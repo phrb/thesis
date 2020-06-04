@@ -16,12 +16,35 @@
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
 #+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w@) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
-#+LATEX_CLASS_OPTIONS: [a4paper]
-#+LATEX_HEADER: \usepackage[showframe,margin=2cm]{geometry}
+#+LATEX_CLASS: book
+#+LATEX_CLASS_OPTIONS: [12pt,twoside,a4paper]
+#+LATEX_HEADER: \usepackage[a4paper]{geometry}
+#+LATEX_HEADER: \geometry{
+#+LATEX_HEADER:   %top=32mm,
+#+LATEX_HEADER:   %bottom=28mm,
+#+LATEX_HEADER:   %left=24mm,
+#+LATEX_HEADER:   %right=34mm,
+#+LATEX_HEADER:   textwidth=152mm, % 210-24-34
+#+LATEX_HEADER:   textheight=237mm, % 297-32-28
+#+LATEX_HEADER:   vmarginratio=8:7, % 32:28
+#+LATEX_HEADER:   hmarginratio=12:17, % 24:34
+#+LATEX_HEADER:   % Com geometry, esta medida não é tão relevante; basta garantir que ela
+#+LATEX_HEADER:   % seja menor que "top" e que o texto do cabeçalho caiba nela.
+#+LATEX_HEADER:   headheight=25.4mm,
+#+LATEX_HEADER:   % distância entre o início do texto principal e a base do cabeçalho;
+#+LATEX_HEADER:   % ou seja, o cabeçalho "invade" a margem superior nessa medida. Essa
+#+LATEX_HEADER:   % é a medida que determina a posição do cabeçalho
+#+LATEX_HEADER:   headsep=11mm,
+#+LATEX_HEADER:   footskip=10mm,
+#+LATEX_HEADER:   marginpar=20mm,
+#+LATEX_HEADER:   marginparsep=5mm,
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{sourcecodepro}
 #+LATEX_HEADER: \usepackage{forest}
+#+LATEX_HEADER: \usepackage{titling}
 #+LATEX_HEADER: \usepackage{rotating}
 #+LATEX_HEADER: \usepackage{booktabs}
 #+LATEX_HEADER: \usepackage{array}
@@ -77,9 +100,10 @@
 #+LATEX_HEADER:   tabsize=2,
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
+#+LATEX_HEADER: \singlespacing
 
-* Drafts
-** Structure Draft
+* Thesis Drafts                                                    :noexport:
+** Structure Drafts
 1. Introduction
    1. Autotuning
       1. Algorithm Selection Problem?
@@ -102,7 +126,7 @@
    3. Factorial Designs
       1. Example?
    4. Optimal Design
-      1. BLUE
+      1. Properties of the BLUE, Information Matrix
       2. Variance-optimizing criteria
       3. Example on Laplacian GPU
    5. Autotuning SPAPT Kernels
@@ -118,8 +142,17 @@
 4. Conclusion
    - Expressing structure with kernels? (Duvenaud's thesis)
    - Performance of the Federov Algorithm for D-Optimal design construction?
-
-** Underlying Hypotheses of Autotuning Methods           :ExportableReports:
+*** Structure Draft
+- Course on performance optimization for HPC, and why it's hard
+- Difficulty to optimize programs comes from complexity in:
+  - Computer architecture
+    - Pursuit of doubling performance, fitting more transistors,
+      (Moore's Law), and the end of frequency and power
+      scaling (Dennard's),
+      mean that we need parallel architectures, which are more complex
+  - Software
+    - Parallel architectures are harder to program efficiently
+** Underlying Hypotheses of Autotuning Methods
 :PROPERTIES:
 :EXPORT_FILE_NAME: hipotheses.pdf
 :END:
@@ -139,6 +172,10 @@ usage. Some of  these hypotheses are explicit,  such as the ones  that come from
 the  linear model.   Others are  implicit,  such as  the ones  that support  the
 implementation and the justification of optimization heuristics.
 *** Overview of Autotuning Methods
+:PROPERTIES:
+:EXPORT_TITLE:
+:EXPORT_FILE_NAME: tree.pdf
+:END:
 #+begin_export latex
 \begin{sidewaysfigure}[t]
   \centering
@@ -290,7 +327,7 @@ implementation and the justification of optimization heuristics.
   \caption{A high-level view of autotuning methods, where \textcolor{NavyBlue}{\textbf{blue}} boxes
     denote branching questions, \textcolor{BurntOrange}{\textbf{orange}} boxes
     denote key hypotheses, \textcolor{ForestGreen}{\textbf{green}} boxes
-    denote specific method choices, and \textbf{bold} boxes denote specific methods.}
+    denote algorithm choices, and \textbf{bold} boxes denote methods.}
 \end{sidewaysfigure}
 #+end_export
 
@@ -411,3 +448,448 @@ implementation and the justification of optimization heuristics.
   \end{tikzpicture}
 }
 #+end_export
+** Application to the Microsoft Latin America PhD Award
+*** Search Heuristics and Statistical Learning methods for Autotuning HPC Programs
+:PROPERTIES:
+:EXPORT_DATE:
+:EXPORT_TITLE: @@latex: Search Heuristics and Statistical Learning \\ Methods for Program Autotuning@@
+:EXPORT_FILE_NAME: application.pdf
+:EXPORT_AUTHOR: Pedro Bruel
+:END:
+
+#+latex: \vspace{-4em}
+
+High Performance Computing  has been a cornerstone of  collective scientific and
+industrial progress  for at least  five decades.   Paying the cost  of increased
+complexity,  software and  hardware  engineering advances  continue to  overcome
+several challenges on the way of the sustained performance improvements observed
+during the last  fifty years.  This mounting complexity means  that reaching the
+advertised hardware  performance for  a given program  requires not  only expert
+knowledge  of a  given hardware  architecture, but  also mastery  of programming
+models  and  languages for  parallel  and  distributed  computing.
+
+If we state performance optimization problems as /search/ or /learning/ problems, by
+converting implementation  and configuration  choices to /parameters/  which might
+affect  performance,  we  can  draw   and  adapt  proven  methods  from  search,
+mathematical  optimization and  statistics. The  effectiveness of  these adapted
+methods  on autotuning  problems varies  greatly,  and hinges  on practical  and
+mathematical properties of the problem and the corresponding /search space/.
+
+When  adapting methods  for autotuning,  we must  face challenges  emerging from
+practical properties  such as restricted  time and cost budgets,  constraints on
+feasible  parameter values,  and the  need to  mix /categorical/,  /continuous/, and
+/discrete/ parameters. To achieve useful results, we must also choose methods that
+make hypotheses compatible with problem search  spaces, such as the existence of
+discoverable,  or at  least  exploitable, relationships  between parameters  and
+performance.   Choosing  an autotuning  method  requires  determining a  balance
+between the exploration of a problem, when we would seek to discover and explain
+relationships between  parameters and performance,  and the exploitation  of the
+best optimizations we can find, when we would seek only to minimize performance.
+
+The    effectiveness   of    search    heuristics   on    autotuning   can    be
+limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
+between other factors, by underlying hypotheses  about the search space, such as
+the  reachability of  the  global optimum  and the  smoothness  of search  space
+surfaces, which  are frequently not  respected. The derivation  of relationships
+between  parameters  and  performance  from search  heuristic  optimizations  is
+greatly hindered,  if not rendered impossible,  by the biased way  these methods
+explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
+Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
+structured  parameter  exploration,  and  can  be used  to  build  and  validate
+performance     models,     generating    transparent     and     cost-effective
+optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}. Other methods
+from   the  parametric   family   are   more  widely   used,   such  as   Bandit
+Algorithms\nbsp{}\cite{xu2017parallel}.   Nonparametric  learning   methods,  such  as
+Decision    Trees\nbsp{}\cite{balaprakash2016automomml}     and    Gaussian    Process
+Regression\nbsp{}\cite{parsa2019pabo}, are able  to reduce model bias  greatly, at the
+expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorizes some
+autotuning  methods  according to  some  of  the  key hypotheses  and  branching
+questions underlying each method.
+
+During this  thesis I have  adapted and  studied the effectiveness  of different
+search heuristics and statistical learning  methods on optimizing performance on
+several autotuning domains.  During the beginning of my PhD at the University of
+São Paulo (USP), I have published a paper on optimizing the configuration of the
+CUDA compiler\nbsp{}\cite{bruel2017autotuning},  where we have  reached up to  4 times
+performance improvement  in comparison with a  high-level compiler optimization.
+In collaboration with researchers from  Hewlett Packard Enterprise (HPE) in Palo
+Alto, I wrote a  paper on the autotuning of a  compiler for High-Level Synthesis
+for FPGAs\nbsp{}\cite{bruel2017autotuninghls}, where we  have reached, on average, 25%
+improvements on  performance, size, and  complexity of  designs.
+
+At the  end of 2017,  I joined  the /cotutelle/ PhD  program at the  University of
+Grenoble Alpes  (UGA) and  became a member  of the POLARIS  Inria team,  where I
+applied  Design  of   Experiments  to  the  autotuning   of  a  source-to-source
+transformation  compiler\nbsp{}\cite{bruel2019autotuning},  where  we  showed  we  can
+achieve significant speedup by exploiting  search space structure using a strict
+budget.   I also  have  collaborated with  HPE on  another  paper, providing  an
+analysis  of the  applicability  of autotuning  methods  to a  Hardware-Software
+Co-design  problem\nbsp{}\cite{bruel2017generalize}.   During  my  Teaching  Assistant
+internships,  I  have  published one  paper\nbsp{}\cite{bruel2017openmp}  on  parallel
+programming  teaching, and  collaborated on  another\nbsp{}\cite{goncalves2016openmp},
+where we showed that teaching lower level programming models, despite being more
+challenging at first, provides a stronger core understanding.
+
+I continue to collaborate with HPE  researchers on the application of autotuning
+methods to  optimize Neural Networks,  hardware accelerators for  Deep Learning,
+and  algorithms  for dealing  with  network  congestion.   With my  advisors,  I
+currently manage  1 undergraduate and 4  masters students, who are  applying the
+statistical  learning autotuning  methods  I studied  and  adapted to  different
+domains  in the  context of  a joint  USP/HPE research  project.  I  am strongly
+motivated to continue pursuing a career  on Computer Science research, aiming to
+produce  rigorous and  value-adding  contributions. I  hereby  submit my  thesis
+proposal and application to the Microsoft Latin America PhD Award.
+#+begin_export latex
+\begin{center}
+  \begin{figure}[t]
+    \resizebox{.9\textwidth}{!}{%
+      \begin{forest}
+        for tree={%
+          anchor = north,
+          align = center,
+          l sep+=1em
+        },
+        [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+          draw,
+          [{Constructs surrogate estimate $\hat{f}(\cdot, \theta(X))$?},
+            draw,
+            color = NavyBlue
+            [{Search Heuristics},
+              draw,
+              color = BurntOrange,
+              edge label = {node[midway, fill=white, font = \scriptsize]{No}}
+              [{\textbf{Random} \textbf{Sampling}}, draw]
+              [{Reachable Optima},
+                draw,
+                color = BurntOrange
+                [, phantom]
+                [{Underlying Hypotheses \\ \textbf{Heuristics}}, draw]]]
+            [{Statistical Learning},
+              draw,
+              color = BurntOrange,
+              edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
+              [{Parametric Learning},
+                draw,
+                color = BurntOrange
+                [{$\forall{}i: x_i \in X$ is discrete\\$\hat{f}(X) \approx f_1(x_1) + \dots + f_k(x_k)$},
+                  draw,
+                  color = BurntOrange
+                  [{\textbf{Independent Bandits}\\for each $x_i$:\textbf{UCB},\textbf{EXP3},$\dots$}, draw]
+                  [, phantom]]
+                [{Linear Model\\$\hat{f} = \mathcal{M}(X)\theta{}(X) + \varepsilon$},
+                  draw,
+                  color = BurntOrange
+                  [, phantom]
+                  [{Check for model adequacy?},
+                    draw,
+                    alias = adequacy,
+                    color = NavyBlue
+                    [{Consider interactions?\\{$\exists x_i \neq x_j:\; \theta(x_ix_j) \neq 0$}},
+                      draw,
+                      alias = interactions,
+                      color = NavyBlue,
+                      edge label = {node[midway, fill=white, font = \scriptsize]{No}}
+                      [{$\forall x_i \in X: x_i \in \{-1, 1\}$\\\textbf{Screening} \textbf{Designs}},
+                        edge label = {node[midway, fill=white, font = \scriptsize]{No}},
+                        draw
+                        [, phantom]
+                        [{Select $\hat{X}_{*}$, reduce dimension of $\mathcal{X}$},
+                          edge = {-stealth, ForestGreen, semithick},
+                          edge label = {node[midway, fill=white, font = \scriptsize]{Exploit}},
+                          draw,
+                          alias = estimate,
+                          color = ForestGreen]]
+                      [{\textbf{Optimal} \textbf{Design}},
+                        draw,
+                        alias = optimal,
+                        edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}]]
+                    [, phantom]
+                    [, phantom]
+                    [, phantom]
+                    [, phantom]
+                    [, phantom]
+                    [, phantom]
+                    [{\textbf{Space-filling} \textbf{Designs}},
+                      draw,
+                      edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
+                      [, phantom]
+                      [{Model selection},
+                        edge = {-stealth, ForestGreen, semithick},
+                        edge label = {node[midway, fill=white, font = \scriptsize]{Explore}},
+                        draw,
+                        alias = selection,
+                        color = ForestGreen]]]]]
+              [{Nonparametric Learning},
+                draw,
+                color = BurntOrange
+                [{Splitting rules on X\\\textbf{Decision} \textbf{Trees}},
+                  draw
+                  [, phantom]
+                  [{Estimate $\hat{f}(\cdot)$ and $uncertainty(\hat{f}(\cdot))$},
+                    edge = {-stealth, ForestGreen, semithick},
+                    draw,
+                    alias = uncertainty,
+                    color = ForestGreen
+                    [{Minimize $uncertainty(\hat{f}(X))$},
+                      edge = {ForestGreen, semithick},
+                      edge label = {node[midway, fill=white, font = \scriptsize]{Explore}},
+                      draw,
+                      color = ForestGreen]
+                    [{Minimize $\hat{f}(X)$},
+                      edge = {ForestGreen, semithick},
+                      edge label = {node[midway, fill=white, font = \scriptsize]{Exploit}},
+                      draw,
+                      color = ForestGreen]
+                    [{Minimize $\hat{f}(X) - uncertainty(\hat{f}(X))$},
+                      edge = {ForestGreen, semithick},
+                      edge label = {node[midway, fill=white, font = \scriptsize]{Exploit$+$Explore}},
+                      draw,
+                      color = ForestGreen]]]
+                [{\textbf{Gaussian} \textbf{Process Regression}},
+                  alias = gaussian,
+                  draw]
+                [{\textbf{Neural} \textbf{Networks}}, draw]]]]]
+        \draw [-stealth, semithick, ForestGreen](selection) to [bend left=27] node[near start, fill=white, font = \scriptsize] {Exploit} (adequacy.south);
+        \draw [-stealth, semithick, ForestGreen](estimate.east) to [bend right=37] node[near start, fill=white, font = \scriptsize] {Explore} (adequacy.south) ;
+        \draw [-stealth, semithick, ForestGreen](gaussian) to (uncertainty);
+        \draw [-stealth, semithick, ForestGreen](optimal) to node[midway, fill=white, font = \scriptsize] {Exploit} (estimate) ;
+      \end{forest}
+    }
+    \caption{A high-level view of autotuning methods, where \textcolor{NavyBlue}{\textbf{blue}} boxes
+      denote branching questions, \textcolor{BurntOrange}{\textbf{orange}} boxes
+      denote key hypotheses, \textcolor{ForestGreen}{\textbf{green}} boxes
+      highlight exploration and exploitation choices, and \textbf{bold} boxes denote methods.}
+    \label{fig:tree}
+  \end{figure}
+\end{center}
+#+end_export
+
+#+latex: \newpage
+
+#+LATEX: \bibliographystyle{IEEEtran}
+#+LATEX: \bibliography{references}
+*** (Short) Search Heuristics and Statistical Learning methods for Autotuning HPC Programs
+:PROPERTIES:
+:EXPORT_DATE:
+:EXPORT_TITLE: @@latex: Search Heuristics and Statistical Learning \\ Methods for Program Autotuning@@
+:EXPORT_FILE_NAME: short-application.pdf
+:EXPORT_AUTHOR: Pedro Bruel
+:END:
+
+#+latex: \vspace{-3em}
+
+High Performance Computing  has been a cornerstone of  collective scientific and
+industrial progress  for at least  five decades.   Paying the cost  of increased
+complexity,  software and  hardware  engineering advances  continue to  overcome
+several challenges on the way of the sustained performance improvements observed
+during the last  fifty years.  This mounting complexity means  that reaching the
+advertised hardware  performance for  a given program  requires not  only expert
+knowledge  of a  given hardware  architecture, but  also mastery  of programming
+models  and  languages for  parallel  and  distributed  computing.
+
+If we state performance optimization problems as /search/ or /learning/ problems, by
+converting implementation  and configuration  choices to /parameters/  which might
+affect  performance,  we  can  draw   and  adapt  proven  methods  from  search,
+mathematical  optimization and  statistics. The  effectiveness of  these adapted
+methods  on autotuning  problems varies  greatly,  and hinges  on practical  and
+mathematical properties of the problem and the corresponding /search space/.
+
+When  adapting methods  for autotuning,  we must  face challenges  emerging from
+practical properties  such as restricted  time and cost budgets,  constraints on
+feasible  parameter values,  and the  need to  mix /categorical/,  /continuous/, and
+/discrete/ parameters. To achieve useful results, we must also choose methods that
+make hypotheses compatible with problem search  spaces, such as the existence of
+discoverable,  or at  least  exploitable, relationships  between parameters  and
+performance.   Choosing  an autotuning  method  requires  determining a  balance
+between the exploration of a problem, when we would seek to discover and explain
+relationships between  parameters and performance,  and the exploitation  of the
+best optimizations we can find, when we would seek only to minimize performance.
+
+During this  thesis I have  adapted and  studied the effectiveness  of different
+search heuristics and statistical learning  methods on optimizing performance on
+several autotuning domains.  During the beginning of my PhD at the University of
+São Paulo (USP), I have published a paper on optimizing the configuration of the
+CUDA compiler\nbsp{}\cite{bruel2017autotuning},  where we have  reached up to  4 times
+performance improvement  in comparison with a  high-level compiler optimization.
+In collaboration with researchers from  Hewlett Packard Enterprise (HPE) in Palo
+Alto, I wrote a  paper on the autotuning of a  compiler for High-Level Synthesis
+for FPGAs\nbsp{}\cite{bruel2017autotuninghls}, where we  have reached, on average, 25%
+improvements on  performance, size, and  complexity of  designs.
+
+At the  end of 2017,  I joined  the /cotutelle/ PhD  program at the  University of
+Grenoble Alpes  (UGA) and  became a member  of the POLARIS  Inria team,  where I
+applied  Design  of   Experiments  to  the  autotuning   of  a  source-to-source
+transformation  compiler\nbsp{}\cite{bruel2019autotuning},  where  we  showed  we  can
+achieve significant speedup by exploiting  search space structure using a strict
+budget.   I also  have  collaborated with  HPE on  another  paper, providing  an
+analysis  of the  applicability  of autotuning  methods  to a  Hardware-Software
+Co-design  problem\nbsp{}\cite{bruel2017generalize}.
+
+I continue to collaborate with HPE  researchers on the application of autotuning
+methods to  optimize Neural Networks,  hardware accelerators for  Deep Learning,
+and  algorithms  for dealing  with  network  congestion.   With my  advisors,  I
+currently manage  1 undergraduate and 4  masters students, who are  applying the
+statistical  learning autotuning  methods  I studied  and  adapted to  different
+domains  in the  context of  a joint  USP/HPE research  project.  I  am strongly
+motivated to continue pursuing a career  on Computer Science research, aiming to
+produce  rigorous and  value-adding  contributions. I  hereby  submit my  thesis
+proposal and application to the Microsoft Latin America PhD Award.
+
+#+LATEX: \bibliographystyle{IEEEtran}
+#+LATEX: \bibliography{references}
+* The Need for Autotuning in High Performance Computing
+** Generating Figures                                             :noexport:
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+df_freq <- read.csv("data/wiki_data/frequency.csv", header = TRUE)
+df_transistor <- read.csv("data/wiki_data/transistor_count.csv", header = TRUE)
+#+end_SRC
+
+#+RESULTS:
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+str(df_freq)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+'data.frame':	199 obs. of  12 variables:
+ $ date               : int  1971 1972 1972 1972 1972 1973 1973 1973 1974 1974 ...
+ $ name               : chr  "4004" "PPS-25" "μPD700" "8008" ...
+ $ designer           : chr  "Intel" "Fairchild" "NEC" "Intel" ...
+ $ max_clock_khz      : int  740 400 NA 500 200 NA NA NA 715 NA ...
+ $ max_clock_mhz      : num  NA NA NA NA NA 2 1 1 NA 2 ...
+ $ max_clock_ghz      : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ process_micro_m    : num  10 NA NA 10 NA 7.5 6 NA NA 6 ...
+ $ process_nm         : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ chips              : int  1 2 1 1 1 1 1 1 3 1 ...
+ $ transistor_count   : int  2250 NA NA 3500 NA 2500 2800 NA NA 6000 ...
+ $ transistor_millions: num  NA NA NA NA NA NA NA NA NA NA ...
+ $ logical_cores      : int  1 1 1 1 1 1 1 1 1 1 ...
+#+end_example
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+str(df_transistor)
+#+end_SRC
+
+#+RESULTS:
+: 'data.frame':	151 obs. of  6 variables:
+:  $ name            : chr  "Intel 4004 " "Intel 8008 " "Toshiba TLCS-12 " "Intel 4040 " ...
+:  $ transistor_count: num  2250 3500 11000 3000 4100 ...
+:  $ date            : int  1971 1972 1973 1974 1974 1974 1974 1975 1976 1976 ...
+:  $ designer        : chr  "Intel" "Intel" "Toshiba" "Intel" ...
+:  $ process_nm      : int  10000 10000 6000 10000 6000 6000 8000 8000 5000 4000 ...
+:  $ area_mm         : num  12 14 32 12 16 20 11 21 27 18 ...
+
+#+begin_SRC R :results graphics output :session *R* :file "./img/49_years_processor_data.pdf" :width 10 :height 5 :eval no-export
+library(ggplot2)
+
+ggplot() +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = logical_cores,
+                   color = "Logical Cores (Count)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = max_clock_khz * 1e-3,
+                   color = "Frequency (MHz)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = max_clock_mhz,
+                   color = "Frequency (MHz)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = max_clock_ghz * 1e3,
+                   color = "Frequency (MHz)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = transistor_count * 1e-3,
+                   color = "Transistors (Thousands)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = transistor_count * 1e-3,
+                   color = "Transistors (Thousands)")) +
+    geom_point(data = df_freq,
+               aes(x = date,
+                   y = transistor_millions * 1e3,
+                   color = "Transistors (Thousands)")) +
+    geom_point(data = df_transistor,
+               aes(x = date,
+                   y = transistor_count * 1e-3,
+                   color = "Transistors (Thousands)")) +
+    xlab("Year") +
+    scale_color_brewer(name = element_blank(), palette = "Set1") +
+    scale_y_continuous(trans = 'log10') +
+    theme_bw(base_size = 18) +
+    theme(axis.title.y = element_blank(),
+          legend.position = c(0.14, 0.8),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 14)) +
+    guides(color = guide_legend(nrow = 4,
+                                override.aes = list(alpha = 1.0,
+                                                    size = 2)))
+
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/49_years_processor_data.pdf]]
+
+** Complexity on Hardware and Software
+High Performance Computing  has been a cornerstone of  collective scientific and
+industrial progress for at least five  decades.  By paying the cost of increased
+complexity,  software and  hardware  engineering advances  continue to  overcome
+several challenges on the way of the sustained performance improvements observed
+during the last fifty years.  A  consequence of this mounting complexity is that
+reaching the  advertised hardware performance  for a given program  requires not
+only expert  knowledge of specific  hardware architectures, but also  mastery of
+programming models and languages for parallel and distributed computing.
+
+If we state performance optimization problems as /search/ or /learning/ problems, by
+converting implementation  and configuration  choices to /parameters/  which might
+affect  performance,  we  can  draw   and  adapt  proven  methods  from  search,
+mathematical  optimization and  statistics. The  effectiveness of  these adapted
+methods  on autotuning  problems varies  greatly,  and hinges  on practical  and
+mathematical properties of the problem and the corresponding /search space/.
+
+When  adapting methods  for autotuning,  we must  face challenges  emerging from
+practical properties  such as restricted  time and cost budgets,  constraints on
+feasible  parameter values,  and the  need to  mix /categorical/,  /continuous/, and
+/discrete/ parameters. To achieve useful results, we must also choose methods that
+make hypotheses compatible with problem search  spaces, such as the existence of
+discoverable,  or at  least  exploitable, relationships  between parameters  and
+performance.   Choosing  an autotuning  method  requires  determining a  balance
+between the exploration of a problem, when we would seek to discover and explain
+relationships between  parameters and performance,  and the exploitation  of the
+best optimizations we can find, when we would seek only to minimize performance.
+
+This  chapter presents  historical context  for  the increase  in complexity  of
+computer  hardware  and  software, which  is  in  great  part  a result  of  the
+strategies   used   to   sustain   the   unrelenting   pursuit   of   transistor
+miniaturization,  supported  until  recently by  performance  improvements  from
+frequency scaling.
+** Backup Text                                                    :noexport:
+The    effectiveness   of    search    heuristics   on    autotuning   can    be
+limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
+between other factors, by underlying hypotheses  about the search space, such as
+the  reachability of  the  global optimum  and the  smoothness  of search  space
+surfaces, which  are frequently not  respected. The derivation  of relationships
+between  parameters  and  performance  from search  heuristic  optimizations  is
+greatly hindered,  if not rendered impossible,  by the biased way  these methods
+explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
+Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
+structured  parameter  exploration,  and  can  be used  to  build  and  validate
+performance     models,     generating    transparent     and     cost-effective
+optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}. Other methods
+from   the  parametric   family   are   more  widely   used,   such  as   Bandit
+Algorithms\nbsp{}\cite{xu2017parallel}.   Nonparametric  learning   methods,  such  as
+Decision    Trees\nbsp{}\cite{balaprakash2016automomml}     and    Gaussian    Process
+Regression\nbsp{}\cite{parsa2019pabo}, are able  to reduce model bias  greatly, at the
+expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorizes some
+autotuning  methods  according to  some  of  the  key hypotheses  and  branching
+questions underlying each method.
+
+** References
+
+#+LATEX: \bibliographystyle{IEEEtran}
+#+LATEX: \bibliography{references}

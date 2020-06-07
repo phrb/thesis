@@ -744,6 +744,7 @@ proposal and application to the Microsoft Latin America PhD Award.
 * The Need for Autotuning in High Performance Computing
 ** Generating Figures                                             :noexport:
 *** 49 Years of Processor Data
+**** Load Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 df_freq <- read.csv("data/wiki_data/frequency.csv", header = TRUE)
@@ -786,6 +787,7 @@ str(df_transistor)
 :  $ process_nm      : int  10000 10000 6000 10000 6000 6000 8000 8000 5000 4000 ...
 :  $ area_mm         : num  12 14 32 12 16 20 11 21 27 18 ...
 
+**** Plots
 #+begin_SRC R :results graphics output :session *R* :file "./img/49_years_processor_data.pdf" :width 10 :height 5 :eval no-export
 library(ggplot2)
 library(extrafont)
@@ -793,83 +795,87 @@ library(scales)
 
 loadfonts(device = "postscript")
 
+
 point_alpha = 0.9
-point_shape = 1
 point_size = 2
+
+shapes = c(0, 1, 2, 5)
 
 ggplot() +
     geom_point(data = df_transistor,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = process_nm,
+                   shape = "Process (nanometers)",
                    color = "Process (nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = process_nm,
+                   shape = "Process (nanometers)",
                    color = "Process (nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = process_micro_m * 1e3,
+                   shape = "Process (nanometers)",
                    color = "Process (nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = logical_cores,
+                   shape = "Logical Cores (Count)",
                    color = "Logical Cores (Count)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = max_clock_khz * 1e-3,
+                   shape = "Frequency (MHz)",
                    color = "Frequency (MHz)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = max_clock_mhz,
+                   shape = "Frequency (MHz)",
                    color = "Frequency (MHz)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = max_clock_ghz * 1e3,
+                   shape = "Frequency (MHz)",
                    color = "Frequency (MHz)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = transistor_count * 1e-3,
+                   shape = "Transistors (Thousands)",
                    color = "Transistors (Thousands)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = transistor_millions * 1e3,
+                   shape = "Transistors (Thousands)",
                    color = "Transistors (Thousands)")) +
     geom_point(data = df_transistor,
                alpha = point_alpha,
-               shape = point_shape,
                size = point_size,
                aes(x = date,
                    y = transistor_count * 1e-3,
+                   shape = "Transistors (Thousands)",
                    color = "Transistors (Thousands)")) +
     xlab("Year") +
     scale_color_brewer(name = element_blank(), palette = "Set1", direction = 1) +
+    scale_shape_manual(name = element_blank(),
+                       values = shapes) +
     scale_y_log10(breaks = trans_breaks(trans = "log10",
                                         inv = function(x) 10 ^ x,
                                         n = 7),
@@ -889,7 +895,330 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/49_years_processor_data.pdf]]
-*** Search Spaces
+*** TOP500 Rmax/Rpeak and Power
+**** Loading Data and Packages
+Load the /csv/:
+
+#+begin_SRC R :results output :session *R* :exports code :eval no-export
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+df <- read.csv("./data/top500/TOP500_history.csv")
+#+end_SRC
+
+#+RESULTS:
+**** Looking at Data
+***** Column Names
+We  have many  columns  filled with  `NA`s,  due to  how  metrics were  measured
+differently over the years. There's data from 1993 to 2019!
+
+#+begin_SRC R :results output :session *R* :exports both :eval no-export
+names(df)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+ [1] "Year"                            "Month"
+ [3] "Day"                             "Rank"
+ [5] "Site"                            "Manufacturer"
+ [7] "Computer"                        "Country"
+ [9] "Processors"                      "RMax"
+[11] "RPeak"                           "Nmax"
+[13] "Nhalf"                           "Processor.Family"
+[15] "Processor"                       "Processor.Speed..MHz."
+[17] "System.Family"                   "Operating.System"
+[19] "Architecture"                    "Segment"
+[21] "Application.Area"                "Interconnect.Family"
+[23] "Interconnect"                    "Region"
+[25] "Continent"                       "Power"
+[27] "System.Model"                    "Total.Cores"
+[29] "Measured.Size"                   "Processor.Cores"
+[31] "Accelerator"                     "Name"
+[33] "Accelerator.Cores"               "Efficiency...."
+[35] "Mflops.Watt"                     "Processor.Technology"
+[37] "OS.Family"                       "Cores.per.Socket"
+[39] "Processor.Generation"            "Previous.Rank"
+[41] "First.Appearance"                "First.Rank"
+[43] "Accelerator.Co.Processor.Cores"  "Accelerator.Co.Processor"
+[45] "Power.Source"                    "Rmax..TFlop.s."
+[47] "Rpeak..TFlop.s."                 "HPCG..TFlop.s."
+[49] "Power..kW."                      "Power.Effeciency..GFlops.Watts."
+[51] "Site.ID"                         "System.ID"
+#+end_example
+
+***** Processor Clock
+Supercomputer  clock  explosion  and  range  broadening.  Even  top-tier  clocks
+stagnate after 2008.
+
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_processors_clock.pdf" :width 10 :height 10 :exports both :eval no-export
+library(ggplot2)
+
+ggplot() +
+    geom_jitter(data = df,
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = Processor.Speed..MHz. / 1000,
+                    color = cut(Rank,
+                                breaks = c(1, 167, 334, 500),
+                                include.lowest = TRUE))) +
+                                        #scale_y_log10() +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  4) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Set1") +
+    ylab("Processor Clock (GHz)") +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.25, 0.95),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15)) +
+    guides(color = guide_legend(nrow = 3, override.aes = list(alpha = 1.0, size = 4)))
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_processors_clock.pdf]]
+
+***** Processors
+Core count sustained  exponential increase.  Although top-tier  core count still
+increases, range  broadening around  2012 can be  explained by  introduction and
+ubiquity of accelerator cores on all tiers.
+
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_total_cores.pdf" :width 17.5 :height 7 :exports both :eval no-export
+library(ggplot2)
+library(tidyr)
+
+plot_df <- df %>%
+    mutate(AllCores = coalesce(Processors, Total.Cores) - replace_na(Accelerator.Co.Processor.Cores, 0)) %>%
+    select(Rank, Year, AllCores, Accelerator.Co.Processor.Cores) %>%
+    gather(-Rank, -Year, key = "Type", value = "Count") %>%
+    mutate(Type = factor(Type,
+                         levels = c("AllCores",
+                                    "Accelerator.Co.Processor.Cores"),
+                         labels = c("Processor Cores",
+                                    "Accelerator Cores"))) %>%
+    filter(is.finite(Count))
+
+ggplot() +
+    geom_jitter(data = plot_df,
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = Count,
+                    color = cut(Rank,
+                                breaks = c(1, 167, 334, 500),
+                                include.lowest = TRUE))) +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  6) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Set1") +
+    ylab("Core Count") +
+    scale_y_log10() +
+    # annotation_logticks(sides = "l") +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.67, 0.08),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          axis.text.y = element_text(angle = 90, hjust = 0.5)) +
+    guides(color = guide_legend(nrow = 3, override.aes = list(alpha = 1.0, size = 4))) +
+    facet_wrap(. ~ Type, ncol = 4)
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_total_cores.pdf]]
+***** RPeak and RMax
+Sustained increase of theoretical peak and  achieved max performance on HPL and,
+most recently,  on the  HPCG benchmark.  RPeak does not  guarantee rank  on some
+cases.
+
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_rpeak.pdf" :width 17.5 :height 7 :exports both :eval no-export
+library(ggplot2)
+
+plot_df <- df %>%
+    mutate(RMax = RMax / 1e3,
+           RPeak = RPeak / 1e3,
+           RMaxT = coalesce(RMax, Rmax..TFlop.s.),
+           RPeakT = coalesce(RPeak, Rpeak..TFlop.s.)) %>%
+    select(Rank,
+           Year,
+           RMaxT,
+           RPeakT,
+           HPCG..TFlop.s.) %>%
+    gather(-Rank, -Year, key = "Type", value = "Count") %>%
+    mutate(Type = factor(Type,
+                         levels = c("RPeakT",
+                                    "RMaxT",
+                                    "HPCG..TFlop.s."),
+                         labels = c("RPeak (HPL)",
+                                    "RMax (HPL)",
+                                    "RMax (HPCG)"))) %>%
+    filter(is.finite(Count))
+
+ggplot() +
+    geom_jitter(data = plot_df,
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = Count,
+                    color = cut(Rank,
+                                breaks = c(1, 167, 334, 500),
+                                include.lowest = TRUE))) +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  6) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Set1") +
+    ylab("Performance (TFlops/s)") +
+    scale_y_log10() +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.83, 0.09),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          axis.text.y = element_text(angle = 90, hjust = 0.5)) +
+    guides(color = guide_legend(nrow = 3, override.aes = list(alpha = 1.0, size = 4))) +
+    facet_wrap(. ~ Type, ncol = 3)
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_rpeak.pdf]]
+***** RMax / Cores
+Ratio of performance and core count, for HPL and HPCG. Is this sustained increase due only to accelerator cores, or are there other engineering and software advances?
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_rmax_cores.pdf" :width 17.5 :height 7 :exports both :eval no-export
+library(ggplot2)
+
+plot_df <- df %>%
+    mutate(AllCores = coalesce(Processors, Total.Cores)) %>%
+    mutate(RMax = (RMax / 1e3) / AllCores,
+           RPeak = (RPeak / 1e3) / AllCores,
+           Rmax..TFlop.s. = Rmax..TFlop.s. / AllCores,
+           Rpeak..TFlop.s. = Rpeak..TFlop.s. / AllCores,
+           RMaxC = coalesce(RMax, Rmax..TFlop.s.),
+           RPeakC = coalesce(RPeak, Rpeak..TFlop.s.),
+           HPCGC = HPCG..TFlop.s. / AllCores) %>%
+    select(Rank,
+           Year,
+           RMaxC,
+           RPeakC,
+           HPCGC) %>%
+    gather(-Rank, -Year, key = "Type", value = "Count") %>%
+    mutate(Type = factor(Type,
+                         levels = c("RPeakC",
+                                    "RMaxC",
+                                    "HPCGC"),
+                         labels = c("RPeak / Cores (HPL)",
+                                    "RMax / Cores (HPL)",
+                                    "RMax / Cores (HPCG)"))) %>%
+    filter(is.finite(Count))
+
+ggplot() +
+    geom_jitter(data = plot_df,
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = Count,
+                    color = cut(Rank,
+                                breaks = c(1, 167, 334, 500),
+                                include.lowest = TRUE))) +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  6) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Set1") +
+    ylab("Performance / Core Count") +
+    scale_y_log10() +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.85, 0.1),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          strip.text.x = element_text(size = 28),
+          axis.text.y = element_text(angle = 90, hjust = 0.5)) +
+    guides(color = guide_legend(nrow = 3, override.aes = list(alpha = 1.0, size = 4))) +
+    facet_wrap(. ~ Type, ncol = 5)
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_rmax_cores.pdf]]
+
+***** NMax
+Exponential increase of problem size to reach max performance. Why is there
+range broadening after 2011?
+
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_nmax.pdf" :width 10 :height 10 :exports both :eval no-export
+library(ggplot2)
+
+ggplot() +
+    geom_jitter(data = df,
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = Nmax,
+                    color = cut(Rank,
+                                breaks = c(1, 167, 334, 500),
+                                include.lowest = TRUE))) +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  4) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Set1") +
+    ylab("Problem Size to Reach RMax") +
+    scale_y_log10() +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.25, 0.95),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          axis.text.y = element_text(angle = 90, hjust = 0.5)) +
+    guides(color = guide_legend(nrow = 3, override.aes = list(alpha = 1.0, size = 4)))
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_nmax.pdf]]
+
+***** Achieved / Max Performance
+#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_rmax_rpeak.pdf" :width 10 :height 10 :eval no-export :eval no-export
+library(ggplot2)
+
+ggplot() +
+    geom_jitter(data = filter(df, Rank <= 5),
+                alpha = 0.5,
+                height = 0.0,
+                size = 1.5,
+                aes(x = Year,
+                    y = RMax / RPeak,
+                    color = cut(Rank,
+                                breaks = c(1, 100, 200, 300, 400, 500),
+                                include.lowest = TRUE))) +
+                                        #scale_y_log10() +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  4) }) +
+    scale_color_brewer(name = "TOP500 Rank", palette = "Dark2") +
+    ylab("Achieved / Theoretical Performance (RMax / RPeak)") +
+    theme_bw(base_size = 27) +
+    theme(legend.position = c(0.5, 0.025),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          axis.text.y = element_text(angle = 90, hjust = 0.5)) +
+    guides(color = guide_legend(override.aes = list(alpha = 1.0, size = 4)))
+#+end_SRC
+
+#+RESULTS:
+[[file:../res/top500_graphs/top500_rmax_rpeak.pdf]]
+****** Search Spaces
+******* Load Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(extrafont)
 
@@ -1474,16 +1803,28 @@ str(df_search_spaces)
 #+end_SRC
 
 #+RESULTS:
-: 'data.frame':	61 obs. of  7 variables:
-:  $ name                   : chr  "atax" "dgemv" "fdtd4d2d" "gemver" ...
+: 'data.frame':	69 obs. of  8 variables:
+:  $ name                   : chr  "atax" "dgemv3" "fdtd4d2d" "gemver" ...
 :  $ year                   : int  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012 ...
 :  $ dimension              : int  19 49 30 24 11 15 14 12 20 25 ...
 :  $ search_space_size      : num  1.65e+14 2.73e+30 7.06e+24 7.26e+17 1.56e+08 ...
 :  $ log10_search_space_size: int  14 30 24 17 8 8 12 8 16 19 ...
 :  $ domain                 : chr  "Linear Algebra" "Linear Algebra" "Linear Algebra" "Linear Algebra" ...
 :  $ author                 : chr  "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" ...
+:  $ gscholar_citation      : chr  "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" ...
+******* Generate Caption
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+citations <- unique(df_search_spaces$gscholar_citation)
+citations <- paste(citations[citations != ""], collapse = ",")
+cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
+#+end_SRC
 
-#+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 7 :eval no-export
+#+RESULTS:
+:
+: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
+
+******* Plots
+#+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
 library(ggplot2)
 library(dplyr)
 library(scales)
@@ -1492,9 +1833,28 @@ library(ggrepel)
 library(patchwork)
 
 point_alpha = 1.0
-point_shape = 16
-point_size = 2
-base_size = 20
+point_size = 3
+label_size = 6
+
+shapes = c(15, 16, 17, 18, 6, 7, 9, 0, 3, 5, 12, 14, 13, 11)
+
+legend_rows = length(unique(df_search_spaces$domain)) / 2
+legend_position = c(0.66, 0.12)
+
+base_size = 25
+font_family = "Liberation Sans"
+
+color_palette = colorRampPalette(brewer.pal(9,
+                                            "Set1"))(
+                                                length(
+                                                    unique(
+                                                        df_search_spaces$domain)))
+
+x_text = element_text(size = 26)
+y_text = element_text(size = 26)
+
+x_label = element_text(size = 28)
+y_label = element_text(size = 28)
 
 scientific_10 <- function(x) {
     print(x)
@@ -1511,7 +1871,8 @@ p1 <- ggplot(data = df_search_spaces,
                  color = domain,
                  shape = domain)) +
     geom_point(alpha = point_alpha,
-               size = point_size) +
+               size = point_size,
+               show.legend = FALSE) +
     geom_text_repel(data = filter(df_search_spaces,
                                   dimension > 40 &
                                   log10_search_space_size >= 30),
@@ -1519,88 +1880,93 @@ p1 <- ggplot(data = df_search_spaces,
                         y = log10_search_space_size,
                         label = paste(author, name),
                         color = domain),
-                    nudge_x = 0,
-                    ylim = c(NA, NA),
-                    xlim = c(120, 310),
-                    size = 5,
+                    xlim = c(110, 120),
+                    size = label_size,
                     show.legend = FALSE) +
     xlab("Dimension") +
-    ylab("Estimated Search Space Size") +
     scale_color_manual(name = element_blank(),
-                       values = colorRampPalette(
-                           brewer.pal(9,
-                                      "Set1"))(
-                                          length(
-                                              unique(
-                                                  df_search_spaces$domain)))) +
+                       values = color_palette) +
     scale_shape_manual(name = element_blank(),
-                       values = c(15, 16, 17, 18, 6, 7, 9, 0, 3, 5)) +
+                       values = shapes) +
     scale_y_continuous(label = scientific_10) +
     theme_bw(base_size = base_size) +
-    theme(legend.position = c(0.255, 0.89),
-          legend.direction = "horizontal",
-          legend.spacing.x = unit(0.0, 'cm'),
-          legend.spacing.y = unit(0.0, 'cm'),
-          legend.background = element_rect(fill = "transparent", color = NA),
-          legend.text = element_text(size = 13),
-          text = element_text(family = "Liberation Sans")) +
-    guides(color = guide_legend(nrow = 5,
-                                override.aes = list(alpha = 1.0,
-                                                    size = 2.4)))
-p2 <- ggplot(data = df_search_spaces %>%
-                 filter(dimension < 60 &
-                        log10_search_space_size < 50),
+    theme(text = element_text(family = font_family),
+          axis.text.x = x_text,
+          axis.text.y = y_text,
+          axis.title.y = element_blank())
+
+p2 <- ggplot(data = df_search_spaces,
              aes(x = dimension,
                  y = log10_search_space_size,
                  color = domain,
                  shape = domain)) +
     geom_point(alpha = point_alpha,
                size = point_size) +
-    geom_text_repel(data = filter(df_search_spaces,
-                                  dimension > 40 &
-                                  dimension < 60 &
-                                  log10_search_space_size >= 30,
-                                  log10_search_space_size < 50),
+    geom_text_repel(data = df_search_spaces %>%
+                        filter(dimension > 40 &
+                               dimension < 60 &
+                               log10_search_space_size >= 30,
+                               log10_search_space_size < 50),
                     aes(x = dimension,
                         y = log10_search_space_size,
                         label = paste(author, name),
                         color = domain),
-                    ylim = c(32, 45),
-                    xlim = c(35, NA),
-                    nudge_y = 2,
-                    size = 5,
+                    ylim = c(30, 50),
+                    xlim = c(NA, 45),
+                    nudge_x = -3,
+                    size = label_size,
                     show.legend = FALSE) +
+    geom_text_repel(data = df_search_spaces %>%
+                        filter(dimension < 20 &
+                               log10_search_space_size > 19),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(20, 50),
+                    xlim = c(0, 25),
+                    nudge_y = 1.6,
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_text_repel(data = df_search_spaces %>%
+                        filter(dimension > 30 &
+                               log10_search_space_size < 25),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(15, 50),
+                    xlim = c(30, NA),
+                    nudge_y = 2,
+                    size = label_size,
+                    show.legend = FALSE) +
+    xlim(0, 60) +
     xlab("Dimension") +
-    ylab("Estimated Search Space Size") +
+    ylab("Search Space Size") +
     scale_color_manual(name = element_blank(),
-                       values = colorRampPalette(
-                           brewer.pal(9,
-                                      "Set1"))(
-                                          length(
-                                              unique(
-                                                  df_search_spaces$domain)))) +
+                       values = color_palette) +
     scale_shape_manual(name = element_blank(),
-                       values = c(15, 16, 17, 18, 6, 7, 9, 0, 3, 5)) +
-    scale_y_continuous(label = scientific_10) +
+                       values = shapes) +
+    scale_y_continuous(limits = c(1, 50), label = scientific_10) +
     theme_bw(base_size = base_size) +
-    theme(legend.position = c(0.255, 0.89),
+    theme(axis.text.x = x_text,
+          axis.text.y = y_text,
+          legend.position = legend_position,
           legend.direction = "horizontal",
           legend.spacing.x = unit(0.0, 'cm'),
           legend.spacing.y = unit(0.0, 'cm'),
           legend.background = element_rect(fill = "transparent", color = NA),
-          legend.text = element_text(size = 13),
-          text = element_text(family = "Liberation Sans")) +
-    guides(color = guide_legend(nrow = 5,
+          legend.text = element_text(size = 15),
+          text = element_text(family = font_family)) +
+    guides(color = guide_legend(nrow = legend_rows,
                                 override.aes = list(alpha = 1.0,
-                                                    size = 2.4)))
+                                                    size = 3)))
 
 p2 * p1
 #+end_SRC
 
 #+RESULTS:
 [[file:./img/search_spaces.pdf]]
-
-
 
 ** Complexity on Hardware and Software
 High Performance Computing  has been a cornerstone of  collective scientific and
@@ -1635,7 +2001,20 @@ computer  hardware  and  software, which  is  in  great  part  a result  of  the
 strategies   used   to   sustain   the   unrelenting   pursuit   of   transistor
 miniaturization,  supported  until  recently by  performance  improvements  from
 frequency scaling.
-** Backup Text                                                    :noexport:
+
+#+ATTR_LATEX: :width \textwidth
+[[file:img/49_years_processor_data.pdf]]
+
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Dimension and estimated size for problems from different domains.
+#+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
+[[file:img/search_spaces.pdf]]
+
+#+ATTR_LATEX: :width .7\textwidth
+#+CAPTION: \nbsp{}\cite{seymour2008comparison}
+[[file:img/seymour2008comparison.pdf]]
+
+*** Backup Text                                                  :noexport:
 The    effectiveness   of    search    heuristics   on    autotuning   can    be
 limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
 between other factors, by underlying hypotheses  about the search space, such as
@@ -1656,7 +2035,7 @@ expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorize
 autotuning  methods  according to  some  of  the  key hypotheses  and  branching
 questions underlying each method.
 
-** References
+*** References
 
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{references}

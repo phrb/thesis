@@ -21,6 +21,73 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{montgomery2017design}
+D.~C. Montgomery, \emph{Design and analysis of experiments}.\hskip 1em plus
+  0.5em minus 0.4em\relax John wiley \& sons, 2017.
+
+\bibitem{williams2006gaussian}
+C.~K. Williams and C.~E. Rasmussen, \emph{Gaussian processes for machine
+  learning}.\hskip 1em plus 0.5em minus 0.4em\relax MIT press Cambridge, MA,
+  2006, vol.~2, no.~3.
+
+\bibitem{ceruzzi2003history}
+P.~E. Ceruzzi, E.~Paul \emph{et~al.}, \emph{A history of modern
+  computing}.\hskip 1em plus 0.5em minus 0.4em\relax MIT press, 2003.
+
+\bibitem{olcf2020summit}
+O.~R.~N. Laboratory, ``{Summit -- Oak Ridge Leardership Computing Facility},''
+  \url{https://www.olcf.ornl.gov/olcf-resources/compute-systems/summit}, 2020,
+  [Online; accessed 08-Jun-2020].
+
+\bibitem{moore1965cramming}
+G.~E. Moore \emph{et~al.}, ``Cramming more components onto integrated
+  circuits,'' 1965.
+
+\bibitem{wiki2020transistor}
+Wikipedia, ``{Transistor count},''
+  \url{https://en.wikipedia.org/wiki/Transistor_count}, 2020, [Online; accessed
+  08-Jun-2020].
+
+\bibitem{wiki2020chronology}
+------, ``{Microprocessor Chronology},''
+  \url{https://en.wikipedia.org/wiki/Microprocessor_chronology}, 2020, [Online;
+  accessed 08-Jun-2020].
+
+\bibitem{dennard1974design}
+R.~H. Dennard, F.~H. Gaensslen, H.-N. Yu, V.~L. Rideout, E.~Bassous, and A.~R.
+  LeBlanc, ``Design of ion-implanted mosfet's with very small physical
+  dimensions,'' \emph{IEEE Journal of solid-state circuits}, vol.~9, no.~5, pp.
+  256--268, 1974.
+
+\bibitem{frank2001device}
+D.~J. Frank, R.~H. Dennard, E.~Nowak, P.~M. Solomon, Y.~Taur, and H.-S.~P.
+  Wong, ``Device scaling limits of si mosfets and their application
+  dependencies,'' \emph{Proceedings of the IEEE}, vol.~89, no.~3, pp. 259--288,
+  2001.
+
+\bibitem{esmaeilzadeh2011dark}
+H.~Esmaeilzadeh, E.~Blem, R.~S. Amant, K.~Sankaralingam, and D.~Burger, ``Dark
+  silicon and the end of multicore scaling,'' in \emph{2011 38th Annual
+  international symposium on computer architecture (ISCA)}.\hskip 1em plus
+  0.5em minus 0.4em\relax IEEE, 2011, pp. 365--376.
+
+\bibitem{venkataramani2015approximate}
+S.~Venkataramani, S.~T. Chakradhar, K.~Roy, and A.~Raghunathan, ``Approximate
+  computing and the quest for computing efficiency,'' in \emph{2015 52nd
+  ACM/EDAC/IEEE Design Automation Conference (DAC)}.\hskip 1em plus 0.5em minus
+  0.4em\relax IEEE, 2015, pp. 1--6.
+
+\bibitem{cheng2015core}
+H.-Y. Cheng, J.~Zhan, J.~Zhao, Y.~Xie, J.~Sampson, and M.~J. Irwin, ``Core vs.
+  uncore: The heart of darkness,'' in \emph{2015 52nd ACM/EDAC/IEEE Design
+  Automation Conference (DAC)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE,
+  2015, pp. 1--6.
+
+\bibitem{henkel2015new}
+J.~Henkel, H.~Khdr, S.~Pagani, and M.~Shafique, ``New trends in dark silicon,''
+  in \emph{2015 52nd ACM/EDAC/IEEE Design Automation Conference (Dac)}.\hskip
+  1em plus 0.5em minus 0.4em\relax IEEE, 2015, pp. 1--6.
+
 \bibitem{balaprakash2012spapt}
 P.~Balaprakash, S.~M. Wild, and B.~Norris, ``{SPAPT}: Search problems in
   automatic performance tuning,'' \emph{Procedia Computer Science}, vol.~9, pp.

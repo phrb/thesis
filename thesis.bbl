@@ -88,6 +88,19 @@ J.~Henkel, H.~Khdr, S.~Pagani, and M.~Shafique, ``New trends in dark silicon,''
   in \emph{2015 52nd ACM/EDAC/IEEE Design Automation Conference (Dac)}.\hskip
   1em plus 0.5em minus 0.4em\relax IEEE, 2015, pp. 1--6.
 
+\bibitem{top5002020list}
+Top500, ``{Top500 List},'' \url{https://www.top500.org/}, 2020, [Online;
+  accessed 08-Jun-2020].
+
+\bibitem{dongarra2003linpack}
+J.~J. Dongarra, P.~Luszczek, and A.~Petitet, ``{The LINPACK benchmark: past,
+  present and future},'' \emph{Concurrency and Computation: practice and
+  experience}, vol.~15, no.~9, pp. 803--820, 2003.
+
+\bibitem{seymour2008comparison}
+K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
+  empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
+
 \bibitem{balaprakash2012spapt}
 P.~Balaprakash, S.~M. Wild, and B.~Norris, ``{SPAPT}: Search problems in
   automatic performance tuning,'' \emph{Procedia Computer Science}, vol.~9, pp.
@@ -199,9 +212,5 @@ J.~Ol'ha, J.~Hozzov{\'a}, J.~Fousek, and J.~Filipovi{\v{c}}, ``Exploiting
   historical data: pruning autotuning spaces and estimating the number of
   tuning steps,'' in \emph{European Conference on Parallel Processing}.\hskip
   1em plus 0.5em minus 0.4em\relax Springer, 2019, pp. 295--307.
-
-\bibitem{seymour2008comparison}
-K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
-  empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
 
 \end{thebibliography}

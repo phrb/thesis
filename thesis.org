@@ -901,7 +901,7 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/49_years_processor_data.pdf]]
-*** TOP500 Rmax/Rpeak and Power
+*** TOP500
 **** Loading Data and Packages
 Load the /csv/:
 
@@ -914,18 +914,6 @@ df <- read.csv("./data/top500/TOP500_history.csv")
 #+end_SRC
 
 #+RESULTS:
-#+begin_example
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-#+end_example
 **** Looking at Data
 ***** Column Names
 We  have many  columns  filled with  `NA`s,  due to  how  metrics were  measured
@@ -965,7 +953,7 @@ names(df)
 [51] "Site.ID"                         "System.ID"
 #+end_example
 
-***** Achieved / Max Performance
+***** Achieved and Theoretical Performance
 #+begin_SRC R :results graphics output :session *R* :file "./img/top500_rmax_rpeak.pdf" :width 10 :height 5 :exports both :eval no-export
 library(ggplot2)
 library(extrafont)
@@ -1011,8 +999,8 @@ ggplot() +
     #                color = "Power (kW)")) +
     scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
                                                   ceiling(max(x)),
-                                                  6) }) +
-    ylab("TFlops/s") +
+                                                  4) }) +
+    ylab("Tflops/s") +
     scale_color_brewer(name = element_blank(), palette = "Set1", direction = 1) +
     scale_shape_manual(name = element_blank(),
                        values = shapes) +
@@ -1022,7 +1010,7 @@ ggplot() +
                   labels = trans_format("log10",
                                         math_format(10 ^ .x))) +
     theme_bw(base_size = 20) +
-    theme(legend.position = c(0.07, 0.86),
+    theme(legend.position = c(0.06, 0.86),
           legend.direction = "horizontal",
           legend.background = element_rect(fill = "transparent", color = NA),
           legend.text = element_text(size = 16),
@@ -1035,6 +1023,67 @@ ggplot() +
 #+RESULTS:
 [[file:./img/top500_rmax_rpeak.pdf]]
 
+***** Accelerator Core Count
+#+begin_SRC R :results graphics output :session *R* :file "./img/top500_accelerator_cores.pdf" :width 10 :height 5 :exports both :eval no-export
+library(ggplot2)
+library(extrafont)
+library(scales)
+library(tidyr)
+
+loadfonts(device = "postscript")
+
+point_size = 2.8
+shapes = c(0, 1, 2, 5)
+
+plot_df <- df %>%
+    filter(Rank <= 1) %>%
+    mutate(Accelerators = na_if(Accelerator.Co.Processor.Cores, 0),
+           Cores = coalesce(Processors, Total.Cores) -
+               replace_na(Accelerator.Co.Processor.Cores, 0)) %>%
+    select(Rank,
+           Year,
+           Accelerators,
+           Cores) %>%
+    distinct(Rank, Year, .keep_all = TRUE)
+
+ggplot() +
+    geom_point(data = plot_df,
+               size = point_size,
+               aes(x = Year,
+                   y = Cores,
+                   shape = "Processor",
+                   color = "Processor")) +
+    geom_point(data = plot_df,
+               size = point_size,
+               aes(x = Year,
+                   y = Accelerators,
+                   shape = "Accelerator",
+                   color = "Accelerator")) +
+    scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
+                                                  ceiling(max(x)),
+                                                  4) }) +
+    ylab("Cores") +
+    scale_color_brewer(name = element_blank(), palette = "Set1", direction = 1) +
+    scale_shape_manual(name = element_blank(),
+                       values = shapes) +
+    scale_y_log10(breaks = trans_breaks(trans = "log10",
+                                        inv = function(x) 10 ^ x,
+                                        n = 7),
+                  labels = trans_format("log10",
+                                        math_format(10 ^ .x))) +
+    theme_bw(base_size = 20) +
+    theme(legend.position = c(0.09, 0.86),
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", color = NA),
+          legend.text = element_text(size = 16),
+          text = element_text(family = "Liberation Sans")) +
+    guides(color = guide_legend(nrow = 4,
+                                override.aes = list(alpha = 1.0,
+                                                    size = 2)))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/top500_accelerator_cores.pdf]]
 ***** Other Plots
 ****** Processor Clock
 Supercomputer  clock  explosion  and  range  broadening.  Even  top-tier  clocks
@@ -1076,7 +1125,7 @@ Core count sustained  exponential increase.  Although top-tier  core count still
 increases, range  broadening around  2012 can be  explained by  introduction and
 ubiquity of accelerator cores on all tiers.
 
-#+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_total_cores.pdf" :width 17.5 :height 7 :exports both :eval no-export
+#+begin_SRC R :results graphics output :session *R* :file "./img/top500_total_cores.pdf" :width 17.5 :height 7 :exports both :eval no-export
 library(ggplot2)
 library(tidyr)
 
@@ -1120,7 +1169,7 @@ ggplot() +
 #+end_SRC
 
 #+RESULTS:
-[[file:../res/top500_graphs/top500_total_cores.pdf]]
+[[file:./img/top500_total_cores.pdf]]
 ****** RPeak and RMax
 Sustained increase of theoretical peak and  achieved max performance on HPL and,
 most recently,  on the  HPCG benchmark.  RPeak does not  guarantee rank  on some
@@ -2045,12 +2094,12 @@ optimization  for  specific hardware,  under  a  set  of /constraints/,  is  nam
 /autotuning/.
 
 Improving performance  also relies on gathering  application-specific knowledge,
-which requires extensive experimental costs  since, with the exception of linear
+which entails extensive  experimental costs since, with the  exception of linear
 algebra  routines,  theoretical  peak  performance is  not  always  a  reachable
-comparison  baseline.  When  adapting  methods  for  autotuning,  we  must  face
-challenges emerging from  practical properties such as restricted  time and cost
+comparison  baseline.   When  adapting  methods  for  autotuning  we  must  face
+challenges emerging from practical properties,  such as restricted time and cost
 budgets,  constraints  on  feasible  parameter  values,  and  the  need  to  mix
-/categorical/, /continuous/, and /discrete/ parameters.  To achieve useful results, we
+/categorical/, /continuous/, and /discrete/ parameters.  To achieve useful results we
 must also  choose methods  that make hypotheses  compatible with  problem search
 spaces,  such  as  the  existence  of /discoverable/,  or  at  least  /exploitable/,
 relationships between parameters and performance.  Choosing an autotuning method
@@ -2074,10 +2123,10 @@ This  chapter aims  to substantiate  the claim  that autotuning  methods have  a
 fundamental  role to  play on  the future  of program  performance optimization,
 arguing  that the  value and  the difficulty  of the  efforts to  carefully tune
 software became more apparent ever since advances in hardware stopped leading to
-effortless,   at   least   from  the   programmer's   perspective,   performance
-improvements.  The  following sections  discuss the  historical context  for the
-changes in trends on computer  architecture, and characterizes the search spaces
-found when optimizing performance on different domains.
+effortless performance improvements, at least from the programmer's perspective.
+The following sections discuss the historical  context for the changes in trends
+on  computer  architecture,  and  characterize  the  search  spaces  found  when
+optimizing performance on different domains.
 
 ** Historical Trends in Hardware Design
 The physical  constraints imposed  by technological  advances on  circuit design
@@ -2086,7 +2135,7 @@ floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
 practical and  economical need to fit  more computing power into  real estate is
 one  force for  innovation in  hardware design  that spans  its history,  and is
 echoed in  modern supercomputers,  such as  the /Summit/  from /Oak  Ridge National
-Laboratory/\nbsp{}\cite{olcf2020summit}, which also spans entire floors.
+Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 
 Figure\nbsp{}[[fig:trends]] highlights the unrelenting and so far successful pursuit
 of smaller transistor fabrication processes, and the resulting capability to fit
@@ -2127,27 +2176,59 @@ is  named  /Dark  Silicon/\nbsp{}\cite{esmaeilzadeh2011dark}, and  still  presen
 significant       challenges        to       hardware        designers       and
 programmers\nbsp{}\cite{venkataramani2015approximate,cheng2015core,henkel2015new}.
 
+The   /Top500/\nbsp{}\cite{top5002020list}   list    gathers   information   about
+commercially available  supercomputers, and ranks  them by their  performance on
+the              /LINPACK/             benchmark\nbsp{}\cite{dongarra2003linpack}.
+Figure\nbsp{}[[fig:rmax-rpeak]] shows the peak  theoretical performance $RPeak$, and
+the maximum performance achieved on the LINPACK benchmark $RMax$, in $Tflops/s$,
+for the  top-ranked supercomputers on  TOP500.  Despite the  smaller performance
+gains from  hardware design that are  to be expected for  post-Dennard's scaling
+processors, the increase  in computer performance has  continued its exponential
+climb, sustained mostly by software improvements.
+
 #+NAME: fig:rmax-rpeak
-#+CAPTION: Theoretical and achieved performance for the top-ranked supercomputer
-#+CAPTION: on the TOP500 list (ref)
+#+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
+#+CAPTION: achieved \textit{RMax} performance for
+#+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list}
 #+ATTR_LATEX: :width \textwidth
 [[file:./img/top500_rmax_rpeak.pdf]]
 
-#+latex: \todo[inline]{Citation and discussion for RMax/RPeak figure}
+Although hardware  accelerators, such  as GPUs  and FPGAs,  have also  helped to
+sustain exponential  performance increase, their use  is not an escape  from the
+fundamental    scaling   constraints    imposed    by   current    semiconductor
+design.  Figure\nbsp{}[[fig:acc-cores]]   shows  the   increase  in   processor  and
+accelerator core count on the top-ranked  supercomputers on Top500.  Half of the
+top-ranked  supercomputers in  the last  decade  had accelerator  cores, and  of
+those, all  had around  ten times  more accelerator  than processor  cores.  The
+apparent stagnation  of core count  in supercomputers  of the last  decade, even
+considering accelerators, strengthens the case for software optimization.
 
 Advances in hardware  design are currently not capable  of providing performance
 improvements  via frequency  scaling  without dissipating  more  power than  the
-processor  was  designed to  support,  risking  damages. From  the  programmer's
+processor  was designed  to  support, risking  damages.   From the  programmer's
 perspective,  effortless  performance  improvements  over  time  have  not  been
 expected for  quite some time,  and the key  to sustaining historical  trends in
-performance  scaling lies  in  hardware  accelerators such  as  GPUs and  FPGAs,
-parallel  and distributed  programming  libraries, and  fine  tuning of  several
-stages of the software stack, from instruction selection to the layout of neural
-networks.
+performance  scaling lies  in  hardware accelerators,  parallel and  distributed
+programming libraries, and fine tuning of  several stages of the software stack,
+from instruction selection to the layout of neural networks.
+
+#+NAME: fig:acc-cores
+#+CAPTION: Processor and accelerator core count
+#+CAPTION: in supercomputers ranked 1^{st} on
+#+CAPTION: TOP500\nbsp{}\cite{top5002020list}.
+#+CAPTION: Core  count trends for supercomputers are not
+#+CAPTION: necessarily bound to processor trends observed on
+#+CAPTION: Figure\nbsp{}\ref{fig:trends}.
+#+ATTR_LATEX: :width \textwidth
+[[file:./img/top500_accelerator_cores.pdf]]
 
 #+latex: \todo[inline]{Hook paragraph for next section}
 
 ** Characterizing Search Spaces from Autotuning Problems
+#+ATTR_LATEX: :width .7\textwidth
+#+CAPTION: A search space defined for loop blocking and unrolling
+#+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}
+[[file:img/seymour2008comparison.pdf]]
 
 #+ATTR_LATEX: :width \textwidth
 #+CAPTION: Dimension and search space size for autotuning problems from different domains
@@ -2155,10 +2236,6 @@ networks.
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
 
-#+ATTR_LATEX: :width .7\textwidth
-#+CAPTION: A search space defined for loop blocking and unrolling
-#+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}
-[[file:img/seymour2008comparison.pdf]]
 
 ** Thesis Contributions
 

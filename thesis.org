@@ -43,10 +43,11 @@
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
-#+LATEX_HEADER: \usepackage{sourcecodepro}
+# #+LATEX_HEADER: \usepackage{sourcecodepro}
 # #+LATEX_HEADER: \usepackage{mathpazo}
 #+LATEX_HEADER: \usepackage{newpxtext}
 #+LATEX_HEADER: \usepackage{newpxmath}
+#+LATEX_HEADER: \usepackage{DejaVuSansMono}
 #+LATEX_HEADER: \usepackage{forest}
 #+LATEX_HEADER: \usepackage{titling}
 #+LATEX_HEADER: \usepackage{rotating}
@@ -87,10 +88,10 @@
 #+LATEX_HEADER: }[keywords,comments,strings]%
 #+LATEX_HEADER: \lstset{ %
 #+LATEX_HEADER:   backgroundcolor={},
-#+LATEX_HEADER:   basicstyle=\ttfamily\scriptsize,
+#+LATEX_HEADER:   basicstyle=\ttfamily\footnotesize,
 #+LATEX_HEADER:   breakatwhitespace=true,
 #+LATEX_HEADER:   breaklines=true,
-#+LATEX_HEADER:   captionpos=n,
+#+LATEX_HEADER:   captionpos=b,
 # #+LATEX_HEADER:   escapeinside={\%*}{*)},
 #+LATEX_HEADER:   extendedchars=true,
 #+LATEX_HEADER:   frame=n,
@@ -1931,6 +1932,8 @@ cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
 
 **** Plots
 #+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
+
+
 library(ggplot2)
 library(dplyr)
 library(scales)
@@ -2073,6 +2076,820 @@ p2 * p1
 
 #+RESULTS:
 [[file:./img/search_spaces.pdf]]
+*** Loop Blocking and Unrolling
+**** First try
+:PROPERTIES:
+:EXPORT_FILE_NAME: blocking_unrolling.pdf
+:END:
+
+#+begin_src latex :fit true
+% Export this heading with C-c C-e C-s C-b l p
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}
+\draw[red] (0,0) circle (2cm);
+\end{tikzpicture}
+\end{document}
+#+end_src try with export
+**** Arnaud's tip with src blocks
+#+begin_SRC emacs-lisp :eval no-export
+(setq org-format-latex-header "\\documentclass{standalone}
+\\usepackage[usenames]{color}
+[PACKAGES]
+[DEFAULT-PACKAGES]
+\\pagestyle{empty} % do not remove")
+#+end_SRC
+
+#+RESULTS:
+: \documentclass{standalone}
+: \usepackage[usenames]{color}
+: [PACKAGES]
+: [DEFAULT-PACKAGES]
+: \pagestyle{empty} % do not remove
+
+#+HEADER: :headers '("\\usepackage{tikz}")
+#+HEADER: :exports results :results raw
+#+HEADER: :file test.pdf
+#+begin_src latex :eval no-export
+\begin{tikzpicture}
+\draw[blue] (0,0) circle (2cm);
+\end{tikzpicture}
+#+end_src
+**** ggplot
+***** Setup
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(extrafont)
+loadfonts(device = "postscript")
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+Registering fonts with R
+
+Akaash already registered with postscriptFonts().
+AkrutiMal1 already registered with postscriptFonts().
+AkrutiMal2 already registered with postscriptFonts().
+AkrutiTml1 already registered with postscriptFonts().
+AkrutiTml2 already registered with postscriptFonts().
+Anonymice Powerline already registered with postscriptFonts().
+Arimo for Powerline already registered with postscriptFonts().
+Bitstream Vera Sans already registered with postscriptFonts().
+Bitstream Vera Sans Mono already registered with postscriptFonts().
+Bitstream Vera Serif already registered with postscriptFonts().
+Cousine for Powerline already registered with postscriptFonts().
+IBM 3270 already registered with postscriptFonts().
+IBM 3270 Narrow already registered with postscriptFonts().
+IBM 3270 Semi-Narrow already registered with postscriptFonts().
+DejaVu Math TeX Gyre already registered with postscriptFonts().
+DejaVu Sans already registered with postscriptFonts().
+DejaVu Sans Light already registered with postscriptFonts().
+DejaVu Sans Condensed already registered with postscriptFonts().
+DejaVu Sans Mono already registered with postscriptFonts().
+DejaVu Sans Mono for Powerline already registered with postscriptFonts().
+DejaVu Serif already registered with postscriptFonts().
+DejaVu Serif Condensed already registered with postscriptFonts().
+Droid Arabic Kufi already registered with postscriptFonts().
+Droid Arabic Naskh already registered with postscriptFonts().
+Droid Naskh Shift Alt already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Droid Sans. Skipping setup for this font.
+Droid Sans Arabic already registered with postscriptFonts().
+Droid Sans Armenian already registered with postscriptFonts().
+Droid Sans Devanagari already registered with postscriptFonts().
+Droid Sans Ethiopic already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Droid Sans Fallback. Skipping setup for this font.
+Droid Sans Georgian already registered with postscriptFonts().
+Droid Sans Hebrew already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Droid Sans Mono. Skipping setup for this font.
+Droid Sans Mono Dotted for Powerline already registered with postscriptFonts().
+Droid Sans Mono Slashed for Powerline already registered with postscriptFonts().
+Droid Sans Tamil already registered with postscriptFonts().
+Droid Sans Thai already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Droid Serif. Skipping setup for this font.
+Font Awesome 5 Brands Regular already registered with postscriptFonts().
+Font Awesome 5 Free Regular already registered with postscriptFonts().
+Font Awesome 5 Free Solid already registered with postscriptFonts().
+Gargi-1.2b already registered with postscriptFonts().
+Goha-Tibeb Zemen already registered with postscriptFonts().
+Go Mono for Powerline already registered with postscriptFonts().
+More than one version of regular/bold/italic found for GurbaniBoliLite. Skipping setup for this font.
+Hack already registered with postscriptFonts().
+Inconsolata Black already registered with postscriptFonts().
+Inconsolata already registered with postscriptFonts().
+No regular (non-bold, non-italic) version of Inconsolata for Powerline. Skipping setup for this font.
+Inconsolata Condensed already registered with postscriptFonts().
+Inconsolata Condensed Black already registered with postscriptFonts().
+Inconsolata Condensed Bold already registered with postscriptFonts().
+Inconsolata Condensed ExtraBold already registered with postscriptFonts().
+Inconsolata Condensed ExtraLight already registered with postscriptFonts().
+Inconsolata Condensed Light already registered with postscriptFonts().
+Inconsolata Condensed Medium already registered with postscriptFonts().
+Inconsolata Condensed SemiBold already registered with postscriptFonts().
+Inconsolata Expanded already registered with postscriptFonts().
+Inconsolata Expanded Black already registered with postscriptFonts().
+Inconsolata Expanded Bold already registered with postscriptFonts().
+Inconsolata Expanded ExtraBold already registered with postscriptFonts().
+Inconsolata Expanded ExtraLight already registered with postscriptFonts().
+Inconsolata Expanded Light already registered with postscriptFonts().
+Inconsolata Expanded Medium already registered with postscriptFonts().
+Inconsolata Expanded SemiBold already registered with postscriptFonts().
+Inconsolata ExtraBold already registered with postscriptFonts().
+Inconsolata Extra Condensed already registered with postscriptFonts().
+Inconsolata Extra Condensed Black already registered with postscriptFonts().
+Inconsolata Extra Condensed Bold already registered with postscriptFonts().
+Inconsolata Extra Condensed ExtraBold already registered with postscriptFonts().
+Inconsolata Extra Condensed ExtraLight already registered with postscriptFonts().
+Inconsolata Extra Condensed Light already registered with postscriptFonts().
+Inconsolata Extra Condensed Medium already registered with postscriptFonts().
+Inconsolata Extra Condensed SemiBold already registered with postscriptFonts().
+Inconsolata Extra Expanded already registered with postscriptFonts().
+Inconsolata Extra Expanded Black already registered with postscriptFonts().
+Inconsolata Extra Expanded Bold already registered with postscriptFonts().
+Inconsolata Extra Expanded ExtraBold already registered with postscriptFonts().
+Inconsolata Extra Expanded ExtraLight already registered with postscriptFonts().
+Inconsolata Extra Expanded Light already registered with postscriptFonts().
+Inconsolata Extra Expanded Medium already registered with postscriptFonts().
+Inconsolata Extra Expanded SemiBold already registered with postscriptFonts().
+Inconsolata ExtraLight already registered with postscriptFonts().
+Inconsolata Light already registered with postscriptFonts().
+Inconsolata Medium already registered with postscriptFonts().
+Inconsolata SemiBold already registered with postscriptFonts().
+Inconsolata Semi Condensed already registered with postscriptFonts().
+Inconsolata Semi Condensed Black already registered with postscriptFonts().
+Inconsolata Semi Condensed Bold already registered with postscriptFonts().
+Inconsolata Semi Condensed ExtraBold already registered with postscriptFonts().
+Inconsolata Semi Condensed ExtraLight already registered with postscriptFonts().
+Inconsolata Semi Condensed Light already registered with postscriptFonts().
+Inconsolata Semi Condensed Medium already registered with postscriptFonts().
+Inconsolata Semi Condensed SemiBold already registered with postscriptFonts().
+Inconsolata Semi Expanded already registered with postscriptFonts().
+Inconsolata Semi Expanded Black already registered with postscriptFonts().
+Inconsolata Semi Expanded Bold already registered with postscriptFonts().
+Inconsolata Semi Expanded ExtraBold already registered with postscriptFonts().
+Inconsolata Semi Expanded ExtraLight already registered with postscriptFonts().
+Inconsolata Semi Expanded Light already registered with postscriptFonts().
+Inconsolata Semi Expanded Medium already registered with postscriptFonts().
+Inconsolata Semi Expanded SemiBold already registered with postscriptFonts().
+Inconsolata Ultra Condensed already registered with postscriptFonts().
+Inconsolata Ultra Condensed Black already registered with postscriptFonts().
+Inconsolata Ultra Condensed Bold already registered with postscriptFonts().
+Inconsolata Ultra Condensed ExtraBold already registered with postscriptFonts().
+Inconsolata Ultra Condensed ExtraLight already registered with postscriptFonts().
+Inconsolata Ultra Condensed Light already registered with postscriptFonts().
+Inconsolata Ultra Condensed Medium already registered with postscriptFonts().
+Inconsolata Ultra Condensed SemiBold already registered with postscriptFonts().
+Inconsolata Ultra Expanded already registered with postscriptFonts().
+Inconsolata Ultra Expanded Black already registered with postscriptFonts().
+Inconsolata Ultra Expanded Bold already registered with postscriptFonts().
+Inconsolata Ultra Expanded ExtraBold already registered with postscriptFonts().
+Inconsolata Ultra Expanded ExtraLight already registered with postscriptFonts().
+Inconsolata Ultra Expanded Light already registered with postscriptFonts().
+Inconsolata Ultra Expanded Medium already registered with postscriptFonts().
+Inconsolata Ultra Expanded SemiBold already registered with postscriptFonts().
+Liberation Mono already registered with postscriptFonts().
+Liberation Sans already registered with postscriptFonts().
+Liberation Serif already registered with postscriptFonts().
+Ligconsolata already registered with postscriptFonts().
+Likhan already registered with postscriptFonts().
+Literation Mono Powerline already registered with postscriptFonts().
+malayalam already registered with postscriptFonts().
+MalOtf already registered with postscriptFonts().
+Meslo LG L DZ for Powerline already registered with postscriptFonts().
+Meslo LG L for Powerline already registered with postscriptFonts().
+Meslo LG M DZ for Powerline already registered with postscriptFonts().
+Meslo LG M for Powerline already registered with postscriptFonts().
+Meslo LG S DZ for Powerline already registered with postscriptFonts().
+Meslo LG S for Powerline already registered with postscriptFonts().
+More than one version of regular/bold/italic found for monofur for Powerline. Skipping setup for this font.
+More than one version of regular/bold/italic found for Mukti Narrow. Skipping setup for this font.
+Noto Kufi Arabic already registered with postscriptFonts().
+Noto Kufi Arabic Medium already registered with postscriptFonts().
+Noto Kufi Arabic Semi bold already registered with postscriptFonts().
+Noto Mono for Powerline already registered with postscriptFonts().
+Noto Music already registered with postscriptFonts().
+Noto Naskh Arabic already registered with postscriptFonts().
+Noto Naskh Arabic UI already registered with postscriptFonts().
+Noto Nastaliq Urdu already registered with postscriptFonts().
+Noto Sans Black already registered with postscriptFonts().
+Noto Sans already registered with postscriptFonts().
+Noto Sans Light already registered with postscriptFonts().
+Noto Sans Medium already registered with postscriptFonts().
+Noto Sans Thin already registered with postscriptFonts().
+Noto Sans Adlam already registered with postscriptFonts().
+Noto Sans Adlam Unjoined already registered with postscriptFonts().
+Noto Sans AnatoHiero already registered with postscriptFonts().
+Noto Sans Arabic Blk already registered with postscriptFonts().
+Noto Sans Arabic already registered with postscriptFonts().
+Noto Sans Arabic Light already registered with postscriptFonts().
+Noto Sans Arabic Med already registered with postscriptFonts().
+Noto Sans Arabic Thin already registered with postscriptFonts().
+Noto Sans Arabic UI Bk already registered with postscriptFonts().
+Noto Sans Arabic UI already registered with postscriptFonts().
+Noto Sans Arabic UI Lt already registered with postscriptFonts().
+Noto Sans Arabic UI Md already registered with postscriptFonts().
+Noto Sans Arabic UI Th already registered with postscriptFonts().
+Noto Sans Armenian Blk already registered with postscriptFonts().
+Noto Sans Armenian already registered with postscriptFonts().
+Noto Sans Armenian Light already registered with postscriptFonts().
+Noto Sans Armenian Med already registered with postscriptFonts().
+Noto Sans Armenian Thin already registered with postscriptFonts().
+Noto Sans Avestan already registered with postscriptFonts().
+Noto Sans Bamum already registered with postscriptFonts().
+Noto Sans Bassa Vah already registered with postscriptFonts().
+Noto Sans Batak already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Bengali Blk. Skipping setup for this font.
+Noto Sans Bengali already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Bengali Light. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Bengali Med. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Bengali Thin. Skipping setup for this font.
+Noto Sans Bengali UI already registered with postscriptFonts().
+Noto Sans Bhaiksuki already registered with postscriptFonts().
+Noto Sans Brahmi already registered with postscriptFonts().
+Noto Sans Buginese already registered with postscriptFonts().
+Noto Sans Buhid already registered with postscriptFonts().
+Noto Sans CanAborig Bk already registered with postscriptFonts().
+Noto Sans CanAborig already registered with postscriptFonts().
+Noto Sans CanAborig Lt already registered with postscriptFonts().
+Noto Sans CanAborig Md already registered with postscriptFonts().
+Noto Sans CanAborig Th already registered with postscriptFonts().
+Noto Sans Carian already registered with postscriptFonts().
+Noto Sans CaucAlban already registered with postscriptFonts().
+Noto Sans Chakma already registered with postscriptFonts().
+Noto Sans Cham Blk already registered with postscriptFonts().
+Noto Sans Cham already registered with postscriptFonts().
+Noto Sans Cham Light already registered with postscriptFonts().
+Noto Sans Cham Med already registered with postscriptFonts().
+Noto Sans Cham Thin already registered with postscriptFonts().
+Noto Sans Cherokee Blk already registered with postscriptFonts().
+Noto Sans Cherokee already registered with postscriptFonts().
+Noto Sans Cherokee Light already registered with postscriptFonts().
+Noto Sans Cherokee Med already registered with postscriptFonts().
+Noto Sans Cherokee Thin already registered with postscriptFonts().
+Noto Sans Coptic already registered with postscriptFonts().
+Noto Sans Cuneiform already registered with postscriptFonts().
+Noto Sans Cypriot already registered with postscriptFonts().
+Noto Sans Deseret already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Devanagari Bk. Skipping setup for this font.
+Noto Sans Devanagari already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Devanagari Lt. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Devanagari Md. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Devanagari Th. Skipping setup for this font.
+Noto Sans Devanagari UI already registered with postscriptFonts().
+Noto Sans Display Black already registered with postscriptFonts().
+Noto Sans Display already registered with postscriptFonts().
+Noto Sans Display Light already registered with postscriptFonts().
+Noto Sans Display Medium already registered with postscriptFonts().
+Noto Sans Display Thin already registered with postscriptFonts().
+Noto Sans Duployan already registered with postscriptFonts().
+Noto Sans EgyptHiero already registered with postscriptFonts().
+Noto Sans Elbasan already registered with postscriptFonts().
+Noto Sans Ethiopic Blk already registered with postscriptFonts().
+Noto Sans Ethiopic already registered with postscriptFonts().
+Noto Sans Ethiopic Light already registered with postscriptFonts().
+Noto Sans Ethiopic Med already registered with postscriptFonts().
+Noto Sans Ethiopic Thin already registered with postscriptFonts().
+Noto Sans Georgian Blk already registered with postscriptFonts().
+Noto Sans Georgian already registered with postscriptFonts().
+Noto Sans Georgian Light already registered with postscriptFonts().
+Noto Sans Georgian Med already registered with postscriptFonts().
+Noto Sans Georgian Thin already registered with postscriptFonts().
+Noto Sans Glagolitic already registered with postscriptFonts().
+Noto Sans Gothic already registered with postscriptFonts().
+Noto Sans Grantha already registered with postscriptFonts().
+Noto Sans Gujarati already registered with postscriptFonts().
+Noto Sans Gujarati UI already registered with postscriptFonts().
+Noto Sans Gurmukhi Black already registered with postscriptFonts().
+Noto Sans Gurmukhi already registered with postscriptFonts().
+Noto Sans Gurmukhi Light already registered with postscriptFonts().
+Noto Sans Gurmukhi Medium already registered with postscriptFonts().
+Noto Sans Gurmukhi Thin already registered with postscriptFonts().
+Noto Sans Gurmukhi UI Black already registered with postscriptFonts().
+Noto Sans Gurmukhi UI already registered with postscriptFonts().
+Noto Sans Gurmukhi UI Light already registered with postscriptFonts().
+Noto Sans Gurmukhi UI Medium already registered with postscriptFonts().
+Noto Sans Gurmukhi UI Thin already registered with postscriptFonts().
+Noto Sans HanifiRohg already registered with postscriptFonts().
+Noto Sans Hanunoo already registered with postscriptFonts().
+Noto Sans Hatran already registered with postscriptFonts().
+Noto Sans Hebrew Blk already registered with postscriptFonts().
+Noto Sans Hebrew already registered with postscriptFonts().
+Noto Sans Hebrew Light already registered with postscriptFonts().
+Noto Sans Hebrew Med already registered with postscriptFonts().
+Noto Sans Hebrew Thin already registered with postscriptFonts().
+Noto Sans ImpAramaic already registered with postscriptFonts().
+Noto Sans Indic Siyaq Numbers already registered with postscriptFonts().
+Noto Sans InsPahlavi already registered with postscriptFonts().
+Noto Sans InsParthi already registered with postscriptFonts().
+Noto Sans Javanese already registered with postscriptFonts().
+Noto Sans Kaithi already registered with postscriptFonts().
+Noto Sans Kannada Black already registered with postscriptFonts().
+Noto Sans Kannada already registered with postscriptFonts().
+Noto Sans Kannada Light already registered with postscriptFonts().
+Noto Sans Kannada Medium already registered with postscriptFonts().
+Noto Sans Kannada Thin already registered with postscriptFonts().
+Noto Sans Kannada UI Black already registered with postscriptFonts().
+Noto Sans Kannada UI already registered with postscriptFonts().
+Noto Sans Kannada UI Light already registered with postscriptFonts().
+Noto Sans Kannada UI Medium already registered with postscriptFonts().
+Noto Sans Kannada UI Thin already registered with postscriptFonts().
+Noto Sans Kayah Li already registered with postscriptFonts().
+Noto Sans Kharoshthi already registered with postscriptFonts().
+Noto Sans Khmer Black already registered with postscriptFonts().
+Noto Sans Khmer already registered with postscriptFonts().
+Noto Sans Khmer Light already registered with postscriptFonts().
+Noto Sans Khmer Medium already registered with postscriptFonts().
+Noto Sans Khmer Thin already registered with postscriptFonts().
+Noto Sans Khmer UI Black already registered with postscriptFonts().
+Noto Sans Khmer UI already registered with postscriptFonts().
+Noto Sans Khmer UI Light already registered with postscriptFonts().
+Noto Sans Khmer UI Medium already registered with postscriptFonts().
+Noto Sans Khmer UI Thin already registered with postscriptFonts().
+Noto Sans Khojki already registered with postscriptFonts().
+Noto Sans Khudawadi already registered with postscriptFonts().
+Noto Sans Lao Blk already registered with postscriptFonts().
+Noto Sans Lao already registered with postscriptFonts().
+Noto Sans Lao Light already registered with postscriptFonts().
+Noto Sans Lao Med already registered with postscriptFonts().
+Noto Sans Lao Thin already registered with postscriptFonts().
+Noto Sans Lao UI Blk already registered with postscriptFonts().
+Noto Sans Lao UI already registered with postscriptFonts().
+Noto Sans Lao UI Light already registered with postscriptFonts().
+Noto Sans Lao UI Med already registered with postscriptFonts().
+Noto Sans Lao UI Thin already registered with postscriptFonts().
+Noto Sans Lepcha already registered with postscriptFonts().
+Noto Sans Limbu already registered with postscriptFonts().
+Noto Sans Linear A already registered with postscriptFonts().
+Noto Sans Linear B already registered with postscriptFonts().
+Noto Sans Lisu already registered with postscriptFonts().
+Noto Sans Lycian already registered with postscriptFonts().
+Noto Sans Lydian already registered with postscriptFonts().
+Noto Sans Mahajani already registered with postscriptFonts().
+Noto Sans Malayalam Black already registered with postscriptFonts().
+Noto Sans Malayalam already registered with postscriptFonts().
+Noto Sans Malayalam Light already registered with postscriptFonts().
+Noto Sans Malayalam Medium already registered with postscriptFonts().
+Noto Sans Malayalam Thin already registered with postscriptFonts().
+Noto Sans Malayalam UI Black already registered with postscriptFonts().
+Noto Sans Malayalam UI already registered with postscriptFonts().
+Noto Sans Malayalam UI Light already registered with postscriptFonts().
+Noto Sans Malayalam UI Medium already registered with postscriptFonts().
+Noto Sans Malayalam UI Thin already registered with postscriptFonts().
+Noto Sans Mandaic already registered with postscriptFonts().
+Noto Sans Manichaean already registered with postscriptFonts().
+Noto Sans Marchen already registered with postscriptFonts().
+Noto Sans Math already registered with postscriptFonts().
+Noto Sans Mayan Numerals already registered with postscriptFonts().
+Noto Sans MeeteiMayek already registered with postscriptFonts().
+Noto Sans Mende Kikakui already registered with postscriptFonts().
+Noto Sans Meroitic already registered with postscriptFonts().
+Noto Sans Miao already registered with postscriptFonts().
+Noto Sans Modi already registered with postscriptFonts().
+Noto Sans Mongolian already registered with postscriptFonts().
+Noto Sans Mono Black already registered with postscriptFonts().
+Noto Sans Mono already registered with postscriptFonts().
+Noto Sans Mono Light already registered with postscriptFonts().
+Noto Sans Mono Medium already registered with postscriptFonts().
+Noto Sans Mono Thin already registered with postscriptFonts().
+Noto Sans Mro already registered with postscriptFonts().
+Noto Sans Multani already registered with postscriptFonts().
+Noto Sans Myanmar Blk already registered with postscriptFonts().
+Noto Sans Myanmar already registered with postscriptFonts().
+Noto Sans Myanmar Light already registered with postscriptFonts().
+Noto Sans Myanmar Med already registered with postscriptFonts().
+Noto Sans Myanmar Thin already registered with postscriptFonts().
+Noto Sans Myanmar UI Black already registered with postscriptFonts().
+Noto Sans Myanmar UI already registered with postscriptFonts().
+Noto Sans Myanmar UI Light already registered with postscriptFonts().
+Noto Sans Myanmar UI Medium already registered with postscriptFonts().
+Noto Sans Myanmar UI Thin already registered with postscriptFonts().
+Noto Sans Nabataean already registered with postscriptFonts().
+Noto Sans Newa already registered with postscriptFonts().
+Noto Sans NewTaiLue already registered with postscriptFonts().
+Noto Sans N'Ko already registered with postscriptFonts().
+Noto Sans Ogham already registered with postscriptFonts().
+Noto Sans Ol Chiki already registered with postscriptFonts().
+Noto Sans OldHung already registered with postscriptFonts().
+No regular (non-bold, non-italic) version of Noto Sans Old Italic. Skipping setup for this font.
+Noto Sans OldNorArab already registered with postscriptFonts().
+Noto Sans Old Permic already registered with postscriptFonts().
+Noto Sans OldPersian already registered with postscriptFonts().
+Noto Sans OldSogdian already registered with postscriptFonts().
+Noto Sans OldSouArab already registered with postscriptFonts().
+Noto Sans Old Turkic already registered with postscriptFonts().
+Noto Sans Oriya already registered with postscriptFonts().
+Noto Sans Oriya UI already registered with postscriptFonts().
+Noto Sans Osage already registered with postscriptFonts().
+Noto Sans Osmanya already registered with postscriptFonts().
+Noto Sans Pahawh Hmong already registered with postscriptFonts().
+Noto Sans Palmyrene already registered with postscriptFonts().
+Noto Sans PauCinHau already registered with postscriptFonts().
+Noto Sans PhagsPa already registered with postscriptFonts().
+Noto Sans Phoenician already registered with postscriptFonts().
+Noto Sans PsaPahlavi already registered with postscriptFonts().
+Noto Sans Rejang already registered with postscriptFonts().
+Noto Sans Runic already registered with postscriptFonts().
+Noto Sans Samaritan already registered with postscriptFonts().
+Noto Sans Saurashtra already registered with postscriptFonts().
+Noto Sans Sharada already registered with postscriptFonts().
+Noto Sans Shavian already registered with postscriptFonts().
+Noto Sans Siddham already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Sinhala Blk. Skipping setup for this font.
+Noto Sans Sinhala already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Sinhala Light. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Sinhala Med. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Sinhala Thin. Skipping setup for this font.
+Noto Sans Sinhala UI already registered with postscriptFonts().
+Noto Sans SoraSomp already registered with postscriptFonts().
+Noto Sans Sundanese already registered with postscriptFonts().
+Noto Sans Syloti Nagri already registered with postscriptFonts().
+Noto Sans Symbols Blk already registered with postscriptFonts().
+Noto Sans Symbols already registered with postscriptFonts().
+Noto Sans Symbols Light already registered with postscriptFonts().
+Noto Sans Symbols Med already registered with postscriptFonts().
+Noto Sans Symbols Thin already registered with postscriptFonts().
+Noto Sans Symbols2 already registered with postscriptFonts().
+Noto Sans Syriac Black already registered with postscriptFonts().
+Noto Sans Syriac already registered with postscriptFonts().
+Noto Sans Syriac Thin already registered with postscriptFonts().
+Noto Sans Tagalog already registered with postscriptFonts().
+Noto Sans Tagbanwa already registered with postscriptFonts().
+Noto Sans Tai Le already registered with postscriptFonts().
+Noto Sans Tai Tham already registered with postscriptFonts().
+Noto Sans Tai Viet already registered with postscriptFonts().
+Noto Sans Takri already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Tamil Blk. Skipping setup for this font.
+Noto Sans Tamil already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Noto Sans Tamil Light. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Tamil Med. Skipping setup for this font.
+More than one version of regular/bold/italic found for Noto Sans Tamil Thin. Skipping setup for this font.
+Noto Sans Tamil Supplement already registered with postscriptFonts().
+Noto Sans Tamil UI already registered with postscriptFonts().
+Noto Sans Telugu Black already registered with postscriptFonts().
+Noto Sans Telugu already registered with postscriptFonts().
+Noto Sans Telugu Light already registered with postscriptFonts().
+Noto Sans Telugu Medium already registered with postscriptFonts().
+Noto Sans Telugu Thin already registered with postscriptFonts().
+Noto Sans Telugu UI Black already registered with postscriptFonts().
+Noto Sans Telugu UI already registered with postscriptFonts().
+Noto Sans Telugu UI Light already registered with postscriptFonts().
+Noto Sans Telugu UI Medium already registered with postscriptFonts().
+Noto Sans Telugu UI Thin already registered with postscriptFonts().
+Noto Sans Thaana Black already registered with postscriptFonts().
+Noto Sans Thaana already registered with postscriptFonts().
+Noto Sans Thaana Light already registered with postscriptFonts().
+Noto Sans Thaana Medium already registered with postscriptFonts().
+Noto Sans Thaana Thin already registered with postscriptFonts().
+Noto Sans Thai Blk already registered with postscriptFonts().
+Noto Sans Thai already registered with postscriptFonts().
+Noto Sans Thai Light already registered with postscriptFonts().
+Noto Sans Thai Med already registered with postscriptFonts().
+Noto Sans Thai Thin already registered with postscriptFonts().
+Noto Sans Thai UI Blk already registered with postscriptFonts().
+Noto Sans Thai UI already registered with postscriptFonts().
+Noto Sans Thai UI Light already registered with postscriptFonts().
+Noto Sans Thai UI Med already registered with postscriptFonts().
+Noto Sans Thai UI Thin already registered with postscriptFonts().
+Noto Sans Tibetan already registered with postscriptFonts().
+Noto Sans Tifinagh already registered with postscriptFonts().
+Noto Sans Tirhuta already registered with postscriptFonts().
+Noto Sans Ugaritic already registered with postscriptFonts().
+Noto Sans Vai already registered with postscriptFonts().
+Noto Sans WarangCiti already registered with postscriptFonts().
+Noto Sans Yi already registered with postscriptFonts().
+Noto Serif Black already registered with postscriptFonts().
+Noto Serif already registered with postscriptFonts().
+Noto Serif Light already registered with postscriptFonts().
+Noto Serif Medium already registered with postscriptFonts().
+Noto Serif Thin already registered with postscriptFonts().
+Noto Serif Ahom already registered with postscriptFonts().
+Noto Serif Armenian Bk already registered with postscriptFonts().
+Noto Serif Armenian already registered with postscriptFonts().
+Noto Serif Armenian Lt already registered with postscriptFonts().
+Noto Serif Armenian Md already registered with postscriptFonts().
+Noto Serif Armenian Th already registered with postscriptFonts().
+Noto Serif Balinese already registered with postscriptFonts().
+Noto Serif Bengali Black already registered with postscriptFonts().
+Noto Serif Bengali already registered with postscriptFonts().
+Noto Serif Bengali Light already registered with postscriptFonts().
+Noto Serif Bengali Medium already registered with postscriptFonts().
+Noto Serif Bengali Thin already registered with postscriptFonts().
+Noto Serif Devanagari Black already registered with postscriptFonts().
+Noto Serif Devanagari already registered with postscriptFonts().
+Noto Serif Devanagari Light already registered with postscriptFonts().
+Noto Serif Devanagari Medium already registered with postscriptFonts().
+Noto Serif Devanagari Thin already registered with postscriptFonts().
+Noto Serif Display Black already registered with postscriptFonts().
+Noto Serif Display already registered with postscriptFonts().
+Noto Serif Display Light already registered with postscriptFonts().
+Noto Serif Display Medium already registered with postscriptFonts().
+Noto Serif Display Thin already registered with postscriptFonts().
+Noto Serif Dogra already registered with postscriptFonts().
+Noto Serif Ethiopic Bk already registered with postscriptFonts().
+Noto Serif Ethiopic already registered with postscriptFonts().
+Noto Serif Ethiopic Lt already registered with postscriptFonts().
+Noto Serif Ethiopic Md already registered with postscriptFonts().
+Noto Serif Ethiopic Th already registered with postscriptFonts().
+Noto Serif Georgian Bk already registered with postscriptFonts().
+Noto Serif Georgian already registered with postscriptFonts().
+Noto Serif Georgian Lt already registered with postscriptFonts().
+Noto Serif Georgian Md already registered with postscriptFonts().
+Noto Serif Georgian Th already registered with postscriptFonts().
+Noto Serif Gujarati Black already registered with postscriptFonts().
+Noto Serif Gujarati already registered with postscriptFonts().
+Noto Serif Gujarati Light already registered with postscriptFonts().
+Noto Serif Gujarati Medium already registered with postscriptFonts().
+Noto Serif Gujarati Thin already registered with postscriptFonts().
+Noto Serif Gurmukhi Black already registered with postscriptFonts().
+Noto Serif Gurmukhi already registered with postscriptFonts().
+Noto Serif Gurmukhi Light already registered with postscriptFonts().
+Noto Serif Gurmukhi Medium already registered with postscriptFonts().
+Noto Serif Gurmukhi Thin already registered with postscriptFonts().
+Noto Serif Hebrew Blk already registered with postscriptFonts().
+Noto Serif Hebrew already registered with postscriptFonts().
+Noto Serif Hebrew Light already registered with postscriptFonts().
+Noto Serif Hebrew Med already registered with postscriptFonts().
+Noto Serif Hebrew Thin already registered with postscriptFonts().
+Noto Serif Kannada Black already registered with postscriptFonts().
+Noto Serif Kannada already registered with postscriptFonts().
+Noto Serif Kannada Light already registered with postscriptFonts().
+Noto Serif Kannada Medium already registered with postscriptFonts().
+Noto Serif Kannada Thin already registered with postscriptFonts().
+Noto Serif Khmer Black already registered with postscriptFonts().
+Noto Serif Khmer already registered with postscriptFonts().
+Noto Serif Khmer Light already registered with postscriptFonts().
+Noto Serif Khmer Medium already registered with postscriptFonts().
+Noto Serif Khmer Thin already registered with postscriptFonts().
+Noto Serif Lao Blk already registered with postscriptFonts().
+Noto Serif Lao already registered with postscriptFonts().
+Noto Serif Lao Light already registered with postscriptFonts().
+Noto Serif Lao Med already registered with postscriptFonts().
+Noto Serif Lao Thin already registered with postscriptFonts().
+Noto Serif Malayalam Black already registered with postscriptFonts().
+Noto Serif Malayalam already registered with postscriptFonts().
+Noto Serif Malayalam Light already registered with postscriptFonts().
+Noto Serif Malayalam Medium already registered with postscriptFonts().
+Noto Serif Malayalam Thin already registered with postscriptFonts().
+Noto Serif Myanmar Blk already registered with postscriptFonts().
+Noto Serif Myanmar already registered with postscriptFonts().
+Noto Serif Myanmar Light already registered with postscriptFonts().
+Noto Serif Myanmar Med already registered with postscriptFonts().
+Noto Serif Myanmar Thin already registered with postscriptFonts().
+Noto Serif Sinhala Black already registered with postscriptFonts().
+Noto Serif Sinhala already registered with postscriptFonts().
+Noto Serif Sinhala Light already registered with postscriptFonts().
+Noto Serif Sinhala Medium already registered with postscriptFonts().
+Noto Serif Sinhala Thin already registered with postscriptFonts().
+Noto Serif Tamil Blk already registered with postscriptFonts().
+Noto Serif Tamil already registered with postscriptFonts().
+Noto Serif Tamil Light already registered with postscriptFonts().
+Noto Serif Tamil Med already registered with postscriptFonts().
+Noto Serif Tamil Thin already registered with postscriptFonts().
+No regular (non-bold, non-italic) version of NotoSerifTamilSlanted Black. Skipping setup for this font.
+No regular (non-bold, non-italic) version of NotoSerifTamilSlanted. Skipping setup for this font.
+No regular (non-bold, non-italic) version of NotoSerifTamilSlanted Light. Skipping setup for this font.
+No regular (non-bold, non-italic) version of NotoSerifTamilSlanted Medium. Skipping setup for this font.
+No regular (non-bold, non-italic) version of NotoSerifTamilSlanted Thin. Skipping setup for this font.
+Noto Serif Tangut already registered with postscriptFonts().
+Noto Serif Telugu Black already registered with postscriptFonts().
+Noto Serif Telugu already registered with postscriptFonts().
+Noto Serif Telugu Light already registered with postscriptFonts().
+Noto Serif Telugu Medium already registered with postscriptFonts().
+Noto Serif Telugu Thin already registered with postscriptFonts().
+Noto Serif Thai Blk already registered with postscriptFonts().
+Noto Serif Thai already registered with postscriptFonts().
+Noto Serif Thai Light already registered with postscriptFonts().
+Noto Serif Thai Med already registered with postscriptFonts().
+Noto Serif Thai Thin already registered with postscriptFonts().
+Noto Serif Tibetan Black already registered with postscriptFonts().
+Noto Serif Tibetan already registered with postscriptFonts().
+Noto Serif Tibetan Light already registered with postscriptFonts().
+Noto Serif Tibetan Medium already registered with postscriptFonts().
+Noto Serif Tibetan Thin already registered with postscriptFonts().
+NovaMono for Powerline already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Nunito. Skipping setup for this font.
+orya already registered with postscriptFonts().
+More than one version of regular/bold/italic found for padmaa. Skipping setup for this font.
+Pothana2000 already registered with postscriptFonts().
+ProFont for Powerline already registered with postscriptFonts().
+More than one version of regular/bold/italic found for Roboto. Skipping setup for this font.
+More than one version of regular/bold/italic found for Roboto Condensed. Skipping setup for this font.
+Roboto Mono for Powerline already registered with postscriptFonts().
+Roboto Mono Light for Powerline already registered with postscriptFonts().
+Roboto Mono Medium for Powerline already registered with postscriptFonts().
+Roboto Mono Thin for Powerline already registered with postscriptFonts().
+Sagar already registered with postscriptFonts().
+Space Mono already registered with postscriptFonts().
+Space Mono for Powerline already registered with postscriptFonts().
+Symbol Neu for Powerline already registered with postscriptFonts().
+TAMu_Kadambri already registered with postscriptFonts().
+TAMu_Kalyani already registered with postscriptFonts().
+TAMu_Maduram already registered with postscriptFonts().
+Tinos for Powerline already registered with postscriptFonts().
+TSCu_Comic already registered with postscriptFonts().
+TSCu_Paranar already registered with postscriptFonts().
+TSCu_Times already registered with postscriptFonts().
+Ubuntu already registered with postscriptFonts().
+Ubuntu Light already registered with postscriptFonts().
+Ubuntu Condensed already registered with postscriptFonts().
+Ubuntu Mono already registered with postscriptFonts().
+Ubuntu Mono derivative Powerline already registered with postscriptFonts().
+#+end_example
+
+***** Plots
+#+begin_SRC R :results graphics output :session *R* :file "./img/blocking_unrolling.pdf" :width 17.4 :height 6 :eval no-export
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(paletteer)
+library(patchwork)
+
+font_family = "Liberation Sans"
+base_size = 20
+
+x_lab = "Columns"
+y_lab = "Rows"
+
+x_text = element_text(size = 20)
+y_text = element_text(size = 20)
+
+regular <- function(block_size) {
+    matrix_size <- block_size * 4
+    df_matrix <- matrix(rnorm(matrix_size ^ 2),
+                        nrow = matrix_size)
+    iteration <- 1
+
+    for(i in seq(1, matrix_size)){
+        for(j in seq(1, matrix_size)){
+            df_matrix[i, j] <- iteration
+            iteration <- iteration + 1
+        }
+    }
+
+    return(df_matrix)
+}
+
+tiled <- function(block_size) {
+    matrix_size <- block_size * 4
+    df_matrix <- matrix(rnorm(matrix_size ^ 2),
+                        nrow = matrix_size)
+    iteration <- 1
+
+    for(i in seq(1, matrix_size, by = block_size)){
+        for(j in seq(1, matrix_size, by = block_size)){
+            for(x in seq(i, min(i + block_size, matrix_size + 1) - 1)){
+                for(y in seq(j, min(j + block_size, matrix_size + 1) - 1)){
+                    df_matrix[x, y] <- iteration
+                    iteration <- iteration + 1
+                }
+            }
+        }
+    }
+
+    return(df_matrix)
+}
+
+unrolled <- function(block_size) {
+    matrix_size <- block_size * 4
+    unrolling_factor <- block_size
+    df_matrix <- matrix(rnorm(matrix_size ^ 2),
+                        nrow = matrix_size)
+    iteration <- 1
+
+    for(i in seq(1, matrix_size, by = block_size)){
+        for(j in seq(1, matrix_size, by = block_size)){
+            df_matrix[seq(i, min(i + block_size, matrix_size + 1) - 1),
+                      seq(j, min(j + block_size, matrix_size + 1) - 1)] <- iteration
+            iteration <- iteration + 1
+        }
+    }
+
+    return(df_matrix)
+}
+
+to_tile <- function(df) {
+    df %>%
+        data.frame() %>%
+        mutate(row = row_number()) %>%
+        gather(key = "col", value = "order", -row) %>%
+        mutate(col = unlist(
+                   lapply(col,
+                          function(x) {
+                              as.integer(strsplit(x, "X")[[1]][2])
+                          })))
+}
+
+regular_access <- to_tile(regular(4))
+tiled_access <- to_tile(tiled(4))
+unrolled_access <- to_tile(unrolled(4))
+
+cf_palette <- "pals::jet"
+
+p1 <- ggplot() +
+    geom_tile(data = regular_access,
+              aes(x = rev(col),
+                  y = row,
+                  fill = order,
+                  color = order),
+              show.legend = FALSE) +
+    scale_fill_paletteer_c(cf_palette) +
+    scale_color_paletteer_c(cf_palette) +
+    scale_x_discrete(expand = c(0,0))+
+    scale_y_discrete(expand = c(0,0)) +
+    labs(x = x_lab,
+         y = y_lab,
+         title = "Regular Access Pattern") +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.x = x_text,
+          axis.title.y = y_text,
+          text = element_text(family = font_family),
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 16),
+          legend.title = element_text(size = 23, margin = margin(r = 10)),
+          legend.spacing.x = unit(0.0, 'cm'),
+          axis.ticks.y = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+
+p2 <- ggplot() +
+    geom_tile(data = tiled_access,
+              aes(x = rev(col),
+                  y = row,
+                  fill = order,
+                  color = order),
+              show.legend = FALSE) +
+    scale_fill_paletteer_c(cf_palette) +
+    scale_color_paletteer_c(cf_palette) +
+    #scale_color_paletteer_c(name = "Access Order",
+    #                        cf_palette,
+    #                        guide = guide_colorbar(title.vjust = 1.1,
+    #                                               title.hjust = 1,
+    #                                               label.position = "bottom"),
+    #                        breaks = c(1, 256),
+    #                        labels = c("First", "Last")) +
+    scale_x_discrete(expand = c(0,0))+
+    scale_y_discrete(expand = c(0,0)) +
+    labs(x = x_lab,
+         y = y_lab,
+         title = "Tiled Access Pattern") +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.x = x_text,
+          axis.title.y = y_text,
+          text = element_text(family = font_family),
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          # legend.background = element_rect(fill = "transparent", colour = NA),
+          # legend.text = element_text(size = 16),
+          legend.title = element_text(margin = margin(r = 40)),
+          # legend.spacing.x = unit(0.0, 'cm'),
+          axis.ticks.y = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+
+p3 <- ggplot() +
+    geom_tile(data = unrolled_access,
+              aes(x = rev(col),
+                  y = row,
+                  fill = order,
+                  color = order)) +
+    scale_color_paletteer_c(cf_palette) +
+    scale_fill_paletteer_c(name = "Order",
+                           cf_palette,
+                           guide = guide_colorbar(barwidth = 0.7,
+                                                  barheight = 20,
+                                                  direction = "vertical",
+                                                  label.hjust = 1,
+                                                  ticks = FALSE,
+                                                  reverse = FALSE),
+                           limits = c(1, 16),
+                           breaks = c(1, 16),
+                           labels = c("Last", "First")) +
+    scale_x_discrete(expand = c(0,0))+
+    scale_y_discrete(expand = c(0,0)) +
+    labs(x = x_lab,
+         y = y_lab,
+         title = "Unrolled Access Pattern") +
+    theme_bw(base_size = base_size) +
+    theme(text = element_text(family = font_family),
+          axis.title.x = x_text,
+          axis.title.y = y_text,
+          legend.position = "right",
+          legend.background = element_rect(fill = "transparent", colour = NA),
+          legend.text = element_text(size = 20),
+          legend.title = element_text(size = 23, margin = margin(b = 15)),
+          # legend.spacing.x = unit(0.0, 'cm'),
+          axis.ticks.y = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
+    guides(color = FALSE)
+
+p1 + p2 + p3
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/blocking_unrolling.pdf]]
+
 * The Need for Autotuning in High Performance Computing
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
@@ -2195,22 +3012,23 @@ climb, sustained mostly by software improvements.
 
 Although hardware  accelerators, such  as GPUs  and FPGAs,  have also  helped to
 sustain exponential  performance increase, their use  is not an escape  from the
-fundamental    scaling   constraints    imposed    by   current    semiconductor
-design.  Figure\nbsp{}[[fig:acc-cores]]   shows  the   increase  in   processor  and
-accelerator core count on the top-ranked  supercomputers on Top500.  Half of the
-top-ranked  supercomputers in  the last  decade  had accelerator  cores, and  of
-those, all  had around  ten times  more accelerator  than processor  cores.  The
-apparent stagnation  of core count  in supercomputers  of the last  decade, even
-considering accelerators, strengthens the case for software optimization.
+fundamental  scaling  constraints  imposed   by  current  semiconductor  design.
+Figure\nbsp{}[[fig:acc-cores]] shows the increase  in processor and accelerator core
+count  on the  top-ranked  supercomputers  on Top500.   Half  of the  top-ranked
+supercomputers in the  last decade had accelerator cores, and  of those, all had
+around ten times more accelerator than processor cores.  The apparent stagnation
+of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
+highlights the crucial impact of software on performance.
 
 Advances in hardware  design are currently not capable  of providing performance
 improvements  via frequency  scaling  without dissipating  more  power than  the
-processor  was designed  to  support, risking  damages.   From the  programmer's
-perspective,  effortless  performance  improvements  over  time  have  not  been
-expected for  quite some time,  and the key  to sustaining historical  trends in
-performance  scaling lies  in  hardware accelerators,  parallel and  distributed
-programming libraries, and fine tuning of  several stages of the software stack,
-from instruction selection to the layout of neural networks.
+processor was  designed to support,  which violates power constraints  and risks
+damaging the circuit.  From the programmer's perspective, effortless performance
+improvements from hardware  have not been expected for quite  some time, and the
+key  to  sustaining  historical  trends  in  performance  scaling  has  lied  in
+accelerators, parallel and distributed programming libraries, and fine tuning of
+several stages of  the software stack, from instruction selection  to the layout
+of neural networks.
 
 #+NAME: fig:acc-cores
 #+CAPTION: Processor and accelerator core count
@@ -2222,9 +3040,45 @@ from instruction selection to the layout of neural networks.
 #+ATTR_LATEX: :width \textwidth
 [[file:./img/top500_accelerator_cores.pdf]]
 
-#+latex: \todo[inline]{Hook paragraph for next section}
+The problem of optimizing software  for performance presents its own challenges.
+The search  spaces that emerge from  autotuning problems grow quickly  to a size
+for which  it would  take a  prohibitive amount  of time  to determine  the best
+configuration by exhaustively evaluating  all possibilities. Although this means
+we must  seek to decrease  the amount  of possibilities, by  restricting allowed
+parameter values, or dropping parameters completely,  it is often unclear how to
+decide  which parameters  should be  restricted  or dropped.   The next  section
+introduces a simple  autotuning problem, and presents an  overview of autotuning
+search spaces  from the size  perspective.  The section also  briefly introduces
+methods  used  to explore  autotuning  search  spaces,  which are  discussed  in
+Chapter\nbsp{}[[Search and Statistical Learning for Autotuning]].
 
 ** Characterizing Search Spaces from Autotuning Problems
+#+ATTR_LATEX: :width \textwidth
+#+CAPTION: Tiling and unrolling access patterns
+[[file:./img/blocking_unrolling.pdf]]
+
+#+CAPTION: Test
+#+begin_src C :results output :exports code :eval no-export
+int N = 256;
+int BLOCK = 4;
+
+int A[N][N], B[N][N], C[N][N];
+
+int i, j, k;
+
+for (i = 0; i < N; i++){
+    for (j = 0; j < N; j++){
+        C[i][j] = 0;
+
+        for (k = 0; k < N; k++){
+            C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+}
+#+end_src
+
+#+RESULTS:
+
 #+ATTR_LATEX: :width .7\textwidth
 #+CAPTION: A search space defined for loop blocking and unrolling
 #+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}

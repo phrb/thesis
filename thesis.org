@@ -19,32 +19,10 @@
 #+LATEX_CLASS: partless-book
 #+LATEX_CLASS_OPTIONS: [11pt,twoside,a4paper]
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
-# #+LATEX_HEADER: \geometry{
-# #+LATEX_HEADER:   %top=32mm,
-# #+LATEX_HEADER:   %bottom=28mm,
-# #+LATEX_HEADER:   %left=24mm,
-# #+LATEX_HEADER:   %right=34mm,
-# #+LATEX_HEADER:   textwidth=152mm, % 210-24-34
-# #+LATEX_HEADER:   textheight=237mm, % 297-32-28
-# #+LATEX_HEADER:   vmarginratio=8:7, % 32:28
-# #+LATEX_HEADER:   hmarginratio=12:17, % 24:34
-# #+LATEX_HEADER:   % Com geometry, esta medida não é tão relevante; basta garantir que ela
-# #+LATEX_HEADER:   % seja menor que "top" e que o texto do cabeçalho caiba nela.
-# #+LATEX_HEADER:   headheight=25.4mm,
-# #+LATEX_HEADER:   % distância entre o início do texto principal e a base do cabeçalho;
-# #+LATEX_HEADER:   % ou seja, o cabeçalho "invade" a margem superior nessa medida. Essa
-# #+LATEX_HEADER:   % é a medida que determina a posição do cabeçalho
-# #+LATEX_HEADER:   headsep=11mm,
-# #+LATEX_HEADER:   footskip=10mm,
-# #+LATEX_HEADER:   marginpar=20mm,
-# #+LATEX_HEADER:   marginparsep=5mm,
-# #+LATEX_HEADER: }
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
-# #+LATEX_HEADER: \usepackage{sourcecodepro}
-# #+LATEX_HEADER: \usepackage{mathpazo}
 #+LATEX_HEADER: \usepackage{newpxtext}
 #+LATEX_HEADER: \usepackage{newpxmath}
 #+LATEX_HEADER: \usepackage{DejaVuSansMono}
@@ -60,6 +38,7 @@
 #+LATEX_HEADER: \usepackage{algpseudocode}
 #+LATEX_HEADER: \usepackage{algorithm}
 #+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{subcaption}
 #+LATEX_HEADER: \usepackage[english]{babel}
 #+LATEX_HEADER: \usepackage[scale=2]{ccicons}
 #+LATEX_HEADER: \usepackage{hyperref}
@@ -88,19 +67,18 @@
 #+LATEX_HEADER: }[keywords,comments,strings]%
 #+LATEX_HEADER: \lstset{ %
 #+LATEX_HEADER:   backgroundcolor={},
-#+LATEX_HEADER:   basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:   basicstyle=\ttfamily\tiny,
 #+LATEX_HEADER:   breakatwhitespace=true,
 #+LATEX_HEADER:   breaklines=true,
 #+LATEX_HEADER:   captionpos=b,
-# #+LATEX_HEADER:   escapeinside={\%*}{*)},
 #+LATEX_HEADER:   extendedchars=true,
 #+LATEX_HEADER:   frame=n,
-#+LATEX_HEADER:   language=R,
+#+LATEX_HEADER:   numbers=left,
 #+LATEX_HEADER:   rulecolor=\color{black},
 #+LATEX_HEADER:   showspaces=false,
 #+LATEX_HEADER:   showstringspaces=false,
 #+LATEX_HEADER:   showtabs=false,
-#+LATEX_HEADER:   stepnumber=2,
+#+LATEX_HEADER:   stepnumber=1,
 #+LATEX_HEADER:   stringstyle=\color{gray},
 #+LATEX_HEADER:   tabsize=2,
 #+LATEX_HEADER: }
@@ -2109,13 +2087,13 @@ p2 * p1
 : \pagestyle{empty} % do not remove
 
 #+HEADER: :headers '("\\usepackage{tikz}")
-#+HEADER: :exports results :results raw
-#+HEADER: :file test.pdf
+#+HEADER: :exports results  :file ./test.pdf
 #+begin_src latex :eval no-export
 \begin{tikzpicture}
 \draw[blue] (0,0) circle (2cm);
 \end{tikzpicture}
 #+end_src
+
 **** ggplot
 ***** Setup
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
@@ -2797,7 +2775,7 @@ p1 <- ggplot() +
     scale_y_discrete(expand = c(0,0)) +
     labs(x = x_lab,
          y = y_lab,
-         title = "Regular Access Pattern") +
+         title = "(a) Regular Access Pattern") +
     theme_bw(base_size = base_size) +
     theme(axis.title.x = x_text,
           axis.title.y = y_text,
@@ -2832,7 +2810,7 @@ p2 <- ggplot() +
     scale_y_discrete(expand = c(0,0)) +
     labs(x = x_lab,
          y = y_lab,
-         title = "Tiled Access Pattern") +
+         title = "(b) After Tiling") +
     theme_bw(base_size = base_size) +
     theme(axis.title.x = x_text,
           axis.title.y = y_text,
@@ -2869,7 +2847,7 @@ p3 <- ggplot() +
     scale_y_discrete(expand = c(0,0)) +
     labs(x = x_lab,
          y = y_lab,
-         title = "Unrolled Access Pattern") +
+         title = "(c) After Tiling and Unrolling") +
     theme_bw(base_size = base_size) +
     theme(text = element_text(family = font_family),
           axis.title.x = x_text,
@@ -2964,7 +2942,7 @@ a self-fulfilling  prophecy were  boosted until around  2005 by  the performance
 gained from increases in circuit frequency.
 
 #+NAME: fig:trends
-#+ATTR_LATEX: :width \textwidth
+#+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: 49 years of microprocessor data, highlighting the sustained exponential
 #+CAPTION: increases and reductions on transistor counts and fabrication processes, the
 #+CAPTION: stagnation of frequency scaling around 2005, and one solution found for it,
@@ -3007,7 +2985,7 @@ climb, sustained mostly by software improvements.
 #+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
 #+CAPTION: achieved \textit{RMax} performance for
 #+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list}
-#+ATTR_LATEX: :width \textwidth
+#+ATTR_LATEX: :width \textwidth :placement [t]
 [[file:./img/top500_rmax_rpeak.pdf]]
 
 Although hardware  accelerators, such  as GPUs  and FPGAs,  have also  helped to
@@ -3037,7 +3015,7 @@ of neural networks.
 #+CAPTION: Core  count trends for supercomputers are not
 #+CAPTION: necessarily bound to processor trends observed on
 #+CAPTION: Figure\nbsp{}\ref{fig:trends}.
-#+ATTR_LATEX: :width \textwidth
+#+ATTR_LATEX: :width \textwidth :placement [t]
 [[file:./img/top500_accelerator_cores.pdf]]
 
 The problem of optimizing software  for performance presents its own challenges.
@@ -3053,38 +3031,130 @@ methods  used  to explore  autotuning  search  spaces,  which are  discussed  in
 Chapter\nbsp{}[[Search and Statistical Learning for Autotuning]].
 
 ** Characterizing Search Spaces from Autotuning Problems
-#+ATTR_LATEX: :width \textwidth
-#+CAPTION: Tiling and unrolling access patterns
+A classical autotuning  example is the problem of decreasing  the execution time
+of  basic components  for linear  algebra, such  as the  ones from  the original
+BLAS\nbsp{}\cite{lawson1979basic},   or   for  general   matrix   multiplication
+(GEMM)\nbsp{}\cite{dongarra1990set}.  One  way to  optimize such programs  is to
+exploit  cache locality  by  reordering and  organizing  loop iterations,  using
+source  code  transformation methods  such  as  loop  /tiling/, or  /blocking/,  and
+/unrolling/.  We now briefly describe loop  tiling and unrolling in the context of
+GEMM,  and how  these methods  generate a  relatively large  and complex  search
+space.
+
+#+NAME: fig:blocking-unrolling
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Access patterns on GEMM, for the \textit{destination} matrix, using
+#+CAPTION: loop  nest optimizations. Panel \textit{(a)} shows the access order
+#+CAPTION: of a naive implementation, panel \textit{(b)} shows the effect of
+#+CAPTION: loop \textit{tiling}, or \textit{blocking}, and panel \textit{(c)}
+#+CAPTION: shows the compounded effect of loop \textit{unrolling}
 [[file:./img/blocking_unrolling.pdf]]
 
-#+CAPTION: Test
-#+begin_src C :results output :exports code :eval no-export
-int N = 256;
-int BLOCK = 4;
+Figure\nbsp{}\ref{fig:gemm-c}   shows   three   GEMM   implementations   in   C.
+Figure\nbsp{}\ref{fig:regular-access} shows  a naive implementation,  with three
+nested loops  span the size  of the square  matrices, accessing elements  of the
+/destination/  matrix   /C/  in   the  order   shown  on   the  leftmost   panel  of
+Figure\nbsp{}[[fig:blocking-unrolling]].  If  loop indices  are split in  blocks, as
+shown in Figure\nbsp{}\ref{fig:blocked-tiled}, memory accesses will be performed
+in /tiles/, as  shown on the center  panel of Figure\nbsp{}[[fig:blocking-unrolling]],
+which can improve performance by using only elements that fit on the processor's
+cache.   Loop  unrolling,  shown   in  Figure\nbsp{}\ref{fig:unrolling},  is  an
+additional source transformation that can be performed on top of tiling, and can
+improve performance by  grouping iterations of a loop, as  is represented on the
+rightmost panel of  Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor
+registers are used.
 
-int A[N][N], B[N][N], C[N][N];
+#+begin_export latex
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
 
-int i, j, k;
+      float A[N][N], B[N][N], C[N][N];
+      int i, j, k;
 
-for (i = 0; i < N; i++){
-    for (j = 0; j < N; j++){
-        C[i][j] = 0;
+      // [...] Initialize A, B, C
 
-        for (k = 0; k < N; k++){
+      for(i = 0; i < N; i++){
+        for(j = 0; j < N; j++){
+          for(k = 0; k < N; k++){
             C[i][j] += A[i][k] * B[k][j];
+          }
         }
-    }
-}
-#+end_src
+      }
+    \end{lstlisting}
+    \caption{Naive implementation}
+    \label{fig:regular-access}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.48\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
+      int B_size = 4;
 
-#+RESULTS:
+      int A[N][N], B[N][N], C[N][N];
+      int i, j, k, x, y;
 
-#+ATTR_LATEX: :width .7\textwidth
+      // [...] Initialize A, B, C
+
+      for(i = 0; i < N; i += B_size){
+        for(j = 0; j < N; j += B_size){
+          for(k = 0; k < N; k++){
+            for(x = i; x < min(i + B_size, N); x++){
+              for(y = j; y < min(j + B_size, N); y++){
+                C[x][y] += A[x][k] * B[k][y];
+              }
+            }
+          }
+        }
+      }
+    \end{lstlisting}
+    \caption{Blocked, or tiled}
+    \label{fig:blocked-tiled}
+  \end{subfigure}
+
+  \begin{subfigure}[t]{\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
+      int B_size = 4;
+
+      int A[N][N], B[N][N], C[N][N];
+      int i, j, k;
+
+      // [...] Initialize A, B, C
+
+      for(i = 0; i < N; i += B_size){
+        for(j = 0; j < N; j += B_size){
+          for(k = 0; k < N; k++){
+            C[i + 0][j + 0] += A[i + 0][k] * B[k][j + 0];
+            C[i + 0][j + 1] += A[i + 0][k] * B[k][j + 1];
+
+            // [...] Unroll the remaining 12 iterations
+
+            C[i + Bsize - 1][j + B_size - 2] += A[i + Bsize - 1][k] * B[k][j + B_size - 2];
+            C[i + Bsize - 1][j + B_size - 1] += A[i + Bsize - 1][k] * B[k][j + B_size - 1];
+          }
+        }
+      }
+    \end{lstlisting}
+    \caption{Tiled and unrolled}
+    \label{fig:unrolling}
+  \end{subfigure}
+  \caption{Loop nest optimizations for GEMM, in C}
+  \label{fig:gemm-c}
+\end{figure}
+#+end_export
+
+#+ATTR_LATEX: :width .7\textwidth :placement [t]
 #+CAPTION: A search space defined for loop blocking and unrolling
 #+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}
 [[file:img/seymour2008comparison.pdf]]
 
-#+ATTR_LATEX: :width \textwidth
+#+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Dimension and search space size for autotuning problems from different domains
 #+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}.
 #+CAPTION: The left panel shows a zoomed view of the right panel

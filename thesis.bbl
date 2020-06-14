@@ -97,6 +97,16 @@ J.~J. Dongarra, P.~Luszczek, and A.~Petitet, ``{The LINPACK benchmark: past,
   present and future},'' \emph{Concurrency and Computation: practice and
   experience}, vol.~15, no.~9, pp. 803--820, 2003.
 
+\bibitem{lawson1979basic}
+C.~L. Lawson, R.~J. Hanson, D.~R. Kincaid, and F.~T. Krogh, ``Basic linear
+  algebra subprograms for fortran usage,'' \emph{ACM Transactions on
+  Mathematical Software (TOMS)}, vol.~5, no.~3, pp. 308--323, 1979.
+
+\bibitem{dongarra1990set}
+J.~J. Dongarra, J.~Du~Croz, S.~Hammarling, and I.~S. Duff, ``A set of level 3
+  basic linear algebra subprograms,'' \emph{ACM Transactions on Mathematical
+  Software (TOMS)}, vol.~16, no.~1, pp. 1--17, 1990.
+
 \bibitem{seymour2008comparison}
 K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
   empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.

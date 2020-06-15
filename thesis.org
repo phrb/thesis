@@ -1970,7 +1970,7 @@ p1 <- ggplot(data = df_search_spaces,
               linetype = 2) +
     geom_text(data = data.frame(x = x_lims[1],
                                 y = y_lims[2],
-                                label = "Zoomed Area"),
+                                label = "Zoomed-in Area"),
               aes(x = x,
                   y = y,
                   label = label,

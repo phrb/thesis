@@ -84,12 +84,12 @@
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
 #+LATEX_HEADER: \onehalfspacing
-#+LATEX_HEADER: \setlength{\parskip}{0.6em}
-#+LATEX_HEADER: \usepackage[pagestyles]{titlesec}
+#+LATEX_HEADER: \setlength{\parskip}{0.5em}
+#+LATEX_HEADER: \usepackage[pagestyles,raggedright]{titlesec}
 #+LATEX_HEADER: \titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\Huge}
-#+LATEX_HEADER: \newpagestyle{mystyle}
-#+LATEX_HEADER: {\sethead[\thepage][][\chaptertitle]{}{}{\thepage}}
-#+LATEX_HEADER: \pagestyle{mystyle}
+# #+LATEX_HEADER: \newpagestyle{mystyle}
+# #+LATEX_HEADER: {\sethead[\thepage][][\chaptertitle]{}{}{\thepage}}
+# #+LATEX_HEADER: \pagestyle{mystyle}
 
 * Thesis Drafts                                                    :noexport:
 ** Structure Drafts
@@ -1909,9 +1909,9 @@ cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
 : \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 
 **** Plots
+- Geom_label around thesis work
+- Mark Seymour et al. example
 #+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
-
-
 library(ggplot2)
 library(dplyr)
 library(scales)
@@ -1930,6 +1930,9 @@ legend_position = c(0.66, 0.12)
 
 base_size = 25
 font_family = "Liberation Sans"
+
+x_lims <- c(0, 60)
+y_lims <- c(1, 50)
 
 color_palette = colorRampPalette(brewer.pal(9,
                                             "Set1"))(
@@ -1957,10 +1960,42 @@ p1 <- ggplot(data = df_search_spaces,
                  y = log10_search_space_size,
                  color = domain,
                  shape = domain)) +
+    geom_rect(aes(xmin = x_lims[1],
+                  xmax = x_lims[2],
+                  ymin = y_lims[1],
+                  ymax = y_lims[2]),
+              show.legend = FALSE,
+              fill = NA,
+              color = "gray35",
+              linetype = 2) +
+    geom_text(data = data.frame(x = x_lims[1],
+                                y = y_lims[2],
+                                label = "Zoomed Area"),
+              aes(x = x,
+                  y = y,
+                  label = label,
+                  shape = NA),
+              color = "gray35",
+              vjust = -0.3,
+              hjust = 0,
+              size = label_size,
+              show.legend = FALSE) +
     geom_point(alpha = point_alpha,
                size = point_size,
                show.legend = FALSE) +
     geom_text_repel(data = filter(df_search_spaces,
+                                  thesis == FALSE &
+                                  dimension > 40 &
+                                  log10_search_space_size >= 30),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    xlim = c(110, 120),
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_label_repel(data = filter(df_search_spaces,
+                                  thesis == TRUE &
                                   dimension > 40 &
                                   log10_search_space_size >= 30),
                     aes(x = dimension,
@@ -1992,6 +2027,22 @@ p2 <- ggplot(data = df_search_spaces,
     geom_text_repel(data = df_search_spaces %>%
                         filter(dimension > 40 &
                                dimension < 60 &
+                               thesis == FALSE &
+                               log10_search_space_size >= 30,
+                               log10_search_space_size < 50),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(30, 50),
+                    xlim = c(NA, 45),
+                    nudge_x = -3,
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_label_repel(data = df_search_spaces %>%
+                        filter(dimension > 40 &
+                               dimension < 60 &
+                               thesis == TRUE &
                                log10_search_space_size >= 30,
                                log10_search_space_size < 50),
                     aes(x = dimension,
@@ -2005,6 +2056,20 @@ p2 <- ggplot(data = df_search_spaces,
                     show.legend = FALSE) +
     geom_text_repel(data = df_search_spaces %>%
                         filter(dimension < 20 &
+                               thesis == FALSE &
+                               log10_search_space_size > 19),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(20, 50),
+                    xlim = c(0, 25),
+                    nudge_y = 1.6,
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_label_repel(data = df_search_spaces %>%
+                        filter(dimension < 20 &
+                               thesis == TRUE &
                                log10_search_space_size > 19),
                     aes(x = dimension,
                         y = log10_search_space_size,
@@ -2017,6 +2082,7 @@ p2 <- ggplot(data = df_search_spaces,
                     show.legend = FALSE) +
     geom_text_repel(data = df_search_spaces %>%
                         filter(dimension > 30 &
+                               thesis == FALSE &
                                log10_search_space_size < 25),
                     aes(x = dimension,
                         y = log10_search_space_size,
@@ -2027,14 +2093,27 @@ p2 <- ggplot(data = df_search_spaces,
                     nudge_y = 2,
                     size = label_size,
                     show.legend = FALSE) +
-    xlim(0, 60) +
+    geom_label_repel(data = df_search_spaces %>%
+                        filter(dimension > 30 &
+                               thesis == TRUE &
+                               log10_search_space_size < 25),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(15, 50),
+                    xlim = c(30, NA),
+                    nudge_y = 2,
+                    size = label_size,
+                    show.legend = FALSE) +
+    xlim(x_lims[1], x_lims[2]) +
     xlab("Dimension") +
     ylab("Search Space Size") +
     scale_color_manual(name = element_blank(),
                        values = color_palette) +
     scale_shape_manual(name = element_blank(),
                        values = shapes) +
-    scale_y_continuous(limits = c(1, 50), label = scientific_10) +
+    scale_y_continuous(limits = y_lims, label = scientific_10) +
     theme_bw(base_size = base_size) +
     theme(axis.text.x = x_text,
           axis.text.y = y_text,
@@ -2049,7 +2128,7 @@ p2 <- ggplot(data = df_search_spaces,
                                 override.aes = list(alpha = 1.0,
                                                     size = 3)))
 
-p2 * p1
+p1 * p2
 #+end_SRC
 
 #+RESULTS:
@@ -2868,7 +2947,7 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/blocking_unrolling.pdf]]
 
-* The Need for Autotuning in High Performance Computing
+* The Need for Autotuning
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
 software  and  hardware  engineering   advances  continue  to  overcome  several
@@ -3030,16 +3109,17 @@ search spaces  from the size  perspective.  The section also  briefly introduces
 methods  used  to explore  autotuning  search  spaces,  which are  discussed  in
 Chapter\nbsp{}[[Search and Statistical Learning for Autotuning]].
 
-** Characterizing Search Spaces from Autotuning Problems
-A classical autotuning  example is the problem of decreasing  the execution time
-of  basic components  for linear  algebra, such  as the  ones from  the original
-BLAS\nbsp{}\cite{lawson1979basic},   or   for  general   matrix   multiplication
-(GEMM)\nbsp{}\cite{dongarra1990set}.  One  way to  optimize such programs  is to
-exploit  cache locality  by  reordering and  organizing  loop iterations,  using
+** Characterizing Search Spaces
+Algorithms for linear  algebra problems are fundamental  to scientific computing
+and statistics. Therefore,  decreasing the execution time of  algorithms such as
+general  matrix multiplication  (GEMM)\nbsp{}\cite{dongarra1990set}, and  others
+from  the  original  BLAS\nbsp{}\cite{lawson1979basic}, can  be  an  interesting
+example of autotuning.   One way to improve the performance  of such programs is
+to exploit  cache locality by  reordering and organizing loop  iterations, using
 source  code  transformation methods  such  as  loop  /tiling/, or  /blocking/,  and
-/unrolling/.  We now briefly describe loop  tiling and unrolling in the context of
-GEMM,  and how  these methods  generate a  relatively large  and complex  search
-space.
+/unrolling/.  We now briefly describe loop  tiling and unrolling for GEMM, and how
+these methods generate a relatively large and complex search space, which we can
+explore with autotuning methods.
 
 #+NAME: fig:blocking-unrolling
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -3052,17 +3132,17 @@ space.
 
 Figure\nbsp{}\ref{fig:gemm-c}   shows   three   GEMM   implementations   in   C.
 Figure\nbsp{}\ref{fig:regular-access} shows  a naive implementation,  with three
-nested loops  span the size  of the square  matrices, accessing elements  of the
+nested loops spanning the size of the square matrices, accessing elements of the
 /destination/  matrix   /C/  in   the  order   shown  on   the  leftmost   panel  of
-Figure\nbsp{}[[fig:blocking-unrolling]].  If  loop indices  are split in  blocks, as
+Figure\nbsp{}[[fig:blocking-unrolling]].  If loop indices  are split into blocks, as
 shown in Figure\nbsp{}\ref{fig:blocked-tiled}, memory accesses will be performed
-in /tiles/, as  shown on the center  panel of Figure\nbsp{}[[fig:blocking-unrolling]],
-which can improve performance by using only elements that fit on the processor's
-cache.   Loop  unrolling,  shown   in  Figure\nbsp{}\ref{fig:unrolling},  is  an
-additional source transformation that can be performed on top of tiling, and can
-improve performance by  grouping iterations of a loop, as  is represented on the
-rightmost panel of  Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor
-registers are used.
+in  /tiles/, shown  on  the center  panel of  Figure\nbsp{}[[fig:blocking-unrolling]],
+which can  improve performance  by using  only elements  loaded into  the cache.
+Loop unrolling,  shown conceptually  in Figure\nbsp{}\ref{fig:unrolling},  is an
+additional  source transformation  that can  be performed  independently, or  in
+addition to tiling, and that can improve performance by grouping iterations of a
+loop,      as      represented      on     the      rightmost      panel      of
+Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are used.
 
 #+begin_export latex
 \begin{figure}[t]
@@ -3149,17 +3229,73 @@ registers are used.
 \end{figure}
 #+end_export
 
+The two /parameters/  involved in this example are the  /block size/, which controls
+the stride,  and the  /unrolling factor/,  which controls  the number  of unrolled
+iterations.  Larger  block sizes are desirable,  because we want to  avoid extra
+comparisons, but  blocks should be  small enough to ensure  access to as  few as
+possible out-of-cache elements.  Likewise, the unrolling factor should be large,
+to leverage available registers,  but not so large that it  forces memory to the
+stack.
+
+The values of  block size and unrolling factor that  optimize performance depend
+on the cache hierarchy  and register layout of the target  processor, and on the
+memory access pattern of the target  algorithm.  An autotuner should also aim to
+account for the  /interaction/ between parameters, that is, for  the fact that the
+best value for each parameter also depends on the value chosen for the other.
+
+#+NAME: fig:search-space
 #+ATTR_LATEX: :width .7\textwidth :placement [t]
 #+CAPTION: A search space defined for loop blocking and unrolling
 #+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}
 [[file:img/seymour2008comparison.pdf]]
+
+It  is straightforward  to change  the block  size of  the implementations  from
+Figure\nbsp{}\ref{fig:gemm-c},  but the  unrolling factor  is not  exposed as  a
+parameter.  To test different unrolling values  we need to generate new versions
+of the  source code with  different numbers of  unrolled iterations.  We  can do
+that   with   code   generators    or   with   /source-to-source   transformation/
+tools\nbsp{}\cite{videau2017boast,hartono2009annotation,ansel2009petabricks}.
+It is  often necessary to  modify the  program we wish  to optimize in  order to
+provide a configuration interface and expose its implicit parameters.
+
+Once we  are able to control  the block size  and the loop unrolling  factor, we
+determine the  target search space by  choosing the values to  be explored.  The
+loop  nest  optimization   example  in  this  section  comes   from  Seymour  /et
+al./\nbsp{}\cite{seymour2008comparison}, and considers 128  integer values in the
+interval $[0,127]$.   A block size  of zero  results in the  implementation from
+Figure\nbsp{}\ref{fig:regular-access}, and an unrolling  factor of zero performs
+a single iteration per condition check.
+
+The performance  of each  of the  $128^2 = 16384$  combinations of  blocking and
+unrolling  factor,  shown  in  /Mflops/s/  in  Figure\nbsp{}[[fig:search-space]],  was
+measured for a sequential matrix multiplication algorithm, using square matrices
+of size 400\nbsp{}\cite{seymour2008comparison}. We can represent this autotuning
+search space as a /3D landscape/, since  we have two configurable parameters and a
+single  target performance  metric.  An  autotuner's  objective is  to find  the
+/highest/ point  of this landscape, since  the objective is to  /maximize/ Mflops/s,
+although  it is  more usual  to  transform the  performance metric  so that  the
+objective is to /minimize/ it.
+
+On a first look, there seems to  be no apparent global search space structure in
+the landscape on  Figure\nbsp{}[[fig:search-space]], but local features  jump to the
+eyes, such as  the ``valley'' across all block sizes  for low unrolling factors,
+the ``ramp'' across all unrolling factors for low block sizes, and the series of
+jagged  ``plateaus'' across  the middle  regions, with  ridges for  identical or
+divisible block sizes and unrolling factors.  A careful look reveals a curvature
+along  the unrolling  factor  axis. The  best performance  on  this program  was
+achieved with a block size of 80 and an unrolling factor of 2.
+
+In this  conceptual example,  all ${\approx}1.64\times10^4$  configurations were
+exhaustively evaluated, but in most settings where autotuning methods are useful
+it is impossible to do so.
+
+
 
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Dimension and search space size for autotuning problems from different domains
 #+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}.
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
-
 
 ** Thesis Contributions
 

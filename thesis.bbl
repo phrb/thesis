@@ -97,19 +97,37 @@ J.~J. Dongarra, P.~Luszczek, and A.~Petitet, ``{The LINPACK benchmark: past,
   present and future},'' \emph{Concurrency and Computation: practice and
   experience}, vol.~15, no.~9, pp. 803--820, 2003.
 
-\bibitem{lawson1979basic}
-C.~L. Lawson, R.~J. Hanson, D.~R. Kincaid, and F.~T. Krogh, ``Basic linear
-  algebra subprograms for fortran usage,'' \emph{ACM Transactions on
-  Mathematical Software (TOMS)}, vol.~5, no.~3, pp. 308--323, 1979.
-
 \bibitem{dongarra1990set}
 J.~J. Dongarra, J.~Du~Croz, S.~Hammarling, and I.~S. Duff, ``A set of level 3
   basic linear algebra subprograms,'' \emph{ACM Transactions on Mathematical
   Software (TOMS)}, vol.~16, no.~1, pp. 1--17, 1990.
 
+\bibitem{lawson1979basic}
+C.~L. Lawson, R.~J. Hanson, D.~R. Kincaid, and F.~T. Krogh, ``Basic linear
+  algebra subprograms for fortran usage,'' \emph{ACM Transactions on
+  Mathematical Software (TOMS)}, vol.~5, no.~3, pp. 308--323, 1979.
+
 \bibitem{seymour2008comparison}
 K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
   empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
+
+\bibitem{videau2017boast}
+B.~Videau, K.~Pouget, L.~Genovese, T.~Deutsch, D.~Komatitsch, F.~Desprez, and
+  J.-F. M{\'e}haut, ``{BOAST}: A metaprogramming framework to produce portable
+  and efficient computing kernels for hpc applications,'' \emph{The
+  International Journal of High Performance Computing Applications}, p.
+  1094342017718068, 2017.
+
+\bibitem{hartono2009annotation}
+A.~Hartono, B.~Norris, and P.~Sadayappan, ``Annotation-based empirical
+  performance tuning using {Orio},'' in \emph{Parallel \& Distributed
+  Processing, 2009. IPDPS 2009. IEEE International Symposium on}.\hskip 1em
+  plus 0.5em minus 0.4em\relax IEEE, 2009, pp. 1--11.
+
+\bibitem{ansel2009petabricks}
+J.~Ansel, C.~Chan, Y.~L. Wong, M.~Olszewski, Q.~Zhao, A.~Edelman, and
+  S.~Amarasinghe, ``Petabricks: a language and compiler for algorithmic
+  choice,'' \emph{ACM Sigplan Notices}, vol.~44, no.~6, pp. 38--49, 2009.
 
 \bibitem{balaprakash2012spapt}
 P.~Balaprakash, S.~M. Wild, and B.~Norris, ``{SPAPT}: Search problems in

@@ -2003,6 +2003,7 @@ p1 <- ggplot(data = df_search_spaces,
                         label = paste(author, name),
                         color = domain),
                     xlim = c(110, 120),
+                    ylim = c(55, NA),
                     size = label_size,
                     show.legend = FALSE) +
     xlab("Dimension") +

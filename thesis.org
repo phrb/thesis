@@ -3332,4 +3332,4 @@ questions underlying each method.
 * Gaussian Process Regression
 ** References
 #+LATEX: \bibliographystyle{IEEEtran}
-#+LATEX: \bibliography{references}
+#+LATEX: \bibliography{bibliography/references}

@@ -182,6 +182,12 @@ A.~Mametjanov, P.~Balaprakash, C.~Choudary, P.~D. Hovland, S.~M. Wild, and
   Annual International Symposium on}.\hskip 1em plus 0.5em minus 0.4em\relax
   IEEE, 2015, pp. 84--91.
 
+\bibitem{abdelfattah2016performance}
+A.~Abdelfattah, A.~Haidar, S.~Tomov, and J.~Dongarra, ``Performance, design,
+  and autotuning of batched gemm for gpus,'' in \emph{International Conference
+  on High Performance Computing}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Springer, 2016, pp. 21--38.
+
 \bibitem{xu2017parallel}
 C.~Xu, G.~Liu, R.~Zhao, S.~Yang, G.~Luo, and Z.~Zhang, ``A parallel
   bandit-based approach for autotuning fpga compilation,'' in \emph{Proceedings
@@ -240,5 +246,93 @@ J.~Ol'ha, J.~Hozzov{\'a}, J.~Fousek, and J.~Filipovi{\v{c}}, ``Exploiting
   historical data: pruning autotuning spaces and estimating the number of
   tuning steps,'' in \emph{European Conference on Parallel Processing}.\hskip
   1em plus 0.5em minus 0.4em\relax Springer, 2019, pp. 295--307.
+
+\bibitem{bilmes1997optimizing}
+J.~Bilmes, K.~Asanovic, C.-W. Chin, and J.~Demmel, ``Optimizing matrix multiply
+  using {PHiPAC}: a portable, high-performance, ansi c coding methodology,'' in
+  \emph{Proceedings of International Conference on Supercomputing, Vienna,
+  Austria}, 1997.
+
+\bibitem{dongarra1998automatically}
+J.~J. Dongarra and C.~R. Whaley, ``Automatically tuned linear algebra software
+  ({ATLAS}),'' \emph{Proceedings of SC}, vol.~98, 1998.
+
+\bibitem{frigo1998fftw}
+M.~Frigo and S.~G. Johnson, ``{FFTW}: An adaptive software architecture for the
+  fft,'' in \emph{Acoustics, Speech and Signal Processing, 1998. Proceedings of
+  the 1998 IEEE International Conference on}, vol.~3.\hskip 1em plus 0.5em
+  minus 0.4em\relax IEEE, 1998, pp. 1381--1384.
+
+\bibitem{tapus2002active}
+C.~{\c{T}}{\u{a}}pu{\c{s}}, I.-H. Chung, J.~K. Hollingsworth \emph{et~al.},
+  ``Active harmony: Towards automated performance tuning,'' in
+  \emph{Proceedings of the 2002 ACM/IEEE conference on Supercomputing}.\hskip
+  1em plus 0.5em minus 0.4em\relax IEEE Computer Society Press, 2002, pp.
+  1--11.
+
+\bibitem{vuduc2005oski}
+R.~Vuduc, J.~W. Demmel, and K.~A. Yelick, ``{OSKI}: A library of automatically
+  tuned sparse matrix kernels,'' in \emph{Journal of Physics: Conference
+  Series}, vol.~16, no.~1.\hskip 1em plus 0.5em minus 0.4em\relax IOP
+  Publishing, 2005, p. 521.
+
+\bibitem{fursin2011milepost}
+G.~Fursin, Y.~Kashnikov, A.~W. Memon, Z.~Chamski, O.~Temam, M.~Namolaru,
+  E.~Yom-Tov, B.~Mendelson, A.~Zaks, E.~Courtois \emph{et~al.}, ``Milepost gcc:
+  Machine learning enabled self-tuning compiler,'' \emph{International journal
+  of parallel programming}, vol.~39, no.~3, pp. 296--327, 2011.
+
+\bibitem{jordan2012multi}
+H.~Jordan, P.~Thoman, J.~J. Durillo, S.~Pellegrini, P.~Gschwandtner,
+  T.~Fahringer, and H.~Moritsch, ``A multi-objective auto-tuning framework for
+  parallel codes,'' in \emph{High Performance Computing, Networking, Storage
+  and Analysis (SC), 2012 International Conference for}.\hskip 1em plus 0.5em
+  minus 0.4em\relax IEEE, 2012, pp. 1--12.
+
+\bibitem{spampinato2014basic}
+D.~G. Spampinato and M.~P{\"u}schel, ``A basic linear algebra compiler,'' in
+  \emph{Proceedings of Annual IEEE/ACM International Symposium on Code
+  Generation and Optimization}.\hskip 1em plus 0.5em minus 0.4em\relax ACM,
+  2014, p.~23.
+
+\bibitem{audet2014optimization}
+C.~Audet, K.-C. Dang, and D.~Orban, ``Optimization of algorithms with opal,''
+  \emph{Mathematical Programming Computation}, vol.~6, no.~3, pp. 233--254,
+  2014.
+
+\bibitem{fursin2015collective}
+G.~Fursin, A.~Memon, C.~Guillon, and A.~Lokhmotov, ``Collective mind, part ii:
+  Towards performance-and cost-aware software engineering as a natural
+  science,'' \emph{arXiv preprint arXiv:1506.06256}, 2015.
+
+\bibitem{nugteren2015cltune}
+C.~Nugteren and V.~Codreanu, ``Cltune: A generic auto-tuner for opencl
+  kernels,'' in \emph{Embedded Multicore/Many-core Systems-on-Chip (MCSoC),
+  2015 IEEE 9th International Symposium on}.\hskip 1em plus 0.5em minus
+  0.4em\relax IEEE, 2015, pp. 195--202.
+
+\bibitem{guerreiro2015multi}
+J.~Guerreiro, A.~Ilic, N.~Roma, and P.~Tom{\'a}s, ``Multi-kernel auto-tuning on
+  gpus: Performance and energy-aware optimization,'' in \emph{Parallel,
+  Distributed and Network-Based Processing (PDP), 2015 23rd Euromicro
+  International Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE,
+  2015, pp. 438--445.
+
+\bibitem{chang2016efficient}
+L.-W. Chang, I.~El~Hajj, C.~Rodrigues, J.~G{\'o}mez-Luna, and W.-m. Hwu,
+  ``Efficient kernel synthesis for performance portable programming,'' in
+  \emph{Microarchitecture (MICRO), 2016 49th Annual IEEE/ACM International
+  Symposium on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2016.
+
+\bibitem{coelho2016mase}
+C.~G. Coelho, C.~G. Abreu, R.~M. Ramos, A.~H. Mendes, G.~Teodoro, and C.~G.
+  Ralha, ``Mase-bdi: agent-based simulator for environmental land change with
+  efficient and parallel auto-tuning,'' \emph{Applied Intelligence}, vol.~45,
+  no.~3, pp. 904--922, 2016.
+
+\bibitem{beckingsale2017apollo}
+D.~Beckingsale, O.~Pearce, I.~Laguna, and T.~Gamblin, ``Apollo: Reusable models
+  for fast, dynamic tuning of input-dependent code,'' in \emph{The 31th IEEE
+  International Parallel and Distributed Processing Symposium}, 2017.
 
 \end{thebibliography}

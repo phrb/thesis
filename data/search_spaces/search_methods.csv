@@ -1,0 +1,35 @@
+"name","gscholar_citation","problem_domain","year","method","largest_dimension","largest_size","largest_size_log10","ad_hoc"
+"Orio","balaprakash2012spapt","Linear Algebra",2012,"Decision Trees",49,2.73E+030,30,FALSE
+"OpenTuner","ansel2014opentuner","Compiler Parameters",2014,"Search Heuristics",222,1E+106,106,FALSE
+"pOSKI","byun2012autotuning","Linear Algebra",2012,"Search Heuristics",5,1540,3,TRUE
+"Petrovic, F. \textit{et al.}","petrovivc2020benchmark","Linear Algebra",2020,"Search Heuristics",15,242000,5,FALSE
+"DeepHyper","balaprakash2018deephyper","Neural Networks",2018,"Decision Trees",11,64000000000000,13,FALSE
+"Abdelfattah, A. \textit{et al.}","abdelfattah2016performance","Linear Algebra",2016,"Exhaustive",10,10000000,7,TRUE
+"Mametjanov, A. \textit{et al.}","mametjanov2015autotuning","High-Level Synthesis",2015,"Decision Trees",5,10200000,7,TRUE
+"Xu, C. \textit{et al.}","xu2017parallel","High-Level Synthesis",2017,"Search Heuristics",24,2390000000000000,15,TRUE
+"PRO","tiwari2009scalable","Linear Algebra",2009,"Search Heuristics",7,65500000,7,TRUE
+"ParamILS","hutter2009paramils","Combinatorial Auctions",2009,"Search Heuristics",63,1.38E+038,38,FALSE
+"Chu, Y. \textit{et al.}","chu2020improving","Search/MVWCP",2020,"Search Heuristics",12,1170000000000,12,TRUE
+"Tuzov, I. \textit{et al.}","tuzov2018tuning","High-Level Synthesis",2018,"Design of Experiments",72,2.25E+034,34,TRUE
+"SynTunSys","ziegler2019syntunsys","High-Level Synthesis",2019,"Search Heuristics",100,1.27E+030,30,FALSE
+"Periscope","gerndt2018multi","Compiler Parameters",2018,"Search Heuristics",11,15600,4,FALSE
+"Kwon, J. \textit{et al.}","kwon2019learning","High-Level Synthesis",2019,"Machine Learning",400,2.58E+120,120,TRUE
+"FuncyTuner","wang2019funcytuner","Compiler Parameters",2019,"Search Heuristics",33,23000000000000,13,FALSE
+"Ol’ha, J. \textit{et al.}","olha2019exploiting","Parallel Computing",2019,"Sensitivity Analysis",15,242000,5,FALSE
+"Seymour, K. \textit{et al.}","seymour2008comparison","Linear Algebra",2008,"Search Heuristics",21,690000000000000,14,TRUE
+"ATLAS","dongarra1998automatically","Linear Algebra",1998,"Exhaustive",,,,TRUE
+"OSKI","vuduc2005oski","Linear Algebra",2005,"Search Heuristics",,,,TRUE
+"Lgen","spampinato2014basic","Linear Algebra",2014,"Search Heuristics",,,,
+"INSIEME","jordan2012multi","Compiler Parameters",2012,"Genetic Algorithm",,,,
+"PetaBricks","ansel2009petabricks","Domain-Specific Language",2009,"Genetic Algorithm",,,,
+"TANGRAM","chang2016efficient","Domain-Specific Language",2016,"Search Heuristics",,,,
+"Active Harmony","tapus2002active","Domain-Specific Language",2002,"Search Heuristics",,,,
+"MASE-BDI","coelho2016mase","Environmental Land Change",2016,"Search Heuristics",,,,
+"CLTune","nugteren2015cltune","Parallel Computing",2015,"Search Heuristics",,,,
+"OPAL","audet2014optimization","Parallel Computing",2014,"Search Heuristics",,,,
+"MILEPOST GCC","fursin2011milepost","Compiler Parameters",2011,"Machine Learning",,,,
+"Apollo","beckingsale2017apollo","Parallel Computing",2017,"Decision Trees",,,,
+"PhiPAC","bilmes1997optimizing","Linear Algebra",1997,"Search Heuristics",,,,
+"FFTW","frigo1998fftw","Digital Signal Processing",1998,"Search Heuristics",,,,
+"Guerreirro, J. \textit{et al.}","guerreiro2015multi","Parallel Computing",2015,"Search Heuristics",,,,
+"Collective Mind","fursin2015collective","Compiler Parameters",2015,"Machine Learning",,,,

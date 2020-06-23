@@ -1906,7 +1906,7 @@ cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
 
 #+RESULTS:
 :
-: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
+: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 
 **** Plots
 - Geom_label around thesis work
@@ -1968,16 +1968,17 @@ p1 <- ggplot(data = df_search_spaces,
               fill = NA,
               color = "gray35",
               linetype = 2) +
-    geom_text(data = data.frame(x = x_lims[1],
-                                y = y_lims[2],
-                                label = "Zoomed-in Area"),
+    geom_text(data = data.frame(x = x_lims[2],
+                                y = y_lims[1],
+                                label = "Detailed"),
               aes(x = x,
                   y = y,
                   label = label,
                   shape = NA),
               color = "gray35",
-              vjust = -0.3,
+              vjust = 1.3,
               hjust = 0,
+              angle = 90,
               size = label_size,
               show.legend = FALSE) +
     geom_point(alpha = point_alpha,
@@ -1991,19 +1992,48 @@ p1 <- ggplot(data = df_search_spaces,
                         y = log10_search_space_size,
                         label = paste(author, name),
                         color = domain),
-                    xlim = c(110, 120),
+                    xlim = c(130, 200),
                     size = label_size,
                     show.legend = FALSE) +
     geom_label_repel(data = filter(df_search_spaces,
                                   thesis == TRUE &
+                                  name != "resnet50_weights" &
+                                  name != "gemv" &
                                   dimension > 40 &
                                   log10_search_space_size >= 30),
                     aes(x = dimension,
                         y = log10_search_space_size,
                         label = paste(author, name),
                         color = domain),
-                    xlim = c(110, 120),
-                    ylim = c(55, NA),
+                    xlim = c(130, NA),
+                    ylim = c(NA, NA),
+                    nudge_y = 1,
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_label_repel(data = filter(df_search_spaces,
+                                  thesis == TRUE &
+                                  dimension > 40 &
+                                  log10_search_space_size >= 30) %>%
+                     filter(name == "resnet50_weights"),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(60, NA),
+                    xlim = c(130, NA),
+                    size = label_size,
+                    show.legend = FALSE) +
+    geom_label_repel(data = filter(df_search_spaces,
+                                  thesis == TRUE &
+                                  dimension > 40 &
+                                  log10_search_space_size >= 30) %>%
+                     filter(name == "gemv"),
+                    aes(x = dimension,
+                        y = log10_search_space_size,
+                        label = paste(author, name),
+                        color = domain),
+                    ylim = c(50, NA),
+                    xlim = c(130, NA),
                     size = label_size,
                     show.legend = FALSE) +
     xlab("Dimension") +
@@ -2129,7 +2159,7 @@ p2 <- ggplot(data = df_search_spaces,
                                 override.aes = list(alpha = 1.0,
                                                     size = 3)))
 
-p1 * p2
+p2 * p1
 #+end_SRC
 
 #+RESULTS:
@@ -2183,7 +2213,6 @@ loadfonts(device = "postscript")
 
 #+RESULTS:
 #+begin_example
-Registering fonts with R
 
 Akaash already registered with postscriptFonts().
 AkrutiMal1 already registered with postscriptFonts().
@@ -2840,6 +2869,10 @@ regular_access <- to_tile(regular(4))
 tiled_access <- to_tile(tiled(4))
 unrolled_access <- to_tile(unrolled(4))
 
+t_regular_access <- to_tile(t(regular(4)))
+t_tiled_access <- to_tile(t(tiled(4)))
+t_unrolled_access <- to_tile(t(unrolled(4)))
+
 cf_palette <- "pals::jet"
 
 p1 <- ggplot() +
@@ -2906,7 +2939,7 @@ p2 <- ggplot() +
           panel.grid.minor = element_blank())
 
 p3 <- ggplot() +
-    geom_tile(data = unrolled_access,
+    geom_tile(data = tiled_access,
               aes(x = rev(col),
                   y = row,
                   fill = order,
@@ -2920,8 +2953,8 @@ p3 <- ggplot() +
                                                   label.hjust = 1,
                                                   ticks = FALSE,
                                                   reverse = FALSE),
-                           limits = c(1, 16),
-                           breaks = c(1, 16),
+                           limits = c(1, 256),
+                           breaks = c(1, 256),
                            labels = c("Last", "First")) +
     scale_x_discrete(expand = c(0,0))+
     scale_y_discrete(expand = c(0,0)) +
@@ -3122,14 +3155,22 @@ source  code  transformation methods  such  as  loop  /tiling/, or  /blocking/, 
 these methods generate a relatively large and complex search space, which we can
 explore with autotuning methods.
 
+# #+NAME: fig:blocking-unrolling
+# #+ATTR_LATEX: :width \textwidth :placement [t]
+# #+CAPTION: Access patterns on GEMM, for the \textit{destination} matrix, using
+# #+CAPTION: loop  nest optimizations. Panel \textit{(a)} shows the access order
+# #+CAPTION: of a naive implementation, panel \textit{(b)} shows the effect of
+# #+CAPTION: loop \textit{tiling}, or \textit{blocking}, and panel \textit{(c)}
+# #+CAPTION: shows the compounded effect of loop \textit{unrolling}
+# [[file:./img/blocking_unrolling.pdf]]
+
 #+NAME: fig:blocking-unrolling
-#+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Access patterns on GEMM, for the \textit{destination} matrix, using
+#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+CAPTION: Access patterns for matrices in $C = A + B^{\top}$, with
 #+CAPTION: loop  nest optimizations. Panel \textit{(a)} shows the access order
-#+CAPTION: of a naive implementation, panel \textit{(b)} shows the effect of
-#+CAPTION: loop \textit{tiling}, or \textit{blocking}, and panel \textit{(c)}
-#+CAPTION: shows the compounded effect of loop \textit{unrolling}
-[[file:./img/blocking_unrolling.pdf]]
+#+CAPTION: of a regular implementation, and panel \textit{(b)} shows the effect of
+#+CAPTION: loop \textit{tiling}, or \textit{blocking}
+[[file:./img/access_patterns.pdf]]
 
 Figure\nbsp{}\ref{fig:gemm-c}   shows   three   GEMM   implementations   in   C.
 Figure\nbsp{}\ref{fig:regular-access} shows  a naive implementation,  with three
@@ -3152,21 +3193,22 @@ Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are u
     \lstset{language=C,captionpos=b,numbers=none}
     \begin{lstlisting}
       int N = 256;
-
       float A[N][N], B[N][N], C[N][N];
       int i, j, k;
-
-      // [...] Initialize A, B, C
-
+      // Initialize A, B, C
       for(i = 0; i < N; i++){
+        // Load line i of A to fast memory
         for(j = 0; j < N; j++){
+          // Load C[i][j] to fast memory
+          // Load column j of B to fast memory
           for(k = 0; k < N; k++){
             C[i][j] += A[i][k] * B[k][j];
           }
+          // Write C[i][j] to main memory
         }
       }
     \end{lstlisting}
-    \caption{Naive implementation}
+    \caption{Regular implementation}
     \label{fig:regular-access}
   \end{subfigure}
   ~
@@ -3175,21 +3217,22 @@ Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are u
     \begin{lstlisting}
       int N = 256;
       int B_size = 4;
-
       int A[N][N], B[N][N], C[N][N];
       int i, j, k, x, y;
-
-      // [...] Initialize A, B, C
-
+      // Initialize A, B, C
       for(i = 0; i < N; i += B_size){
         for(j = 0; j < N; j += B_size){
+          // Load block (i, j) of C to fast memory
           for(k = 0; k < N; k++){
+            // Load block (i, k) of A to fast memory
+            // Load block (k, y) of B to fast memory
             for(x = i; x < min(i + B_size, N); x++){
               for(y = j; y < min(j + B_size, N); y++){
                 C[x][y] += A[x][k] * B[k][y];
               }
             }
           }
+          // Write block (i, j) of C to main memory
         }
       }
     \end{lstlisting}
@@ -3202,23 +3245,22 @@ Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are u
     \begin{lstlisting}
       int N = 256;
       int B_size = 4;
-
       int A[N][N], B[N][N], C[N][N];
       int i, j, k;
-
-      // [...] Initialize A, B, C
-
+      // Initialize A, B, C
       for(i = 0; i < N; i += B_size){
         for(j = 0; j < N; j += B_size){
+          // Load block (i, j) of C to fast memory
           for(k = 0; k < N; k++){
+            // Load block (i, k) of A to fast memory
+            // Load block (k, y) of B to fast memory
             C[i + 0][j + 0] += A[i + 0][k] * B[k][j + 0];
             C[i + 0][j + 1] += A[i + 0][k] * B[k][j + 1];
-
-            // [...] Unroll the remaining 12 iterations
-
+            // Unroll the remaining 12 iterations
             C[i + Bsize - 1][j + B_size - 2] += A[i + Bsize - 1][k] * B[k][j + B_size - 2];
             C[i + Bsize - 1][j + B_size - 1] += A[i + Bsize - 1][k] * B[k][j + B_size - 1];
           }
+          // Write block (i, j) of C to main memory
         }
       }
     \end{lstlisting}
@@ -3290,13 +3332,90 @@ In this  conceptual example,  all ${\approx}1.64\times10^4$  configurations were
 exhaustively evaluated, but in most settings where autotuning methods are useful
 it is impossible to do so.
 
-
-
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Dimension and search space size for autotuning problems from different domains
-#+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}.
+#+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
+
+#+begin_SRC R :results output latex :session *R* :eval no-export :exports results
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+df <- read.csv("data/search_spaces/search_methods.csv")
+
+df <- df %>%
+    mutate(citation_name = paste(name,
+                                 "~\\cite{",
+                                 gscholar_citation,
+                                 "}",
+                                 sep = "")) %>%
+    select(citation_name,
+           year,
+           method,
+           problem_domain) %>%
+    group_by(year) %>%
+    arrange(method, .by_group = TRUE)
+
+names(df) <- c("System", "Year", "Method", "Domain")
+
+kable(df,
+      format = "latex",
+      escape = FALSE,
+      booktabs = TRUE,
+      linesep = "") %>%
+    kable_styling(latex_options = c("scale_down"))
+#+end_SRC
+
+#+RESULTS:
+#+begin_export latex
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrll}
+\toprule
+System & Year & Method & Domain\\
+\midrule
+PhiPAC~\cite{bilmes1997optimizing} & 1997 & Search Heuristics & Linear Algebra\\
+ATLAS~\cite{dongarra1998automatically} & 1998 & Exhaustive & Linear Algebra\\
+FFTW~\cite{frigo1998fftw} & 1998 & Search Heuristics & Digital Signal Processing\\
+Active Harmony~\cite{tapus2002active} & 2002 & Search Heuristics & Domain-Specific Language\\
+OSKI~\cite{vuduc2005oski} & 2005 & Search Heuristics & Linear Algebra\\
+Seymour, K. \textit{et al.}~\cite{seymour2008comparison} & 2008 & Search Heuristics & Linear Algebra\\
+PetaBricks~\cite{ansel2009petabricks} & 2009 & Genetic Algorithm & Domain-Specific Language\\
+PRO~\cite{tiwari2009scalable} & 2009 & Search Heuristics & Linear Algebra\\
+ParamILS~\cite{hutter2009paramils} & 2009 & Search Heuristics & Combinatorial Auctions\\
+MILEPOST GCC~\cite{fursin2011milepost} & 2011 & Machine Learning & Compiler Parameters\\
+Orio~\cite{balaprakash2012spapt} & 2012 & Decision Trees & Linear Algebra\\
+INSIEME~\cite{jordan2012multi} & 2012 & Genetic Algorithm & Compiler Parameters\\
+pOSKI~\cite{byun2012autotuning} & 2012 & Search Heuristics & Linear Algebra\\
+OpenTuner~\cite{ansel2014opentuner} & 2014 & Search Heuristics & Compiler Parameters\\
+Lgen~\cite{spampinato2014basic} & 2014 & Search Heuristics & Linear Algebra\\
+OPAL~\cite{audet2014optimization} & 2014 & Search Heuristics & Parallel Computing\\
+Mametjanov, A. \textit{et al.}~\cite{mametjanov2015autotuning} & 2015 & Decision Trees & High-Level Synthesis\\
+Collective Mind~\cite{fursin2015collective} & 2015 & Machine Learning & Compiler Parameters\\
+CLTune~\cite{nugteren2015cltune} & 2015 & Search Heuristics & Parallel Computing\\
+Guerreirro, J. \textit{et al.}~\cite{guerreiro2015multi} & 2015 & Search Heuristics & Parallel Computing\\
+Abdelfattah, A. \textit{et al.}~\cite{abdelfattah2016performance} & 2016 & Exhaustive & Linear Algebra\\
+TANGRAM~\cite{chang2016efficient} & 2016 & Search Heuristics & Domain-Specific Language\\
+MASE-BDI~\cite{coelho2016mase} & 2016 & Search Heuristics & Environmental Land Change\\
+Apollo~\cite{beckingsale2017apollo} & 2017 & Decision Trees & Parallel Computing\\
+Xu, C. \textit{et al.}~\cite{xu2017parallel} & 2017 & Search Heuristics & High-Level Synthesis\\
+DeepHyper~\cite{balaprakash2018deephyper} & 2018 & Decision Trees & Neural Networks\\
+Tuzov, I. \textit{et al.}~\cite{tuzov2018tuning} & 2018 & Design of Experiments & High-Level Synthesis\\
+Periscope~\cite{gerndt2018multi} & 2018 & Search Heuristics & Compiler Parameters\\
+Kwon, J. \textit{et al.}~\cite{kwon2019learning} & 2019 & Machine Learning & High-Level Synthesis\\
+SynTunSys~\cite{ziegler2019syntunsys} & 2019 & Search Heuristics & High-Level Synthesis\\
+FuncyTuner~\cite{wang2019funcytuner} & 2019 & Search Heuristics & Compiler Parameters\\
+Ol’ha, J. \textit{et al.}~\cite{olha2019exploiting} & 2019 & Sensitivity Analysis & Parallel Computing\\
+Petrovic, F. \textit{et al.}~\cite{petrovivc2020benchmark} & 2020 & Search Heuristics & Linear Algebra\\
+Chu, Y. \textit{et al.}~\cite{chu2020improving} & 2020 & Search Heuristics & Search/MVWCP\\
+\bottomrule
+\end{tabular}}
+\end{table}
+#+end_export
 
 ** Thesis Contributions
 

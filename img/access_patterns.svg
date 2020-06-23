@@ -1435,9 +1435,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="245.77465"
-     inkscape:cx="201.38707"
-     inkscape:zoom="0.98994949"
+     inkscape:cy="204.31486"
+     inkscape:cx="283.38719"
+     inkscape:zoom="1.4"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -2270,99 +2270,95 @@
          y="96.258057"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'TeX Gyre Schola Math';-inkscape-font-specification:'TeX Gyre Schola Math';stroke-width:0.264583">+</tspan></text>
     <g
-       id="g15924-5"
        transform="translate(-21.454051,29.326356)"
-       inkscape:label="GridCartesian:X8:Y8"
-       style="stroke:#b2b2b2;stroke-opacity:1">
-      <g
-         id="g15904-1"
-         inkscape:label="MajorXGridlines"
-         style="stroke:#b2b2b2;stroke-opacity:1">
-        <path
-           id="path15890-7"
-           inkscape:label="MajorXDiv1"
-           d="M 5,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15892-4"
-           inkscape:label="MajorXDiv2"
-           d="M 10,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15894-3"
-           inkscape:label="MajorXDiv3"
-           d="M 15,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15896-1"
-           inkscape:label="MajorXDiv4"
-           d="M 20,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15898-4"
-           inkscape:label="MajorXDiv5"
-           d="M 25,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15900-6"
-           inkscape:label="MajorXDiv6"
-           d="M 30,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15902-94"
-           inkscape:label="MajorXDiv7"
-           d="M 35,0 V 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-      </g>
-      <g
-         id="g15920-2"
-         inkscape:label="MajorYGridlines"
-         style="stroke:#b2b2b2;stroke-opacity:1">
-        <path
-           id="path15906-2"
-           inkscape:label="MajorYDiv1"
-           d="M 0,5 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15908-6"
-           inkscape:label="MajorYDiv2"
-           d="M 0,10 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15910-4"
-           inkscape:label="MajorYDiv3"
-           d="M 0,15 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15912-1"
-           inkscape:label="MajorYDiv4"
-           d="M 0,20 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15914-2"
-           inkscape:label="MajorYDiv5"
-           d="M 0,25 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15916-8"
-           inkscape:label="MajorYDiv6"
-           d="M 0,30 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-        <path
-           id="path15918-8"
-           inkscape:label="MajorYDiv7"
-           d="M 0,35 H 40"
-           style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1" />
-      </g>
-      <rect
-         id="rect15922-92"
-         inkscape:label="Border"
-         style="fill:none;stroke:#b2b2b2;stroke-width:0.396875;stroke-opacity:1"
-         height="40"
-         width="40"
-         y="0"
-         x="0" />
+       style="stroke:#b2b2b2;stroke-opacity:1"
+       inkscape:label="MajorXGridlines"
+       id="g15904-1">
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 5,0 V 40"
+         inkscape:label="MajorXDiv1"
+         id="path15890-7" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 10,0 V 40"
+         inkscape:label="MajorXDiv2"
+         id="path15892-4" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 15,0 V 40"
+         inkscape:label="MajorXDiv3"
+         id="path15894-3" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 20,0 V 40"
+         inkscape:label="MajorXDiv4"
+         id="path15896-1" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 25,0 V 40"
+         inkscape:label="MajorXDiv5"
+         id="path15898-4" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 30,0 V 40"
+         inkscape:label="MajorXDiv6"
+         id="path15900-6" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 35,0 V 40"
+         inkscape:label="MajorXDiv7"
+         id="path15902-94" />
     </g>
+    <g
+       transform="translate(-21.454051,29.326356)"
+       style="stroke:#b2b2b2;stroke-opacity:1"
+       inkscape:label="MajorYGridlines"
+       id="g15920-2">
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,5 H 40"
+         inkscape:label="MajorYDiv1"
+         id="path15906-2" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,10 H 40"
+         inkscape:label="MajorYDiv2"
+         id="path15908-6" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,15 H 40"
+         inkscape:label="MajorYDiv3"
+         id="path15910-4" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,20 H 40"
+         inkscape:label="MajorYDiv4"
+         id="path15912-1" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,25 H 40"
+         inkscape:label="MajorYDiv5"
+         id="path15914-2" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,30 H 40"
+         inkscape:label="MajorYDiv6"
+         id="path15916-8" />
+      <path
+         style="fill:none;stroke:#b2b2b2;stroke-width:0.264583;stroke-opacity:1"
+         d="M 0,35 H 40"
+         inkscape:label="MajorYDiv7"
+         id="path15918-8" />
+    </g>
+    <rect
+       x="-21.45405"
+       y="29.326357"
+       width="40"
+       height="40"
+       style="fill:none;stroke:#b2b2b2;stroke-width:0.396875;stroke-opacity:1"
+       inkscape:label="Border"
+       id="rect15922-92" />
     <path
        style="fill:none;stroke:#555555;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.529167, 0.529167;stroke-dashoffset:0;stroke-opacity:1"
        d="m 16.255624,31.785569 -35.448859,4.934312"

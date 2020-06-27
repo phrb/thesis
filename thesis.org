@@ -3058,6 +3058,15 @@ on  computer  architecture,  and  characterize  the  search  spaces  found  when
 optimizing performance on different domains.
 
 ** Historical Trends in Hardware Design
+#+NAME: fig:trends
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: 49 years of microprocessor data, highlighting the sustained exponential
+#+CAPTION: increases and reductions on transistor counts and fabrication processes, the
+#+CAPTION: stagnation of frequency scaling around 2005, and one solution found for it,
+#+CAPTION: the simultaneous exponential increase on logical core count.
+#+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
+[[file:img/49_years_processor_data.pdf]]
+
 The physical  constraints imposed  by technological  advances on  circuit design
 were evident since  the first vacuum tube computers that  already spanned entire
 floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
@@ -3073,15 +3082,6 @@ integrated circuits by Gordon Moore /et al./ in 1965\nbsp{}\cite{moore1965crammi
 also postulated  its continuity.  The  performance improvements produced  by the
 design efforts to make Moore's  forecast a self-fulfilling prophecy were boosted
 until around 2005 by the performance gained from increases in circuit frequency.
-
-#+NAME: fig:trends
-#+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: 49 years of microprocessor data, highlighting the sustained exponential
-#+CAPTION: increases and reductions on transistor counts and fabrication processes, the
-#+CAPTION: stagnation of frequency scaling around 2005, and one solution found for it,
-#+CAPTION: the simultaneous exponential increase on logical core count.
-#+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
-[[file:img/49_years_processor_data.pdf]]
 
 Robert  Dennard /et  al./ remarked  in 1974\nbsp{}\cite{dennard1974design}  that smaller
 transistors, in part because they  generate shorter circuit delays, decrease the
@@ -3156,18 +3156,18 @@ for which  it would  take a  prohibitive amount  of time  to determine  the best
 configuration by exhaustively evaluating  all possibilities. Although this means
 we must  seek to decrease  the amount  of possibilities, by  restricting allowed
 parameter values, or dropping parameters completely,  it is often unclear how to
-decide  which parameters  should be  restricted  or dropped.   The next  section
-introduces a simple autotuning problem, presents an overview of the magnitude of
-the dimension  of autotuning search  spaces, and briefly introduces  the methods
+decide  which parameters  should be  restricted or  dropped.  The  next sections
+introduce a simple  autotuning problem, present an overview of  the magnitude of
+the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
-Chapter\nbsp{}[[Search Heuristics and Statistical Learning for Autotuning]].
+Chapter\nbsp{}[[Search Heuristics and Statistical Learning]].
 
-** Characterizing Search Spaces
+** Loop Nest Optimization as an Autotuning Problem
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
-general matrix multiplication (GEMM)\nbsp{}\cite{dongarra1990set}, and others from the
-original  BLAS\nbsp{}\cite{lawson1979basic},  is  an interesting  and  well  motivated
-example to  introduce autotuning.
+general  matrix multiplication  (GEMM)\nbsp{}\cite{dongarra1990set}, and  others
+from the original BLAS\nbsp{}\cite{lawson1979basic},  is an interesting and well
+motivated example, that we will use to introduce the autotuning problem.
 
 One way to improve the performance of such linear algebra programs is to exploit
 cache locality by  reordering and organizing loop iterations,  using source code
@@ -3175,9 +3175,23 @@ transformation methods such as loop /tiling/, or /blocking/, and /unrolling/.  W
 now  briefly describe  loop tiling  and unrolling  for a  simple linear  algebra
 problem. After,  we will  discuss an  autotuning search  space for  blocking and
 unrolling applied to  GEMM, and how these transformations  generate a relatively
-large and complex search space, which we can explore with autotuning methods.
+large and complex search space, which we can explore using autotuning methods.
 
-For three square matrices $A$, $B$, and $C$, we wish to compute $C = C + A + B^{\top}$.
+Figure\nbsp{}\ref{fig:transpose-c}  shows  three  versions  of  code  in  the  /C/
+language that, given three square matrices $A$,  $B$, and $C$, computes $C = C +
+A +  B^{\top}$. The first  optimization we can make  is to preemptively  load to
+cache, or /prefetch/, as  many as possible of the elements we  know will be needed
+at       any       given       iteration,       as       is       shown       in
+Figure\nbsp{}\ref{fig:transpose-regular-access}. The shaded  elements on the top
+row of Figure\nbsp{}[[fig:blocking-unrolling]] represent  the elements that could be
+prefetched in iterations of Figure\nbsp{}\ref{fig:transpose-regular-access}.
+
+Since /C/ matrices are stored in /row-major order/, each access of an element of $B$
+forces loading the next row elements, even if we explicitly prefetch a column of
+$B$.  Since  we are accessing  $B$ in a  /column-major order/, the  prefetched row
+elements would not be used until we reached the corresponding column. Therefore,
+the next column elements will have  to be loaded at each iteration, considerably
+slowing down the computation.
 
 # #+NAME: fig:blocking-unrolling
 # #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -3275,6 +3289,17 @@ For three square matrices $A$, $B$, and $C$, we wish to compute $C = C + A + B^{
 #+CAPTION: of a regular implementation, and panel \textit{(b)} shows the effect of
 #+CAPTION: loop \textit{tiling}, or \textit{blocking}
 [[file:./img/access_patterns.pdf]]
+
+We  can  solve this  problem  by  reordering  memory  accesses to  request  only
+prefetched elements. It  suffices to adequately split loop  indices into blocks,
+as shown in Figure\nbsp{}\ref{fig:transpose-blocked-tiled}. Now, memory accesses
+are   be   performed    in   /tiles/,   as   shown   on   the    bottom   row   of
+Figure\nbsp{}[[fig:blocking-unrolling]].  If  blocks are  correctly sized to  fit in
+cache, we  can improve performance  by explicitly prefetching each  tile.  After
+blocking, we can  still improve performance by /unrolling/  loop iterations, which
+forces register  usage and helps  the compiler to  identify regions that  can be
+/vectorized/.   A  conceptual  implementation  of   loop  unrolling  is  shown  in
+Figure\nbsp{}\ref{fig:transpose-unrolling}.
 
 Figure\nbsp{}\ref{fig:gemm-c}   shows   three   GEMM   implementations   in   C.
 Figure\nbsp{}\ref{fig:regular-access} shows  a naive implementation,  with three
@@ -3436,6 +3461,7 @@ In this  conceptual example,  all ${\approx}1.64\times10^4$  configurations were
 exhaustively evaluated, but in most settings where autotuning methods are useful
 it is impossible to do so.
 
+** Characterizing Search Spaces
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Dimension and search space size for autotuning problems from different domains
 #+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
@@ -3523,8 +3549,8 @@ Chu, Y. \textit{et al.}~\cite{chu2020improving} & Search/MVWCP & SH & 2020\\
 ** Thesis Contributions
 
 ** Text Structure
-Chapter\nbsp{}[[Search Heuristics and Statistical Learning for Autotuning]] presents background
-for  the application  of methods  derived from  search heuristics,  mathematical
+Chapter\nbsp{}[[Search Heuristics and Statistical Learning]] presents background for
+the  application  of  methods   derived  from  search  heuristics,  mathematical
 optimization, and statistical learning to autotuning.
 ** Backup Text                                                    :noexport:
 The    effectiveness   of    search    heuristics   on    autotuning   can    be
@@ -3551,13 +3577,13 @@ questions underlying each method.
 ** Introduction
 ** Computational Documents with Emacs
 ** Versioning for Code, Text, and Data
-* Search Heuristics and Statistical Learning for Autotuning
+* Search Heuristics and Statistical Learning
 ** Introduction
 - Methods Tree
 ** Search Heuristics
-*** Introduction
-- Implicit hypotheses
-- No explicit surrogate models
+*** Underlying Implicit Hypotheses
+*** Optimization without Surrogate Models
+*** OpenTuner: Leveraging Ensembles of Heuristics
 *** Software for Autotuning with Heuristics
 *** Results with GPU Compiler Parameters
 *** Results with High-Level Synthesis for FPGAs
@@ -3583,20 +3609,18 @@ questions underlying each method.
 *** Software for Autotuning with Statistical Learning
 *** Results
 - Briefly mention results, link to following chapters
-* A Design of Experiments Methodology for Autotuning
+* A Design of Experiments Methodology
 ** Introduction
 - Poses the question of choosing the experiments $X$
 - Mixing categorical and numerical (continuous and discrete) factors
 ** Inference with Analysis of Variance
-** Autotuning under a Tight Budget
-*** Screening for Main Effects
-*** Fractional Factorial Designs
-*** Optimal Designs
+** Inference for Autotuning under a Tight Budget
+*** Screening for Main Effects of GPU Compiler Parameters
+*** Fractional Factorial Designs for Chip Design on FPGAs
+*** Optimal Designs for a GPU Laplacian Kernel
 ** Optimal Design
 *** The KL Exchange Algorithm
-** Results
-*** Results in a GPU Laplacian Kernel
-*** Results with SPAPT
+*** Prediction and Inference for HPC Kernels
 **** CCGRID Paper
 **** Later developments
 * Gaussian Process Regression

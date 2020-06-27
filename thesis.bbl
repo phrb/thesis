@@ -300,11 +300,6 @@ C.~Audet, K.-C. Dang, and D.~Orban, ``Optimization of algorithms with opal,''
   \emph{Mathematical Programming Computation}, vol.~6, no.~3, pp. 233--254,
   2014.
 
-\bibitem{fursin2015collective}
-G.~Fursin, A.~Memon, C.~Guillon, and A.~Lokhmotov, ``Collective mind, part ii:
-  Towards performance-and cost-aware software engineering as a natural
-  science,'' \emph{arXiv preprint arXiv:1506.06256}, 2015.
-
 \bibitem{nugteren2015cltune}
 C.~Nugteren and V.~Codreanu, ``Cltune: A generic auto-tuner for opencl
   kernels,'' in \emph{Embedded Multicore/Many-core Systems-on-Chip (MCSoC),
@@ -317,6 +312,11 @@ J.~Guerreiro, A.~Ilic, N.~Roma, and P.~Tom{\'a}s, ``Multi-kernel auto-tuning on
   Distributed and Network-Based Processing (PDP), 2015 23rd Euromicro
   International Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE,
   2015, pp. 438--445.
+
+\bibitem{fursin2015collective}
+G.~Fursin, A.~Memon, C.~Guillon, and A.~Lokhmotov, ``Collective mind, part ii:
+  Towards performance-and cost-aware software engineering as a natural
+  science,'' \emph{arXiv preprint arXiv:1506.06256}, 2015.
 
 \bibitem{chang2016efficient}
 L.-W. Chang, I.~El~Hajj, C.~Rodrigues, J.~G{\'o}mez-Luna, and W.-m. Hwu,

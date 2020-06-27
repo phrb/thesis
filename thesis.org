@@ -1,5 +1,6 @@
 #+STARTUP: overview indent inlineimages logdrawer
-#+TITLE:  Autotuning Methods
+#+TITLE: Towards Transparent and Parsimonious
+#+TITLE: Methods for Automatic Performance Tuning
 #+AUTHOR:      Pedro Bruel
 #+LANGUAGE:    en
 #+TAGS: noexport(n) Stats(S)
@@ -19,6 +20,26 @@
 #+LATEX_CLASS: partless-book
 #+LATEX_CLASS_OPTIONS: [11pt,twoside,a4paper]
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
+#+LATEX_HEADER: \geometry{
+#+LATEX_HEADER:   %top=32mm,
+#+LATEX_HEADER:   %bottom=28mm,
+#+LATEX_HEADER:   %left=24mm,
+#+LATEX_HEADER:   %right=34mm,
+#+LATEX_HEADER:   textwidth=152mm, % 210-24-34
+#+LATEX_HEADER:   textheight=237mm, % 297-32-28
+#+LATEX_HEADER:   vmarginratio=8:7, % 32:28
+#+LATEX_HEADER:   hmarginratio=12:17, % 24:34
+#+LATEX_HEADER:   % Com geometry, esta medida não é tão relevante; basta garantir que ela
+#+LATEX_HEADER:   % seja menor que "top" e que o texto do cabeçalho caiba nela.
+#+LATEX_HEADER:   headheight=25.4mm,
+#+LATEX_HEADER:   % distância entre o início do texto principal e a base do cabeçalho;
+#+LATEX_HEADER:   % ou seja, o cabeçalho "invade" a margem superior nessa medida. Essa
+#+LATEX_HEADER:   % é a medida que determina a posição do cabeçalho
+#+LATEX_HEADER:   headsep=11mm,
+#+LATEX_HEADER:   footskip=10mm,
+#+LATEX_HEADER:   marginpar=20mm,
+#+LATEX_HEADER:   marginparsep=5mm,
+#+LATEX_HEADER: }
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
@@ -2982,6 +3003,7 @@ p1 + p2 + p3
 [[file:./img/blocking_unrolling.pdf]]
 
 * The Need for Autotuning
+** Introduction
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
 software  and  hardware  engineering   advances  continue  to  overcome  several
@@ -2993,13 +3015,12 @@ of programming models and languages for parallel and distributed computing.
 
 If we state performance optimization problems as /search/ or /learning/ problems, by
 converting implementation  and configuration  choices to /parameters/  which might
-affect  performance,  we  can  draw   and  adapt  proven  methods  from  search,
-mathematical optimization, and /statistical  learning/. The effectiveness of these
+affect  performance, we  can draw  from and  adapt proven  methods from  search,
+mathematical optimization, and statistical  learning. The effectiveness of these
 adapted methods on performance optimization  problems varies greatly, and hinges
 on practical  and mathematical properties  of the problem and  the corresponding
-/search  space/. The  application of  such methods  to the  automation of  program
-optimization  for  specific hardware,  under  a  set  of /constraints/,  is  named
-/autotuning/.
+/search space/. The  application of such methods to the  automation of performance
+tuning for specific hardware, under a set of /constraints/, is named /autotuning/.
 
 Improving performance  also relies on gathering  application-specific knowledge,
 which entails extensive  experimental costs since, with the  exception of linear
@@ -3007,14 +3028,14 @@ algebra  routines,  theoretical  peak  performance is  not  always  a  reachable
 comparison  baseline.   When  adapting  methods  for  autotuning  we  must  face
 challenges emerging from practical properties,  such as restricted time and cost
 budgets,  constraints  on  feasible  parameter  values,  and  the  need  to  mix
-/categorical/, /continuous/, and /discrete/ parameters.  To achieve useful results we
+/categorical/, /continuous/, and /discrete/ parameters.   To achieve useful results we
 must also  choose methods  that make hypotheses  compatible with  problem search
 spaces,  such  as  the  existence  of /discoverable/,  or  at  least  /exploitable/,
 relationships between parameters and performance.  Choosing an autotuning method
-requires determining  a balance between  the exploration  of a problem,  when we
-would  seek  to  discover  and  explain  relationships  between  parameters  and
-performance, and the exploitation of the best optimizations we can find, when we
-would seek only to minimize performance.
+requires balancing  the exploration of a  problem, that is, seeking  to discover
+and  explain   relationships  between   parameters  and  performance,   and  the
+exploitation of known or discovered relationships, seeking only to find the best
+possible performance.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
 the       statistical       learning       methods      of       /Design       of
@@ -3045,14 +3066,13 @@ one  force for  innovation in  hardware design  that spans  its history,  and is
 echoed in  modern supercomputers,  such as  the /Summit/  from /Oak  Ridge National
 Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 
-Figure\nbsp{}[[fig:trends]] highlights the unrelenting and so far successful pursuit
-of smaller transistor fabrication processes, and the resulting capability to fit
+Figure\nbsp{}[[fig:trends]] highlights  the unrelenting and  so far successful  pursuit of
+smaller transistor  fabrication processes, and  the resulting capability  to fit
 more computing power on  a fixed chip area.  This trend  was already observed in
-integrated      circuits      by      Gordon      Moore      /et      al./      in
-1965\nbsp{}\cite{moore1965cramming},  who also  postulated its  continuity.  The
-performance improvements produced by the design efforts to make Moore's forecast
-a self-fulfilling  prophecy were  boosted until around  2005 by  the performance
-gained from increases in circuit frequency.
+integrated circuits by Gordon Moore /et al./ in 1965\nbsp{}\cite{moore1965cramming}, who
+also postulated  its continuity.  The  performance improvements produced  by the
+design efforts to make Moore's  forecast a self-fulfilling prophecy were boosted
+until around 2005 by the performance gained from increases in circuit frequency.
 
 #+NAME: fig:trends
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -3063,36 +3083,35 @@ gained from increases in circuit frequency.
 #+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
 [[file:img/49_years_processor_data.pdf]]
 
-Robert  Dennard  /et  al./ remarked  in  1974\nbsp{}\cite{dennard1974design}  that
-smaller  transistors, in  part  because they  generate  shorter circuit  delays,
-decrease  the energy  required to  power  a circuit  and enable  an increase  in
-operation  frequency without  breaking  power usage  constraints.  This  scaling
-effect,  named /Dennard's  scaling/,  is hindered  primarily  by leakage  current,
-caused    by     quantum    tunneling    effects    in     small    transistors.
-Figure\nbsp{}[[fig:trends]] shows  a marked  stagnation on frequency  increase after
-around 2005,  as transistors crossed  the 10^{2}nm fabrication process.   It was
-expected that leakage  due to tunneling would limit  frequency scaling strongly,
-even     before      the     transistor     fabrication      process     reached
-10nm\nbsp{}\cite{frank2001device}.
+Robert  Dennard /et  al./ remarked  in 1974\nbsp{}\cite{dennard1974design}  that smaller
+transistors, in part because they  generate shorter circuit delays, decrease the
+energy required to power a circuit and enable an increase in operation frequency
+without breaking power usage constraints.   This scaling effect, named /Dennard's
+scaling/, is hindered  primarily by leakage current, caused  by quantum tunneling
+effects in  small transistors.  Figure\nbsp{}[[fig:trends]]  shows a marked  stagnation on
+frequency  increase  after  around  2005,   as  transistors  crossed  the  10^{2}nm
+fabrication process.  It was expected that  leakage due to tunneling would limit
+frequency  scaling  strongly, even  before  the  transistor fabrication  process
+reached 10nm\nbsp{}\cite{frank2001device}.
 
 Current hardware is now past the  effects of Dennard's scaling.  The increase in
-logical cores,  still around  2015, can  be interpreted  as preparation  for and
-mitigation of the end  of frequency scaling, and ushered in  an age of multicore
-scaling.  Still, in order to meet power consumption constraints, up to half of a
-multicore processor could have to be  powered down at all times. This phenomenon
-is  named  /Dark  Silicon/\nbsp{}\cite{esmaeilzadeh2011dark}, and  still  presents
-significant       challenges        to       hardware        designers       and
+logical cores around  2015 can be interpreted as preparation  for and mitigation
+of the  end of frequency  scaling, and ushered in  an age of  multicore scaling.
+Still, in order to meet power consumption constraints, up to half of a multicore
+processor could have to be powered down, at all times.  This phenomenon is named
+/Dark   Silicon/\nbsp{}\cite{esmaeilzadeh2011dark},   and   presents   significant
+challenges        to        current         hardware        designers        and
 programmers\nbsp{}\cite{venkataramani2015approximate,cheng2015core,henkel2015new}.
 
 The   /Top500/\nbsp{}\cite{top5002020list}   list    gathers   information   about
-commercially available  supercomputers, and ranks  them by their  performance on
-the              /LINPACK/             benchmark\nbsp{}\cite{dongarra2003linpack}.
-Figure\nbsp{}[[fig:rmax-rpeak]] shows the peak  theoretical performance $RPeak$, and
-the maximum performance achieved on the LINPACK benchmark $RMax$, in $Tflops/s$,
-for the  top-ranked supercomputers on  TOP500.  Despite the  smaller performance
-gains from  hardware design that are  to be expected for  post-Dennard's scaling
-processors, the increase  in computer performance has  continued its exponential
-climb, sustained mostly by software improvements.
+commercially  available supercomputers,  and ranks  them by  performance on  the
+/LINPACK/  benchmark\nbsp{}\cite{dongarra2003linpack}.  Figure\nbsp{}[[fig:rmax-rpeak]]  shows the
+peak theoretical  performance $RPeak$, and  the maximum performance  achieved on
+the LINPACK benchmark  $RMax$, in $Tflops/s$, for  the top-ranked supercomputers
+on TOP500.  Despite the smaller performance  gains from hardware design that are
+to be expected  for post-Dennard's scaling processors, the  increase in computer
+performance has  sustained an  exponential climb,  sustained mostly  by software
+improvements.
 
 #+NAME: fig:rmax-rpeak
 #+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
@@ -3101,15 +3120,15 @@ climb, sustained mostly by software improvements.
 #+ATTR_LATEX: :width \textwidth :placement [t]
 [[file:./img/top500_rmax_rpeak.pdf]]
 
-Although hardware  accelerators, such  as GPUs  and FPGAs,  have also  helped to
-sustain exponential  performance increase, their use  is not an escape  from the
+Although  /hardware accelerators/  such as  GPUs and  FPGAs, have  also helped  to
+support exponential performance  increases, their use is not an  escape from the
 fundamental  scaling  constraints  imposed   by  current  semiconductor  design.
-Figure\nbsp{}[[fig:acc-cores]] shows the increase  in processor and accelerator core
-count  on the  top-ranked  supercomputers  on Top500.   Half  of the  top-ranked
-supercomputers in the  last decade had accelerator cores, and  of those, all had
+Figure\nbsp{}[[fig:acc-cores]] shows the increase in  processor and accelerator core count
+on  the   top-ranked  supercomputers   on  Top500.    Half  of   the  top-ranked
+supercomputers in the  last decade had accelerator cores and,  of those, all had
 around ten times more accelerator than processor cores.  The apparent stagnation
 of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
-highlights the crucial impact of software on performance.
+highlights the crucial impact software optimization has on performance.
 
 Advances in hardware  design are currently not capable  of providing performance
 improvements  via frequency  scaling  without dissipating  more  power than  the
@@ -3138,22 +3157,27 @@ configuration by exhaustively evaluating  all possibilities. Although this means
 we must  seek to decrease  the amount  of possibilities, by  restricting allowed
 parameter values, or dropping parameters completely,  it is often unclear how to
 decide  which parameters  should be  restricted  or dropped.   The next  section
-introduces a simple  autotuning problem, and presents an  overview of autotuning
-search spaces  from the size  perspective.  The section also  briefly introduces
-methods  used  to explore  autotuning  search  spaces,  which are  discussed  in
-Chapter\nbsp{}[[Search and Statistical Learning for Autotuning]].
+introduces a simple autotuning problem, presents an overview of the magnitude of
+the dimension  of autotuning search  spaces, and briefly introduces  the methods
+commonly used to explore search spaces, some of which are discussed in detail in
+Chapter\nbsp{}[[Search Heuristics and Statistical Learning for Autotuning]].
 
 ** Characterizing Search Spaces
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
-general  matrix multiplication  (GEMM)\nbsp{}\cite{dongarra1990set}, and  others
-from  the  original  BLAS\nbsp{}\cite{lawson1979basic}, can  be  an  interesting
-example of autotuning.   One way to improve the performance  of such programs is
-to exploit  cache locality by  reordering and organizing loop  iterations, using
-source  code  transformation methods  such  as  loop  /tiling/, or  /blocking/,  and
-/unrolling/.  We now briefly describe loop  tiling and unrolling for GEMM, and how
-these methods generate a relatively large and complex search space, which we can
-explore with autotuning methods.
+general matrix multiplication (GEMM)\nbsp{}\cite{dongarra1990set}, and others from the
+original  BLAS\nbsp{}\cite{lawson1979basic},  is  an interesting  and  well  motivated
+example to  introduce autotuning.
+
+One way to improve the performance of such linear algebra programs is to exploit
+cache locality by  reordering and organizing loop iterations,  using source code
+transformation methods such as loop /tiling/, or /blocking/, and /unrolling/.  We will
+now  briefly describe  loop tiling  and unrolling  for a  simple linear  algebra
+problem. After,  we will  discuss an  autotuning search  space for  blocking and
+unrolling applied to  GEMM, and how these transformations  generate a relatively
+large and complex search space, which we can explore with autotuning methods.
+
+For three square matrices $A$, $B$, and $C$, we wish to compute $C = C + A + B^{\top}$.
 
 # #+NAME: fig:blocking-unrolling
 # #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -3163,6 +3187,86 @@ explore with autotuning methods.
 # #+CAPTION: loop \textit{tiling}, or \textit{blocking}, and panel \textit{(c)}
 # #+CAPTION: shows the compounded effect of loop \textit{unrolling}
 # [[file:./img/blocking_unrolling.pdf]]
+
+#+begin_export latex
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
+      float A[N][N], B[N][N], C[N][N];
+      int i, j;
+      // Initialize A, B, C
+      for(i = 0; i < N; i++){
+        // Load line i of A to fast memory
+        for(j = 0; j < N; j++){
+          // Load C[i][j] to fast memory
+          // Load column j of B to fast memory
+          C[i][j] += A[i][j] + B[j][i];
+          // Write C[i][j] to main memory
+        }
+      }
+    \end{lstlisting}
+    \caption{Regular implementation}
+    \label{fig:transpose-regular-access}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.48\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
+      int B_size = 4;
+      int A[N][N], B[N][N], C[N][N];
+      int i, j, x, y;
+      // Initialize A, B, C
+      for(i = 0; i < N; i += B_size){
+        for(j = 0; j < N; j += B_size){
+          // Load block (i, j) of C to fast memory
+          // Load block (i, j) of A to fast memory
+          // Load block (j, i) of B to fast memory
+          for(x = i; x < min(i + B_size, N); x++){
+            for(y = j; y < min(j + B_size, N); y++){
+              C[x][y] += A[x][y] + B[y][x];
+            }
+          }
+          // Write block (i, j) of C to main memory
+        }
+      }
+    \end{lstlisting}
+    \caption{Blocked, or tiled}
+    \label{fig:transpose-blocked-tiled}
+  \end{subfigure}
+
+  \begin{subfigure}[t]{\textwidth}
+    \lstset{language=C,captionpos=b,numbers=none}
+    \begin{lstlisting}
+      int N = 256;
+      int B_size = 4;
+      int A[N][N], B[N][N], C[N][N];
+      int i, j, k;
+      // Initialize A, B, C
+      for(i = 0; i < N; i += B_size){
+        for(j = 0; j < N; j += B_size){
+          // Load block (i, j) of C to fast memory
+          // Load block (i, j) of A to fast memory
+          // Load block (j, i) of B to fast memory
+          C[i + 0][j + 0] += A[i + 0][j] * B[i][j + 0];
+          C[i + 0][j + 1] += A[i + 0][j] * B[i][j + 1];
+          // Unroll the remaining 12 iterations
+          C[i + Bsize - 1][j + B_size - 2] += A[i + Bsize - 1][j] * B[i][j + B_size - 2];
+          C[i + Bsize - 1][j + B_size - 1] += A[i + Bsize - 1][j] * B[i][j + B_size - 1];
+          // Write block (i, j) of C to main memory
+        }
+      }
+    \end{lstlisting}
+    \caption{Tiled and unrolled}
+    \label{fig:transpose-unrolling}
+  \end{subfigure}
+  \caption{Loop nest optimizations for $C = C + A + B^{\top}$, in C}
+  \label{fig:transpose-c}
+\end{figure}
+#+end_export
 
 #+NAME: fig:blocking-unrolling
 #+ATTR_LATEX: :width .7\textwidth :placement [t]
@@ -3352,13 +3456,12 @@ df <- df %>%
                                  "}",
                                  sep = "")) %>%
     select(citation_name,
-           year,
-           method,
-           problem_domain) %>%
-    group_by(year) %>%
-    arrange(method, .by_group = TRUE)
+           problem_domain,
+           shorthand_method,
+           year) %>%
+    arrange(year)
 
-names(df) <- c("System", "Year", "Method", "Domain")
+names(df) <- c("System", "Domain", "Method", "Year")
 
 kable(df,
       format = "latex",
@@ -3374,44 +3477,44 @@ kable(df,
 \begin{table}[H]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{lrll}
+\begin{tabular}{lllr}
 \toprule
-System & Year & Method & Domain\\
+System & Domain & Method & Year\\
 \midrule
-PhiPAC~\cite{bilmes1997optimizing} & 1997 & Search Heuristics & Linear Algebra\\
-ATLAS~\cite{dongarra1998automatically} & 1998 & Exhaustive & Linear Algebra\\
-FFTW~\cite{frigo1998fftw} & 1998 & Search Heuristics & Digital Signal Processing\\
-Active Harmony~\cite{tapus2002active} & 2002 & Search Heuristics & Domain-Specific Language\\
-OSKI~\cite{vuduc2005oski} & 2005 & Search Heuristics & Linear Algebra\\
-Seymour, K. \textit{et al.}~\cite{seymour2008comparison} & 2008 & Search Heuristics & Linear Algebra\\
-PetaBricks~\cite{ansel2009petabricks} & 2009 & Genetic Algorithm & Domain-Specific Language\\
-PRO~\cite{tiwari2009scalable} & 2009 & Search Heuristics & Linear Algebra\\
-ParamILS~\cite{hutter2009paramils} & 2009 & Search Heuristics & Combinatorial Auctions\\
-MILEPOST GCC~\cite{fursin2011milepost} & 2011 & Machine Learning & Compiler Parameters\\
-Orio~\cite{balaprakash2012spapt} & 2012 & Decision Trees & Linear Algebra\\
-INSIEME~\cite{jordan2012multi} & 2012 & Genetic Algorithm & Compiler Parameters\\
-pOSKI~\cite{byun2012autotuning} & 2012 & Search Heuristics & Linear Algebra\\
-OpenTuner~\cite{ansel2014opentuner} & 2014 & Search Heuristics & Compiler Parameters\\
-Lgen~\cite{spampinato2014basic} & 2014 & Search Heuristics & Linear Algebra\\
-OPAL~\cite{audet2014optimization} & 2014 & Search Heuristics & Parallel Computing\\
-Mametjanov, A. \textit{et al.}~\cite{mametjanov2015autotuning} & 2015 & Decision Trees & High-Level Synthesis\\
-Collective Mind~\cite{fursin2015collective} & 2015 & Machine Learning & Compiler Parameters\\
-CLTune~\cite{nugteren2015cltune} & 2015 & Search Heuristics & Parallel Computing\\
-Guerreirro, J. \textit{et al.}~\cite{guerreiro2015multi} & 2015 & Search Heuristics & Parallel Computing\\
-Abdelfattah, A. \textit{et al.}~\cite{abdelfattah2016performance} & 2016 & Exhaustive & Linear Algebra\\
-TANGRAM~\cite{chang2016efficient} & 2016 & Search Heuristics & Domain-Specific Language\\
-MASE-BDI~\cite{coelho2016mase} & 2016 & Search Heuristics & Environmental Land Change\\
-Apollo~\cite{beckingsale2017apollo} & 2017 & Decision Trees & Parallel Computing\\
-Xu, C. \textit{et al.}~\cite{xu2017parallel} & 2017 & Search Heuristics & High-Level Synthesis\\
-DeepHyper~\cite{balaprakash2018deephyper} & 2018 & Decision Trees & Neural Networks\\
-Tuzov, I. \textit{et al.}~\cite{tuzov2018tuning} & 2018 & Design of Experiments & High-Level Synthesis\\
-Periscope~\cite{gerndt2018multi} & 2018 & Search Heuristics & Compiler Parameters\\
-Kwon, J. \textit{et al.}~\cite{kwon2019learning} & 2019 & Machine Learning & High-Level Synthesis\\
-SynTunSys~\cite{ziegler2019syntunsys} & 2019 & Search Heuristics & High-Level Synthesis\\
-FuncyTuner~\cite{wang2019funcytuner} & 2019 & Search Heuristics & Compiler Parameters\\
-Ol’ha, J. \textit{et al.}~\cite{olha2019exploiting} & 2019 & Sensitivity Analysis & Parallel Computing\\
-Petrovic, F. \textit{et al.}~\cite{petrovivc2020benchmark} & 2020 & Search Heuristics & Linear Algebra\\
-Chu, Y. \textit{et al.}~\cite{chu2020improving} & 2020 & Search Heuristics & Search/MVWCP\\
+PhiPAC~\cite{bilmes1997optimizing} & Linear Algebra & SH (Exhaustive) & 1997\\
+ATLAS~\cite{dongarra1998automatically} & Linear Algebra & SH (Exhaustive) & 1998\\
+FFTW~\cite{frigo1998fftw} & Digital Signal Processing & SH (Exhaustive) & 1998\\
+Active Harmony~\cite{tapus2002active} & Domain-Specific Language & SH & 2002\\
+OSKI~\cite{vuduc2005oski} & Linear Algebra & SH & 2005\\
+Seymour, K. \textit{et al.}~\cite{seymour2008comparison} & Linear Algebra & SH & 2008\\
+PRO~\cite{tiwari2009scalable} & Linear Algebra & SH & 2009\\
+ParamILS~\cite{hutter2009paramils} & Combinatorial Auctions & SH & 2009\\
+PetaBricks~\cite{ansel2009petabricks} & Domain-Specific Language & SH (Genetic Algorithm) & 2009\\
+MILEPOST GCC~\cite{fursin2011milepost} & Compiler Parameters & ML & 2011\\
+Orio~\cite{balaprakash2012spapt} & Linear Algebra & ML (Decision Trees) & 2012\\
+pOSKI~\cite{byun2012autotuning} & Linear Algebra & SH & 2012\\
+INSIEME~\cite{jordan2012multi} & Compiler Parameters & SH (Genetic Algorithm) & 2012\\
+OpenTuner~\cite{ansel2014opentuner} & Compiler Parameters & SH & 2014\\
+Lgen~\cite{spampinato2014basic} & Linear Algebra & SH & 2014\\
+OPAL~\cite{audet2014optimization} & Parallel Computing & SH & 2014\\
+Mametjanov, A. \textit{et al.}~\cite{mametjanov2015autotuning} & High-Level Synthesis & ML (Decision Trees) & 2015\\
+CLTune~\cite{nugteren2015cltune} & Parallel Computing & SH & 2015\\
+Guerreirro, J. \textit{et al.}~\cite{guerreiro2015multi} & Parallel Computing & SH & 2015\\
+Collective Mind~\cite{fursin2015collective} & Compiler Parameters & ML & 2015\\
+Abdelfattah, A. \textit{et al.}~\cite{abdelfattah2016performance} & Linear Algebra & SH (Exhaustive) & 2016\\
+TANGRAM~\cite{chang2016efficient} & Domain-Specific Language & SH & 2016\\
+MASE-BDI~\cite{coelho2016mase} & Environmental Land Change & SH & 2016\\
+Xu, C. \textit{et al.}~\cite{xu2017parallel} & High-Level Synthesis & SH & 2017\\
+Apollo~\cite{beckingsale2017apollo} & Parallel Computing & ML (Decision Trees) & 2017\\
+DeepHyper~\cite{balaprakash2018deephyper} & Neural Networks & ML (Decision Trees) & 2018\\
+Tuzov, I. \textit{et al.}~\cite{tuzov2018tuning} & High-Level Synthesis & Design of Experiments & 2018\\
+Periscope~\cite{gerndt2018multi} & Compiler Parameters & SH & 2018\\
+SynTunSys~\cite{ziegler2019syntunsys} & High-Level Synthesis & SH & 2019\\
+Kwon, J. \textit{et al.}~\cite{kwon2019learning} & High-Level Synthesis & ML & 2019\\
+FuncyTuner~\cite{wang2019funcytuner} & Compiler Parameters & SH & 2019\\
+Ol’ha, J. \textit{et al.}~\cite{olha2019exploiting} & Parallel Computing & Sensitivity Analysis & 2019\\
+Petrovic, F. \textit{et al.}~\cite{petrovivc2020benchmark} & Linear Algebra & SH & 2020\\
+Chu, Y. \textit{et al.}~\cite{chu2020improving} & Search/MVWCP & SH & 2020\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -3420,8 +3523,7 @@ Chu, Y. \textit{et al.}~\cite{chu2020improving} & 2020 & Search Heuristics & Sea
 ** Thesis Contributions
 
 ** Text Structure
-
-Chapter\nbsp{}[[Search and Statistical Learning for Autotuning]] presents background
+Chapter\nbsp{}[[Search Heuristics and Statistical Learning for Autotuning]] presents background
 for  the application  of methods  derived from  search heuristics,  mathematical
 optimization, and statistical learning to autotuning.
 ** Backup Text                                                    :noexport:
@@ -3445,10 +3547,63 @@ expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorize
 autotuning  methods  according to  some  of  the  key hypotheses  and  branching
 questions underlying each method.
 
-* Reproducible Science
-* Search and Statistical Learning for Autotuning
-* Design of Experiments
+* Efforts for Reproducible Science
+** Introduction
+** Computational Documents with Emacs
+** Versioning for Code, Text, and Data
+* Search Heuristics and Statistical Learning for Autotuning
+** Introduction
+- Methods Tree
+** Search Heuristics
+*** Introduction
+- Implicit hypotheses
+- No explicit surrogate models
+*** Software for Autotuning with Heuristics
+*** Results with GPU Compiler Parameters
+*** Results with High-Level Synthesis for FPGAs
+** Statistical Learning
+*** Introduction
+- Explicit surrogate models
+- The Bias-Variance Trade-off
+- Inference and prediction
+- Supervised and unsupervised learning
+- Parametric and Nonparametric Methods
+*** Supervised Methods for Regression and Classification
+- KNN, Linear Regression, Logistic Regression, Neural Networks
+- Briefly mention others
+*** Model Assessment
+- Train and Test Sets
+- Train and Test Mean Squared Error
+- Cross Validation, Bootstrapping
+- The question of choosing experiments $X$ is never posed
+*** Linear Regression
+- Ordinary Least Squares: Gauss-Markov (BLUE)
+- Ridge, Lasso
+- Transformations of $X$
+*** Software for Autotuning with Statistical Learning
+*** Results
+- Briefly mention results, link to following chapters
+* A Design of Experiments Methodology for Autotuning
+** Introduction
+- Poses the question of choosing the experiments $X$
+- Mixing categorical and numerical (continuous and discrete) factors
+** Inference with Analysis of Variance
+** Autotuning under a Tight Budget
+*** Screening for Main Effects
+*** Fractional Factorial Designs
+*** Optimal Designs
+** Optimal Design
+*** The KL Exchange Algorithm
+** Results
+*** Results in a GPU Laplacian Kernel
+*** Results with SPAPT
+**** CCGRID Paper
+**** Later developments
 * Gaussian Process Regression
+** Introduction
+- Sampling functions
+- Covariance Kernels: modeling uncertainty regions
+- Expressing structure?
 ** References
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{bibliography/references}

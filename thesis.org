@@ -40,6 +40,8 @@
 #+LATEX_HEADER:   marginpar=20mm,
 #+LATEX_HEADER:   marginparsep=5mm,
 #+LATEX_HEADER: }
+#+LATEX_HEADER: \widowpenalty=10000
+#+LATEX_HEADER: \clubpenalty=10000
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
@@ -3058,6 +3060,14 @@ on  computer  architecture,  and  characterize  the  search  spaces  found  when
 optimizing performance on different domains.
 
 ** Historical Trends in Hardware Design
+The physical  constraints imposed  by technological  advances on  circuit design
+were evident since  the first vacuum tube computers that  already spanned entire
+floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
+practical and  economical need to fit  more computing power into  real estate is
+one  force for  innovation in  hardware design  that spans  its history,  and is
+echoed in  modern supercomputers,  such as  the /Summit/  from /Oak  Ridge National
+Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
+
 #+NAME: fig:trends
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: 49 years of microprocessor data, highlighting the sustained exponential
@@ -3066,14 +3076,6 @@ optimizing performance on different domains.
 #+CAPTION: the simultaneous exponential increase on logical core count.
 #+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
 [[file:img/49_years_processor_data.pdf]]
-
-The physical  constraints imposed  by technological  advances on  circuit design
-were evident since  the first vacuum tube computers that  already spanned entire
-floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
-practical and  economical need to fit  more computing power into  real estate is
-one  force for  innovation in  hardware design  that spans  its history,  and is
-echoed in  modern supercomputers,  such as  the /Summit/  from /Oak  Ridge National
-Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 
 Figure\nbsp{}[[fig:trends]] highlights  the unrelenting and  so far successful  pursuit of
 smaller transistor  fabrication processes, and  the resulting capability  to fit
@@ -3105,20 +3107,13 @@ programmers\nbsp{}\cite{venkataramani2015approximate,cheng2015core,henkel2015new
 
 The   /Top500/\nbsp{}\cite{top5002020list}   list    gathers   information   about
 commercially  available supercomputers,  and ranks  them by  performance on  the
-/LINPACK/  benchmark\nbsp{}\cite{dongarra2003linpack}.  Figure\nbsp{}[[fig:rmax-rpeak]]  shows the
-peak theoretical  performance $RPeak$, and  the maximum performance  achieved on
-the LINPACK benchmark  $RMax$, in $Tflops/s$, for  the top-ranked supercomputers
-on TOP500.  Despite the smaller performance  gains from hardware design that are
-to be expected  for post-Dennard's scaling processors, the  increase in computer
-performance has  sustained an  exponential climb,  sustained mostly  by software
-improvements.
-
-#+NAME: fig:rmax-rpeak
-#+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
-#+CAPTION: achieved \textit{RMax} performance for
-#+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list}
-#+ATTR_LATEX: :width \textwidth :placement [t]
-[[file:./img/top500_rmax_rpeak.pdf]]
+/LINPACK/ benchmark\nbsp{}\cite{dongarra2003linpack}.  Figure\nbsp{}[[fig:rmax-rpeak]]
+shows  the peak  theoretical performance  $RPeak$, and  the maximum  performance
+achieved  on the  LINPACK benchmark  $RMax$, in  $Tflops/s$, for  the top-ranked
+supercomputers on TOP500.   Despite the smaller performance  gains from hardware
+design  that are  to  be  expected for  post-Dennard's  scaling processors,  the
+increase in computer  performance has sustained an  exponential climb, sustained
+mostly by software improvements.
 
 Although  /hardware accelerators/  such as  GPUs and  FPGAs, have  also helped  to
 support exponential performance  increases, their use is not an  escape from the
@@ -3130,6 +3125,23 @@ around ten times more accelerator than processor cores.  The apparent stagnation
 of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
 highlights the crucial impact software optimization has on performance.
 
+#+NAME: fig:rmax-rpeak
+#+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
+#+CAPTION: achieved \textit{RMax} performance for
+#+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list}
+#+ATTR_LATEX: :width \textwidth :placement [t]
+[[file:./img/top500_rmax_rpeak.pdf]]
+
+#+NAME: fig:acc-cores
+#+CAPTION: Processor and accelerator core count
+#+CAPTION: in supercomputers ranked 1^{st} on
+#+CAPTION: TOP500\nbsp{}\cite{top5002020list}.
+#+CAPTION: Core  count trends for supercomputers are not
+#+CAPTION: necessarily bound to processor trends observed on
+#+CAPTION: Figure\nbsp{}\ref{fig:trends}.
+#+ATTR_LATEX: :width \textwidth :placement [h!]
+[[file:./img/top500_accelerator_cores.pdf]]
+
 Advances in hardware  design are currently not capable  of providing performance
 improvements  via frequency  scaling  without dissipating  more  power than  the
 processor was  designed to support,  which violates power constraints  and risks
@@ -3139,16 +3151,6 @@ key  to  sustaining  historical  trends  in  performance  scaling  has  lied  in
 accelerators, parallel and distributed programming libraries, and fine tuning of
 several stages of  the software stack, from instruction selection  to the layout
 of neural networks.
-
-#+NAME: fig:acc-cores
-#+CAPTION: Processor and accelerator core count
-#+CAPTION: in supercomputers ranked 1^{st} on
-#+CAPTION: TOP500\nbsp{}\cite{top5002020list}.
-#+CAPTION: Core  count trends for supercomputers are not
-#+CAPTION: necessarily bound to processor trends observed on
-#+CAPTION: Figure\nbsp{}\ref{fig:trends}.
-#+ATTR_LATEX: :width \textwidth :placement [t]
-[[file:./img/top500_accelerator_cores.pdf]]
 
 The problem of optimizing software  for performance presents its own challenges.
 The search  spaces that emerge from  autotuning problems grow quickly  to a size
@@ -3161,7 +3163,6 @@ introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
 Chapter\nbsp{}[[Search Heuristics and Statistical Learning]].
-
 ** Loop Nest Optimization as an Autotuning Problem
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
@@ -3283,7 +3284,7 @@ slowing down the computation.
 #+end_export
 
 #+NAME: fig:blocking-unrolling
-#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+ATTR_LATEX: :width .7\textwidth :placement [h!]
 #+CAPTION: Access patterns for matrices in $C = A + B^{\top}$, with
 #+CAPTION: loop  nest optimizations. Panel \textit{(a)} shows the access order
 #+CAPTION: of a regular implementation, and panel \textit{(b)} shows the effect of
@@ -3301,19 +3302,30 @@ forces register  usage and helps  the compiler to  identify regions that  can be
 /vectorized/.   A  conceptual  implementation  of   loop  unrolling  is  shown  in
 Figure\nbsp{}\ref{fig:transpose-unrolling}.
 
-Figure\nbsp{}\ref{fig:gemm-c}   shows   three   GEMM   implementations   in   C.
-Figure\nbsp{}\ref{fig:regular-access} shows  a naive implementation,  with three
-nested loops spanning the size of the square matrices, accessing elements of the
-/destination/  matrix   /C/  in   the  order   shown  on   the  leftmost   panel  of
-Figure\nbsp{}[[fig:blocking-unrolling]].  If loop indices  are split into blocks, as
-shown in Figure\nbsp{}\ref{fig:blocked-tiled}, memory accesses will be performed
-in  /tiles/, shown  on  the center  panel of  Figure\nbsp{}[[fig:blocking-unrolling]],
-which can  improve performance  by using  only elements  loaded into  the cache.
-Loop unrolling,  shown conceptually  in Figure\nbsp{}\ref{fig:unrolling},  is an
-additional  source transformation  that can  be performed  independently, or  in
-addition to tiling, and that can improve performance by grouping iterations of a
-loop,      as      represented      on     the      rightmost      panel      of
-Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are used.
+Looking at the  loop nest optimization problem from  the autotuning perspective,
+the two  /parameters/ that  emerge from  the implementations  are the  /block size/,
+which controls the  stride, and the /unrolling factor/, which  controls the number
+of unrolled  iterations.  Larger block sizes  are desirable, because we  want to
+avoid extra comparisons,  but blocks should be small enough  to ensure access to
+as few as possible out-of-cache elements.  Likewise, the unrolling factor should
+be large,  to leverage vectorization and  available registers, but not  so large
+that it forces memory to the stack.
+
+The values  of block size  and unrolling  factor that optimize  performance will
+depend on the  cache hierarchy, register layout,  and vectorization capabilities
+of the  target processor, but  also on the memory  access pattern of  the target
+algorithm.   In  addition  to  finding   the  best  values  for  each  parameter
+independently, an  autotuner must  ideally aim to  account for  the /interactions/
+between parameters, that is, for the fact that the best value for each parameter
+might also depend on the value chosen for the other.
+
+The    next    loop    optimization    example    comes    from    Seymour    /et
+al./\nbsp{}\cite{seymour2008comparison}, and considers 128 blocking and unrolling
+values, in the interval $[0,127]$, for  the GEMM algorithm.  The three panels of
+Figure\nbsp{}\ref{fig:gemm-c} show  conceptual implementations of  loop blocking
+and unrolling for GEMM in /C/.  A block size of zero results in the implementation
+from  Figure\nbsp{}\ref{fig:regular-access}, and  an  unrolling  factor of  zero
+performs a single iteration per condition check.
 
 #+begin_export latex
 \begin{figure}[t]
@@ -3401,22 +3413,8 @@ Figure\nbsp{}[[fig:blocking-unrolling]], ensuring that processor registers are u
 \end{figure}
 #+end_export
 
-The two /parameters/  involved in this example are the  /block size/, which controls
-the stride,  and the  /unrolling factor/,  which controls  the number  of unrolled
-iterations.  Larger  block sizes are desirable,  because we want to  avoid extra
-comparisons, but  blocks should be  small enough to ensure  access to as  few as
-possible out-of-cache elements.  Likewise, the unrolling factor should be large,
-to leverage available registers,  but not so large that it  forces memory to the
-stack.
-
-The values of  block size and unrolling factor that  optimize performance depend
-on the cache hierarchy  and register layout of the target  processor, and on the
-memory access pattern of the target  algorithm.  An autotuner should also aim to
-account for the  /interaction/ between parameters, that is, for  the fact that the
-best value for each parameter also depends on the value chosen for the other.
-
 #+NAME: fig:search-space
-#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+ATTR_LATEX: :width .6\textwidth :placement [h!]
 #+CAPTION: A search space defined for loop blocking and unrolling
 #+CAPTION: parameters, in a matrix multiplication kernel\nbsp{}\cite{seymour2008comparison}
 [[file:img/seymour2008comparison.pdf]]
@@ -3428,42 +3426,54 @@ of the  source code with  different numbers of  unrolled iterations.  We  can do
 that   with   code   generators    or   with   /source-to-source   transformation/
 tools\nbsp{}\cite{videau2017boast,hartono2009annotation,ansel2009petabricks}.
 It is  often necessary to  modify the  program we wish  to optimize in  order to
-provide a configuration interface and expose its implicit parameters.
+provide a configuration  interface and expose its implicit  parameters.  Once we
+are able to control  the block size and the loop  unrolling factor, we determine
+the target search space by choosing the values to be explored.
 
-Once we  are able to control  the block size  and the loop unrolling  factor, we
-determine the  target search space by  choosing the values to  be explored.  The
-loop  nest  optimization   example  in  this  section  comes   from  Seymour  /et
-al./\nbsp{}\cite{seymour2008comparison}, and considers 128  integer values in the
-interval $[0,127]$.   A block size  of zero  results in the  implementation from
-Figure\nbsp{}\ref{fig:regular-access}, and an unrolling  factor of zero performs
-a single iteration per condition check.
-
-The performance  of each  of the  $128^2 = 16384$  combinations of  blocking and
-unrolling  factor,  shown  in  /Mflops/s/  in  Figure\nbsp{}[[fig:search-space]],  was
-measured for a sequential matrix multiplication algorithm, using square matrices
-of size 400\nbsp{}\cite{seymour2008comparison}. We can represent this autotuning
-search space as a /3D landscape/, since  we have two configurable parameters and a
-single  target performance  metric.  An  autotuner's  objective is  to find  the
-/highest/ point  of this landscape, since  the objective is to  /maximize/ Mflops/s,
-although  it is  more usual  to  transform the  performance metric  so that  the
-objective is to /minimize/ it.
+In this  example, the search  space is defined by  the $128^2 =  16384$ possible
+combinations  of  blocking  and  unrolling  values.   The  performance  of  each
+combination    in     the    search     space,    shown    in     /Mflops/s/    in
+Figure\nbsp{}[[fig:search-space]],    was   measured    for   a    sequential   GEMM
+implementation,        using        square        matrices        of        size
+400\nbsp{}\cite{seymour2008comparison}. We can  represent this autotuning search
+space as a /3D landscape/, since we  have two configurable parameters and a single
+target  performance metric.   In  this setting,  the objective  is  to find  the
+/highest/ point, since the objective is to /maximize/ Mflops/s, although usually the
+performance metric is transformed so that the objective is its /minimization/.
 
 On a first look, there seems to  be no apparent global search space structure in
 the landscape on  Figure\nbsp{}[[fig:search-space]], but local features  jump to the
 eyes, such as  the ``valley'' across all block sizes  for low unrolling factors,
 the ``ramp'' across all unrolling factors for low block sizes, and the series of
 jagged  ``plateaus'' across  the middle  regions, with  ridges for  identical or
-divisible block sizes and unrolling factors.  A careful look reveals a curvature
-along  the unrolling  factor  axis. The  best performance  on  this program  was
-achieved with a block size of 80 and an unrolling factor of 2.
+divisible block sizes  and unrolling factors.  A careful look  reveals also that
+there is  a curvature  along the  unrolling factor  axis.  Also  of note  is the
+abundance in  this landscape of  /local minima/,  that is, points  with relatively
+good performance, surrounded  by points with worse  performance. By exhaustively
+evaluating  all  possibilities, the  original  study  determined that  the  best
+performance  on this  program  was achieved  with  a  block size  of  80 and  an
+unrolling factor of 2.
 
 In this  conceptual example,  all ${\approx}1.64\times10^4$  configurations were
-exhaustively evaluated, but in most settings where autotuning methods are useful
-it is impossible to do so.
+exhaustively evaluated,  but it is  impossible to do  so in most  settings where
+autotuning methods are  useful.  The next section provides a  perspective of the
+autotuning  domains  and methods  employed  in  current research,  presenting  a
+selection of  search spaces and  discussing the trends  that can be  observed on
+search space size, targeted HPC domains, and chosen optimization methods.
 
 ** Characterizing Search Spaces
+Autotuning  methods are  used to  improve performance  in an  increasingly large
+variety of domains, from the  initial applications to linear algebra subprograms
+to the now ubiquitous construction and  configuration of neural networks, to the
+configuration  of  the  increasingly  relevant  tools  for  the  re-configurable
+hardware of  FPGAs.  It is  not far-fetched to  link the continued  increases in
+performance  and  hardware complexity,  that  we  discussed previously  in  this
+chapter, to the  increases in dimension and size of  the autotuning problems that
+we can now tackle. Figure\nbsp{}[[fig:search-spaces]].
+
+#+NAME: fig:search-spaces
 #+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Dimension and search space size for autotuning problems from different domains
+#+CAPTION: Dimension and search space size for autotuning problems from 14 domains
 #+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
@@ -3499,7 +3509,6 @@ kable(df,
 
 #+RESULTS:
 #+begin_export latex
-
 \begin{table}[H]
 \centering
 \resizebox{\linewidth}{!}{
@@ -3564,14 +3573,14 @@ explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
 Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
 structured  parameter  exploration,  and  can  be used  to  build  and  validate
 performance     models,     generating    transparent     and     cost-effective
-optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}. Other methods
-from   the  parametric   family   are   more  widely   used,   such  as   Bandit
-Algorithms\nbsp{}\cite{xu2017parallel}.   Nonparametric  learning   methods,  such  as
-Decision    Trees\nbsp{}\cite{balaprakash2016automomml}     and    Gaussian    Process
-Regression\nbsp{}\cite{parsa2019pabo}, are able  to reduce model bias  greatly, at the
-expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorizes some
-autotuning  methods  according to  some  of  the  key hypotheses  and  branching
-questions underlying each method.
+optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}.   Other
+methods  from  the parametric  family  are  more  widely  used, such  as  Bandit
+Algorithms\nbsp{}\cite{xu2017parallel}.  Nonparametric learning methods, such as
+Decision   Trees\nbsp{}\cite{balaprakash2016automomml}   and  Gaussian   Process
+Regression\nbsp{}\cite{parsa2019pabo}, are able to reduce model bias greatly, at
+the  expense  of   increased  prediction  variance.  Figure\nbsp{}\ref{fig:tree}
+categorizes some autotuning methods according to  some of the key hypotheses and
+branching questions underlying each method.
 
 * Efforts for Reproducible Science
 ** Introduction

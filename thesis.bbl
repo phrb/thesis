@@ -335,4 +335,30 @@ D.~Beckingsale, O.~Pearce, I.~Laguna, and T.~Gamblin, ``Apollo: Reusable models
   for fast, dynamic tuning of input-dependent code,'' in \emph{The 31th IEEE
   International Parallel and Distributed Processing Symposium}, 2017.
 
+\bibitem{balaprakash2011can}
+P.~Balaprakash, S.~M. Wild, and P.~D. Hovland, ``Can search algorithms save
+  large-scale automatic performance tuning?'' in \emph{ICCS}, 2011, pp.
+  2136--2145.
+
+\bibitem{balaprakash2012experimental}
+------, ``An experimental study of global and local search algorithms in
+  empirical performance tuning,'' in \emph{International Conference on High
+  Performance Computing for Computational Science}.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer, 2012, pp. 261--269.
+
+\bibitem{balaprakash2016automomml}
+P.~Balaprakash, A.~Tiwari, S.~M. Wild, and P.~D. Hovland, ``{AutoMOMML:
+  Automatic Multi-objective Modeling with Machine Learning},'' in \emph{High
+  Performance Computing: 31st International Conference, ISC High Performance
+  2016, Frankfurt, Germany, June 19-23, 2016, Proceedings}, M.~J. Kunkel,
+  P.~Balaji, and J.~Dongarra, Eds.\hskip 1em plus 0.5em minus 0.4em\relax
+  Springer International Publishing, 2016, pp. 219--239.
+
+\bibitem{parsa2019pabo}
+M.~Parsa, A.~Ankit, A.~Ziabari, and K.~Roy, ``{PABO: Pseudo Agent-Based
+  Multi-Objective Bayesian Hyperparameter Optimization for Efficient Neural
+  Accelerator Design},'' in \emph{2019 IEEE/ACM International Conference on
+  Computer-Aided Design (ICCAD)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE,
+  2019, pp. 1--8.
+
 \end{thebibliography}

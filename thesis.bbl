@@ -21,9 +21,27 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{seymour2008comparison}
+K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
+  empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
+
+\bibitem{fisher1937design}
+R.~A. Fisher, \emph{The design of experiments}.\hskip 1em plus 0.5em minus
+  0.4em\relax Oliver And Boyd; Edinburgh; London, 1937.
+
+\bibitem{bukh1992art}
+P.~N.~D. Bukh, \emph{The art of computer systems performance analysis,
+  techniques for experimental design, measurement, simulation and
+  modeling}.\hskip 1em plus 0.5em minus 0.4em\relax JSTOR, 1992.
+
 \bibitem{montgomery2017design}
 D.~C. Montgomery, \emph{Design and analysis of experiments}.\hskip 1em plus
   0.5em minus 0.4em\relax John wiley \& sons, 2017.
+
+\bibitem{box2005statistics}
+G.~E. Box, J.~S. Hunter, and W.~G. Hunter, \emph{Statistics for experimenters:
+  design, innovation, and discovery}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Wiley-Interscience New York, 2005, vol.~2.
 
 \bibitem{williams2006gaussian}
 C.~K. Williams and C.~E. Rasmussen, \emph{Gaussian processes for machine
@@ -106,10 +124,6 @@ J.~J. Dongarra, J.~Du~Croz, S.~Hammarling, and I.~S. Duff, ``A set of level 3
 C.~L. Lawson, R.~J. Hanson, D.~R. Kincaid, and F.~T. Krogh, ``Basic linear
   algebra subprograms for fortran usage,'' \emph{ACM Transactions on
   Mathematical Software (TOMS)}, vol.~5, no.~3, pp. 308--323, 1979.
-
-\bibitem{seymour2008comparison}
-K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
-  empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
 
 \bibitem{videau2017boast}
 B.~Videau, K.~Pouget, L.~Genovese, T.~Deutsch, D.~Komatitsch, F.~Desprez, and
@@ -334,6 +348,12 @@ C.~G. Coelho, C.~G. Abreu, R.~M. Ramos, A.~H. Mendes, G.~Teodoro, and C.~G.
 D.~Beckingsale, O.~Pearce, I.~Laguna, and T.~Gamblin, ``Apollo: Reusable models
   for fast, dynamic tuning of input-dependent code,'' in \emph{The 31th IEEE
   International Parallel and Distributed Processing Symposium}, 2017.
+
+\bibitem{bruel2017autotuninghls}
+P.~Bruel, A.~Goldman, S.~R. Chalamalasetti, and D.~Milojicic, ``{Autotuning
+  High-Level Synthesis for FPGAs Using OpenTuner and LegUp},'' in
+  \emph{International Conference on Reconfigurable Computing and FPGAs
+  (ReConFig)}, 2017.
 
 \bibitem{balaprakash2011can}
 P.~Balaprakash, S.~M. Wild, and P.~D. Hovland, ``Can search algorithms save

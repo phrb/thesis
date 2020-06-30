@@ -3004,8 +3004,8 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/blocking_unrolling.pdf]]
 
-* The Need for Autotuning
-** Introduction
+* Introduction
+** The Need for Autotuning
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
 software  and  hardware  engineering   advances  continue  to  overcome  several
@@ -3039,16 +3039,59 @@ and  explain   relationships  between   parameters  and  performance,   and  the
 exploitation of known or discovered relationships, seeking only to find the best
 possible performance.
 
+Search  algorithms  based  on  machine  learning heuristics  are  not  the  best
+candidates for  autotuning domains  where measurements  are lengthy  and costly,
+such as compiling industrial-level FPGA  programs, because these algorithms rely
+on the  availability of a  large number of  measurements. They also  assume good
+optimizations  are  reachable from  a  starting  position, and  that  tendencies
+observed locally in the search space are exploitable.  These assumptions are not
+usually true in  common autotuning domains, as  shown in the work  of Seymour /et
+al./\nbsp\cite{seymour2008comparison}.
+
+Autotuning search spaces also usually  have non-linear constraints and undefined
+regions, which are  also expected to decrease the effectiveness  of search based
+on heuristics and  machine learning.  An additional downside  to heuristics- and
+machine learning-based search  is that, usually, optimization  choices cannot be
+explained, and knowledge  gained during optimization is not  reusable.  The main
+contribution of this  thesis is to study  how to overcome the  reliance on these
+assumptions about search spaces, and the lack of explainable optimizations, from
+the point  of view  of a  /Design of Experiments/  (DoE), or  /Experimental Design/,
+methodology to autotuning.
+
+One of  the first detailed  descriptions and  mathematical treatment of  DoE was
+presented  by Ronald  Fisher\nbsp\cite{fisher1937design}  in his  1937 book  /The
+Design of Experiments/,  where he discussed principles  of experimentation, latin
+square  sampling and  factorial  designs.  Later  books such  as  the ones  from
+Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
+/et   al./\nbsp\cite{box2005statistics}   present   comprehensive   and   detailed
+foundations.   Techniques  based on  DoE  are  /parsimonious/ because  they  allow
+decreasing   the  number   of   measurements  required   to  determine   certain
+relationships  between  parameters  and  metrics, and  are  /transparent/  because
+parameter  selections and  configurations can  be  justified by  the results  of
+statistical tests.
+
+In DoE terminology, a  /design/ is a plan for executing  a series of measurements,
+or /experiments/, whose objective is to identify relationships between /factors/ and
+/responses/.  While factors and responses can refer to different concrete entities
+in  other  domains,  in  computer   experiments  factors  can  be  configuration
+parameters for algorithms  and compilers, for example, and responses  can be the
+execution time or memory consumption of a program.
+
+Designs  can  serve diverse  purposes,  from  identifying the  most  significant
+factors  for  performance, to  fitting  analytical  performance models  for  the
+response.  The  field of DoE  encompasses the mathematical formalization  of the
+construction of experimental designs.  More practical works in the field present
+algorithms to generate designs with different objectives and restrictions.
+
 The contributions of  this thesis are strategies to apply  to program autotuning
-the       statistical       learning       methods      of       /Design       of
-Experiments/\nbsp{}\cite{montgomery2017design},   or  /Experimental   Design/,  and
-/Gaussian  Process   Regression/\nbsp{}\cite{williams2006gaussian}.   This  thesis
-presents background and a high-level view of the theoretical foundations of each
-method, and detailed discussions of  the challenges involved in specializing the
-general definitions  of search  heuristics and  statistical learning  methods to
-different autotuning  problems, as well  as what  can be /learned/  about specific
-autotuning search spaces,  and how that acquired knowledge can  be leveraged for
-further optimization.
+the         DoE         methodology,        and         /Gaussian         Process
+Regression/\nbsp{}\cite{williams2006gaussian}.   This thesis  presents background
+and  a high-level  view  of  the theoretical  foundations  of  each method,  and
+detailed  discussions of  the challenges  involved in  specializing the  general
+definitions of search  heuristics and statistical learning  methods to different
+autotuning problems,  as well as what  can be /learned/ about  specific autotuning
+search spaces,  and how  that acquired  knowledge can  be leveraged  for further
+optimization.
 
 This  chapter aims  to substantiate  the claim  that autotuning  methods have  a
 fundamental  role to  play on  the future  of program  performance optimization,
@@ -3077,24 +3120,26 @@ Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 #+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
 [[file:img/49_years_processor_data.pdf]]
 
-Figure\nbsp{}[[fig:trends]] highlights  the unrelenting and  so far successful  pursuit of
-smaller transistor  fabrication processes, and  the resulting capability  to fit
+Figure\nbsp{}[[fig:trends]] highlights the unrelenting and so far successful pursuit
+of smaller transistor fabrication processes, and the resulting capability to fit
 more computing power on  a fixed chip area.  This trend  was already observed in
-integrated circuits by Gordon Moore /et al./ in 1965\nbsp{}\cite{moore1965cramming}, who
-also postulated  its continuity.  The  performance improvements produced  by the
-design efforts to make Moore's  forecast a self-fulfilling prophecy were boosted
-until around 2005 by the performance gained from increases in circuit frequency.
+integrated      circuits      by      Gordon      Moore      /et      al./      in
+1965\nbsp{}\cite{moore1965cramming},  who also  postulated its  continuity.  The
+performance improvements produced by the design efforts to make Moore's forecast
+a self-fulfilling  prophecy were  boosted until around  2005 by  the performance
+gained from increases in circuit frequency.
 
-Robert  Dennard /et  al./ remarked  in 1974\nbsp{}\cite{dennard1974design}  that smaller
-transistors, in part because they  generate shorter circuit delays, decrease the
-energy required to power a circuit and enable an increase in operation frequency
-without breaking power usage constraints.   This scaling effect, named /Dennard's
-scaling/, is hindered  primarily by leakage current, caused  by quantum tunneling
-effects in  small transistors.  Figure\nbsp{}[[fig:trends]]  shows a marked  stagnation on
-frequency  increase  after  around  2005,   as  transistors  crossed  the  10^{2}nm
-fabrication process.  It was expected that  leakage due to tunneling would limit
-frequency  scaling  strongly, even  before  the  transistor fabrication  process
-reached 10nm\nbsp{}\cite{frank2001device}.
+Robert  Dennard  /et  al./ remarked  in  1974\nbsp{}\cite{dennard1974design}  that
+smaller  transistors, in  part  because they  generate  shorter circuit  delays,
+decrease  the energy  required to  power  a circuit  and enable  an increase  in
+operation  frequency without  breaking  power usage  constraints.  This  scaling
+effect,  named /Dennard's  scaling/,  is hindered  primarily  by leakage  current,
+caused    by     quantum    tunneling    effects    in     small    transistors.
+Figure\nbsp{}[[fig:trends]] shows  a marked  stagnation on frequency  increase after
+around 2005,  as transistors crossed  the 10^{2}nm fabrication process.   It was
+expected that leakage  due to tunneling would limit  frequency scaling strongly,
+even     before      the     transistor     fabrication      process     reached
+10nm\nbsp{}\cite{frank2001device}.
 
 Current hardware is now past the  effects of Dennard's scaling.  The increase in
 logical cores around  2015 can be interpreted as preparation  for and mitigation
@@ -3118,8 +3163,8 @@ mostly by software improvements.
 Although  /hardware accelerators/  such as  GPUs and  FPGAs, have  also helped  to
 support exponential performance  increases, their use is not an  escape from the
 fundamental  scaling  constraints  imposed   by  current  semiconductor  design.
-Figure\nbsp{}[[fig:acc-cores]] shows the increase in  processor and accelerator core count
-on  the   top-ranked  supercomputers   on  Top500.    Half  of   the  top-ranked
+Figure\nbsp{}[[fig:acc-cores]] shows the increase  in processor and accelerator core
+count  on the  top-ranked  supercomputers  on Top500.   Half  of the  top-ranked
 supercomputers in the  last decade had accelerator cores and,  of those, all had
 around ten times more accelerator than processor cores.  The apparent stagnation
 of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
@@ -3659,10 +3704,58 @@ complex search spaces than ever before.
 Autotuning  methods  are one  approach  to  tackle performance  optimization  of
 complex search  spaces, enabling exploitation of  existing relationships between
 program  parameters and  performance.   We can  derive  autotuning methods  from
-well-established statistics,  although their usage is  not common in, nor  is it
-standardized for, autotuning domains.
+well-established  statistics,  although   their  usage  is  not   common  in  or
+standardized for autotuning domains.
 
-The first  contribution of  this thesis  is a  strategy to  apply the  Design of
+Initial work on this thesis studied  the effectiveness of classical and standard
+search heuristics,  such as  Simulated Annealing,  on autotuning  problems.  The
+first target autotuning domain was the set  of parameters of a compiler for CUDA
+programs.  The search heuristics for this  case study were implemented using the
+OpenTuner framework\nbsp\cite{ansel2014opentuner}, and  consisted of an ensemble
+of  search  heuristics  coordinated  by a  Multi-Armed  Bandit  algorithm.   The
+autotuner  searched  for a  set  of  compilation  parameters that  optimized  17
+heterogeneous  GPU  kernels, from  a  set  of approximately  $10^{23}$  possible
+combinations of all  parameters.  With 1.5h autotuning runs we  have achieved up
+to  $4\times$  speedup  in  comparison   with  the  CUDA  compiler's  high-level
+optimizations.   The  compilation  and  execution  times  of  programs  in  this
+autotuning domain are relatively fast, and were in the order of a few seconds to
+a minute.  Since measurement costs are relatively small, search heuristics could
+find  good optimizations  using  as  many measurements  as  needed.  A  detailed
+description      of      this      work       is      available      in      our
+paper\nbsp\cite{bruel2017autotuning}   published   in    the   /Concurrency   and
+Computation: Practice and Experience/ journal.
+
+The  next  case  study  was  developed  in  collaboration  with  /Hewlett-Packard
+Enterprise/,  and  consisted of  applying  the  same heuristics-based  autotuning
+approach to the  configuration of parameters involved in the  generation of FPGA
+hardware specification  from source  code in  the C  language, a  process called
+/High-Level Synthesis/ (HLS).  The main difference from our work with GPU compiler
+parameters was the time to obtain  the hardware specification, which could be in
+the order of hours for a single kernel.
+
+In this  more complex  scenario, we  achieved up  to $2\times$  improvements for
+different hardware metrics using  conventional search algorithms.  These results
+were obtained in a simple HLS benchmark, for which compilation times were in the
+order of  minutes.  The  search space was  composed of  approximately $10^{123}$
+possible  configurations, which  is much  larger than  the search  space in  our
+previous work with GPUs. Search space size and the larger measurement cost meant
+that  we  did  not  expect  the  heuristics-based  approach  to  have  the  same
+effectiveness   as  in   the   GPU   compiler  case   study.    This  work   was
+published\nbsp\cite{bruel2017autotuninghls}  at  the  2017  /IEEE  International
+Conference on ReConFigurable Computing and FPGAs/.
+
+Approaches using  classical machine  learning and optimization  techniques would
+not scale  to industrial-level  HLS, where  each compilation  can take  hours to
+complete.  Search space properties also  increase the complexity of the problem,
+in  particular  its  structure  composed of  binary,  factorial  and  continuous
+variables with potentially complex interactions.   Our results on autotuning HLS
+for  FPGAs  corroborate   the  conclusion  that  the   empirical  autotuning  of
+expensive-to-evaluate functions, such as those  that appear on the autotuning of
+HLS, require a more parsimonious  and transparent approach, that can potentially
+be achieved using  the DoE methodology.  The next section  describes our work on
+applying the DoE methodology to autotuning.
+
+The  main contribution  of this  thesis is  a strategy  to apply  the Design  of
 Experiments methodology to autotuning problems.  The strategy is based on linear
 regression  and  its  extensions,  Analysis of  Variance  (ANOVA),  and  Optimal
 Design. The strategy  requires the formulation of initial  assumptions about the
@@ -3672,16 +3765,43 @@ parameters, suggesting regions for further experimentation in a transparent way,
 that is, in a  way that is supported by statistical  tests of significance.  The
 effectiveness of the proposed strategy, and its ability to explain optimizations
 it  finds,  are  evaluated  on   autotuning  problems  in  the  source-to-source
-transformation domain.
+transformation domain. The initial stages of this work resulted in a publication
+on IEEE/ACM CCGrid\nbsp{}\cite{bruel2019autotuning}.
 
+Further efforts in this direction were  dedicated to describe precisely what can
+be learned about  search spaces from the application of  the methodology, and to
+refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
+objectives of model  assessment and prediction. These  discussions are presented
+in Chapter\nbsp{}[[A Design of Experiments Methodology]].
 
+Because the  Design of Experiments  methodology requires the specification  of a
+class of initial performance models, the methodology can sometimes achieve worse
+prediction  capabilities  when  there  is considerable  uncertainty  on  initial
+assumptions about the  underlying relationships.  Chapter\nbsp{}[[Gaussian Process
+Regression: A  more Flexible Method]]  describes the application to  autotuning of
+Gaussian Process Regression, an approach  that trades some explanatory power for
+a much  larger and  more flexible  class of underlying  models. We  evaluate the
+performance of this approach on the source-to-source transformation problem from
+Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
+problem on the quantization of /Deep Neural Network/ (DNN) layers.
 ** Text Structure
+The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
+Reproducible Science]] describes the efforts made over the duration of the work on
+this thesis  to establish a  workflow that promotes reproducible  science, using
+computational  documents  and  versioning   for  code,  results,  and  analyses.
 Chapter\nbsp{}[[Search Heuristics and Statistical Learning]] presents background for
 the  application  of  methods   derived  from  search  heuristics,  mathematical
-optimization, and statistical learning to autotuning.
+optimization, and statistical learning to autotuning.  Chapter\nbsp{}[[A Design of
+Experiments Methodology]]  describes the DoE  methodology, and its  application to
+autotuning problems, and the method  limitations encountered during this thesis.
+Chapter\nbsp{}[[Gaussian Process Regression: A  more Flexible Method]] describes the
+Gaussian Process Regression method, and  its application to autotuning problems.
+Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
+this  chapter, in  light of  the  results of  the excursions  performed in  this
+thesis.
 * Efforts for Reproducible Science
 ** Introduction
-** Computational Documents with Emacs
+** Computational Documents with Emacs and Org mode
 ** Versioning for Code, Text, and Data
 * Search Heuristics and Statistical Learning
 ** Introduction
@@ -3705,50 +3825,59 @@ the  expense  of  increased  prediction  variance.   Figure\nbsp{}\ref{fig:tree}
 categorizes some autotuning methods according to  some of the key hypotheses and
 branching questions underlying each method.
 ** Search Heuristics
-*** Underlying Implicit Hypotheses
+*** Implicit Underlying Hypotheses
 *** Optimization without Surrogate Models
+**** Limitations on Analyzing Results
 *** OpenTuner: Leveraging Ensembles of Heuristics
-*** Software for Autotuning with Heuristics
-*** Results with GPU Compiler Parameters
-*** Results with High-Level Synthesis for FPGAs
+**** The Multi-Armed Bandit, Area Under the Curve Approach
+*** Results and Limits of Analysis
+**** GPU Compiler Parameters
+**** High-Level Synthesis for FPGAs
+**** Limitations of Analyzing Results from Search Heuristics
 ** Statistical Learning
 *** Introduction
-- Explicit surrogate models
-- The Bias-Variance Trade-off
-- Inference and prediction
-- Supervised and unsupervised learning
-- Parametric and Nonparametric Methods
+**** Optimization with Surrogate Models
+**** The Bias-Variance Trade-Off
+**** Inference and prediction
+**** Supervised and Unsupervised Learning
+**** Parametric and Nonparametric Statistics
 *** Supervised Methods for Regression and Classification
-- KNN, Linear Regression, Logistic Regression, Neural Networks
-- Briefly mention others
+**** KNN, Linear Regression, Logistic Regression, Neural Networks
 *** Model Assessment
-- Train and Test Sets
-- Train and Test Mean Squared Error
-- Cross Validation, Bootstrapping
-- The question of choosing experiments $X$ is never posed
+**** Train and Test Sets
+**** Train and Test Mean Squared Error
+**** Cross Validation, Bootstrapping
+**** Information Criteria for Model Assessment
+***** Mallow's C_p and AIC
+***** BIC
+*** Choosing Experiments $X$: An Unposed Question
 *** Linear Regression
-- Ordinary Least Squares: Gauss-Markov (BLUE)
-- Ridge, Lasso
-- Transformations of $X$
+**** Ordinary Least Squares: Gauss-Markov (BLUE)
+**** Ridge, Lasso
+**** Transformations of $X$
 *** Software for Autotuning with Statistical Learning
-*** Results
-- Briefly mention results, link to following chapters
+**** The /R/ Language
+*** Results using Statistical Learning
+**** Linear Regression and Design of Experiments
 * A Design of Experiments Methodology
 ** Introduction
-- Poses the question of choosing the experiments $X$
-- Mixing categorical and numerical (continuous and discrete) factors
-** Inference with Analysis of Variance
+*** Posing the Question of Choosing Experiments $X$
+**** Reducing Experimental Cost
+**** Improving Model Inference and Prediction
+** Inference with Analysis of Variance (ANOVA)
 ** Inference for Autotuning under a Tight Budget
 *** Screening for Main Effects of GPU Compiler Parameters
 *** Fractional Factorial Designs for Chip Design on FPGAs
 *** Optimal Designs for a GPU Laplacian Kernel
-*** Space-Filling Designs for Quantization of DNN Layers
+*** Space-Filling Designs for Exploring Quantization of DNN Layers
 ** Optimal Design
 *** Optimality Criteria
+*** Mixing Categorical and Numerical Factors
+*** Experimentation under Search Space Constraints
 *** Exchange Algorithms for Optimal Design Construction
-** Prediction and Inference for HPC Kernels
+** Prediction and Inference for Source-to-Source Transformation
 *** Results with SPAPT Kernels
-* Autotuning for Larger Search Spaces with Gaussian Process Regression
+* Gaussian Process Regression: A more Flexible Method
 ** Introduction
 ** Sampling Functions from Multidimensional Gaussian Distributions
 ** Nonparametric Modeling with Covariance Kernels

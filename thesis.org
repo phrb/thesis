@@ -3786,7 +3786,7 @@ decide  which parameters  should be  restricted or  dropped.  The  next sections
 introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
-Chapter\nbsp{}[[Methods for Function Minimization]].
+Chapter\nbsp{}[[Autotuning using Function Minimization Methods]].
 *** Loop Nest Optimization as an Autotuning Problem
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
@@ -4268,11 +4268,11 @@ with  the  most prominent  domains  in  this  sample being  parallel  computing,
 compiler parameters, and  High-Level Synthesis.  Systems using  methods based on
 Machine Learning become more common on later work than systems using heuristics.
 
-Chapter\nbsp{}[[Application of Function Minimization Methods to Autotuning]] provides more
-detailed definitions  and discussions  of the applicability,  effectiveness, and
-explanatory  power  of  autotuning  methods   based  on  search  heuristics  and
-statistical learning.  The  remainder of this chapter  details the contributions
-of this thesis and the structure of this document.
+Chapter\nbsp{}[[Applications to Autotuning]] provides  more detailed definitions and
+discussions  of  the  applicability,  effectiveness, and  explanatory  power  of
+autotuning methods  based on  search heuristics  and statistical  learning.  The
+remainder  of this  chapter details  the contributions  of this  thesis and  the
+structure of this document.
 *** Thesis Contributions
 Computer  performance has  sustained exponential  increases over  the last  half
 century,  despite   current  physical  limits  on   hardware  design.   Software
@@ -4363,28 +4363,27 @@ a much  larger and  more flexible  class of underlying  models. We  evaluate the
 performance of this approach on the source-to-source transformation problem from
 Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
 problem on the quantization of /Deep Neural Network/ (DNN) layers.
-*** Text Structure
-The  remainder of  this thesis  is  organized as  follows.  Chapter\nbsp{}[[Efforts  for
+*** Text Structure                                               :noexport:
+The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
 Reproducible Science]] describes the efforts made over the duration of the work on
 this thesis  to establish a  workflow that promotes reproducible  science, using
 computational  documents  and  versioning   for  code,  results,  and  analyses.
-Chapter\nbsp{}[[Methods for  Function Minimization]]  presents background for  the derived
-from search heuristics, mathematical optimization, and statistical learning, and
-Chapter\nbsp{}[[Application   of  Function   Minimization  Methods   to  Autotuning]]   to
-autotuning.   Chapter\nbsp{}[[A  Design of  Experiments  Methodology]]  describes the  DoE
-methodology,  and  its  application  to  autotuning  problems,  and  the  method
-limitations   encountered   during   this  thesis.    Chapter\nbsp{}[[Gaussian   Process
-Regression: A  more Flexible  Method]] describes  the Gaussian  Process Regression
-method, and its application  to autotuning problems.  Chapter\nbsp{}[[Conclusion]] resumes
-and  concludes the  high-level  discussions of  this chapter,  in  light of  the
-results of the excursions performed in this thesis.
+Chapter\nbsp{}[[Methods  for Function  Minimization]]  presents  background for  the
+derived  from  search  heuristics, mathematical  optimization,  and  statistical
+learning,  and Chapter\nbsp{}[[Application  of  Function  Minimization Methods  to
+Autotuning]]  to autotuning.   Chapter\nbsp{}[[A Design  of Experiments  Methodology]]
+describes the DoE  methodology, and its application to  autotuning problems, and
+the method  limitations encountered during this  thesis.  Chapter\nbsp{}[[Gaussian
+Process  Regression:  A more  Flexible  Method]]  describes the  Gaussian  Process
+Regression    method,   and    its   application    to   autotuning    problems.
+Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
+this  chapter, in  light of  the  results of  the excursions  performed in  this
+thesis.
 ** Efforts for Reproducible Science
 *** Introduction
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
-* Background
-** Methods for Function Minimization
-*** Introduction
+* Autotuning using Function Minimization Methods
 The    effectiveness   of    search    heuristics   on    autotuning   can    be
 limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
 between other factors, by underlying hypotheses  about the search space, such as
@@ -4396,20 +4395,23 @@ explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
 Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
 structured  parameter  exploration,  and  can  be used  to  build  and  validate
 performance     models,     generating    transparent     and     cost-effective
-optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}.         Other
+optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}.   Other
 methods  from  the parametric  family  are  more  widely  used, such  as  Bandit
-Algorithms\nbsp{}\cite{xu2017parallel}.   Nonparametric  learning   methods,  such  as
-Decision    Trees\nbsp{}\cite{balaprakash2016automomml}     and    Gaussian    Process
-Regression\nbsp{}\cite{parsa2019pabo}, are able  to reduce model bias  greatly, at the
-expense  of increased  prediction  variance.  Figure\nbsp{}\ref{fig:tree}  categorizes
-some autotuning  methods according to some  of the key hypotheses  and branching
-questions underlying each method.
-**** A Classification Tree of Methods for Function Minimization
-*** Search Heuristics
-**** Implicit Underlying Hypotheses about Search Spaces
-**** Optimization without Surrogate Models
-**** Classification of Search Heuristics
-*** Statistical Learning
+Algorithms\nbsp{}\cite{xu2017parallel}.  Nonparametric learning methods, such as
+Decision   Trees\nbsp{}\cite{balaprakash2016automomml}   and  Gaussian   Process
+Regression\nbsp{}\cite{parsa2019pabo}, are able to reduce model bias greatly, at
+the  expense  of  increased  prediction  variance.   Figure\nbsp{}\ref{fig:tree}
+categorizes some autotuning methods according to  some of the key hypotheses and
+branching questions underlying each method.
+
+** Methods for Known or Cheap-to-Evaluate Functions
+*** Stochastic Methods
+**** Single-State Methods
+**** Methods Based on Populations
+*** Methods Based on Derivatives
+**** Local Descent Methods
+** Methods for Unknown or Expensive-to-Evaluate Functions
+*** Statistical Learning Methods
 **** Introduction
 ***** Optimization with Surrogate Models
 ***** The Bias-Variance Trade-Off
@@ -4453,8 +4455,7 @@ questions underlying each method.
 **** Sensitivity Analysis with Sobol Indices
 **** Other Nonparametric Methods
 **** Classification of Nonparametric Methods
-*** Revisiting the Classification Tree
-** Application of Function Minimization Methods to Autotuning
+** Applications to Autotuning
 *** Search Heuristics
 **** OpenTuner: Leveraging Ensembles of Heuristics
 ***** The Multi-Armed Bandit, Area Under the Curve Approach

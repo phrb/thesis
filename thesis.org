@@ -3229,13 +3229,13 @@ p1 + p2 + p3
   for tree={%
     anchor = north,
     align = center,
-    l sep+=1em
+    l sep+=1.4em
   },
   [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
     draw,
-    [{Is $f(\theta(X))$ known?},
+    [{Is $f(X)$ known?},
       draw
-      [{Minimization Methods for $f(\theta(X))$},
+      [{Directly Minimize $f(X)$},
         draw,
         edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
         [{Are $\nabla{}f$, $\mathbf{H}f$ known?},
@@ -3243,9 +3243,9 @@ p1 + p2 + p3
           [{Stochastic\\Descent},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{No}}
-            [{Population\\\textbf{Genetic}\\\textbf{Algorithms}}, draw]
-            [{Direct\\\textbf{Nelder-Mead}}, draw]
-            [{Single-state\\\textbf{Simulated}\\\textbf{Annealing}}, draw]]
+            [{Population\\based\\\textbf{Genetic}\\\textbf{Algorithms}\\$\dots$}, draw]
+            [{Direct\\\textbf{Nelder-Mead}\\$\dots$}, draw]
+            [{Single-state\\\textbf{Simulated}\\\textbf{Annealing}\\$\dots$}, draw]]
           [{\textbf{Gradient}\\\textbf{Descent}},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}]]]
@@ -3307,6 +3307,9 @@ p1 + p2 + p3
             [{Splitting rules on X\\\textbf{Decision} \textbf{Trees}},
               draw
               [, phantom]
+              [, phantom]
+              [, phantom]
+              [, phantom]
               [{Estimate $\hat{f}(\cdot)$ and\\$uncertainty(\hat{f}(\cdot))$},
                 edge = {-stealth, ForestGreen, semithick},
                 draw,
@@ -3329,8 +3332,7 @@ p1 + p2 + p3
                   color = ForestGreen]]]
             [{\textbf{Gaussian}\\\textbf{Process Regression}},
               alias = gaussian,
-              draw]
-            [{\textbf{Neural}\\\textbf{Networks}}, draw]]]]]]
+              draw]]]]]]
   \draw [-stealth, semithick, ForestGreen](selection) to [bend left=27] node[near start, fill=white, font = \scriptsize] {Exploit} (adequacy.south);
   \draw [-stealth, semithick, ForestGreen](estimate.east) to [bend right=37] node[near start, fill=white, font = \scriptsize] {Explore} (adequacy.south) ;
   \draw [-stealth, semithick, ForestGreen](gaussian) to (uncertainty);

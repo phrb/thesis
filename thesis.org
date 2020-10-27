@@ -3940,7 +3940,7 @@ decide  which parameters  should be  restricted or  dropped.  The  next sections
 introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
-Chapter\nbsp{}[[Autotuning using Function Minimization Methods]].
+Chapter\nbsp{}[[Autotuning using Algorithms for Optimization]].
 *** Loop Nest Optimization as an Autotuning Problem
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as

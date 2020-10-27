@@ -186,6 +186,154 @@
       mean that we need parallel architectures, which are more complex
   - Software
     - Parallel architectures are harder to program efficiently
+
+** Outlining the draft with Arnaud                                :noexport:
+**** Introduction
+General presentation of the manuscript
+*** Context 
+**** Observation: Historical Trends in Hardware Design
+**** Consequences for compilers and application developers: Generating optimized code has become increasingly difficult
+**** Autotuning approaches and difficulties
+- Describe existing approaches (opentuner, etc.) and provide examples
+  of autotuning problems with their dimension
+
+All this leads you to explain the current state of the technology and
+what is possibly "wrong" with current approaches.
+- Huge dimension and unclear geometry
+- Many black/box search heuristics whose effectiveness is difficult to
+  evaluate/interpret
+*** Optimization (in Autotuning context)
+**** Optimization Method
+***** Methods Based on Derivatives (Local Descent)
+****** Gradient based
+- Classical hypothesis: convex
+- convergence difficulties
+****** Gradient + Hessian based
+- fast convergence
+****** This requires too strong hypothesis, hence the needs for more "general" methods
+***** Schochastic Methods
+****** Single-State
+****** Population-Based methods
+***** Mini-conclusion
+- Most of these methods are not parsimonious. Require many estimates
+  of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
+  worse as they need to explore whereas descent based methods head to
+  the optimum more directly.
+**** Learning: Building a Surrogate
+***** Statistical Learning: Linear Regression
+- the model
+- how to fit
+- "Model quality" +how to check whether the model is correct or not ?+
+- how to interpret the significance (LM-CI, ANOVA). May hint to good
+  values for optimization
+
+Limitation: simple model with shape constraits, cannot "fit"
+everything
+***** Gaussian Process
+- the model
+- how to fit
+- provides mean estimates with confidence estimation
+- how to interpret the significance (sobol indices) but quite costly
+***** Mini-Conclusion
+Two big classes of models. Generality vs. interpretability. Yet
+everything we mentioned assumes X is given, sampled from
+observations. In our contects, We can choose which X to test, either
+to test the model, or to improve its quality, or to find a "good"
+value in our space $\mathcal{X}$.
+**** Design of Experiments
+***** 2-level factorial designs
+***** Screening
+Super efficient but very limited
+***** Optimal designs
+A "flexible" screening: allows to include non-linear terms,
+interactions, etc. if needed.
+
+Awesome but if a parameter was not included in the model or if the
+model is too simple (e.g. only comprised a linear term where a
+quadratic one would have been needed, or an important interaction was
+not included), we won't be able to detect it (lack of fit).
+***** Space-filling Designs
+Not very efficient for parameter estimate but good to evaluate the
+lack of fit.
+
+Also good for variance minimization in GP.
+***** Mini-conclusion
+- Designs to obtain good-quality parameter estimates
+  - Screening and D-opt for LM
+  - SFD for GP
+- Designs to test the model quality (lack of fit)
+  - SFD fo LM
+
+If model based, parameter significance and estimation can be used to
+reduce dimension and guide the optimization. With this DoE approach,
+we have a clear separation between the sampling phase and the
+interpretation phase. But what if no parameter really appears
+significant anymore ?
+**** Online Learning: the exploration / exploitation trade-off
+***** Bandits: simple (discrete choice, optimize regret = \sum_t R_t), USB
+***** EI for GP (continuous choice, optimize EI = \max_t R_t)
+Also mention GP-UCB and contrast with EGO. There are also variants for
+Linear Model (LinUCB).
+***** Mini-conclusion
+These methods seamlessly mix exploration and exploitation but the
+overal objective function is generally the regret, which makes sense
+for a self-optimizing system (e.g. facebook) but not in an autotuning
+context (where EI is more meaningful).
+**** Summary and Proposal
+- use glassbox (DoE based) approach to perform the optimization,
+  always try to interpret the results
+- 2 big methods based on different exploration/exploitation strategy:
+  1. Evaluate parameter significance and reduce dimension (two phases,
+     iterative)
+  2. Expected Improvement (first a general exploration phase with a
+     SFD, then seamlessly mix exploration and exploitation)
+  Possibly combinations of both approaches could be used back and
+  forth depending on the specific information we learn on the use
+  case.
+- In this thesis, we evaluate these DoE-based approaches for several
+  autotuning use cases and try to compare them with approaches that
+  had beed previously proposed fot these use cases.
+*** Evaluation
+**** Reproducible Research Methodology 
+- Tools and such
+- Explain difficulty of finding a needle in a haystack:
+  - how to know whether we found the optimal value ?
+  - how to know how far we are from the optimal value ?
+  - how to know whether there is anything to find ?
+  - how to know whether the geometry hypothesis we make are sound in
+    an unknown space ?
+  - ...
+**** Use Case 1: GPU compiling flags
+- mix binaire/numérique, opentuner (multi-armed to select the right
+  stochastic descent algorithm)
+- Tried to use clustering to identify significant parameters
+- On the interest of using a Screening design.
+  - Once the significant parameters are, they can easily be
+    fixed. Are there the same as the ones found by opentuner.
+**** Use Case 2: Kernel GPU Steven
+- Base strategies (RS, GAs, Local Descent, ...)
+- D-opt based approach \to excellent results
+- GP-EI based approach (TODO)
+**** Use Case 3: SPAPT
+- Base strategies (RS because equivalent to other classical strategies
+  s.a. GAs and others)
+- D-opt based approach \to not really impressive compared to RS but
+  maybe there is nothing to find.
+  - Ability to interpret = unclear. Nothing to see or model too simple ?
+**** Use Case 4: FPGA
+- 100 of numerical parameters
+- several metrics to optimize \to weighted combination
+- OpenTuner with heuristic and bandits gave "good" results
+  (improvement over the default one)
+- +DoE+ because no more access to the code. Ideally GP-EI. But we could
+  see that the OpenTuner exploration makes it very hard to interprete
+  the geometry.
+**** Use Case 5: Bit Quantization in Neural Nets
+- 54 discrete numerical parameters
+- several objective functions
+- RL
+- GP-EI
+*** Conclusion and Perspectives
 ** Underlying Hypotheses of Autotuning Methods
 :PROPERTIES:
 :EXPORT_FILE_NAME: hipotheses.pdf
@@ -3737,7 +3885,8 @@ ggplot(data, aes(x = x1, y = x2)) +
 
 #+RESULTS:
 [[file:./img/sampling_comparison.pdf]]
-* Introduction
+
+* Context 
 ** The Need for Autotuning
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
@@ -4533,7 +4682,7 @@ Regression    method,   and    its   application    to   autotuning    problems.
 Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
 this  chapter, in  light of  the  results of  the excursions  performed in  this
 thesis.
-** Efforts for Reproducible Science
+** Research Methodology: Efforts for Reproducible Science
 *** Introduction
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data

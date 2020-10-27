@@ -17,8 +17,29 @@
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
 #+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w@) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
+#+begin_src emacs-lisp :tangle init.el :exports none
+;; Pour configurer les subdivisions de la classe book (indiquer : #+LaTeX_CLASS: book)
+(with-eval-after-load "ox-latex"
+(add-to-list 'org-latex-classes
+             '("book"
+               "\\documentclass{book}"
+               ("\\part{%s}" . "\\part*{%s}")
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+#+end_src
+
+#+RESULTS:
+| book    | \documentclass{book}                 | (\part{%s} . \part*{%s})       | (\chapter{%s} . \chapter*{%s})       | (\section{%s} . \section*{%s})             | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| beamer  | \documentclass[presentation]{beamer} | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |                                      |                                            |
+| article | \documentclass{article}              |                                |                                      |                                            |                                      |                                            |
+
 #+LATEX_CLASS: book
 #+LATEX_CLASS_OPTIONS: [11pt,twoside,a4paper]
+#+DRAWERS: latex_headers
+
+:latex_headers:
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
 #+LATEX_HEADER: \geometry{
 #+LATEX_HEADER:   %top=32mm,
@@ -113,6 +134,7 @@
 # #+LATEX_HEADER: \newpagestyle{mystyle}
 # #+LATEX_HEADER: {\sethead[\thepage][][\chaptertitle]{}{}{\thepage}}
 # #+LATEX_HEADER: \pagestyle{mystyle}
+:end:
 
 * Thesis Drafts                                                    :noexport:
 ** Structure Drafts

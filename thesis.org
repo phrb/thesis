@@ -3222,7 +3222,7 @@ p1 + p2 + p3
 : [DEFAULT-PACKAGES]
 : \pagestyle{empty} % do not remove
 
-#+HEADER: :headers '("\\usepackage[dvipsnames]{xcolor}" "\\usepackage{tikz}" "\\usepackage{forest}" )
+#+HEADER: :headers '("\\usepackage[dvipsnames]{xcolor}" "\\usepackage{tikz}" "\\usepackage{forest}" "\\usepackage{amsmath}" "\\DeclareMathOperator*{\\argmin}{arg\\,min}" )
 #+HEADER: :exports results :results raw :file ./img/tree.pdf
 #+begin_src latex :eval no-export
 \begin{forest}
@@ -3233,12 +3233,12 @@ p1 + p2 + p3
   },
   [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
     draw,
-    [{Is $f(X)$ known?},
+    [{Is $f(X)$ known,\\or cheap to measure?},
       draw
-      [{Directly Minimize $f(X)$},
+      [{\textit{Search Heuristics}\\Leverage measurements\\to minimize $f(X)$},
         draw,
         edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
-        [{Are $\nabla{}f$, $\mathbf{H}f$ known?},
+        [{Can $\nabla{}f$ and $\mathbf{H}f$ be computed?},
           draw
           [{Stochastic\\Descent},
             draw,
@@ -3246,25 +3246,23 @@ p1 + p2 + p3
             [{Population\\based\\\textbf{Genetic}\\\textbf{Algorithms}\\$\dots$}, draw]
             [{Direct\\\textbf{Nelder-Mead}\\$\dots$}, draw]
             [{Single-state\\\textbf{Simulated}\\\textbf{Annealing}\\$\dots$}, draw]]
-          [{\textbf{Gradient}\\\textbf{Descent}},
+          [{\textbf{Gradient}\\\textbf{Descent}\\$\dots$},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}]]]
-      [{\textit{Statistical Learning}\\Construct surrogate $\hat{f}(\cdot, \theta(X))$},
+      [{\textit{Statistical Learning}\\Construct a surrogate\\$\hat{f}(\cdot, \theta(X))$, estimate $\theta(X)$},
         draw,
         edge label = {node[midway, fill=white, font = \scriptsize]{No}}
         [{Is $|\theta(X)|$ finite?},
           draw
-          [{Parametric},
+          [{Parametric Models},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
             [{$\forall{}i: x_i \in X$ is discrete\\$\hat{f}(X) \approx f_1(x_1) + \dots + f_k(x_k)$},
               draw
-              [{\textbf{Independent Bandits}\\for each $x_i$:\textbf{UCB},\textbf{EXP3},$\dots$}, draw]
-              [, phantom]]
-            [{Linear Model\\$\hat{f} = \mathcal{M}(X)\theta{}(X) + \varepsilon$},
+              [{\textbf{Independent Bandits}\\for each $x_i$:\textbf{UCB},\textbf{EXP3},$\dots$}, draw]]
+            [{\textbf{Design of Experiments}\\using linear models\\$\hat{f} = \mathcal{M}(X)\theta{}(X) + \varepsilon$},
               draw
-              [, phantom]
-              [{Check for model adequacy?},
+              [{Find \textit{significant} $x_i \in X$,\\or check \textit{lack of fit} of $\hat{f}$?},
                 draw,
                 alias = adequacy
                 [{Consider interactions?\\{$\exists x_i \neq x_j:\; \theta(x_ix_j) \neq 0$}},
@@ -3275,12 +3273,12 @@ p1 + p2 + p3
                     edge label = {node[midway, fill=white, font = \scriptsize]{No}},
                     draw
                     [, phantom]
-                    [{Select $\hat{X}_{*}$, reduce\\dimension of $\mathcal{X}$},
-                      edge = {-stealth, ForestGreen, semithick},
+                    [{Pick $\hat{X}_{*} = \argmin_{X \in \mathcal{X}}\hat{f}$,\\reduce dimension of $\mathcal{X}$},
+                      edge = {-stealth, Black, semithick},
                       edge label = {node[midway, fill=white, font = \scriptsize]{Exploit}},
                       draw,
                       alias = estimate,
-                      color = ForestGreen]]
+                      color = Black]]
                   [{\textbf{Optimal}\\\textbf{Design}},
                     draw,
                     alias = optimal,
@@ -3294,14 +3292,13 @@ p1 + p2 + p3
                 [{\textbf{Space-filling}\\\textbf{Designs}},
                   draw,
                   edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
-                  [, phantom]
                   [{Model selection},
-                    edge = {-stealth, ForestGreen, semithick},
+                    edge = {-stealth, Black, semithick},
                     edge label = {node[midway, fill=white, font = \scriptsize]{Explore}},
                     draw,
                     alias = selection,
-                    color = ForestGreen]]]]]
-          [{Nonparametric},
+                    color = Black]]]]]
+          [{Nonparametric Models},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{No}}
             [{Splitting rules on X\\\textbf{Decision} \textbf{Trees}},
@@ -3311,32 +3308,32 @@ p1 + p2 + p3
               [, phantom]
               [, phantom]
               [{Estimate $\hat{f}(\cdot)$ and\\$uncertainty(\hat{f}(\cdot))$},
-                edge = {-stealth, ForestGreen, semithick},
+                edge = {-stealth, Black, semithick},
                 draw,
                 alias = uncertainty,
-                color = ForestGreen
+                color = Black
                 [{Minimize\\$uncertainty(\hat{f}(X))$},
-                  edge = {ForestGreen, semithick},
+                  edge = {Black, semithick},
                   edge label = {node[midway, fill=white, font = \scriptsize]{Explore}},
                   draw,
-                  color = ForestGreen]
+                  color = Black]
                 [{Minimize $\hat{f}(X)$},
-                  edge = {ForestGreen, semithick},
+                  edge = {Black, semithick},
                   edge label = {node[midway, fill=white, font = \scriptsize]{Exploit}},
                   draw,
-                  color = ForestGreen]
-                [{Minimize\\$\hat{f}(X) - uncertainty(\hat{f}(X))$},
-                  edge = {ForestGreen, semithick},
+                  color = Black]
+                [{Minimize \textit{EI}, or\\$\hat{f}(X) - uncertainty(\hat{f}(X))$},
+                  edge = {Black, semithick},
                   edge label = {node[midway, fill=white, font = \scriptsize]{Exploit$+$Explore}},
                   draw,
-                  color = ForestGreen]]]
+                  color = Black]]]
             [{\textbf{Gaussian}\\\textbf{Process Regression}},
               alias = gaussian,
               draw]]]]]]
-  \draw [-stealth, semithick, ForestGreen](selection) to [bend left=27] node[near start, fill=white, font = \scriptsize] {Exploit} (adequacy.south);
-  \draw [-stealth, semithick, ForestGreen](estimate.east) to [bend right=37] node[near start, fill=white, font = \scriptsize] {Explore} (adequacy.south) ;
-  \draw [-stealth, semithick, ForestGreen](gaussian) to (uncertainty);
-  \draw [-stealth, semithick, ForestGreen](optimal) to node[midway, fill=white, font = \scriptsize] {Exploit} (estimate) ;
+  \draw [-stealth, semithick, Black](selection) to [bend left=22] node[near start, fill=white, font = \scriptsize] {Exploit} (adequacy.south);
+  \draw [-stealth, semithick, Black](estimate.east) to [bend right=32] node[near start, fill=white, font = \scriptsize] {Explore} (adequacy.south) ;
+  \draw [-stealth, semithick, Black](gaussian) to (uncertainty);
+  \draw [-stealth, semithick, Black](optimal) to node[midway, fill=white, font = \scriptsize] {Exploit} (estimate) ;
 \end{forest}
 #+end_src
 
@@ -4519,6 +4516,7 @@ thesis.
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
 * Autotuning using Algorithms for Optimization
+** Introduction
 ** Function Minimization
 *** Stochastic Methods
 **** Single-State Methods
@@ -4588,6 +4586,7 @@ branching questions underlying each method.
 **** Mixing Categorical and Numerical Factors
 **** Optimality Criteria
 **** Exchange Algorithms for Optimal Design Construction
+- KL-Exchange
 *** Inference with Analysis of Variance (ANOVA)
 *** Sampling under Search Space Constraints
 *** Classification of Design of Experiments Methods
@@ -4606,7 +4605,7 @@ branching questions underlying each method.
 ***** Fractional Factorial Designs for Chip Design on FPGAs
 *** Gaussian Process Regression
 * Experimental Validation
-** Search Heuristics
+** Function Minimization
 *** Results and Limits of Analysis
 **** GPU Compiler Parameters
 **** High-Level Synthesis for FPGAs

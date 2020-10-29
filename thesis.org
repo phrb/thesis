@@ -137,56 +137,6 @@
 :end:
 
 * Thesis Drafts                                                    :noexport:
-** Structure Drafts
-1. Introduction
-   1. Autotuning
-      1. Algorithm Selection Problem?
-   2. Overview of Autotuning Methods (taxonomy/decision tree)
-   3. Search Heuristics
-      - Introduction
-      - OpenTuner
-      - Autotuning GPU compiler parameters
-      - Autotuning High Level Synthesis for FPGAs
-   4. Statistical Learning
-      - Parametric, nonparametric
-   5. Related Work
-      - Literature Review
-2. Design of Experiments
-   1. Introduction
-      1. Linear Regression
-   2. Screening
-      1. Main effects
-      2. Example with CUDA flags
-   3. Factorial Designs
-      1. Example?
-   4. Optimal Design
-      1. Properties of the BLUE, Information Matrix
-      2. Variance-optimizing criteria
-      3. Example on Laplacian GPU
-   5. Autotuning SPAPT Kernels
-      - Mixing factor types
-      - Sampling with Constraints
-      - Heteroscedasticity
-3. Gaussian Process Regression
-   1. Introduction
-      1. Bayesian Linear Model (Rasmussen's Book)
-      2. EGO
-   2. Revisiting SPAPT kernels
-   3. Quantization for Deep Neural Networks
-4. Conclusion
-   - Expressing structure with kernels? (Duvenaud's thesis)
-   - Performance of the Federov Algorithm for D-Optimal design construction?
-*** Structure Draft
-- Course on performance optimization for HPC, and why it's hard
-- Difficulty to optimize programs comes from complexity in:
-  - Computer architecture
-    - Pursuit of doubling performance, fitting more transistors,
-      (Moore's Law), and the end of frequency and power
-      scaling (Dennard's),
-      mean that we need parallel architectures, which are more complex
-  - Software
-    - Parallel architectures are harder to program efficiently
-
 ** Outlining the draft with Arnaud
 *** Introduction
 General presentation of the manuscript
@@ -334,6 +284,56 @@ context (where EI is more meaningful).
 - RL
 - GP-EI
 *** Conclusion and Perspectives
+** Structure Drafts
+1. Introduction
+   1. Autotuning
+      1. Algorithm Selection Problem?
+   2. Overview of Autotuning Methods (taxonomy/decision tree)
+   3. Search Heuristics
+      - Introduction
+      - OpenTuner
+      - Autotuning GPU compiler parameters
+      - Autotuning High Level Synthesis for FPGAs
+   4. Statistical Learning
+      - Parametric, nonparametric
+   5. Related Work
+      - Literature Review
+2. Design of Experiments
+   1. Introduction
+      1. Linear Regression
+   2. Screening
+      1. Main effects
+      2. Example with CUDA flags
+   3. Factorial Designs
+      1. Example?
+   4. Optimal Design
+      1. Properties of the BLUE, Information Matrix
+      2. Variance-optimizing criteria
+      3. Example on Laplacian GPU
+   5. Autotuning SPAPT Kernels
+      - Mixing factor types
+      - Sampling with Constraints
+      - Heteroscedasticity
+3. Gaussian Process Regression
+   1. Introduction
+      1. Bayesian Linear Model (Rasmussen's Book)
+      2. EGO
+   2. Revisiting SPAPT kernels
+   3. Quantization for Deep Neural Networks
+4. Conclusion
+   - Expressing structure with kernels? (Duvenaud's thesis)
+   - Performance of the Federov Algorithm for D-Optimal design construction?
+*** Structure Draft
+- Course on performance optimization for HPC, and why it's hard
+- Difficulty to optimize programs comes from complexity in:
+  - Computer architecture
+    - Pursuit of doubling performance, fitting more transistors,
+      (Moore's Law), and the end of frequency and power
+      scaling (Dennard's),
+      mean that we need parallel architectures, which are more complex
+  - Software
+    - Parallel architectures are harder to program efficiently
+
 ** Underlying Hypotheses of Autotuning Methods
 :PROPERTIES:
 :EXPORT_FILE_NAME: hipotheses.pdf
@@ -3886,7 +3886,23 @@ ggplot(data, aes(x = x1, y = x2)) +
 #+RESULTS:
 [[file:./img/sampling_comparison.pdf]]
 
-* Context
+* Historical Hardware Design Trends and Consequences for Code Optimization
+** Introduction                                                   :noexport:
+The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
+Reproducible Science]] describes the efforts made over the duration of the work on
+this thesis  to establish a  workflow that promotes reproducible  science, using
+computational  documents  and  versioning   for  code,  results,  and  analyses.
+Chapter\nbsp{}[[Methods  for Function  Minimization]]  presents  background for  the
+derived  from  search  heuristics, mathematical  optimization,  and  statistical
+learning,  and Chapter\nbsp{}[[Application  of  Function  Minimization Methods  to
+Autotuning]]  to autotuning.   Chapter\nbsp{}[[A Design  of Experiments  Methodology]]
+describes the DoE  methodology, and its application to  autotuning problems, and
+the method  limitations encountered during this  thesis.  Chapter\nbsp{}[[Gaussian
+Process  Regression:  A more  Flexible  Method]]  describes the  Gaussian  Process
+Regression    method,   and    its   application    to   autotuning    problems.
+Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
+this  chapter, in  light of  the  results of  the excursions  performed in  this
+thesis.
 ** The Need for Autotuning
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
@@ -3984,7 +4000,7 @@ The following sections discuss the historical  context for the changes in trends
 on  computer  architecture,  and  characterize  the  search  spaces  found  when
 optimizing performance on different domains.
 
-*** Historical Trends in Hardware Design
+*** Historical Hardware Design Trends
 The physical  constraints imposed  by technological  advances on  circuit design
 were evident since  the first vacuum tube computers that  already spanned entire
 floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
@@ -4090,7 +4106,7 @@ introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
 Chapter\nbsp{}[[Autotuning using Algorithms for Optimization]].
-*** Loop Nest Optimization as an Autotuning Problem
+*** Consequences for Code Optimization: Autotuning Loop Nest Optimization
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
 general  matrix multiplication  (GEMM)\nbsp{}\cite{dongarra1990set}, and  others
@@ -4389,7 +4405,7 @@ autotuning  domains  and methods  employed  in  current research,  presenting  a
 selection of  search spaces and  discussing the trends  that can be  observed on
 search space size, targeted HPC domains, and chosen optimization methods.
 
-*** Characterizing Search Spaces
+*** Autotuning Approaches and Search Space
 Autotuning  methods have  been used  to improve  performance in  an increasingly
 large  variety of  domains,  from  the earlier  applications  to linear  algebra
 subprograms,  to the  now ubiquitous  construction and  configuration of  neural
@@ -4442,12 +4458,12 @@ generating  a large  set of  combinations. Despite  that, regarding  performance
 improvements, it is likely that most  configuration parameters will have a small
 impact, that is,  that only a handful of parameters  are responsible for changes
 in performance.  Search  spaces are often much more restrictive  than the one we
-discussed  in Section\nbsp{}[[Loop  Nest  Optimization as  an Autotuning  Problem]].
-Autotuning problem definitions usually come with /constraints/ on parameter values
-and limited /experimental  budgets/, and /runtime/ failures  for some configurations
-are often  unpredictable. In this  context, finding configurations  that improve
-performance   and  determining   the  subset   of  /significant   parameters/  are
-considerable challenges.
+discussed in  Section\nbsp{}[[Consequences for Code Optimization:  Autotuning Loop
+Nest Optimization]].  Autotuning problem definitions usually come with /constraints/
+on parameter values  and limited /experimental budgets/, and  /runtime/ failures for
+some  configurations   are  often  unpredictable.   In   this  context,  finding
+configurations  that   improve  performance   and  determining  the   subset  of
+/significant parameters/ are considerable challenges.
 
 Search  heuristics, such  as methods  based on  genetic algorithms  and gradient
 descent, are  a natural way to  tackle these challenges because  they consist of
@@ -4576,7 +4592,7 @@ discussions  of  the  applicability,  effectiveness, and  explanatory  power  of
 autotuning methods  based on  search heuristics  and statistical  learning.  The
 remainder  of this  chapter details  the contributions  of this  thesis and  the
 structure of this document.
-*** Thesis Contributions
+** Thesis Contributions
 Computer  performance has  sustained exponential  increases over  the last  half
 century,  despite   current  physical  limits  on   hardware  design.   Software
 optimization  has  performed an  increasingly  substantial  role on  performance
@@ -4666,26 +4682,6 @@ a much  larger and  more flexible  class of underlying  models. We  evaluate the
 performance of this approach on the source-to-source transformation problem from
 Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
 problem on the quantization of /Deep Neural Network/ (DNN) layers.
-*** Text Structure                                               :noexport:
-The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
-Reproducible Science]] describes the efforts made over the duration of the work on
-this thesis  to establish a  workflow that promotes reproducible  science, using
-computational  documents  and  versioning   for  code,  results,  and  analyses.
-Chapter\nbsp{}[[Methods  for Function  Minimization]]  presents  background for  the
-derived  from  search  heuristics, mathematical  optimization,  and  statistical
-learning,  and Chapter\nbsp{}[[Application  of  Function  Minimization Methods  to
-Autotuning]]  to autotuning.   Chapter\nbsp{}[[A Design  of Experiments  Methodology]]
-describes the DoE  methodology, and its application to  autotuning problems, and
-the method  limitations encountered during this  thesis.  Chapter\nbsp{}[[Gaussian
-Process  Regression:  A more  Flexible  Method]]  describes the  Gaussian  Process
-Regression    method,   and    its   application    to   autotuning    problems.
-Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
-this  chapter, in  light of  the  results of  the excursions  performed in  this
-thesis.
-** Research Methodology: Efforts for Reproducible Science
-*** Introduction
-*** Computational Documents with Emacs and Org mode
-*** Versioning for Code, Text, and Data
 * Autotuning using Algorithms for Optimization
 ** Introduction
 ** Function Minimization
@@ -4776,6 +4772,10 @@ branching questions underlying each method.
 ***** Fractional Factorial Designs for Chip Design on FPGAs
 *** Gaussian Process Regression
 * Experimental Validation
+** Research Methodology: Efforts for Reproducible Science
+*** Introduction
+*** Computational Documents with Emacs and Org mode
+*** Versioning for Code, Text, and Data
 ** Function Minimization
 *** Results and Limits of Analysis
 **** GPU Compiler Parameters

@@ -3887,7 +3887,97 @@ ggplot(data, aes(x = x1, y = x2)) +
 [[file:./img/sampling_comparison.pdf]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
-** Introduction                                                   :noexport:
+** Introduction
+Computer  performance has  sustained exponential  increases over  the last  half
+century,  despite   current  physical  limits  on   hardware  design.   Software
+optimization  has  performed an  increasingly  substantial  role on  performance
+improvement over the last 15 years, requiring the exploration of larger and more
+complex search spaces than ever before.
+
+Autotuning  methods  are one  approach  to  tackle performance  optimization  of
+complex search  spaces, enabling exploitation of  existing relationships between
+program  parameters and  performance.   We can  derive  autotuning methods  from
+well-established  statistics,  although   their  usage  is  not   common  in  or
+standardized for autotuning domains.
+
+Initial work on this thesis studied  the effectiveness of classical and standard
+search heuristics,  such as  Simulated Annealing,  on autotuning  problems.  The
+first target autotuning domain was the set  of parameters of a compiler for CUDA
+programs.  The search heuristics for this  case study were implemented using the
+OpenTuner framework\nbsp\cite{ansel2014opentuner}, and  consisted of an ensemble
+of  search  heuristics  coordinated  by a  Multi-Armed  Bandit  algorithm.   The
+autotuner  searched  for a  set  of  compilation  parameters that  optimized  17
+heterogeneous  GPU  kernels, from  a  set  of approximately  $10^{23}$  possible
+combinations of all  parameters.  With 1.5h autotuning runs we  have achieved up
+to  $4\times$  speedup  in  comparison   with  the  CUDA  compiler's  high-level
+optimizations.   The  compilation  and  execution  times  of  programs  in  this
+autotuning domain are relatively fast, and were in the order of a few seconds to
+a minute.  Since measurement costs are relatively small, search heuristics could
+find  good optimizations  using  as  many measurements  as  needed.  A  detailed
+description      of      this      work       is      available      in      our
+paper\nbsp\cite{bruel2017autotuning}   published   in    the   /Concurrency   and
+Computation: Practice and Experience/ journal.
+
+The  next  case  study  was  developed  in  collaboration  with  /Hewlett-Packard
+Enterprise/,  and  consisted of  applying  the  same heuristics-based  autotuning
+approach to the  configuration of parameters involved in the  generation of FPGA
+hardware specification  from source  code in  the C  language, a  process called
+/High-Level Synthesis/ (HLS).  The main difference from our work with GPU compiler
+parameters was the time to obtain  the hardware specification, which could be in
+the order of hours for a single kernel.
+
+In this  more complex  scenario, we  achieved up  to $2\times$  improvements for
+different hardware metrics using  conventional search algorithms.  These results
+were obtained in a simple HLS benchmark, for which compilation times were in the
+order of  minutes.  The  search space was  composed of  approximately $10^{123}$
+possible  configurations, which  is much  larger than  the search  space in  our
+previous work with GPUs. Search space size and the larger measurement cost meant
+that  we  did  not  expect  the  heuristics-based  approach  to  have  the  same
+effectiveness   as  in   the   GPU   compiler  case   study.    This  work   was
+published\nbsp\cite{bruel2017autotuninghls}  at  the  2017  /IEEE  International
+Conference on ReConFigurable Computing and FPGAs/.
+
+Approaches using  classical machine  learning and optimization  techniques would
+not scale  to industrial-level  HLS, where  each compilation  can take  hours to
+complete.  Search space properties also  increase the complexity of the problem,
+in  particular  its  structure  composed of  binary,  factorial  and  continuous
+variables with potentially complex interactions.   Our results on autotuning HLS
+for  FPGAs  corroborate   the  conclusion  that  the   empirical  autotuning  of
+expensive-to-evaluate functions, such as those  that appear on the autotuning of
+HLS, require a more parsimonious  and transparent approach, that can potentially
+be achieved using  the DoE methodology.  The next section  describes our work on
+applying the DoE methodology to autotuning.
+
+The  main contribution  of this  thesis is  a strategy  to apply  the Design  of
+Experiments methodology to autotuning problems.  The strategy is based on linear
+regression  and  its  extensions,  Analysis of  Variance  (ANOVA),  and  Optimal
+Design. The strategy  requires the formulation of initial  assumptions about the
+target autotuning problem, which are  refined with data collected by efficiently
+selected experiments. The main objectives  are to identify relationships between
+parameters, suggesting regions for further experimentation in a transparent way,
+that is, in a  way that is supported by statistical  tests of significance.  The
+effectiveness of the proposed strategy, and its ability to explain optimizations
+it  finds,  are  evaluated  on   autotuning  problems  in  the  source-to-source
+transformation domain. The initial stages of this work resulted in a publication
+on IEEE/ACM CCGrid\nbsp{}\cite{bruel2019autotuning}.
+
+Further efforts in this direction were  dedicated to describe precisely what can
+be learned about  search spaces from the application of  the methodology, and to
+refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
+objectives of model  assessment and prediction. These  discussions are presented
+in Chapter\nbsp{}[[A Design of Experiments Methodology]].
+
+Because the  Design of Experiments  methodology requires the specification  of a
+class of initial performance models, the methodology can sometimes achieve worse
+prediction  capabilities  when  there  is considerable  uncertainty  on  initial
+assumptions about the  underlying relationships.  Chapter\nbsp{}[[Gaussian Process
+Regression: A  more Flexible Method]]  describes the application to  autotuning of
+Gaussian Process Regression, an approach  that trades some explanatory power for
+a much  larger and  more flexible  class of underlying  models. We  evaluate the
+performance of this approach on the source-to-source transformation problem from
+Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
+problem on the quantization of /Deep Neural Network/ (DNN) layers.
+*** Text Structure                                               :noexport:
 The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
 Reproducible Science]] describes the efforts made over the duration of the work on
 this thesis  to establish a  workflow that promotes reproducible  science, using
@@ -4105,7 +4195,7 @@ decide  which parameters  should be  restricted or  dropped.  The  next sections
 introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
-Chapter\nbsp{}[[Autotuning using Algorithms for Optimization]].
+Chapter\nbsp{}[[Optimization Methods for Autotuning]].
 *** Consequences for Code Optimization: Autotuning Loop Nest Optimization
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
@@ -4573,10 +4663,10 @@ flexibility to  perform well in complex  search spaces and make  few assumptions
 about problems, but usually provide little, if  any, that can be used to explain
 optimization choices or derive relationships between parameters and performance.
 
-Table\nbsp{}\ref{tab:search-methods} lists some autotuning systems, their target
+Table\nbsp{}\ref{tab:search-methods}  lists  some  autotuning  systems,  their  target
 domains, and  the employed  method, ordered by  publication date.   Some systems
 that  did not  provide  detailed  search space  descriptions  and  could not  be
-included in Figure\nbsp{}[[fig:search-spaces]], especially some of the earlier work,
+included  in  Figure\nbsp{}[[fig:search-spaces]], especially  some  of  the earlier  work,
 provided enough information to categorize their autotuning methods. In contrast,
 many  more  recent  works,  especially  those using  methods  based  on  Machine
 Learning, did not provide specific  method information. Earlier work often deals
@@ -4587,104 +4677,16 @@ with  the  most prominent  domains  in  this  sample being  parallel  computing,
 compiler parameters, and  High-Level Synthesis.  Systems using  methods based on
 Machine Learning become more common on later work than systems using heuristics.
 
-Chapter\nbsp{}[[Applications to Autotuning]] provides  more detailed definitions and
-discussions  of  the  applicability,  effectiveness, and  explanatory  power  of
-autotuning methods  based on  search heuristics  and statistical  learning.  The
-remainder  of this  chapter details  the contributions  of this  thesis and  the
-structure of this document.
-** Thesis Contributions
-Computer  performance has  sustained exponential  increases over  the last  half
-century,  despite   current  physical  limits  on   hardware  design.   Software
-optimization  has  performed an  increasingly  substantial  role on  performance
-improvement over the last 15 years, requiring the exploration of larger and more
-complex search spaces than ever before.
-
-Autotuning  methods  are one  approach  to  tackle performance  optimization  of
-complex search  spaces, enabling exploitation of  existing relationships between
-program  parameters and  performance.   We can  derive  autotuning methods  from
-well-established  statistics,  although   their  usage  is  not   common  in  or
-standardized for autotuning domains.
-
-Initial work on this thesis studied  the effectiveness of classical and standard
-search heuristics,  such as  Simulated Annealing,  on autotuning  problems.  The
-first target autotuning domain was the set  of parameters of a compiler for CUDA
-programs.  The search heuristics for this  case study were implemented using the
-OpenTuner framework\nbsp\cite{ansel2014opentuner}, and  consisted of an ensemble
-of  search  heuristics  coordinated  by a  Multi-Armed  Bandit  algorithm.   The
-autotuner  searched  for a  set  of  compilation  parameters that  optimized  17
-heterogeneous  GPU  kernels, from  a  set  of approximately  $10^{23}$  possible
-combinations of all  parameters.  With 1.5h autotuning runs we  have achieved up
-to  $4\times$  speedup  in  comparison   with  the  CUDA  compiler's  high-level
-optimizations.   The  compilation  and  execution  times  of  programs  in  this
-autotuning domain are relatively fast, and were in the order of a few seconds to
-a minute.  Since measurement costs are relatively small, search heuristics could
-find  good optimizations  using  as  many measurements  as  needed.  A  detailed
-description      of      this      work       is      available      in      our
-paper\nbsp\cite{bruel2017autotuning}   published   in    the   /Concurrency   and
-Computation: Practice and Experience/ journal.
-
-The  next  case  study  was  developed  in  collaboration  with  /Hewlett-Packard
-Enterprise/,  and  consisted of  applying  the  same heuristics-based  autotuning
-approach to the  configuration of parameters involved in the  generation of FPGA
-hardware specification  from source  code in  the C  language, a  process called
-/High-Level Synthesis/ (HLS).  The main difference from our work with GPU compiler
-parameters was the time to obtain  the hardware specification, which could be in
-the order of hours for a single kernel.
-
-In this  more complex  scenario, we  achieved up  to $2\times$  improvements for
-different hardware metrics using  conventional search algorithms.  These results
-were obtained in a simple HLS benchmark, for which compilation times were in the
-order of  minutes.  The  search space was  composed of  approximately $10^{123}$
-possible  configurations, which  is much  larger than  the search  space in  our
-previous work with GPUs. Search space size and the larger measurement cost meant
-that  we  did  not  expect  the  heuristics-based  approach  to  have  the  same
-effectiveness   as  in   the   GPU   compiler  case   study.    This  work   was
-published\nbsp\cite{bruel2017autotuninghls}  at  the  2017  /IEEE  International
-Conference on ReConFigurable Computing and FPGAs/.
-
-Approaches using  classical machine  learning and optimization  techniques would
-not scale  to industrial-level  HLS, where  each compilation  can take  hours to
-complete.  Search space properties also  increase the complexity of the problem,
-in  particular  its  structure  composed of  binary,  factorial  and  continuous
-variables with potentially complex interactions.   Our results on autotuning HLS
-for  FPGAs  corroborate   the  conclusion  that  the   empirical  autotuning  of
-expensive-to-evaluate functions, such as those  that appear on the autotuning of
-HLS, require a more parsimonious  and transparent approach, that can potentially
-be achieved using  the DoE methodology.  The next section  describes our work on
-applying the DoE methodology to autotuning.
-
-The  main contribution  of this  thesis is  a strategy  to apply  the Design  of
-Experiments methodology to autotuning problems.  The strategy is based on linear
-regression  and  its  extensions,  Analysis of  Variance  (ANOVA),  and  Optimal
-Design. The strategy  requires the formulation of initial  assumptions about the
-target autotuning problem, which are  refined with data collected by efficiently
-selected experiments. The main objectives  are to identify relationships between
-parameters, suggesting regions for further experimentation in a transparent way,
-that is, in a  way that is supported by statistical  tests of significance.  The
-effectiveness of the proposed strategy, and its ability to explain optimizations
-it  finds,  are  evaluated  on   autotuning  problems  in  the  source-to-source
-transformation domain. The initial stages of this work resulted in a publication
-on IEEE/ACM CCGrid\nbsp{}\cite{bruel2019autotuning}.
-
-Further efforts in this direction were  dedicated to describe precisely what can
-be learned about  search spaces from the application of  the methodology, and to
-refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
-objectives of model  assessment and prediction. These  discussions are presented
-in Chapter\nbsp{}[[A Design of Experiments Methodology]].
-
-Because the  Design of Experiments  methodology requires the specification  of a
-class of initial performance models, the methodology can sometimes achieve worse
-prediction  capabilities  when  there  is considerable  uncertainty  on  initial
-assumptions about the  underlying relationships.  Chapter\nbsp{}[[Gaussian Process
-Regression: A  more Flexible Method]]  describes the application to  autotuning of
-Gaussian Process Regression, an approach  that trades some explanatory power for
-a much  larger and  more flexible  class of underlying  models. We  evaluate the
-performance of this approach on the source-to-source transformation problem from
-Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
-problem on the quantization of /Deep Neural Network/ (DNN) layers.
-* Autotuning using Algorithms for Optimization
+Chapter\nbsp{}[[]]  provides   more  detailed  definitions  and   discussions  of  the
+applicability, effectiveness, and explanatory  power of autotuning methods based
+on search  heuristics and statistical  learning.  The remainder of  this chapter
+details the contributions of this thesis and the structure of this document.
+* Optimization Methods for Autotuning
 ** Introduction
-** Function Minimization
+** Methods for Function Minimization
+*** Methods Based on Derivatives
+**** Gradient
+**** Gradient and Hessian
 *** Stochastic Methods
 **** Single-State Methods
 The    effectiveness   of    search    heuristics   on    autotuning   can    be
@@ -4708,56 +4710,46 @@ categorizes some autotuning methods according to  some of the key hypotheses and
 branching questions underlying each method.
 
 **** Methods Based on Populations
-*** Methods Based on Derivatives
-**** Local Descent Methods
-** Learning
-*** Statistical Learning Methods
-**** Introduction
-***** Optimization with Surrogate Models
-***** The Bias-Variance Trade-Off
-***** Inference and prediction
-***** Supervised and Unsupervised Learning
-***** Parametric and Nonparametric Statistics
-**** Supervised Methods for Regression and Classification
-- KNN, Linear Regression, Logistic Regression, Neural Networks
-**** Model Assessment
-- Train and Test Sets
-- Train and Test Mean Squared Error
-- Cross Validation, Bootstrapping
-- Information Criteria for Model Assessment
-  - Mallow's C_p and AIC
-  - BIC
-**** Choosing Experiments $X$: An Unposed Question
-**** Linear Regression
-- Ridge, Lasso
-***** Ordinary Least Squares: Gauss-Markov (BLUE)
-***** Transformations of $X$
-**** Classification of Statistical Learning Methods
+*** Summary
+** Statistical Learning
+*** Introduction
+- Optimization with Surrogate Models
+- The Bias-Variance Trade-Off
+- Inference and prediction
+- Supervised and Unsupervised Learning
+- Parametric and Nonparametric Statistics
+- Model Assessment:
+  - Train and Test Sets
+  - Train and Test Mean Squared Error
+  - Cross Validation, Bootstrapping
+  - Information Criteria for Model Assessment
+    - Mallow's C_p and AIC
+    - BIC
+*** Linear Regression
+- Ordinary Least Squares: Gauss-Markov (BLUE)
+- Transformations of $X$
+- ANOVA
 *** Gaussian Process Regression
-**** Introduction
-**** Sampling Functions from Multidimensional Gaussian Distributions
-**** Nonparametric Modeling with Covariance Kernels
-**** Sensitivity Analysis with Sobol Indices
-**** Other Nonparametric Methods
-**** Classification of Nonparametric Methods
-*** Online Learning
+- Sampling Functions from Multidimensional Gaussian Distributions
+- Nonparametric Modeling with Covariance Kernels
+- Sensitivity Analysis with Sobol Indices
+- Other Nonparametric Methods
+*** Summary
 ** Design of Experiments
 *** Introduction
-**** Posing the Question of Choosing Experiments $X$
-***** Reducing Experimental Cost
-***** Improving Model Inference and Prediction
+- Reducing Experimental Cost
+- Improving Model Inference and Prediction
+*** 2-Level Factorial Designs
 *** Screening
-*** Factorial Designs
-*** Space-Filling Designs
 *** Optimal Design
 **** Mixing Categorical and Numerical Factors
 **** Optimality Criteria
 **** Exchange Algorithms for Optimal Design Construction
 - KL-Exchange
-*** Inference with Analysis of Variance (ANOVA)
-*** Sampling under Search Space Constraints
-*** Classification of Design of Experiments Methods
-** Applications to Autotuning
+*** Space-Filling Designs
+*** Summary
+** Online Learning
+** Applications to Autotuning                                     :noexport:
 *** Function Minimization
 **** OpenTuner: Leveraging Ensembles of Heuristics
 ***** The Multi-Armed Bandit, Area Under the Curve Approach

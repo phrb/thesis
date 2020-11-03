@@ -161,7 +161,7 @@ what is possibly "wrong" with current approaches.
 ****** Gradient + Hessian based
 - fast convergence
 ****** This requires too strong hypothesis, hence the needs for more "general" methods
-***** Schochastic Methods
+***** Stochastic Methods (Derivative-Free)
 ****** Single-State
 ****** Population-Based methods
 ***** Mini-conclusion
@@ -3401,7 +3401,7 @@ p1 + p2 + p3
     align = center,
     l sep+=1.4em
   },
-  [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+  [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = [x_1,\dots,x_k]^{\top} \in \mathcal{X}) + \varepsilon$},
     draw,
     [{Is $f(X)$ known,\\or cheap to measure?},
       draw
@@ -3965,18 +3965,19 @@ Further efforts in this direction were  dedicated to describe precisely what can
 be learned about  search spaces from the application of  the methodology, and to
 refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
 objectives of model  assessment and prediction. These  discussions are presented
-in Chapter\nbsp{}[[A Design of Experiments Methodology]].
+in Chapter\nbsp{}[[Application 2: GPU Laplacian Kernel]].
 
 Because the  Design of Experiments  methodology requires the specification  of a
 class of initial performance models, the methodology can sometimes achieve worse
 prediction  capabilities  when  there  is considerable  uncertainty  on  initial
-assumptions about the  underlying relationships.  Chapter\nbsp{}[[Gaussian Process
-Regression: A  more Flexible Method]]  describes the application to  autotuning of
-Gaussian Process Regression, an approach  that trades some explanatory power for
-a much  larger and  more flexible  class of underlying  models. We  evaluate the
-performance of this approach on the source-to-source transformation problem from
-Chapter\nbsp{}[[A  Design of  Experiments  Methodology]], and  on larger  autotuning
-problem on the quantization of /Deep Neural Network/ (DNN) layers.
+assumptions  about the  underlying relationships.   Chapters\nbsp{}[[Application 4:  CPU
+Kernels from the SPAPT Benchmark]] and  [[Application 5: Bit Quantization for Neural
+Networks]] describes the application to autotuning of Gaussian Process Regression,
+an  approach that  trades some  explanatory  power for  a much  larger and  more
+flexible  class of  underlying  models.   We evaluate  the  performance of  this
+approach on the source-to-source transformation problem from Chapter\nbsp{}[[Application
+2: GPU Laplacian Kernel]], and on larger autotuning problem on the quantization of
+/Deep Neural Network/ (DNN) layers.
 *** Text Structure                                               :noexport:
 The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
 Reproducible Science]] describes the efforts made over the duration of the work on
@@ -4683,6 +4684,50 @@ on search  heuristics and statistical  learning.  The remainder of  this chapter
 details the contributions of this thesis and the structure of this document.
 * Optimization Methods for Autotuning
 ** Introduction
+The  following chapters  discuss the  optimization  methods that  we applied  to
+autotuning  in different  domains.  Each  chapter presents  a group  of methods,
+briefly discussing  methods and  their underlying  hypotheses. The  objective of
+each chapter is  to provide high-level and straightforward  descriptions of each
+optimization  method,  presenting  clear  definitions  tied  to  the  autotuning
+context. Each chapter  concludes with a discussion of the  applicability of each
+category of optimization method to autotuning.
+
+The  optimization methods  that are  applicable to  autotuning have  significant
+differences, but  in general share  the definitions  of basic concepts.   We can
+also use the  same mathematical notation to discuss all  methods.  The remainder
+of this chapter presents the common  concepts and the mathematical notation used
+in the discussions of subsequent chapters.
+
+In  this thesis  we will  call /optimization/  the minimization  of a  real-valued
+function  with a  single vector  input.  For  a given  function $f:  \mathcal{X}
+\mapsto  \mathbb{R}$,  we wish  to  find  the  $X =  [x_1,\dots,x_k]^{\top}  \in
+\mathcal{X}$ for which $f(X)$ is the  smallest, for all $X \in \mathcal{X}$.  In
+autotuning context, $f$  represents the /performance metric/ we  wish to optimize,
+such as  the execution time,  and $\mathcal{X}$  represents the set  of possible
+/configurations/ we can explore, such  as compiler flags.  Therefore, optimization
+in the  autotuning context  means finding the  configuration that  minimizes the
+target performance metric.
+
+As an example, consider  optimizing the choice of flags for  a compiler with $k$
+flags, where a  configuration $X = [x_1,\dots,x_k]^{\top}$ consists  of a vector
+with $k$ /boolean/ values, denoting whether each flag $x_1,\dots,x_k$ is turned on
+to compile  an application.  To  find the compiler configuration  that generates
+the binary with the smallest execution  time, we conduct $n$ /experiments/, chosen
+in   some    arbitrary   fashion,   generating   the    matrix   $\mathbf{X}   =
+[X_1,\dots,X_n]$. Each  experiment consists of compiling  the target application
+using the specified compiler configuration,  and measuring the execution time of
+the resulting binary.
+
+We can never observe the true value  of $f(X \in \mathcal{X})$ because there are
+always  unknown   or  uncontrollable   effects,  and  inherent   imprecision  in
+measurement. In  practice, we settle  for observing and  minimizing $Y =  f(X) +
+\varepsilon$, where  $\varepsilon$ encapsulates  all unknown  and uncontrollable
+effects, as well as measurement error.
+
+Suppose that we could conduct $n = 2^{k}$ experiments, measuring the performance
+of binaries generated with all possible flag combinations, and obtaining the
+measurements $Y_i = f(X
+
 ** Methods for Function Minimization
 *** Methods Based on Derivatives
 **** Gradient
@@ -4763,26 +4808,16 @@ branching questions underlying each method.
 **** Inference for Autotuning under a Tight Budget
 ***** Fractional Factorial Designs for Chip Design on FPGAs
 *** Gaussian Process Regression
-* Experimental Validation
+* Applications
 ** Research Methodology: Efforts for Reproducible Science
 *** Introduction
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
-** Function Minimization
-*** Results and Limits of Analysis
-**** GPU Compiler Parameters
-**** High-Level Synthesis for FPGAs
-**** Limitations of Analyzing Results from Search Heuristics
-** A Design of Experiments Methodology
-*** Inference for Autotuning under a Tight Budget
-**** Screening for Main Effects of GPU Compiler Parameters
-**** Optimal Designs for a GPU Laplacian Kernel
-**** Space-Filling Designs for Exploring Quantization of DNN Layers
-*** Prediction and Inference for Source-to-Source Transformation
-**** Results with SPAPT Kernels
-** Gaussian Process Regression: A more Flexible Method
-*** Expressing Structure with Covariance Kernels?
-*** Results with Quantization of Deep Neural Network Layers
+** Application 1: CUDA Compiler
+** Application 2: GPU Laplacian Kernel
+** Application 3: High-Level Synthesis for FPGAs
+** Application 4: CPU Kernels from the SPAPT Benchmark
+** Application 5: Bit Quantization for Neural Networks
 ** Conclusion
 #+begin_export latex
 \bibliographystyle{IEEEtran}

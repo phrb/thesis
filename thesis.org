@@ -4702,11 +4702,11 @@ In  this thesis  we will  call /optimization/  the minimization  of a  real-valu
 function  with a  single vector  input.  For  a given  function $f:  \mathcal{X}
 \mapsto  \mathbb{R}$,  we wish  to  find  the  $X =  [x_1,\dots,x_k]^{\top}  \in
 \mathcal{X}$ for which $f(X)$ is the  smallest, for all $X \in \mathcal{X}$.  In
-autotuning context, $f$  represents the /performance metric/ we  wish to optimize,
-such as  the execution time,  and $\mathcal{X}$  represents the set  of possible
-/configurations/ we can explore, such  as compiler flags.  Therefore, optimization
-in the  autotuning context  means finding the  configuration that  minimizes the
-target performance metric.
+autotuning  context, $f(\cdot)$  represents the  /performance metric/  we wish  to
+optimize, such  as the execution time,  and $\mathcal{X}$ represents the  set of
+possible  /configurations/ we  can explore,  such as  compiler flags.   Therefore,
+optimization  in the  autotuning context  means finding  the configuration  that
+minimizes the target performance metric.
 
 As an example, consider  optimizing the choice of flags for  a compiler with $k$
 flags, where a  configuration $X = [x_1,\dots,x_k]^{\top}$ consists  of a vector
@@ -4722,19 +4722,25 @@ We can never observe the true value  of $f(X \in \mathcal{X})$ because there are
 always  unknown   or  uncontrollable   effects,  and  inherent   imprecision  in
 measurement. In  practice, we settle  for observing and  minimizing $Y =  f(X) +
 \varepsilon$, where  $\varepsilon$ encapsulates  all unknown  and uncontrollable
-effects, as well as measurement error.
+effects, as well as measurement error. Suppose that we could conduct $n = 2^{k}$
+experiments, measuring the  performance of binaries generated  with all possible
+flag combinations, and  obtain the measurements $Y_i =  f(X_i) + \varepsilon_i$,
+for $i = 1,\dots,2^{k}$.  The /global optimum/ in this example  would be the $X_i$
+producing the fastest binary, that is, the smallest $Y_i$.
 
-Suppose that we could conduct $n = 2^{k}$ experiments, measuring the performance
-of binaries generated with all possible flag combinations, and obtaining the
-measurements $Y_i = f(X
+Assuming we are capable of evaluating $f(\cdot)$ for an arbitrarily large set of
+experiments $\mathbf{X}$, and that we are not interested in building statistical
+models  for  the  performance  of  our application,  we  can  directly  optimize
+$f(\cdot)$  using stochastic  descent  methods, or  gradient- and  hessian-based
+methods if it is possible to  compute derivatives of $f(\cdot)$.  These function
+minimization  methods  are  discussed   in  Chapter\nbsp{}[[Methods  for  Function
+Minimization]].  If we are not capable  of directly measuring $f(\cdot)$, if it is
+unreasonably  expensive  or   time-consuming  to  do  so,   or  if  constructing
+statistical performance models for our  application is of crucial importance, we
+can employ  the surrogate-based methods discussed  in Chapters\nbsp{}[[Statistical
+Learning]], [[Design of Experiments]], and [[Online Learning]].
 
-** Methods for Function Minimization
-*** Methods Based on Derivatives
-**** Gradient
-**** Gradient and Hessian
-*** Stochastic Methods
-**** Single-State Methods
-The    effectiveness   of    search    heuristics   on    autotuning   can    be
+The  effectiveness   of  stochastic  descent   methods  on  autotuning   can  be
 limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
 between other factors, by underlying hypotheses  about the search space, such as
 the  reachability of  the  global optimum  and the  smoothness  of search  space
@@ -4753,6 +4759,18 @@ Regression\nbsp{}\cite{parsa2019pabo}, are able to reduce model bias greatly, at
 the  expense  of  increased  prediction  variance.   Figure\nbsp{}\ref{fig:tree}
 categorizes some autotuning methods according to  some of the key hypotheses and
 branching questions underlying each method.
+
+#+NAME: fig:tree
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Some autotuning methods
+[[file:img/tree.pdf]]
+
+** Methods for Function Minimization
+*** Methods Based on Derivatives
+**** Gradient
+**** Gradient and Hessian
+*** Stochastic Methods
+**** Single-State Methods
 
 **** Methods Based on Populations
 *** Summary

@@ -921,9 +921,10 @@ proposal and application to the Microsoft Latin America PhD Award.
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{references}
 * Generating Figures                                               :noexport:
-** Chapter 1
-*** 49 Years of Processor Data
-**** Load Data
+** Historical Trends
+*** Introduction
+**** 49 Years of Processor Data
+***** Load Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 df_freq <- read.csv("data/wiki_data/frequency.csv", header = TRUE)
@@ -978,7 +979,7 @@ str(df_transistor)
 :  $ process_nm      : int  10000 10000 6000 10000 6000 6000 8000 8000 5000 4000 ...
 :  $ area_mm         : num  12 14 32 12 16 20 11 21 27 18 ...
 
-**** Plots
+***** Plots
 #+begin_SRC R :results graphics output :session *R* :file "./img/49_years_processor_data.pdf" :width 10 :height 5 :eval no-export
 library(ggplot2)
 library(extrafont)
@@ -1107,8 +1108,8 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/49_years_processor_data.pdf]]
-*** TOP500
-**** Loading Data and Packages
+**** TOP500
+***** Loading Data and Packages
 Load the /csv/:
 
 #+begin_SRC R :results output :session *R* :exports code :eval no-export
@@ -1120,8 +1121,8 @@ df <- read.csv("./data/top500/TOP500_history.csv")
 #+end_SRC
 
 #+RESULTS:
-**** Looking at Data
-***** Column Names
+***** Looking at Data
+****** Column Names
 We  have many  columns  filled with  `NA`s,  due to  how  metrics were  measured
 differently over the years. There's data from 1993 to 2019!
 
@@ -1159,7 +1160,7 @@ names(df)
 [51] "Site.ID"                         "System.ID"
 #+end_example
 
-***** Achieved and Theoretical Performance
+****** Achieved and Theoretical Performance
 #+begin_SRC R :results graphics output :session *R* :file "./img/top500_rmax_rpeak.pdf" :width 10 :height 5 :exports both :eval no-export
 library(ggplot2)
 library(extrafont)
@@ -1229,7 +1230,7 @@ ggplot() +
 #+RESULTS:
 [[file:./img/top500_rmax_rpeak.pdf]]
 
-***** Accelerator Core Count
+****** Accelerator Core Count
 #+begin_SRC R :results graphics output :session *R* :file "./img/top500_accelerator_cores.pdf" :width 10 :height 5 :exports both :eval no-export
 library(ggplot2)
 library(extrafont)
@@ -1290,8 +1291,8 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/top500_accelerator_cores.pdf]]
-***** Other Plots
-****** Processor Clock
+****** Other Plots
+******* Processor Clock
 Supercomputer  clock  explosion  and  range  broadening.  Even  top-tier  clocks
 stagnate after 2008.
 
@@ -1326,7 +1327,7 @@ ggplot() +
 #+RESULTS:
 [[file:../res/top500_graphs/top500_processors_clock.pdf]]
 
-****** Processors
+******* Processors
 Core count sustained  exponential increase.  Although top-tier  core count still
 increases, range  broadening around  2012 can be  explained by  introduction and
 ubiquity of accelerator cores on all tiers.
@@ -1376,7 +1377,7 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/top500_total_cores.pdf]]
-****** RPeak and RMax
+******* RPeak and RMax
 Sustained increase of theoretical peak and  achieved max performance on HPL and,
 most recently,  on the  HPCG benchmark.  RPeak does not  guarantee rank  on some
 cases.
@@ -1433,7 +1434,7 @@ ggplot() +
 
 #+RESULTS:
 [[file:../res/top500_graphs/top500_rpeak.pdf]]
-****** RMax / Cores
+******* RMax / Cores
 Ratio of performance and core count, for HPL and HPCG. Is this sustained increase due only to accelerator cores, or are there other engineering and software advances?
 #+begin_SRC R :results graphics output :session *R* :file "../res/top500_graphs/top500_rmax_cores.pdf" :width 17.5 :height 7 :exports both :eval no-export
 library(ggplot2)
@@ -1493,7 +1494,7 @@ ggplot() +
 #+RESULTS:
 [[file:../res/top500_graphs/top500_rmax_cores.pdf]]
 
-****** NMax
+******* NMax
 Exponential increase of problem size to reach max performance. Why is there
 range broadening after 2011?
 
@@ -1529,8 +1530,8 @@ ggplot() +
 #+RESULTS:
 [[file:../res/top500_graphs/top500_nmax.pdf]]
 
-*** Search Spaces
-**** Load Data
+**** Search Spaces
+***** Load Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(extrafont)
 
@@ -2124,7 +2125,7 @@ str(df_search_spaces)
 :  $ domain                 : chr  "Linear Algebra" "Linear Algebra" "Linear Algebra" "Linear Algebra" ...
 :  $ author                 : chr  "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" ...
 :  $ gscholar_citation      : chr  "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" ...
-**** Generate Caption
+***** Generate Caption
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 citations <- unique(df_search_spaces$gscholar_citation)
 citations <- paste(citations[citations != ""], collapse = ",")
@@ -2135,7 +2136,7 @@ cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
 :
 : \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 
-**** Plots
+***** Plots
 - Geom_label around thesis work
 - Mark Seymour et al. example
 #+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
@@ -2391,8 +2392,8 @@ p2 * p1
 
 #+RESULTS:
 [[file:./img/search_spaces.pdf]]
-*** Loop Blocking and Unrolling
-**** First try
+**** Loop Blocking and Unrolling
+***** First try
 :PROPERTIES:
 :EXPORT_FILE_NAME: blocking_unrolling.pdf
 :END:
@@ -2407,7 +2408,7 @@ p2 * p1
 \end{tikzpicture}
 \end{document}
 #+end_src try with export
-**** Arnaud's tip with src blocks
+***** Arnaud's tip with src blocks
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 \\usepackage[usenames]{color}
@@ -2434,8 +2435,8 @@ p2 * p1
 #+RESULTS:
 [[file:./img/test.pdf]]
 
-**** ggplot
-***** Setup
+***** ggplot
+****** Setup
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(extrafont)
 loadfonts(device = "postscript")
@@ -3012,7 +3013,7 @@ Ubuntu Mono already registered with postscriptFonts().
 Ubuntu Mono derivative Powerline already registered with postscriptFonts().
 #+end_example
 
-***** Plots
+****** Plots
 #+begin_SRC R :results graphics output :session *R* :file "./img/blocking_unrolling.pdf" :width 17.4 :height 6 :eval no-export
 library(ggplot2)
 library(dplyr)
@@ -3213,8 +3214,9 @@ p1 + p2 + p3
 
 
 
-** Chapter 3
-*** (Old) Complete Classification Tree for Function Minimization Methods
+** Optimization Methods
+*** Introduction
+**** (Old) Complete Classification Tree for Function Minimization Methods
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3379,7 +3381,7 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/old_tree.pdf]]
 
-*** Complete Classification Tree for Function Minimization Methods
+**** Complete Classification Tree for Function Minimization Methods
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3511,7 +3513,7 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/tree.pdf]]
 
-*** Simplest Version
+**** Simplest Version
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3573,8 +3575,8 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/simplest_tree.pdf]]
 
-*** Representing Sampling Strategies
-**** Generate Fake Data with Algorithms
+**** Representing Sampling Strategies
+***** Generate Fake Data with Algorithms
 #+HEADER: :results output :session *R* :exports none :eval no-export
 #+BEGIN_SRC R
 fake_gradient_data_seed <- data.frame(x1 = c(1, 1, 99, 99),
@@ -3635,7 +3637,7 @@ for(run_id in c(1, 2, 3, 4)) {
 fake_sima_data$name <- rep("Simulated Annealing", nrow(fake_sima_data))
 data <- bind_rows(data, fake_sima_data)
 #+END_SRC
-**** Generate Data
+***** Generate Data
 #+HEADER: :results output :session *R* :eval no-export
 #+BEGIN_SRC R
 library(ggplot2)
@@ -3792,7 +3794,7 @@ The following objects are masked from ‘package:base’:
     intersect, setdiff, setequal, union
 #+end_example
 
-**** Plot
+***** Plot
 #+HEADER: :results graphics output :session *R*
 #+HEADER: :file ./img/sampling_comparison.pdf :exports none :width 15 :height 11.5 :eval no-export
 #+BEGIN_SRC R
@@ -3886,6 +3888,313 @@ ggplot(data, aes(x = x1, y = x2)) +
 
 #+RESULTS:
 [[file:./img/sampling_comparison.pdf]]
+
+**** Search Space Introduction
+#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+resolution = 100
+
+new_grid = expand.grid(seq(from = -1.0, to = 1.0, length.out = resolution),
+                       seq(from = -1.0, to = 1.0, length.out = resolution))
+
+df = data.frame(x = new_grid$Var1,
+                y = new_grid$Var2)
+
+amp_x = 1
+amp_y = 1
+
+noise_sd = 0.03
+color_palette = "viridis::viridis"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.1
+base_size = 32
+title_size = 39
+optimum_size = 10
+optimum_stroke = 3
+
+df$z = ((df$x ^ 2) * amp_x) +
+    ((df$y ^ 2) * amp_y) +
+    rnorm(resolution ^ 2,
+          mean = 0.0,
+          sd = noise_sd)
+
+df$type = paste("noise_",
+                noise_sd,
+                sep = "")
+
+plot_df = df
+
+df$z = ((df$x ^ 2) * amp_x) +
+    ((df$y ^ 2) * amp_y)
+
+df$type = "no_noise"
+
+plot_df = bind_rows(plot_df, df)
+
+df$z = ((df$x ^ 2) * amp_x) +
+    ((df$y ^ 2) * amp_y) +
+    rnorm(resolution ^ 2,
+          mean = 0.0,
+          sd = noise_sd)
+
+df$type = "constrained"
+constraint = data.frame(x_min = 0.1,
+                        x_max = 0.4,
+                        y_min = -0.3,
+                        y_max = 0.4)
+
+df[(df$x < constraint$x_max &
+    df$x > constraint$x_min &
+    df$y < constraint$y_max &
+    df$y > constraint$y_min),
+   "z"] = NA
+
+plot_df = bind_rows(plot_df, df)
+
+p_no_noise = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_contour(data = filter(plot_df,
+                               type == "no_noise"),
+                 aes(x = x,
+                     y = y,
+                     z = z,
+                     color = ..level..),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "no_noise") %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    xlab(TeX("(a)")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+p_noise = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_contour(data = filter(plot_df,
+                               type == paste("noise_",
+                                             noise_sd,
+                                             sep = "")),
+                 aes(x = x,
+                     y = y,
+                     z = z,
+                     color = ..level..),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == paste("noise_",
+                                        noise_sd,
+                                        sep = "")) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    xlab(TeX("(b)")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+p_constrained = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_contour(data = filter(plot_df,
+                               type == "constrained"),
+                 aes(x = x,
+                     y = y,
+                     z = z,
+                     color = ..level..),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "constrained") %>%
+                   filter(!is.na(z)) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    geom_rect(aes(xmin = constraint$x_min,
+                  xmax = constraint$x_max,
+                  ymin = constraint$y_min,
+                  ymax = constraint$y_max),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 1,
+              linetype = 2) +
+    geom_text(aes(x = (constraint$x_max - constraint$x_min),
+                  y = (constraint$y_max - constraint$y_min)),
+              size = 12,
+              hjust = -0.6,
+              vjust = 1.0,
+              color = "gray70",
+              angle = -90,
+              label = "Constrained") +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    xlab(TeX("(c)")) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+p_no_noise_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == "no_noise") %>%
+                  filter(y == plot_df %>%
+                         filter(type == "no_noise") %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "no_noise") %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    xlab(TeX("(d)")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+p_noise_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == paste("noise_",
+                                       noise_sd,
+                                       sep = "")) %>%
+                  filter(y == plot_df %>%
+                         filter(type == paste("noise_",
+                                              noise_sd,
+                                              sep = "")) %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == paste("noise_",
+                                        noise_sd,
+                                        sep = "")) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    xlab(TeX("(e)")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+p_constrained_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == "constrained") %>%
+                  filter(y == plot_df %>%
+                         filter(type == "constrained") %>%
+                         filter(!is.na(z)) %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "constrained") %>%
+                   filter(!is.na(z)) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 3) +
+    geom_rect(aes(xmin = constraint$x_min,
+                  xmax = constraint$x_max,
+                  ymin = plot_df %>%
+                      filter(type == "constrained") %>%
+                      filter(!is.na(z)) %>%
+                      filter(z == min(z)) %>%
+                      mutate(z = 0.9 * z) %>%
+                      select(z) %>%
+                      first(),
+                  ymax = 0.3),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 1,
+              linetype = 2) +
+    geom_text(aes(x = (constraint$x_max - constraint$x_min),
+                  y = 0.455),
+              size = 12,
+              hjust = -0.6,
+              vjust = 1.0,
+              color = "gray70",
+              angle = -90,
+              label = "Constrained") +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    xlab(TeX("(f)")) +
+    theme_bw(base_size = base_size) +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_text(size = title_size))
+
+(p_no_noise | p_noise | p_constrained) /
+    (p_no_noise_line | p_noise_line | p_constrained_line)
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/simple_search_space.pdf]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -4800,21 +5109,21 @@ discussion.
 #+NAME: tab:notation
 #+CAPTION: Summary of the notation, concepts, and examples discussed in this chapter,
 #+CAPTION: and common to the autotuning methods discussed in further chapters
-#+ATTR_LATEX: :align p{.22\columnwidth}p{.2\columnwidth}p{.5\columnwidth} :booktabs t :placement []\scriptsize
+#+ATTR_LATEX: :align p{.22\columnwidth}p{.2\columnwidth}p{.5\columnwidth} :booktabs t :font \scriptsize
 |--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
 | Symbol                                                                   | Concept                         | Example                                                           |
 |--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
-| $\mathcal{X}$                                                            | Input space                     | All possible compiler flag assignments                            |
+| $\mathcal{X}$                                                            | Search space                    | All possible compiler flag assignments                            |
 | $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                  | Input variable                  | A specific flag assignment                                        |
-| $\vert{}\mathbf{x}\vert{} = p$                                          | Input space dimension           |                                                                   |
+| $\vert{}\mathbf{x}\vert{} = p$                                           | Input space dimension           |                                                                   |
 | $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$ | Experimental design             | A set of flag assignments                                         |
 | $\vert{}\mathbf{X}\vert{} = n$                                           | Number of experiments           |                                                                   |
 | $f: \mathcal{X} \mapsto \mathbb{R}$                                      | Function to minimize            | Performance metric, such as the execution time of a binary        |
 | $y = f(\mathbf{x}) + \varepsilon$                                        | Observable quantity             | Measurement of the execution time, subject to error $\varepsilon$ |
 | $\Theta$                                                                 | Parameter space                 | All possible values of the coefficients of a linear model         |
-| $\theta: X \mapsto \Theta$                                               | Parameter vector                | Estimate of the coefficients of a linear model                    |
-| $\hat{f}: \mathcal{X} \mapsto \mathbb{R}$                                | Surrogate for $f$               | A linear model fit used for /predictions/                           |
-| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{x}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment     |
+| $\theta: \mathbf{X} \in \mathcal{X} \mapsto \Theta$                      | Parameter vector                | Estimate of the coefficients of a linear model                    |
+| $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                  | Surrogate for $f$               | A linear model fit used for /predictions/                           |
+| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment     |
 |--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
 
 ** Methods for Function Minimization

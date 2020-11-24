@@ -3579,64 +3579,67 @@ p1 + p2 + p3
 ***** Generate Fake Data with Algorithms
 #+HEADER: :results output :session *R* :exports none :eval no-export
 #+BEGIN_SRC R
-fake_gradient_data_seed <- data.frame(x1 = c(1, 1, 99, 99),
-                                      x2 = c(1, 99, 1, 99),
-                                      run = c(1, 2, 3, 4),
-                                      sign1 = c(1, 1, -1, -1),
-                                      sign2 = c(1, -1, 1, -1))
+fake_gradient_df_seed <- data.frame(x1 = c(1, 1, 99, 99),
+                                    x2 = c(1, 99, 1, 99),
+                                    run = c(1, 2, 3, 4),
+                                    sign1 = c(1, 1, -1, -1),
+                                    sign2 = c(1, -1, 1, -1))
 
-fake_gradient_data <- NULL
-
-for(run_id in c(1, 2, 3, 4)) {
-  if (is.null(fake_gradient_data)) {
-      fake_gradient_data <- fake_gradient_data_seed[run_id, ]
-  } else {
-      fake_gradient_data <- rbind(fake_gradient_data, fake_gradient_data_seed[run_id, ])
-  }
-
-  for(i in 1:10) {
-      row <- nrow(fake_gradient_data)
-      fake_descent <- data.frame(x1 = ceiling(fake_gradient_data[row, "x1"] + (fake_gradient_data[row, "sign1"] * runif(1, min = 1, max = 5))),
-                                 x2 = ceiling(fake_gradient_data[row, "x2"] + (fake_gradient_data[row, "sign2"] * runif(1, min = 1, max = 5))),
-                                 run = fake_gradient_data[row, "run"],
-                                 sign1 = fake_gradient_data[row, "sign1"],
-                                 sign2 = fake_gradient_data[row, "sign2"])
-      fake_gradient_data <- rbind(fake_gradient_data, fake_descent)
-  }
-}
-
-fake_gradient_data$name <- rep("Gradient Descent", nrow(fake_gradient_data))
-data <- bind_rows(data, fake_gradient_data)
-
-fake_sima_data_seed <- data.frame(x1 = c(30, 30, 70, 70),
-                                  x2 = c(30, 70, 30, 70),
-                                  run = c(1, 2, 3, 4),
-                                  sign1 = c(1, 1, -1, -1),
-                                  sign2 = c(1, -1, 1, -1))
-
-fake_sima_data <- NULL
+fake_gradient_df <- NULL
 
 for(run_id in c(1, 2, 3, 4)) {
-  if (is.null(fake_sima_data)) {
-      fake_sima_data <- fake_sima_data_seed[run_id, ]
-  } else {
-      fake_sima_data <- rbind(fake_sima_data, fake_sima_data_seed[run_id, ])
-  }
+    if (is.null(fake_gradient_df)) {
+        fake_gradient_df <- fake_gradient_df_seed[run_id, ]
+    } else {
+        fake_gradient_df <- rbind(fake_gradient_df, fake_gradient_df_seed[run_id, ])
+    }
 
-  for(i in 1:10) {
-      row <- nrow(fake_sima_data)
-      fake_descent <- data.frame(x1 = ceiling(fake_sima_data[row, "x1"] + (fake_sima_data[row, "sign1"] * runif(1, min = -5, max = 5))),
-                                 x2 = ceiling(fake_sima_data[row, "x2"] + (fake_sima_data[row, "sign2"] * runif(1, min = -5, max = 5))),
-                                 run = fake_sima_data[row, "run"],
-                                 sign1 = fake_sima_data[row, "sign1"],
-                                 sign2 = fake_sima_data[row, "sign2"])
-      fake_sima_data <- rbind(fake_sima_data, fake_descent)
-  }
+    for(i in 1:10) {
+        row <- nrow(fake_gradient_df)
+        fake_descent <- data.frame(x1 = ceiling(fake_gradient_df[row, "x1"] + (fake_gradient_df[row, "sign1"] * runif(1, min = 1, max = 5))),
+                                   x2 = ceiling(fake_gradient_df[row, "x2"] + (fake_gradient_df[row, "sign2"] * runif(1, min = 1, max = 5))),
+                                   run = fake_gradient_df[row, "run"],
+                                   sign1 = fake_gradient_df[row, "sign1"],
+                                   sign2 = fake_gradient_df[row, "sign2"])
+        fake_gradient_df <- rbind(fake_gradient_df, fake_descent)
+    }
 }
 
-fake_sima_data$name <- rep("Simulated Annealing", nrow(fake_sima_data))
-data <- bind_rows(data, fake_sima_data)
+fake_gradient_df$name <- rep("Gradient Descent", nrow(fake_gradient_df))
+df <- bind_rows(df, fake_gradient_df)
+
+fake_sima_df_seed <- data.frame(x1 = c(30, 30, 70, 70),
+                                x2 = c(30, 70, 30, 70),
+                                run = c(1, 2, 3, 4),
+                                sign1 = c(1, 1, -1, -1),
+                                sign2 = c(1, -1, 1, -1))
+
+fake_sima_df <- NULL
+
+for(run_id in c(1, 2, 3, 4)) {
+    if (is.null(fake_sima_df)) {
+        fake_sima_df <- fake_sima_df_seed[run_id, ]
+    } else {
+        fake_sima_df <- rbind(fake_sima_df, fake_sima_df_seed[run_id, ])
+    }
+
+    for(i in 1:10) {
+        row <- nrow(fake_sima_df)
+        fake_descent <- data.frame(x1 = ceiling(fake_sima_df[row, "x1"] + (fake_sima_df[row, "sign1"] * runif(1, min = -5, max = 5))),
+                                   x2 = ceiling(fake_sima_df[row, "x2"] + (fake_sima_df[row, "sign2"] * runif(1, min = -5, max = 5))),
+                                   run = fake_sima_df[row, "run"],
+                                   sign1 = fake_sima_df[row, "sign1"],
+                                   sign2 = fake_sima_df[row, "sign2"])
+        fake_sima_df <- rbind(fake_sima_df, fake_descent)
+    }
+}
+
+fake_sima_df$name <- rep("Simulated Annealing", nrow(fake_sima_df))
+df <- bind_rows(df, fake_sima_df)
 #+END_SRC
+
+#+RESULTS:
+
 ***** Generate Data
 #+HEADER: :results output :session *R* :eval no-export
 #+BEGIN_SRC R
@@ -3653,80 +3656,80 @@ search_space_size <- 100
 center_x1 <- (search_space_size / 2) - 30
 center_x2 <- (search_space_size / 2) - 30
 
-get_cost <- function(data) {
-    return(((data$x1 - center_x1) ^ 2) + ((data$x2 - center_x2) ^ 2) + ((abs((data$x1 - center_x1) * (data$x2 - center_x2)))**.7 * sin((data$x1 - center_x1) * (data$x2 - center_x2))))
+get_cost <- function(df) {
+    return(((df$x1 - center_x1) ^ 2) + ((df$x2 - center_x2) ^ 2) + ((abs((df$x1 - center_x1) * (df$x2 - center_x2)))**.7 * sin((df$x1 - center_x1) * (df$x2 - center_x2))))
 }
 
-objective_data <- expand.grid(seq(0, search_space_size, 1),
-                              seq(0, search_space_size, 1))
-names(objective_data) <- c("x1", "x2")
+objective_df <- expand.grid(seq(0, search_space_size, 1),
+                            seq(0, search_space_size, 1))
+names(objective_df) <- c("x1", "x2")
 
-objective_data$Y <- get_cost(objective_data)
+objective_df$Y <- get_cost(objective_df)
 
 sima_samples <- 15
 
 plot(x = c(0, 100, center_x1, 100, 0), y = c(0, 100, center_x2, 0, 100))
-fake_sima_data <- as.data.frame(locator(n = sima_samples, type = "l"))
-names(fake_sima_data) <- c("x1", "x2")
+fake_sima_df <- as.data.frame(locator(n = sima_samples, type = "l"))
+names(fake_sima_df) <- c("x1", "x2")
 dev.off()
 
-fake_sima_data$run <- c(rep(1, nrow(fake_sima_data)))
-fake_sima_data$name <- rep("Simulated Annealing", nrow(fake_sima_data))
+fake_sima_df$run <- c(rep(1, nrow(fake_sima_df)))
+fake_sima_df$name <- rep("Simulated Annealing", nrow(fake_sima_df))
 
-fake_sima_data$cost <- get_cost(fake_sima_data)
-fake_sima_data$min <- fake_sima_data$cost == min(fake_sima_data$cost)
+fake_sima_df$cost <- get_cost(fake_sima_df)
+fake_sima_df$min <- fake_sima_df$cost == min(fake_sima_df$cost)
 
-data <- fake_sima_data
+df <- fake_sima_df
 
 descent_samples <- 20
 
 plot(x = c(0, 100, center_x1, 100, 0), y = c(0, 100, center_x2, 0, 100))
-fake_descent_data <- as.data.frame(locator(n = descent_samples, type = "l"))
-names(fake_descent_data) <- c("x1", "x2")
+fake_descent_df <- as.data.frame(locator(n = descent_samples, type = "l"))
+names(fake_descent_df) <- c("x1", "x2")
 dev.off()
 
 paths <- 5
 fake_runs <- rep(1, descent_samples / paths)
 for(i in 2:paths){
-  fake_runs <- c(fake_runs, rep(i, descent_samples / paths))
+    fake_runs <- c(fake_runs, rep(i, descent_samples / paths))
 }
 
-fake_descent_data$run <- fake_runs
-fake_descent_data$name <- rep("Gradient Descent", nrow(fake_descent_data))
+fake_descent_df$run <- fake_runs
+fake_descent_df$name <- rep("Gradient Descent", nrow(fake_descent_df))
 
-fake_descent_data$cost <- get_cost(fake_descent_data)
-fake_descent_data$min <- fake_descent_data$cost == min(fake_descent_data$cost)
+fake_descent_df$cost <- get_cost(fake_descent_df)
+fake_descent_df$min <- fake_descent_df$cost == min(fake_descent_df$cost)
 
-data <- bind_rows(data, fake_descent_data)
+df <- bind_rows(df, fake_descent_df)
 
-rs_data <- data.frame(x1 = sample(0:search_space_size, sample_size, replace = T),
-                      x2 = sample(0:search_space_size, sample_size, replace = T))
-rs_data$name <- rep("Random Sampling", nrow(rs_data))
+rs_df <- data.frame(x1 = sample(0:search_space_size, sample_size, replace = T),
+                    x2 = sample(0:search_space_size, sample_size, replace = T))
+rs_df$name <- rep("Random Sampling", nrow(rs_df))
 
-rs_data$cost <- get_cost(rs_data)
-rs_data$min <- rs_data$cost == min(rs_data$cost)
+rs_df$cost <- get_cost(rs_df)
+rs_df$min <- rs_df$cost == min(rs_df$cost)
 
-data <- bind_rows(data, rs_data)
+df <- bind_rows(df, rs_df)
 
-lhs_data <- lhs.design(nruns = sample_size, nfactors = 2, digits = 0, type = "maximin",
-                       factor.names = list(x1 = c(0, search_space_size), x2 = c(0, search_space_size)))
-lhs_data$name <- rep("Latin Hypercube Sampling", nrow(lhs_data))
+lhs_df <- lhs.design(nruns = sample_size, nfactors = 2, digits = 0, type = "maximin",
+                     factor.names = list(x1 = c(0, search_space_size), x2 = c(0, search_space_size)))
+lhs_df$name <- rep("Latin Hypercube Sampling", nrow(lhs_df))
 
-lhs_data$cost <- get_cost(lhs_data)
-lhs_data$min <- lhs_data$cost == min(lhs_data$cost)
+lhs_df$cost <- get_cost(lhs_df)
+lhs_df$min <- lhs_df$cost == min(lhs_df$cost)
 
-data <- bind_rows(data, lhs_data)
+df <- bind_rows(df, lhs_df)
 
 full_factorial <- gen.factorial(c(search_space_size, search_space_size), center = FALSE)
 names(full_factorial) <- c("x1", "x2")
 output <- optFederov(~ x1 + x2, full_factorial, nTrials = sample_size)
-dopt_data <- output$design
+dopt_df <- output$design
 
-dopt_data$name <- rep("DOpt. Linear Model", nrow(dopt_data))
-dopt_data$cost <- get_cost(dopt_data)
-dopt_data$min <- rep(FALSE, nrow(dopt_data))
+dopt_df$name <- rep("DOpt. Linear Model", nrow(dopt_df))
+dopt_df$cost <- get_cost(dopt_df)
+dopt_df$min <- rep(FALSE, nrow(dopt_df))
 
-regression <- lm(cost ~ x1 + x2, data = dopt_data)
+regression <- lm(cost ~ x1 + x2, data = dopt_df)
 prediction <- predict(regression, newdata = full_factorial)
 best <- full_factorial[prediction == min(prediction), ]
 
@@ -3734,19 +3737,19 @@ best$cost <- min(prediction)
 best$name <- "DOpt. Linear Model"
 best$min <- TRUE
 
-dopt_data <- bind_rows(dopt_data, best)
-data <- bind_rows(data, dopt_data)
+dopt_df <- bind_rows(dopt_df, best)
+df <- bind_rows(df, dopt_df)
 
 full_factorial <- gen.factorial(c(search_space_size, search_space_size), center = FALSE)
 names(full_factorial) <- c("x1", "x2")
 output <- optFederov(~ x1 + x2 + I(x1 ^ 2) + I(x2 ^ 2), full_factorial, nTrials = sample_size)
-doptq_data <- output$design
+doptq_df <- output$design
 
-doptq_data$name <- rep("DOpt. Quadratic Model", nrow(doptq_data))
-doptq_data$cost <- get_cost(doptq_data)
-doptq_data$min <- rep(FALSE, nrow(doptq_data))
+doptq_df$name <- rep("DOpt. Quadratic Model", nrow(doptq_df))
+doptq_df$cost <- get_cost(doptq_df)
+doptq_df$min <- rep(FALSE, nrow(doptq_df))
 
-regression <- lm(cost ~ x1 + x2 + I(x1 ^ 2) + I(x2 ^ 2), data = doptq_data)
+regression <- lm(cost ~ x1 + x2 + I(x1 ^ 2) + I(x2 ^ 2), data = doptq_df)
 prediction <- predict(regression, newdata = full_factorial)
 best <- full_factorial[prediction == min(prediction), ]
 
@@ -3754,18 +3757,19 @@ best$cost <- min(prediction)
 best$name <- "DOpt. Quadratic Model"
 best$min <- TRUE
 
-doptq_data <- bind_rows(doptq_data, best)
-data <- bind_rows(data, doptq_data)
+doptq_df <- bind_rows(doptq_df, best)
+df <- bind_rows(df, doptq_df)
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-Want to understand how all the pieces fit together? See the R for Data
-Science book: http://r4ds.had.co.nz/
 Loading required package: FrF2
 Loading required package: DoE.base
 Loading required package: grid
 Loading required package: conf.design
+Registered S3 method overwritten by 'DoE.base':
+  method           from
+  factorize.factor conf.design
 
 Attaching package: ‘DoE.base’
 
@@ -3782,16 +3786,10 @@ The following object is masked from ‘package:base’:
     lengths
 
 Loading required package: rsm
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
+null device
+          1
+null device
+          1
 #+end_example
 
 ***** Plot
@@ -3799,13 +3797,13 @@ The following objects are masked from ‘package:base’:
 #+HEADER: :file ./img/sampling_comparison.pdf :exports none :width 15 :height 11.5 :eval no-export
 #+BEGIN_SRC R
 library(extrafont)
-data$facet <- factor(data$name, levels = c("Random Sampling",
+df$facet <- factor(df$name, levels = c("Random Sampling",
                                            "Latin Hypercube Sampling",
                                            "Gradient Descent",
                                            "Simulated Annealing",
                                            "DOpt. Linear Model",
                                            "DOpt. Quadratic Model"))
-ggplot(data, aes(x = x1, y = x2)) +
+ggplot(df, aes(x = x1, y = x2)) +
     scale_x_continuous(limits = c(-1, 101),
                        expand = c(0, 0)) +
     scale_y_continuous(limits = c(-1, 101),
@@ -3814,16 +3812,16 @@ ggplot(data, aes(x = x1, y = x2)) +
     ylab("y") +
     facet_wrap(facet ~ .,
                ncol = 3) +
-    #geom_raster(data = objective_data, aes(fill = Y), show.legend = FALSE) +
-    #geom_contour(data = objective_data, aes(z = Y), colour = "white", linetype = 8) + #, breaks = 1 * (2 ^ (2:20))) +
-    geom_contour(data = objective_data,
+    #geom_raster(data = objective_df, aes(fill = Y), show.legend = FALSE) +
+    #geom_contour(data = objective_df, aes(z = Y), colour = "white", linetype = 8) + #, breaks = 1 * (2 ^ (2:20))) +
+    geom_contour(data = objective_df,
                  aes(z = Y),
                  linetype = 1,
                  colour = "black",
                  alpha = 0.6,
                  show.legend = FALSE,
                  breaks = 1 * (2 ^ (4:20))) +
-    geom_path(data = subset(data,
+    geom_path(data = subset(df,
                             name %in% c("Gradient Descent", "Simulated Annealing")),
               aes(group = run),
               color = "black",
@@ -3833,7 +3831,7 @@ ggplot(data, aes(x = x1, y = x2)) +
                size = 3,
                colour = "black",
                alpha = 0.55) +
-    geom_jitter(data = subset(data,
+    geom_jitter(data = subset(df,
                               name %in% c("Gradient Descent")),
                 color = "black",
                 size = 3,
@@ -3841,7 +3839,7 @@ ggplot(data, aes(x = x1, y = x2)) +
                 alpha = 0.55,
                 width = 8,
                 height = 8) +
-    geom_jitter(data = subset(data,
+    geom_jitter(data = subset(df,
                               name %in% c("Gradient Descent")),
                 color = "black",
                 size = 3,
@@ -3849,7 +3847,7 @@ ggplot(data, aes(x = x1, y = x2)) +
                 alpha = 0.55,
                 width = 8,
                 height = 8) +
-    geom_jitter(data = subset(data,
+    geom_jitter(data = subset(df,
                               name %in% c("Gradient Descent")),
                 color = "black",
                 size = 3,
@@ -3857,7 +3855,7 @@ ggplot(data, aes(x = x1, y = x2)) +
                 alpha = 0.45,
                 width = 8,
                 height = 8) +
-    geom_jitter(data = subset(data,
+    geom_jitter(data = subset(df,
                               name %in% c("Gradient Descent")),
                 color = "black",
                 size = 3,
@@ -3867,9 +3865,9 @@ ggplot(data, aes(x = x1, y = x2)) +
                 height = 8) +
     scale_fill_distiller(palette = "Greys",
                          direction = -1,
-                         limits = c(min(objective_data$Y) - 1000,
-                                    max(objective_data$Y))) +
-    geom_point(data = subset(data,
+                         limits = c(min(objective_df$Y) - 1000,
+                                    max(objective_df$Y))) +
+    geom_point(data = subset(df,
                              min == TRUE),
                color = "red",
                shape = 3,
@@ -3890,12 +3888,10 @@ ggplot(data, aes(x = x1, y = x2)) +
 [[file:./img/sampling_comparison.pdf]]
 
 **** Search Space Introduction
-#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
+***** Simple Search Spaces
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
-library(ggplot2)
-library(paletteer)
-library(patchwork)
-library(latex2exp)
 
 resolution = 100
 
@@ -3909,16 +3905,6 @@ amp_x = 1
 amp_y = 1
 
 noise_sd = 0.03
-color_palette = "viridis::viridis"
-
-constraint_border = paletteer_c(palette = "viridis::viridis",
-                                n = 2)[[1]]
-
-thickness = 1.1
-base_size = 32
-title_size = 39
-optimum_size = 10
-optimum_stroke = 3
 
 df$z = ((df$x ^ 2) * amp_x) +
     ((df$y ^ 2) * amp_y) +
@@ -3946,6 +3932,7 @@ df$z = ((df$x ^ 2) * amp_x) +
           sd = noise_sd)
 
 df$type = "constrained"
+
 constraint = data.frame(x_min = 0.1,
                         x_max = 0.4,
                         y_min = -0.3,
@@ -3958,6 +3945,81 @@ df[(df$x < constraint$x_max &
    "z"] = NA
 
 plot_df = bind_rows(plot_df, df)
+
+write.csv(plot_df,
+          "data/search_spaces/simple_search_space.csv",
+          row.names = FALSE)
+
+#+end_SRC
+
+****** Search Spaces Overview
+#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+plot_df = read.csv("data/search_spaces/simple_search_space.csv",
+                   header = TRUE)
+
+color_palette = "viridis::viridis"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 10
+optimum_stroke = 3
+optima_shape = 4
+
+noise_sd = 0.03
+
+constraint_label = "Not feasible"
+
+constraint = data.frame(x_min = 0.1,
+                        x_max = 0.4,
+                        y_min = -0.3,
+                        y_max = 0.4)
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+theme_config_line = theme(axis.title.y = element_text(angle = 0,
+                                                      margin = margin(t = 0,
+                                                                      b = 0,
+                                                                      r = 0.7,
+                                                                      l = 0,
+                                                                      unit = "cm"),
+                                                      vjust = 0.5,
+                                                      size = title_size),
+                          axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                      b = -0.7,
+                                                                      r = 0,
+                                                                      l = 0,
+                                                                      unit = "cm"),
+                                                      size = title_size),
+                          axis.ticks = element_blank(),
+                          axis.text.x = element_blank(),
+                          axis.text.y = element_blank())
 
 p_no_noise = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -3980,12 +4042,12 @@ p_no_noise = ggplot() +
                color = "red",
                size = optimum_size,
                stroke = optimum_stroke,
-               shape = 3) +
-    xlab(TeX("(a)")) +
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
+    theme_config
 
 p_noise = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -4012,12 +4074,12 @@ p_noise = ggplot() +
                color = "red",
                size = optimum_size,
                stroke = optimum_stroke,
-               shape = 3) +
-    xlab(TeX("(b)")) +
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
+    theme_config
 
 p_constrained = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -4041,7 +4103,7 @@ p_constrained = ggplot() +
                color = "red",
                size = optimum_size,
                stroke = optimum_stroke,
-               shape = 3) +
+               shape = 4) +
     geom_rect(aes(xmin = constraint$x_min,
                   xmax = constraint$x_max,
                   ymin = constraint$y_min,
@@ -4054,16 +4116,224 @@ p_constrained = ggplot() +
     geom_text(aes(x = (constraint$x_max - constraint$x_min),
                   y = (constraint$y_max - constraint$y_min)),
               size = 12,
-              hjust = -0.6,
-              vjust = 1.0,
-              color = "gray70",
+              hjust = -0.65,
+              vjust = 1.1,
+              color = "gray58",
               angle = -90,
-              label = "Constrained") +
+              label = constraint_label) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    xlab(TeX("(c)")) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
     theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
+    theme_config
+
+p_no_noise_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == "no_noise") %>%
+                  filter(y == plot_df %>%
+                         filter(type == "no_noise") %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = line_thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "no_noise") %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(d)}")) +
+    ylab(TeX("$y$")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config_line
+
+p_noise_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == paste("noise_",
+                                       noise_sd,
+                                       sep = "")) %>%
+                  filter(y == plot_df %>%
+                         filter(type == paste("noise_",
+                                              noise_sd,
+                                              sep = "")) %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = line_thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == paste("noise_",
+                                        noise_sd,
+                                        sep = "")) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(e)}")) +
+    ylab(TeX("$y$")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config_line
+
+p_constrained_line = ggplot() +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    geom_line(data = plot_df %>%
+                  filter(type == "constrained") %>%
+                  filter(y == plot_df %>%
+                         filter(type == "constrained") %>%
+                         filter(!is.na(z)) %>%
+                         filter(z == min(z)) %>%
+                         select(y) %>% first()),
+                 aes(x = x,
+                     y = z,
+                     color = z),
+                 size = line_thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(type == "constrained") %>%
+                   filter(!is.na(z)) %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = z),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    geom_rect(aes(xmin = constraint$x_min,
+                  xmax = constraint$x_max,
+                  ymin = plot_df %>%
+                      filter(type == "constrained") %>%
+                      filter(!is.na(z)) %>%
+                      filter(z == min(z)) %>%
+                      mutate(z = 0.9 * z) %>%
+                      select(z) %>%
+                      first(),
+                  ymax = 0.3),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 1,
+              linetype = 2) +
+    geom_text(aes(x = (constraint$x_max - constraint$x_min),
+                  y = 0.455),
+              size = 12,
+              hjust = -0.64,
+              vjust = 1.1,
+              color = "gray58",
+              angle = -90,
+              label = constraint_label) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(f)}")) +
+    ylab(TeX("$y$")) +
+    theme_bw(base_size = base_size) +
+    theme_config_line
+
+(p_no_noise | p_noise | p_constrained) /
+    (p_no_noise_line | p_noise_line | p_constrained_line)
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/simple_search_space.pdf]]
+
+***** Local, global optimum, convexity
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/optima_convexity.pdf" :width 20 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+plot_df = read.csv("data/search_spaces/simple_search_space.csv",
+                   header = TRUE)
+
+color_palette = "viridis::viridis"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.5
+base_size = 32
+title_size = 39
+optimum_size = 10
+optimum_stroke = 3
+
+optima_shape = 4
+constraint_label = "Not feasible"
+
+constraint = data.frame(x_min = 0.1,
+                        x_max = 0.4,
+                        y_min = -0.3,
+                        y_max = 0.4)
+
+convex_line = plot_df %>%
+    filter(y == plot_df %>%
+           filter(type == "no_noise") %>%
+           filter(z == min(z)) %>%
+           select(y) %>% first()) %>%
+    filter(type == "no_noise") %>%
+    mutate(n = row_number()) %>%
+    filter(n == round(0.05 * max(n)) |
+           n == round(0.81 * max(n)))
+
+convex_line_model = lm(z ~ x, convex_line)
+
+convex_line_prediction = plot_df %>%
+    filter(y == plot_df %>%
+           filter(type == "no_noise") %>%
+           filter(z == min(z)) %>%
+           select(y) %>% first()) %>%
+    filter(type == "no_noise")
+
+convex_line_prediction$pred = predict(convex_line_model, convex_line_prediction)
+
+theme_config_line = theme(axis.title.y = element_text(angle = 0,
+                                                      margin = margin(t = 0,
+                                                                      b = 0,
+                                                                      r = 0.7,
+                                                                      l = 0,
+                                                                      unit = "cm"),
+                                                      vjust = 0.5,
+                                                      size = title_size),
+                          axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                      b = -0.7,
+                                                                      r = 0,
+                                                                      l = 0,
+                                                                      unit = "cm"),
+                                                      size = title_size),
+                          axis.ticks = element_blank(),
+                          axis.text.x = element_blank(),
+                          axis.text.y = element_blank())
+
+constrained_local_optima = data.frame(x = c(-0.25, -0.45, -0.575),
+                                      y = c(0.1, 0.24, 0.34),
+                                      x_b = c(-0.25, -0.25, -0.25),
+                                      y_b = c(0.5, 0.5, 0.5))
+
+local_optima_curvature = 0.5
 
 p_no_noise_line = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -4089,49 +4359,66 @@ p_no_noise_line = ggplot() +
                color = "red",
                size = optimum_size,
                stroke = optimum_stroke,
-               shape = 3) +
-    xlab(TeX("(d)")) +
-    scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
-
-p_noise_line = ggplot() +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
-    geom_line(data = plot_df %>%
-                  filter(type == paste("noise_",
-                                       noise_sd,
-                                       sep = "")) %>%
-                  filter(y == plot_df %>%
-                         filter(type == paste("noise_",
-                                              noise_sd,
-                                              sep = "")) %>%
-                         filter(z == min(z)) %>%
-                         select(y) %>% first()),
-                 aes(x = x,
-                     y = z,
-                     color = z),
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_point(data = plot_df %>%
-                   filter(type == paste("noise_",
-                                        noise_sd,
-                                        sep = "")) %>%
-                   filter(z == min(z)),
+               shape = optima_shape) +
+    geom_line(data = convex_line_prediction,
+              aes(x = x,
+                  y = pred),
+              color = constraint_border,
+              linetype = 3,
+              size = 1.9,
+              show.legend = FALSE) +
+    geom_line(data = convex_line,
+              aes(x = x,
+                  y = z),
+              color = constraint_border,
+              size = 2.3,
+              show.legend = FALSE) +
+    geom_point(data = convex_line,
                aes(x = x,
-                   y = z),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 3) +
-    xlab(TeX("(e)")) +
+                   y = z,
+                   color = z),
+               size = 6,
+               show.legend = FALSE) +
+    geom_curve(aes(x = 0.0,
+                   y = 0.1,
+                   xend = -0.01,
+                   yend = 0.01),
+               angle = 90,
+               curvature = 0.05,
+               lineend = "round",
+               linejoin = "round",
+               size = 1.4,
+               color = constraint_border,
+               arrow = arrow(length = unit(0.3, "inches"))) +
+    geom_rect(aes(xmin = -0.25,
+                  xmax = 0.25,
+                  ymin = 0.1,
+                  ymax = 0.26),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 0.4) +
+    geom_text(aes(x = 0., y = 0.18),
+              size = 12,
+              color = constraint_border,
+              label = TeX("\\overset{Global}{Optimum}")) +
+    geom_rect(aes(xmin = -0.3,
+                  xmax = 0.3,
+                  ymin = 0.69,
+                  ymax = 0.85),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 0.4) +
+    geom_text(aes(x = 0., y = 0.77),
+              size = 12,
+              color = constraint_border,
+              label = TeX("\\overset{$y = f(\\cdot,\\, x_2)$}{is Convex}")) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$y$")) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
+    theme_config_line
 
 p_constrained_line = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -4150,6 +4437,30 @@ p_constrained_line = ggplot() +
                  linejoin = "round",
                  lineend = "round",
                  show.legend = FALSE) +
+    geom_curve(data = constrained_local_optima,
+               aes(x = x_b,
+                   y = y_b,
+                   xend = x,
+                   yend = y),
+               angle = 90,
+               curvature = 0.3,
+               lineend = "round",
+               linejoin = "round",
+               size = 1.4,
+               color = constraint_border,
+               arrow = arrow(length = unit(0.3, "inches"))) +
+    geom_rect(aes(xmin = -0.22,
+                  xmax = 0.55,
+                  ymin = 0.45,
+                  ymax = 0.55),
+              show.legend = FALSE,
+              fill = "gray94",
+              color = constraint_border,
+              size = 0.4) +
+    geom_text(aes(x = 0.16, y = 0.5),
+              size = 12,
+              color = constraint_border,
+              label = "Local Optima") +
     geom_point(data = plot_df %>%
                    filter(type == "constrained") %>%
                    filter(!is.na(z)) %>%
@@ -4159,7 +4470,7 @@ p_constrained_line = ggplot() +
                color = "red",
                size = optimum_size,
                stroke = optimum_stroke,
-               shape = 3) +
+               shape = optima_shape) +
     geom_rect(aes(xmin = constraint$x_min,
                   xmax = constraint$x_max,
                   ymin = plot_df %>%
@@ -4178,23 +4489,22 @@ p_constrained_line = ggplot() +
     geom_text(aes(x = (constraint$x_max - constraint$x_min),
                   y = 0.455),
               size = 12,
-              hjust = -0.6,
-              vjust = 1.0,
-              color = "gray70",
+              hjust = -0.62,
+              vjust = 1.1,
+              color = "gray58",
               angle = -90,
-              label = "Constrained") +
+              label = constraint_label) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    xlab(TeX("(f)")) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$y$")) +
     theme_bw(base_size = base_size) +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = title_size))
+    theme_config_line
 
-(p_no_noise | p_noise | p_constrained) /
-    (p_no_noise_line | p_noise_line | p_constrained_line)
+p_no_noise_line | p_constrained_line
 #+end_SRC
 
 #+RESULTS:
-[[file:./img/simple_search_space.pdf]]
+[[file:./img/optima_convexity.pdf]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -5003,10 +5313,13 @@ definitions tied to the autotuning context.
 
 Each chapter concludes  with a discussion of the applicability  of each group of
 methods  to  autotuning  problems.   The methods  we  discuss  have  significant
-differences, but employ  the same basic concepts.  When  pertinent and possible,
-we  will  use the  same  mathematical  notation  to  discuss all  methods.   The
-remainder of  this chapter presents the  common basic concepts and  the notation
-used in subsequent chapters, which are summarized in Table\nbsp{}[[tab:notation]].
+differences  but  employ  the  same  basic  concepts.   We  will  use  the  same
+mathematical notation  to discuss all  methods when possible.  The  remainder of
+this chapter  presents common basic concepts  and the associated notation  to be
+used     in     subsequent     chapters,     which     are     summarized     in
+Table\nbsp{}[[tab:notation]]. Completing  this introduction  to optimization  in the
+context of autotuning, the chapter ends with a discussion of common search space
+properties.
 
 In  this thesis  we will  call /optimization/  the minimization  of a  real-valued
 function with  a single vector  input.  For  a function $f:  \mathcal{X} \mapsto
@@ -5074,25 +5387,25 @@ Learning]],  [[Design of  Experiments]],  and [[Online  Learning]].   These meth
 different strategies to construct a /surrogate model/
 #+begin_export latex
 \begin{equation}
-\hat{f}(\mathbf{x} = [x_1,\dots,x_p]^{\top} \in \mathcal{X}, \theta(\mathbf{x}) \in \Theta)\text{,}
+\hat{f}(\mathbf{x} = [x_1,\dots,x_p]^{\top} \in \mathcal{X}, \theta(\mathbf{X}) \in \Theta)\text{,}
 \end{equation}
 #+end_export
-where the  function $\theta :  \mathcal{X} \mapsto  \Theta$ is produced  by some
-approximation, or /estimation process/, that uses data from an experimental design
-$\mathbf{X}   =   [\mathbf{x}_1,\dots,\mathbf{x}_n]$.   The   /parameter   vector/
-$\theta(\mathbf{x})$ in the /parameter space/ $\Theta$ will be used to compute the
-estimate.     The     constructed    surrogate     model    $\hat{f}(\mathbf{x},
-\theta(\mathbf{x}))$ can be  used as a tool to attempt  to describe and optimize
-the underlying real function $f(\mathbf{x})$,  provided we are able to construct
-a   useful    estimate   of   $\theta(\mathbf{x})$.    We    will   discuss   in
-Chapters\nbsp{}[[Statistical Learning]] and\nbsp{}[[Design of Experiments]] methods that
-use    the     individual    parameter    estimates     $\theta(\mathbf{x})    =
+where  the function  $\theta :  \mathbf{X}  \in \mathcal{X}  \mapsto \Theta$  is
+produced by  some approximation, or /estimation  process/, that uses data  from an
+experimental  design  $\mathbf{X}   =  [\mathbf{x}_1,\dots,\mathbf{x}_n]$.   The
+/parameter vector/  $\theta(\mathbf{X})$ in the  /parameter space/ $\Theta$  will be
+used   to    compute   the   estimate.    The    constructed   surrogate   model
+$\hat{f}(\mathbf{x}, \theta(\mathbf{X}))$  can be used  as a tool to  attempt to
+describe and optimize the underlying  real function $f(\mathbf{x})$, provided we
+are  able to  construct  a  useful estimate  of  $\theta(\mathbf{X})$.  We  will
+discuss in  Chapters\nbsp{}[[Statistical Learning]] and\nbsp{}[[Design  of Experiments]]
+methods  that  use  the  individual parameter  estimates  $\theta(\mathbf{X})  =
 [\theta_1,\dots,\theta_m]^{\top}$  to   assess  the  significance   of  specific
 /factors/, that is, the individual flags in the compiler autotuning example.
 
 Statistical  learning methods  construct  surrogate models  $\hat{f}(\mathbf{x},
-\theta(\mathbf{x}))$ that estimate the relationships between problem factors and
-the target performance metric, which are encoded in $\theta(\mathbf{x})$.  If we
+\theta(\mathbf{X}))$ that estimate the relationships between problem factors and
+the target performance metric, which are encoded in $\theta(\mathbf{X})$.  If we
 have no access  to the underlying function $f(\mathbf{x})$,  surrogates can also
 be constructed using a set of  previously executed experiments, and then used to
 estimate the function values for new output.
@@ -5115,9 +5428,9 @@ discussion.
 |--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
 | $\mathcal{X}$                                                            | Search space                    | All possible compiler flag assignments                            |
 | $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                  | Input variable                  | A specific flag assignment                                        |
-| $\vert{}\mathbf{x}\vert{} = p$                                           | Input space dimension           |                                                                   |
+| $\vert{}\mathbf{x}\vert{} = p$                                           | Search space dimension          | The number of flags to assign                                     |
 | $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$ | Experimental design             | A set of flag assignments                                         |
-| $\vert{}\mathbf{X}\vert{} = n$                                           | Number of experiments           |                                                                   |
+| $\vert{}\mathbf{X}\vert{} = n$                                           | Number of experiments           | Size of the set of flags to compile and measure                   |
 | $f: \mathcal{X} \mapsto \mathbb{R}$                                      | Function to minimize            | Performance metric, such as the execution time of a binary        |
 | $y = f(\mathbf{x}) + \varepsilon$                                        | Observable quantity             | Measurement of the execution time, subject to error $\varepsilon$ |
 | $\Theta$                                                                 | Parameter space                 | All possible values of the coefficients of a linear model         |
@@ -5125,6 +5438,18 @@ discussion.
 | $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                  | Surrogate for $f$               | A linear model fit used for /predictions/                           |
 | $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment     |
 |--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
+
+*** Search Spaces
+
+#+NAME: fig:simple-search-spaces
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Simple search spaces
+[[file:img/simple_search_space.pdf]]
+
+#+NAME: fig:optima-convexity
+#+ATTR_LATEX: :width .66\textwidth :placement [t]
+#+CAPTION: Optima and convexity
+[[file:img/optima_convexity.pdf]]
 
 ** Methods for Function Minimization
 *** Methods Based on Derivatives

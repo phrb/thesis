@@ -5336,12 +5336,12 @@ assume  we can  use  the opposite  of  the performance  metrics  that should  be
 maximized.
 
 As an example of an autotuning  problem, consider optimizing the choice of flags
-for a compiler with $\vert{}\mathbf{x}\vert{}  = p$ flags, where a configuration
+for a compiler with $p  = \vert{}\mathbf{x}\vert{}$ flags, where a configuration
 $\mathbf{x}  =  [x_1,\dots,x_p]^{\top}$ consists  of  a  vector of  $p$  /boolean/
 values,  denoting  whether  each  flag  $x_1,\dots,x_p$ is  turned  on  for  the
 compilation of a specific application.   To find the compiler configuration that
-generates   the  binary   with   the  smallest   execution   time,  we   conduct
-$\vert{}\mathbf{X}\vert{} =  n$ /experiments/, chosen according  to some arbitrary
+generates  the  binary  with  the  smallest execution  time,  we  conduct  $n  =
+\vert{}\mathbf{X}\vert{}$  /experiments/,  chosen   according  to  some  arbitrary
 fashion,   generating    the   /experimental   design   matrix/    $\mathbf{X}   =
 [\mathbf{x}_1,\dots,\mathbf{x}_n]$.  Each  experiment consists of  compiling the
 target application using the specified compiler configuration, and measuring the
@@ -5365,7 +5365,7 @@ with all  possible flag  combinations.  With such  /experimental design/  we wou
 obtain the  measurements
 #+begin_export latex
 \begin{equation}
-\mathbf{y} =  \left\{y_i = f(\mathbf{x}_i)  + \varepsilon_i, \; i =  1,\dots,2^{p}\right\}\text{.}
+\mathbf{y} =  [y_i = f(\mathbf{x}_i)  + \varepsilon_i, \; i =  1,\dots,2^{p}]^{\top}\text{.}
 \end{equation}
 #+end_export
 The /global  optimum/ in this  example would  be the $\mathbf{x}_i$  producing the
@@ -5387,28 +5387,30 @@ Learning]],  [[Design of  Experiments]],  and [[Online  Learning]].   These meth
 different strategies to construct a /surrogate model/
 #+begin_export latex
 \begin{equation}
-\hat{f}(\mathbf{x} = [x_1,\dots,x_p]^{\top} \in \mathcal{X}, \theta(\mathbf{X}) \in \Theta)\text{,}
+\hat{f}(\mathbf{x} = [x_1,\dots,x_p]^{\top} \in \mathcal{X}, \theta(\mathbf{X},\mathbf{y}) \in \Theta)\text{,}
 \end{equation}
 #+end_export
-where  the function  $\theta :  \mathbf{X}  \in \mathcal{X}  \mapsto \Theta$  is
-produced by  some approximation, or /estimation  process/, that uses data  from an
-experimental  design  $\mathbf{X}   =  [\mathbf{x}_1,\dots,\mathbf{x}_n]$.   The
-/parameter vector/  $\theta(\mathbf{X})$ in the  /parameter space/ $\Theta$  will be
-used   to    compute   the   estimate.    The    constructed   surrogate   model
-$\hat{f}(\mathbf{x}, \theta(\mathbf{X}))$  can be used  as a tool to  attempt to
-describe and optimize the underlying  real function $f(\mathbf{x})$, provided we
-are  able to  construct  a  useful estimate  of  $\theta(\mathbf{X})$.  We  will
-discuss in  Chapters\nbsp{}[[Statistical Learning]] and\nbsp{}[[Design  of Experiments]]
-methods  that  use  the  individual parameter  estimates  $\theta(\mathbf{X})  =
+where the function  $\theta : \mathcal{X} \times  \mathbb{R}^{n} \mapsto \Theta$
+is  produced  by  some  approximation,  or /estimation  process/,  that  uses  the
+/observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$   from  an  experimental  design
+$\mathbf{X}   =   [\mathbf{x}_1,\dots,\mathbf{x}_n]$.   The   /parameter   vector/
+$\theta(\mathbf{X},\mathbf{y})$ in the /parameter space/  $\Theta$ will be used to
+compute  the estimate.   The  constructed  surrogate model  $\hat{f}(\mathbf{x},
+\theta(\mathbf{X},\mathbf{y}))$ can be used as a tool to attempt to describe and
+optimize the underlying  real function $f(\mathbf{x})$, provided we  are able to
+construct a useful estimate of $\theta(\mathbf{X},\mathbf{y})$.  We will discuss
+in Chapters\nbsp{}[[Statistical  Learning]] and\nbsp{}[[Design of  Experiments]] methods
+that use  the individual  parameter estimates $\theta(\mathbf{X},  \mathbf{y}) =
 [\theta_1,\dots,\theta_m]^{\top}$  to   assess  the  significance   of  specific
 /factors/, that is, the individual flags in the compiler autotuning example.
 
 Statistical  learning methods  construct  surrogate models  $\hat{f}(\mathbf{x},
-\theta(\mathbf{X}))$ that estimate the relationships between problem factors and
-the target performance metric, which are encoded in $\theta(\mathbf{X})$.  If we
-have no access  to the underlying function $f(\mathbf{x})$,  surrogates can also
-be constructed using a set of  previously executed experiments, and then used to
-estimate the function values for new output.
+\theta(\mathbf{X}, \mathbf{y}))$ that estimate the relationships between problem
+factors   and   the   target   performance  metric,   which   are   encoded   in
+$\theta(\mathbf{X},  \mathbf{y})$.   If we  have  no  access to  the  underlying
+function  $f(\mathbf{x})$, surrogates  can also  be constructed  using a  set of
+previously executed experiments,  and then used to estimate  the function values
+for new output.
 
 Chapter\nbsp{}[[Statistical  Learning]]  differentiates between  /parametric/  methods
 which make  the hypothesis that  the number $\vert{}\Theta\vert{}$  of estimated
@@ -5417,29 +5419,52 @@ to construct surrogates depending on a large number of estimable parameters.
 
 Table\nbsp{}[[tab:notation]] summarizes the notation  and concepts we have discussed
 so  far, tying  those concepts  to  the compiler  flag  example we  used in  the
-discussion.
+discussion.   The notation  and the  basic concepts  we have  described in  this
+section, although referring to abstract entities, enable a uniform discussion of
+different optimization methods in the next chapters.
 
 #+NAME: tab:notation
 #+CAPTION: Summary of the notation, concepts, and examples discussed in this chapter,
 #+CAPTION: and common to the autotuning methods discussed in further chapters
 #+ATTR_LATEX: :align p{.22\columnwidth}p{.2\columnwidth}p{.5\columnwidth} :booktabs t :font \scriptsize
-|--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
-| Symbol                                                                   | Concept                         | Example                                                           |
-|--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
-| $\mathcal{X}$                                                            | Search space                    | All possible compiler flag assignments                            |
-| $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                  | Input variable                  | A specific flag assignment                                        |
-| $\vert{}\mathbf{x}\vert{} = p$                                           | Search space dimension          | The number of flags to assign                                     |
-| $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$ | Experimental design             | A set of flag assignments                                         |
-| $\vert{}\mathbf{X}\vert{} = n$                                           | Number of experiments           | Size of the set of flags to compile and measure                   |
-| $f: \mathcal{X} \mapsto \mathbb{R}$                                      | Function to minimize            | Performance metric, such as the execution time of a binary        |
-| $y = f(\mathbf{x}) + \varepsilon$                                        | Observable quantity             | Measurement of the execution time, subject to error $\varepsilon$ |
-| $\Theta$                                                                 | Parameter space                 | All possible values of the coefficients of a linear model         |
-| $\theta: \mathbf{X} \in \mathcal{X} \mapsto \Theta$                      | Parameter vector                | Estimate of the coefficients of a linear model                    |
-| $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                  | Surrogate for $f$               | A linear model fit used for /predictions/                           |
-| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment     |
-|--------------------------------------------------------------------------+---------------------------------+-------------------------------------------------------------------|
+|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+| Symbol                                                                   | Concept                         | Example                                                              |
+|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+| $\mathcal{X}$                                                            | Search space                    | All possible compiler flag assignments                               |
+| $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                  | Input variable                  | A specific flag assignment                                           |
+| $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$ | Experimental design             | A set of flag assignments                                            |
+| $p = \vert{}\mathbf{x}\vert{}$                                           | Search space dimension          | The number of flags to assign                                        |
+| $n = \vert{}\mathbf{X}\vert{}$                                           | Number of experiments           | Size of the set of flags to compile and measure                      |
+| $f: \mathcal{X} \mapsto \mathbb{R}$                                      | Function to minimize            | Performance metric, such as the execution time of a binary           |
+| $y_i = f(\mathbf{x}_i) + \varepsilon_i$                                  | Observable quantity             | Execution time with flags $\mathbf{x}_i$, with error $\varepsilon_i$ |
+| $\mathbf{y} = [y_1, \dots, y_n]^{\top} \in \mathbb{R}^{n}$               | Observations                    | List of execution times for all flags                                |
+| $\Theta$                                                                 | Parameter space                 | All possible values of the coefficients of a linear model            |
+| $\theta: \mathcal{X} \times \mathbb{R}^{n} \mapsto \Theta$               | Parameter vector                | Estimate of the coefficients of a linear model                       |
+| $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                  | Surrogate for $f$               | A linear model fit used for /predictions/                              |
+| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment        |
+|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+
+Before moving on to the descriptions of derivative-based and stochastic function
+minimization methods and their application to autotuning problems, we discuss in
+the next section some  of the properties of search spaces  that are relevant for
+both autotuning and mathematical optimization.
 
 *** Search Spaces
+Consider a more  abstract optimization problem than the  compiler flag selection
+from the last section, consisting of  finding the /global minimum/ of a paraboloid
+surface.  Using  our notation, the  search space $\mathcal{X}$ for  this example
+contains the parameters $x_1, x_2\in [0,1]$
+
+We will look at the search space for the objective functions
+#+begin_export latex
+\begin{align}
+y &= f(\mathbf{x} = [x_1, x_2]^{\top}) = x_{1}^{2} + x_{2}^{2}\text{,} \label{eq:f1}  \\
+y &= f(\mathbf{x} = [x_1, x_2]^{\top}) + \varepsilon = x_{1}^{2} + x_{2}^{2} + \varepsilon,
+\; \text{with } \varepsilon \thicksim \mathcal{N}(0, \sigma^2)\text{, and} \label{eq:f2} \\
+y &= f(\mathbf{x} = [x_1, x_2]^{\top}) + \varepsilon = x_{1}^{2} + x_{2}^{2} + \varepsilon
+\text{, with} \; x_1 \notin (0.1, 0.4), \; x_2 \notin (-0.3, 0.4)\text{.} \label{eq:f3}
+\end{align}
+#+end_export
 
 #+NAME: fig:simple-search-spaces
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -5450,6 +5475,7 @@ discussion.
 #+ATTR_LATEX: :width .66\textwidth :placement [t]
 #+CAPTION: Optima and convexity
 [[file:img/optima_convexity.pdf]]
+
 
 ** Methods for Function Minimization
 *** Methods Based on Derivatives

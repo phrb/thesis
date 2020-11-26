@@ -3889,44 +3889,64 @@ ggplot(df, aes(x = x1, y = x2)) +
 
 **** Search Space Introduction
 ***** Simple Search Spaces
+****** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+a = 0.6
+c = -30
+
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+
 ****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 
 resolution = 100
 
-new_grid = expand.grid(seq(from = -1.0, to = 1.0, length.out = resolution),
-                       seq(from = -1.0, to = 1.0, length.out = resolution))
+new_grid = expand.grid(seq(from = -10.0, to = 10.0, length.out = resolution),
+                       seq(from = -10.0, to = 10.0, length.out = resolution))
 
 df = data.frame(x = new_grid$Var1,
                 y = new_grid$Var2)
 
 amp_x = 1
-amp_y = 1
+amp_y = 1.5
 
-noise_sd = 0.03
+#noise_sd = 0.033
+noise_sd = 20
 
-df$z = ((df$x ^ 2) * amp_x) +
-    ((df$y ^ 2) * amp_y) +
+# f <- function(x, y){
+#     return((x ^ 2) * y)
+# }
+
+# f <- function(x, y){
+#     return(((x ^ 2) * amp_x) + ((y ^ 2) * amp_y))
+# }
+
+f <- function(y, x){
+    return(((x + (2 * y) - 7) ^ 2) + (((2 * x) + y - 5)^ 2))
+}
+
+
+df$z = f(df$x, df$y) +
     rnorm(resolution ^ 2,
           mean = 0.0,
           sd = noise_sd)
 
-df$type = paste("noise_",
-                noise_sd,
-                sep = "")
+df$type = "noise"
 
 plot_df = df
 
-df$z = ((df$x ^ 2) * amp_x) +
-    ((df$y ^ 2) * amp_y)
+df$z = f(df$x, df$y)
 
 df$type = "no_noise"
 
 plot_df = bind_rows(plot_df, df)
 
-df$z = ((df$x ^ 2) * amp_x) +
-    ((df$y ^ 2) * amp_y) +
+df$z = f(df$x, df$y) +
     rnorm(resolution ^ 2,
           mean = 0.0,
           sd = noise_sd)
@@ -3938,11 +3958,16 @@ constraint = data.frame(x_min = 0.1,
                         y_min = -0.3,
                         y_max = 0.4)
 
-df[(df$x < constraint$x_max &
-    df$x > constraint$x_min &
-    df$y < constraint$y_max &
-    df$y > constraint$y_min),
-   "z"] = NA
+quad_constraint <- function(x1, x2, a, c){
+    return(x2 < ((a * (x1 ^ 2)) + c))
+}
+
+lin_constraint <- function(x1, x2, l, k){
+    return(x1 > l | x1 < k)
+}
+
+#df[quad_constraint(df$y, df$x, a, c), "z"] = NA
+df[lin_constraint(df$y, df$x, l, k), "z"] = NA
 
 plot_df = bind_rows(plot_df, df)
 
@@ -3951,6 +3976,8 @@ write.csv(plot_df,
           row.names = FALSE)
 
 #+end_SRC
+
+#+RESULTS:
 
 ****** Search Spaces Overview
 #+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
@@ -3976,7 +4003,7 @@ optimum_size = 10
 optimum_stroke = 3
 optima_shape = 4
 
-noise_sd = 0.03
+noise_sd = 0.033
 
 constraint_label = "Not feasible"
 
@@ -4022,8 +4049,8 @@ theme_config_line = theme(axis.title.y = element_text(angle = 0,
                           axis.text.y = element_blank())
 
 p_no_noise = ggplot() +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
     geom_contour(data = filter(plot_df,
                                type == "no_noise"),
                  aes(x = x,
@@ -4050,12 +4077,9 @@ p_no_noise = ggplot() +
     theme_config
 
 p_noise = ggplot() +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
-    geom_contour(data = filter(plot_df,
-                               type == paste("noise_",
-                                             noise_sd,
-                                             sep = "")),
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    geom_contour(data = filter(plot_df, type == "noise"),
                  aes(x = x,
                      y = y,
                      z = z,
@@ -4065,9 +4089,7 @@ p_noise = ggplot() +
                  lineend = "round",
                  show.legend = FALSE) +
     geom_point(data = plot_df %>%
-                   filter(type == paste("noise_",
-                                        noise_sd,
-                                        sep = "")) %>%
+                   filter(type == "noise") %>%
                    filter(z == min(z)),
                aes(x = x,
                    y = y),
@@ -4082,8 +4104,8 @@ p_noise = ggplot() +
     theme_config
 
 p_constrained = ggplot() +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0)) +
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
     geom_contour(data = filter(plot_df,
                                type == "constrained"),
                  aes(x = x,
@@ -4094,6 +4116,28 @@ p_constrained = ggplot() +
                  linejoin = "round",
                  lineend = "round",
                  show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(type == "constrained") %>%
+                    filter(is.na(z)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(type == "constrained") %>%
+                    filter(is.na(z)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
     geom_point(data = plot_df %>%
                    filter(type == "constrained") %>%
                    filter(!is.na(z)) %>%
@@ -4104,23 +4148,12 @@ p_constrained = ggplot() +
                size = optimum_size,
                stroke = optimum_stroke,
                shape = 4) +
-    geom_rect(aes(xmin = constraint$x_min,
-                  xmax = constraint$x_max,
-                  ymin = constraint$y_min,
-                  ymax = constraint$y_max),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 1,
-              linetype = 2) +
-    geom_text(aes(x = (constraint$x_max - constraint$x_min),
-                  y = (constraint$y_max - constraint$y_min)),
-              size = 12,
-              hjust = -0.65,
-              vjust = 1.1,
-              color = "gray58",
-              angle = -90,
-              label = constraint_label) +
+    # geom_text(aes(x = 0.6,
+    #               y = 0.83),
+    #           size = 12,
+    #           color = "gray50",
+    #           angle = 0,
+    #           label = constraint_label) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     xlab(TeX("\\overset{$x_2$}{(c)}")) +
     ylab(TeX("$x_1$")) +
@@ -4162,13 +4195,9 @@ p_noise_line = ggplot() +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(expand = c(0, 0)) +
     geom_line(data = plot_df %>%
-                  filter(type == paste("noise_",
-                                       noise_sd,
-                                       sep = "")) %>%
+                  filter(type == "noise") %>%
                   filter(y == plot_df %>%
-                         filter(type == paste("noise_",
-                                              noise_sd,
-                                              sep = "")) %>%
+                         filter(type == "noise") %>%
                          filter(z == min(z)) %>%
                          select(y) %>% first()),
                  aes(x = x,
@@ -4179,9 +4208,7 @@ p_noise_line = ggplot() +
                  lineend = "round",
                  show.legend = FALSE) +
     geom_point(data = plot_df %>%
-                   filter(type == paste("noise_",
-                                        noise_sd,
-                                        sep = "")) %>%
+                   filter(type == "noise") %>%
                    filter(z == min(z)),
                aes(x = x,
                    y = z),
@@ -4222,29 +4249,38 @@ p_constrained_line = ggplot() +
                size = optimum_size,
                stroke = optimum_stroke,
                shape = 4) +
-    geom_rect(aes(xmin = constraint$x_min,
-                  xmax = constraint$x_max,
-                  ymin = plot_df %>%
-                      filter(type == "constrained") %>%
-                      filter(!is.na(z)) %>%
-                      filter(z == min(z)) %>%
-                      mutate(z = 0.9 * z) %>%
-                      select(z) %>%
-                      first(),
-                  ymax = 0.3),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 1,
-              linetype = 2) +
-    geom_text(aes(x = (constraint$x_max - constraint$x_min),
-                  y = 0.455),
-              size = 12,
-              hjust = -0.64,
-              vjust = 1.1,
-              color = "gray58",
-              angle = -90,
-              label = constraint_label) +
+    # geom_vline(data = plot_df %>%
+    #                filter(type == "constrained") %>%
+    #                filter(y == plot_df %>%
+    #                       filter(type == "constrained") %>%
+    #                       filter(!is.na(z)) %>%
+    #                       filter(z == min(z)) %>%
+    #                       select(y) %>% first()) %>%
+    #                filter(!is.na(z)),
+    #            aes(xintercept = max(x)),
+    #            linetype = 2,
+    #            color = constraint_border,
+    #            size = 1.3) +
+    # geom_ribbon(data = plot_df %>%
+    #                filter(type == "constrained") %>%
+    #                filter(y == plot_df %>%
+    #                       filter(type == "constrained") %>%
+    #                       filter(!is.na(z)) %>%
+    #                       filter(z == min(z)) %>%
+    #                       select(y) %>% first()) %>%
+    #                filter(!is.na(z)),
+    #             aes(y = z,
+    #                 xmax = max(x),
+    #                 xmin = 10),
+    #             alpha = 0.1) +
+    # geom_text(aes(x = (constraint$x_max - constraint$x_min),
+    #               y = 0.455),
+    #           size = 12,
+    #           hjust = -0.64,
+    #           vjust = 1.1,
+    #           color = "gray58",
+    #           angle = -90,
+    #           label = constraint_label) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     xlab(TeX("\\overset{$x_2$}{(f)}")) +
     ylab(TeX("$y$")) +
@@ -4260,7 +4296,7 @@ p_constrained_line = ggplot() +
 
 ***** Local, global optimum, convexity
 ****** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/optima_convexity.pdf" :width 20 :height 10.5 :eval no-export
+#+begin_SRC R :results graphics output :session *R* :file "./img/optima_convexity.svg" :width 20 :height 10.5 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(paletteer)
@@ -4296,8 +4332,8 @@ convex_line = plot_df %>%
            select(y) %>% first()) %>%
     filter(type == "no_noise") %>%
     mutate(n = row_number()) %>%
-    filter(n == round(0.05 * max(n)) |
-           n == round(0.81 * max(n)))
+    filter(n == round(0.08 * max(n)) |
+           n == round(0.88 * max(n)))
 
 convex_line_model = lm(z ~ x, convex_line)
 
@@ -4305,7 +4341,8 @@ convex_line_prediction = plot_df %>%
     filter(y == plot_df %>%
            filter(type == "no_noise") %>%
            filter(z == min(z)) %>%
-           select(y) %>% first()) %>%
+           select(y) %>%
+           first()) %>%
     filter(type == "no_noise")
 
 convex_line_prediction$pred = predict(convex_line_model, convex_line_prediction)
@@ -4328,8 +4365,8 @@ theme_config_line = theme(axis.title.y = element_text(angle = 0,
                           axis.text.x = element_blank(),
                           axis.text.y = element_blank())
 
-constrained_local_optima = data.frame(x = c(-0.25, -0.45, -0.575),
-                                      y = c(0.1, 0.24, 0.34),
+constrained_local_optima = data.frame(x = c(-0.31, -0.47, -0.542),
+                                      y = c(0.14, 0.24, 0.34),
                                       x_b = c(-0.25, -0.25, -0.25),
                                       y_b = c(0.5, 0.5, 0.5))
 
@@ -4379,41 +4416,41 @@ p_no_noise_line = ggplot() +
                    color = z),
                size = 6,
                show.legend = FALSE) +
-    geom_curve(aes(x = 0.0,
-                   y = 0.1,
-                   xend = -0.01,
-                   yend = 0.01),
-               angle = 90,
-               curvature = 0.05,
-               lineend = "round",
-               linejoin = "round",
-               size = 1.4,
-               color = constraint_border,
-               arrow = arrow(length = unit(0.3, "inches"))) +
-    geom_rect(aes(xmin = -0.25,
-                  xmax = 0.25,
-                  ymin = 0.1,
-                  ymax = 0.26),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 0.4) +
-    geom_text(aes(x = 0., y = 0.18),
-              size = 12,
-              color = constraint_border,
-              label = TeX("\\overset{Global}{Optimum}")) +
-    geom_rect(aes(xmin = -0.3,
-                  xmax = 0.3,
-                  ymin = 0.69,
-                  ymax = 0.85),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 0.4) +
-    geom_text(aes(x = 0., y = 0.77),
-              size = 12,
-              color = constraint_border,
-              label = TeX("\\overset{$y = f(\\cdot,\\, x_2)$}{is Convex}")) +
+    # geom_curve(aes(x = 0.0,
+    #                y = 0.1,
+    #                xend = -0.01,
+    #                yend = 0.01),
+    #            angle = 90,
+    #            curvature = 0.05,
+    #            lineend = "round",
+    #            linejoin = "round",
+    #            size = 1.4,
+    #            color = constraint_border,
+    #            arrow = arrow(length = unit(0.3, "inches"))) +
+    # geom_rect(aes(xmin = -0.25,
+    #               xmax = 0.25,
+    #               ymin = 0.1,
+    #               ymax = 0.26),
+    #           show.legend = FALSE,
+    #           fill = "gray94",
+    #           color = constraint_border,
+    #           size = 0.4) +
+    # geom_text(aes(x = 0., y = 0.18),
+    #           size = 12,
+    #           color = constraint_border,
+    #           label = TeX("\\overset{Global}{Optimum}")) +
+    # geom_rect(aes(xmin = -0.3,
+    #               xmax = 0.3,
+    #               ymin = 0.69,
+    #               ymax = 0.85),
+    #           show.legend = FALSE,
+    #           fill = "gray94",
+    #           color = constraint_border,
+    #           size = 0.4) +
+    # geom_text(aes(x = 0., y = 0.77),
+    #           size = 12,
+    #           color = constraint_border,
+    #           label = TeX("\\overset{$y = f(\\cdot,\\, x_2)$}{is convex}")) +
     xlab(TeX("\\overset{$x_2$}{(a)}")) +
     ylab(TeX("$y$")) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
@@ -4437,30 +4474,54 @@ p_constrained_line = ggplot() +
                  linejoin = "round",
                  lineend = "round",
                  show.legend = FALSE) +
-    geom_curve(data = constrained_local_optima,
-               aes(x = x_b,
-                   y = y_b,
-                   xend = x,
-                   yend = y),
-               angle = 90,
-               curvature = 0.3,
-               lineend = "round",
-               linejoin = "round",
-               size = 1.4,
-               color = constraint_border,
-               arrow = arrow(length = unit(0.3, "inches"))) +
-    geom_rect(aes(xmin = -0.22,
-                  xmax = 0.55,
-                  ymin = 0.45,
-                  ymax = 0.55),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 0.4) +
-    geom_text(aes(x = 0.16, y = 0.5),
-              size = 12,
-              color = constraint_border,
-              label = "Local Optima") +
+    # geom_curve(data = constrained_local_optima,
+    #            aes(x = x_b,
+    #                y = y_b,
+    #                xend = x,
+    #                yend = y),
+    #            angle = 90,
+    #            curvature = 0.3,
+    #            lineend = "round",
+    #            linejoin = "round",
+    #            size = 1.4,
+    #            color = constraint_border,
+    #            arrow = arrow(length = unit(0.3, "inches"))) +
+    # geom_vline(data = plot_df %>%
+    #                filter(type == "constrained") %>%
+    #                filter(y == plot_df %>%
+    #                       filter(type == "constrained") %>%
+    #                       filter(!is.na(z)) %>%
+    #                       filter(z == min(z)) %>%
+    #                       select(y) %>% first()) %>%
+    #                filter(!is.na(z)),
+    #            aes(xintercept = max(x)),
+    #            linetype = 2,
+    #            color = constraint_border,
+    #            size = 1.3) +
+    # geom_ribbon(data = plot_df %>%
+    #                filter(type == "constrained") %>%
+    #                filter(y == plot_df %>%
+    #                       filter(type == "constrained") %>%
+    #                       filter(!is.na(z)) %>%
+    #                       filter(z == min(z)) %>%
+    #                       select(y) %>% first()) %>%
+    #                filter(!is.na(z)),
+    #             aes(y = z,
+    #                 xmax = max(x),
+    #                 xmin = 1),
+    #             alpha = 0.1) +
+    # geom_rect(aes(xmin = -0.22,
+    #               xmax = 0.55,
+    #               ymin = 0.45,
+    #               ymax = 0.55),
+    #           show.legend = FALSE,
+    #           fill = "gray94",
+    #           color = constraint_border,
+    #           size = 0.4) +
+    # geom_text(aes(x = 0.16, y = 0.5),
+    #           size = 12,
+    #           color = constraint_border,
+    #           label = "Local Optima") +
     geom_point(data = plot_df %>%
                    filter(type == "constrained") %>%
                    filter(!is.na(z)) %>%
@@ -4471,29 +4532,6 @@ p_constrained_line = ggplot() +
                size = optimum_size,
                stroke = optimum_stroke,
                shape = optima_shape) +
-    geom_rect(aes(xmin = constraint$x_min,
-                  xmax = constraint$x_max,
-                  ymin = plot_df %>%
-                      filter(type == "constrained") %>%
-                      filter(!is.na(z)) %>%
-                      filter(z == min(z)) %>%
-                      mutate(z = 0.9 * z) %>%
-                      select(z) %>%
-                      first(),
-                  ymax = 0.3),
-              show.legend = FALSE,
-              fill = "gray94",
-              color = constraint_border,
-              size = 1,
-              linetype = 2) +
-    geom_text(aes(x = (constraint$x_max - constraint$x_min),
-                  y = 0.455),
-              size = 12,
-              hjust = -0.62,
-              vjust = 1.1,
-              color = "gray58",
-              angle = -90,
-              label = constraint_label) +
     scale_color_paletteer_c(palette = color_palette, direction = 1) +
     xlab(TeX("\\overset{$x_2$}{(b)}")) +
     ylab(TeX("$y$")) +
@@ -4504,7 +4542,7 @@ p_no_noise_line | p_constrained_line
 #+end_SRC
 
 #+RESULTS:
-[[file:./img/optima_convexity.pdf]]
+[[file:./img/optima_convexity.svg]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -5303,7 +5341,7 @@ applicability, effectiveness, and explanatory  power of autotuning methods based
 on search  heuristics and statistical  learning.  The remainder of  this chapter
 details the contributions of this thesis and the structure of this document.
 * Optimization Methods for Autotuning
-** Introduction
+** Notation and Search Spaces
 The  following chapters  discuss the  optimization  methods that  we applied  to
 autotuning  problems in  different domains.   Each chapter  presents a  group of
 methods,  briefly discussing  each  method  in the  group  and their  underlying
@@ -5321,19 +5359,19 @@ Table\nbsp{}[[tab:notation]]. Completing  this introduction  to optimization  in
 context of autotuning, the chapter ends with a discussion of common search space
 properties.
 
-In  this thesis  we will  call /optimization/  the minimization  of a  real-valued
-function with  a single vector  input.  For  a function $f:  \mathcal{X} \mapsto
-\mathbb{R}$,   we    wish   to   find    the   input   vector    $\mathbf{x}   =
-[x_1,\dots,x_p]^{\top}$ in  the /parameter  space/, or /search  space/ $\mathcal{X}$
-for which $f(\mathbf{x})$ is the smallest, for all $\mathbf{x} \in \mathcal{X}$.
-The  function  $f(\mathbf{x})$  represents,   in  the  autotuning  context,  the
-/performance  metric/ we  wish to  optimize, such  as the  execution time  of some
-application,  and  the  parameter  space $\mathcal{X}$  represents  the  set  of
-possible /configurations/ we  can explore, such as compiler  flags.  Therefore, we
-define optimization in the autotuning  context to mean finding the configuration
-that minimizes  the target performance  metric. For  the sake of  simplicity, we
-assume  we can  use  the opposite  of  the performance  metrics  that should  be
-maximized.
+*** Notation
+We will  call /optimization/  the minimization  of a  real-valued function  with a
+single vector  input.  For  a function $f:  \mathcal{X} \mapsto  \mathbb{R}$, we
+wish  to find  the input  vector  $\mathbf{x} =  [x_1,\dots,x_p]^{\top}$ in  the
+/parameter space/, or /search space/  $\mathcal{X}$ for which $f(\mathbf{x})$ is the
+smallest, for  all $\mathbf{x}  \in \mathcal{X}$.  The  function $f(\mathbf{x})$
+represents,  in  the autotuning  context,  the  /performance  metric/ we  wish  to
+optimize, such  as the  execution time  of some  application, and  the parameter
+space  $\mathcal{X}$  represents  the  set of  possible  /configurations/  we  can
+explore,  such as  compiler flags.   Therefore,  we define  optimization in  the
+autotuning context to  mean finding the configuration that  minimizes the target
+performance  metric. For  the  sake of  simplicity,  we assume  we  can use  the
+opposite of the performance metrics that should be maximized.
 
 As an example of an autotuning  problem, consider optimizing the choice of flags
 for a compiler with $p  = \vert{}\mathbf{x}\vert{}$ flags, where a configuration
@@ -5368,8 +5406,9 @@ obtain the  measurements
 \mathbf{y} =  [y_i = f(\mathbf{x}_i)  + \varepsilon_i, \; i =  1,\dots,2^{p}]^{\top}\text{.}
 \end{equation}
 #+end_export
-The /global  optimum/ in this  example would  be the $\mathbf{x}_i$  producing the
-fastest binary, that is, the smallest $y_i \in \mathbf{y}$.
+The /global  optimum/ $\mathbf{x}^{\ast}$  in this  example is  the $\mathbf{x}_i$
+that  produces the  binary  with  the smallest  execution  time $y^{\ast}$,  the
+smallest $y_i \in \mathbf{y}$.
 
 Assuming we are  capable of evaluating $f(\mathbf{x})$ for  an arbitrarily large
 set of  experiments $\mathbf{X}$,  and that  we are  not interested  in building
@@ -5426,23 +5465,24 @@ different optimization methods in the next chapters.
 #+NAME: tab:notation
 #+CAPTION: Summary of the notation, concepts, and examples discussed in this chapter,
 #+CAPTION: and common to the autotuning methods discussed in further chapters
-#+ATTR_LATEX: :align p{.22\columnwidth}p{.2\columnwidth}p{.5\columnwidth} :booktabs t :font \scriptsize
-|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
-| Symbol                                                                   | Concept                         | Example                                                              |
-|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
-| $\mathcal{X}$                                                            | Search space                    | All possible compiler flag assignments                               |
-| $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                  | Input variable                  | A specific flag assignment                                           |
-| $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$ | Experimental design             | A set of flag assignments                                            |
-| $p = \vert{}\mathbf{x}\vert{}$                                           | Search space dimension          | The number of flags to assign                                        |
-| $n = \vert{}\mathbf{X}\vert{}$                                           | Number of experiments           | Size of the set of flags to compile and measure                      |
-| $f: \mathcal{X} \mapsto \mathbb{R}$                                      | Function to minimize            | Performance metric, such as the execution time of a binary           |
-| $y_i = f(\mathbf{x}_i) + \varepsilon_i$                                  | Observable quantity             | Execution time with flags $\mathbf{x}_i$, with error $\varepsilon_i$ |
-| $\mathbf{y} = [y_1, \dots, y_n]^{\top} \in \mathbb{R}^{n}$               | Observations                    | List of execution times for all flags                                |
-| $\Theta$                                                                 | Parameter space                 | All possible values of the coefficients of a linear model            |
-| $\theta: \mathcal{X} \times \mathbb{R}^{n} \mapsto \Theta$               | Parameter vector                | Estimate of the coefficients of a linear model                       |
-| $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                  | Surrogate for $f$               | A linear model fit used for /predictions/                              |
-| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X}))$                      | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment        |
-|--------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+#+ATTR_LATEX: :align p{.23\columnwidth}p{.195\columnwidth}p{.475\columnwidth} :booktabs t :font \scriptsize
+|-----------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+| Symbol                                                                                              | Concept                         | Example                                                              |
+|-----------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
+| $\mathcal{X}$                                                                                       | Search space                    | All possible compiler flag assignments                               |
+| $\mathbf{x} = [x_1, \dots, x_p]^{\top} \in \mathcal{X}$                                             | Input variable                  | A specific flag assignment                                           |
+| $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \subseteq \mathcal{X}$                            | Experimental design             | A set of flag assignments                                            |
+| $p = \vert{}\mathbf{x}\vert{}$                                                                      | Search space dimension          | The number of flags to assign                                        |
+| $n = \vert{}\mathbf{X}\vert{}$                                                                      | Number of experiments           | Size of the set of flags to compile and measure                      |
+| $f: \mathcal{X} \mapsto \mathbb{R}$                                                                 | Function to minimize            | Performance metric, such as the execution time of a binary           |
+| $y_i = f(\mathbf{x}_i) + \varepsilon_i$                                                             | Observable quantity             | Execution time with flags $\mathbf{x}_i$, with error $\varepsilon_i$ |
+| $\mathbf{y} = [y_1, \dots, y_n]^{\top} \in \mathbb{R}^{n}$                                          | Observations                    | List of execution times for all flags                                |
+| $\mathbf{x}^{\ast}: y^{\ast} = f(\mathbf{x}^{\ast}) \leq f(\mathbf{x}), \mathbf{x} \in \mathcal{X}$ | Global optimum                  | Flag assignment with smallest execution time                         |
+| $\Theta$                                                                                            | Parameter space                 | All possible values of the coefficients of a linear model            |
+| $\theta: \mathcal{X} \times \mathbb{R}^{n} \mapsto \Theta$                                          | Parameter vector                | Estimate of the coefficients of a linear model                       |
+| $\hat{f}: \mathcal{X} \times \Theta \mapsto \mathbb{R}$                                             | Surrogate for $f$               | A linear model fit used for /predictions/                              |
+| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X, \mathbf{y}}))$                                     | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment        |
+|-----------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
 
 Before moving on to the descriptions of derivative-based and stochastic function
 minimization methods and their application to autotuning problems, we discuss in
@@ -5451,31 +5491,95 @@ both autotuning and mathematical optimization.
 
 *** Search Spaces
 Consider a more  abstract optimization problem than the  compiler flag selection
-from the last section, consisting of  finding the /global minimum/ of a paraboloid
-surface.  Using  our notation, the  search space $\mathcal{X}$ for  this example
-contains the parameters $x_1, x_2\in [0,1]$
-
-We will look at the search space for the objective functions
+from  the  last  section,  consisting  of finding  the  global  optimum  of  the
+paraboloid surface defined by the Booth function,
 #+begin_export latex
 \begin{align}
-y &= f(\mathbf{x} = [x_1, x_2]^{\top}) = x_{1}^{2} + x_{2}^{2}\text{,} \label{eq:f1}  \\
-y &= f(\mathbf{x} = [x_1, x_2]^{\top}) + \varepsilon = x_{1}^{2} + x_{2}^{2} + \varepsilon,
-\; \text{with } \varepsilon \thicksim \mathcal{N}(0, \sigma^2)\text{, and} \label{eq:f2} \\
-y &= f(\mathbf{x} = [x_1, x_2]^{\top}) + \varepsilon = x_{1}^{2} + x_{2}^{2} + \varepsilon
-\text{, with} \; x_1 \notin (0.1, 0.4), \; x_2 \notin (-0.3, 0.4)\text{.} \label{eq:f3}
+y_a = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x + 2y - 7)^{2} + (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.} \label{eq:f0}
 \end{align}
 #+end_export
+In our notation, the search space for  this example is $\mathcal{X} = (x_1, x_2)
+\in \mathbb{R}^{2},  \; x_1,x_2 \in  [-10,10]$, with global optimum  $y^{\ast} =
+f(\mathbf{x}^{\ast} = [1, 3]) = 0$.
 
 #+NAME: fig:simple-search-spaces
 #+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Simple search spaces
+#+CAPTION: Contour plots and slices through the global optimum, marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$, for search spaces
+#+CAPTION: defined by variations of the Booth function.
+#+CAPTION: Panels (a) and (d) correspond to Equation\nbsp{}\ref{eq:f0}, panels
+#+CAPTION: (b) and (e) to Equation\nbsp{}\ref{eq:f1}, and panels (c) and (f)
+#+CAPTION: to Equation\nbsp{}\ref{eq:f2}.
 [[file:img/simple_search_space.pdf]]
+
+Besides the  search space defined  by the  observations $y_a$, we  will consider
+search spaces for two variations
+#+begin_export latex
+\begin{align}
+y_b &= f(\mathbf{x}) + \varepsilon, \; \text{with } \varepsilon \thicksim \mathcal{N}(0, \sigma^2)\text{, and} \label{eq:f1} \\
+y_c &= f(\mathbf{x}) + \varepsilon, \; \text{with } \; x_1 \in [3, -6]\text{.} \label{eq:f2}
+\end{align}
+#+end_export
+The underlying objective function in  this example has a closed-form expression,
+but in the context of our applications we consider that we can never observe the
+true $f(\mathbf{x})$, even in ideal experimental conditions.  In that sense, the
+observations $y_b$  closer to  a real application,  and incorporate  the unknown
+effects and  measurement errors  to which the  underlying objective  function is
+subject, represented by the  normally distributed random variable $\varepsilon$,
+with  mean  $0$  and  variance   $\sigma^{2}$.   There  are  often  algorithmic,
+theoretical, or practical /constraints/ on  the allowed combinations of parameters
+of a given  objective function.  The observations $y_c$  represent this scenario
+by incorporating constraints on the parameter $x_1$.
+
+Panels (a),  (b), and (c) of  Figure\nbsp{}[[fig:simple-search-spaces]] show contour
+plots   for  our   search  space   variations  in   Equations\nbsp{}\ref{eq:f0},
+\ref{eq:f1}, and \ref{eq:f2} respectively. The  global optimum in each variation
+is  represented by  a  red cross,  and its  location  changes between  scenarios
+because of  $\varepsilon$. Panels (d), (e),  and (f) show slices  of panels (a),
+(b),   and   (c),  respectively,   that   pass   through  the   global   optimum
+$\mathbf{x}^{\ast}   =   (x_{1}^{\ast},   x_{2}^{\ast})$  for   fixed   $x_1   =
+x_{1}^{\ast}$.
 
 #+NAME: fig:optima-convexity
 #+ATTR_LATEX: :width .66\textwidth :placement [t]
 #+CAPTION: Optima and convexity
-[[file:img/optima_convexity.pdf]]
+[[file:img/optima_convexity_annotated.pdf]]
 
+The noise-free example  shown in panel (a)  has no local optima,  and its smooth
+surface can  be quickly navigated  by the derivative-based methods  discussed in
+Chapter\nbsp{}[[Methods for Function Minimization]]. Such  methods aim to follow the
+direction of /greatest descent/ in the neighborhood of a given point. In a contour
+plot, this direction  is always orthogonal to the contour  lines.  The panel (a)
+from   Figure\nbsp{}[[fig:optima-convexity]]  illustrates   the  /convexity/   of  our
+noise-free function. Informally, a line segment connecting any two points in the
+graph of a convex  function will not cross the graph  of the function. Convexity
+of a function implies the existence of  a single global optimum, whereas lack of
+convexity  implies the  existence  of  /local optima/,  as  happens  in our  noisy
+functions, and is highlighted in panel (b) of Figure\nbsp{}[[fig:optima-convexity]].
+
+Local optima  are by  definition surrounded  by higher  values of  the objective
+function,  and can  thus trap  optimization methods  that do  not plan  for such
+situations,   such   as   a   naive   implementation   of   a   derivative-based
+method. Adapting the step  size of a derivative-based method is  one way to deal
+with functions with many local optima, such as the ones on panels (b) and (c) of
+Figure\nbsp{}[[fig:simple-search-spaces]].
+
+Objective functions  including constraints can  present much harder  problems to
+optimization methods, if  certain conditions are met. For example,  on panel (c)
+of Figure\nbsp{}[[fig:simple-search-spaces]],  we have constraints that  cut contour
+lines in such a way that prevents  attempts to move inside the feasible space in
+the  direction of  greatest descent.   A derivative-based  method would  have to
+drastically  decrease its  step size  upon reaching  the constraint  border, and
+coast along the border in small steps  until it finds a more appealing direction
+of descent.
+
+This more  abstract example aimed  to illustrate that  it can be  non-trivial to
+find the  global optimum of  the simplest of search  spaces, if we  consider the
+significant challenges introduced by unknown effects and measurement error.  The
+additional challenges introduced by the  time cost to obtain measurements, which
+are discussed  in Chapter\nbsp{}[[Design of  Experiments]], guided the  selection of
+the  optimization methods  studied in  this thesis.  The next  chapter discusses
+derivative-based and stochastic methods for function minimization.
 
 ** Methods for Function Minimization
 *** Methods Based on Derivatives

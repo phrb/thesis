@@ -154,7 +154,7 @@ what is possibly "wrong" with current approaches.
 - Many black/box search heuristics whose effectiveness is difficult to
   evaluate/interpret
 *** Optimization (in Autotuning context)
-**** Optimization Method
+**** Optimization Methods
 ***** Methods Based on Derivatives (Local Descent)
 ****** Gradient based
 - Classical hypothesis: convex
@@ -3980,7 +3980,7 @@ write.csv(plot_df,
 #+RESULTS:
 
 ****** Search Spaces Overview
-#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
+j#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(paletteer)
@@ -4543,6 +4543,264 @@ p_no_noise_line | p_constrained_line
 
 #+RESULTS:
 [[file:./img/optima_convexity.svg]]
+*** Methods Based on Derivatives
+**** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+**** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+library(pracma)
+
+resolution = 100
+
+new_grid = expand.grid(seq(from = -10.0, to = 10.0, length.out = resolution),
+                       seq(from = -10.0, to = 10.0, length.out = resolution))
+
+df = data.frame(x = new_grid$Var1,
+                y = new_grid$Var2)
+
+noise_sd = 20
+
+f <- function(y, x){
+    return(((x + (2 * y) - 7) ^ 2) + (((2 * x) + y - 5)^ 2))
+}
+
+lin_constraint <- function(x1, x2, l, k){
+    return(x1 > l | x1 < k)
+}
+
+df$z = f(df$x, df$y)
+
+df$z_noisy = f(df$x, df$y) +
+    rnorm(resolution ^ 2,
+          mean = 0.0,
+          sd = noise_sd)
+
+df$z_constrained = df$z_noisy
+df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
+
+grad_f = gradient(matrix(df$z, nrow = resolution))
+grad_f_noisy = gradient(matrix(df$z_noisy, nrow = resolution))
+
+plot_df = df %>%
+    mutate(x_grad = as.vector(grad_f$X),
+           y_grad = as.vector(grad_f$Y),
+           x_grad_noisy = as.vector(grad_f_noisy$X),
+           y_grad_noisy = as.vector(grad_f_noisy$Y))
+
+write.csv(plot_df,
+          "data/search_spaces/gradient.csv",
+          row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+
+**** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_gradient.pdf" :width 30 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(pracma)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Green"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+noise_sd = 20
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(1, resolution, by = grad_resolution)]
+
+p_no_noise = ggplot() +
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_noise = ggplot() +
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_constrained = ggplot() +
+    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked) %>%
+                    filter(!is.na(z_constrained)),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_constrained),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
+    geom_point(data = plot_df %>%
+                   filter(!is.na(z_constrained)) %>%
+                   filter(z_constrained == min(z_constrained)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_no_noise | p_noise | p_constrained
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_gradient.pdf]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -5582,7 +5840,76 @@ the  optimization methods  studied in  this thesis.  The next  chapter discusses
 derivative-based and stochastic methods for function minimization.
 
 ** Methods for Function Minimization
+This  chapter  aims  to  present  the  intuition  guiding  the  construction  of
+derivative-based  and   stochastic  or  derivative-free  methods   for  function
+minimization.  We discuss the key hypotheses  of these groups of methods, and in
+which cases they can be effective for autotuning problems.
+
+For this chapter, we will put aside the idea of using observations to estimate a
+parameter  vector  and  construct   a  surrogate  function  $\hat{f}(\mathbf{x},
+\theta(\mathbf{X},\mathbf{y}))$.  The  methods discussed in this  chapter do not
+construct  a surrogate  function,  and  thus attempt  to  directly optimize  the
+objective function $f(\mathbf{x})$. In that sense, because they need to know how
+to evaluate it during optimization, they  make the hypothesis that the objective
+function  is known.   The  effectiveness  of the  methods  based on  derivatives
+requires additional properties of $f(\mathbf{x})$ to be known, such as its first
+and second order derivatives, which  imposes additional constraints on objective
+functions.
+
+Evaluating derivatives  to determine the next  best step or using  heuristics to
+explore a  search space cannot  be done parsimoniously.   Estimating derivatives
+when closed-forms  are unknown  and exploring in  the expectation  of leveraging
+unknown   search  space   structure   require  a   large   number  of   function
+evaluations. We  will discuss Design  of Experiments in  Chapter\nbsp{}[[Design of
+Experiments]], and present  optimization strategies for situations  where the cost
+of evaluating the objective function is prohibitive.
+
+Methods based on  derivatives can be powerful, provided  their strong hypothesis
+are  respected. We  now  briefly  define and  discuss  these  methods and  their
+application to autotuning.
+
 *** Methods Based on Derivatives
+- Taylor series: derivative information at a point --> approximation information
+  around that point
+
+#+NAME: fig:booth-gradient
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$,
+#+CAPTION: for search spaces  defined by variations of the Booth function.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: The global optimum is marked with a $\color{red}\boldsymbol{\times}$.
+#+CAPTION: To aid visualization, vector magnitude was encoded by color intensity,
+#+CAPTION: so that darker vectors have larger magnitude. The gradient along the
+#+CAPTION: function's basin is near zero.
+[[file:img/booth_gradient.pdf]]
+
+The  gradient  $\nabla{}f(\mathbf{x})$ of  a  function  $f: \mathcal{X}  \mapsto
+\mathbb{R}$ at point  $\mathbf{x} = [x_1, \dots, x_n]^{\top}$ is  defined as
+#+begin_export latex
+\begin{align}
+  \nabla{}f(\mathbf{x} = [x_1,\dots,x_n]^{\top}) =
+        \left[\dfrac{\partial f}{\partial x_1}(\mathbf{x}),
+          \dots,
+          \dfrac{\partial f}{\partial x_n}(\mathbf{x})\right]^{\top}\text{,}
+\end{align}
+#+end_export
+where   $\frac{\partial    f}{\partial   x_i}(\mathbf{x})$,    or   equivalently
+$f^{\prime}_{x_i}(\mathbf{x})$,  is the  partial  derivative of  $f(\mathbf{x})$
+with respect to  variable $x_i$. The vector  $\nabla{}f(\mathbf{x}_i)$ points to
+the  direction   of  /greatest   ascent/  in  which,   from  the   perspective  of
+$f(\mathbf{x}_i)$, the value of $f$ increases the most.
+
+The gradient descent  method is one of the simplest  ways to leverage derivative
+information  for  optimization.   It  consists  in  moving  iteratively  in  the
+direction  of /greatest  descent/, opposite  the gradient,  from a  starting point
+$\mathbf{x}_1$.
+#+begin_export latex
+\begin{align}
+  \mathbf{x}_{k} = \mathbf{x}_{k - 1} - \alpha_{k}\nabla{}f(\mathbf{x}_{k - 1}), \; k=2,\dots,n
+\end{align}
+#+end_export
+
 **** Gradient
 **** Gradient and Hessian
 *** Stochastic Methods

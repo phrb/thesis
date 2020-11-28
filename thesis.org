@@ -5869,9 +5869,6 @@ are  respected. We  now  briefly  define and  discuss  these  methods and  their
 application to autotuning.
 
 *** Methods Based on Derivatives
-- Taylor series: derivative information at a point --> approximation information
-  around that point
-
 #+NAME: fig:booth-gradient
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$,
@@ -5894,24 +5891,48 @@ The  gradient  $\nabla{}f(\mathbf{x})$ of  a  function  $f: \mathcal{X}  \mapsto
           \dfrac{\partial f}{\partial x_n}(\mathbf{x})\right]^{\top}\text{,}
 \end{align}
 #+end_export
-where   $\frac{\partial    f}{\partial   x_i}(\mathbf{x})$,    or   equivalently
-$f^{\prime}_{x_i}(\mathbf{x})$,  is the  partial  derivative of  $f(\mathbf{x})$
-with respect to  variable $x_i$. The vector  $\nabla{}f(\mathbf{x}_i)$ points to
-the  direction   of  /greatest   ascent/  in  which,   from  the   perspective  of
-$f(\mathbf{x}_i)$, the value of $f$ increases the most.
+where $\frac{\partial f}{\partial x_i}(\mathbf{x})$ is the partial derivative of
+$f(\mathbf{x})$    with    respect    to     variable    $x_i$.    The    vector
+$\nabla{}f(\mathbf{x}_i)$ points to  the direction of /greatest  ascent/ in which,
+from the perspective of $f(\mathbf{x}_i)$, the value of $f$ increases the most.
 
 The gradient descent  method is one of the simplest  ways to leverage derivative
 information  for  optimization.   It  consists  in  moving  iteratively  in  the
 direction  of /greatest  descent/, opposite  the gradient,  from a  starting point
-$\mathbf{x}_1$.
+$\mathbf{x}_1$.   If  we follow  the  opposite  of  the  gradient at  $x_1$  for
+additional points $x_2,\dots,x_n$, each iteration would be
 #+begin_export latex
 \begin{align}
-  \mathbf{x}_{k} = \mathbf{x}_{k - 1} - \alpha_{k}\nabla{}f(\mathbf{x}_{k - 1}), \; k=2,\dots,n
+  \mathbf{x}_{k} = \mathbf{x}_{k - 1} - \alpha_{k}\nabla{}f(\mathbf{x}_{k - 1}), \; k=2,\dots,n\text{,}
 \end{align}
 #+end_export
+where $\alpha_k$  is the  step size  at iteration  $k$. The  step size  for each
+iteration can  be a parameter  fixed at the  beginning of optimization,  but the
+best $\alpha_k$ can alternatively be determined by searching along the direction
+of greatest descent.
 
-**** Gradient
-**** Gradient and Hessian
+Figure\nbsp{}[[fig:booth-gradient]]  shows the  opposites  of the  gradients of  the
+three variations of Booth's  function, described by Equations\nbsp{}\ref{eq:f0},
+\ref{eq:f1}, and \ref{eq:f2}.  A gradient  descent algorithm would iterate along
+the directions  of greatest  descent at  each point and  would easily  reach the
+optimum on the search space of panel (a), unless the choice of $\mathbf{x}_1$ is
+really  unlucky.  The  descent paths  on  panels (b)  and  (c) would  not be  so
+straightforward since  the several local  minima, represented by the  crests and
+loops on the contour  lines, can trap the method if  $\alpha_k$ is not carefully
+chosen.
+
+The situation  can be  even thornier in  panel (c), where  an unlucky  choice of
+$\mathbf{x}_1$  or  $\alpha_k$  can  throw  the descent  path  against  the  top
+constraint  border, forcing  the  method to  zigzag along  the  border in  short
+steps. This  would happen in the  particular situation of panel  (c) because all
+gradient information  guides the descent  across the constraint border,  but the
+method cannot cross  it. Gradient descent would  have a hard time  on panels (b)
+and (c)  even upon reaching the  basin where the optimum  lies, because gradient
+information there is also conflicting due to $\varepsilon$.
+
+- Taylor expansion: Information about derivatives at a point --> (approximation)
+  information about the function around a point
+
 *** Stochastic Methods
 **** Single-State Methods
 

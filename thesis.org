@@ -10,7 +10,7 @@
 #+TAGS: FAPESP(f)
 #+TAGS: DataVis(v) PaperReview(W)
 #+EXPORT_SELECT_TAGS: Blog
-#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   H:4 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -36,7 +36,7 @@
 | article | \documentclass{article}              |                                |                                      |                                            |                                      |                                            |
 
 #+LATEX_CLASS: book
-#+LATEX_CLASS_OPTIONS: [11pt,twoside,a4paper]
+#+LATEX_CLASS_OPTIONS: [11pt,oneside,a4paper]
 #+DRAWERS: latex_headers
 
 :latex_headers:
@@ -63,6 +63,7 @@
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
+#+LATEX_HEADER: \usepackage{indentfirst}
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
@@ -173,7 +174,18 @@ what is possibly "wrong" with current approaches.
 - high cost of estimating derivatives
 ***** Stochastic Methods (Derivative-Free)
 ****** Single-State
+- compute neighborhood of x --> perturb x
+  - random walk
+  - greedy random walk
+  - best random walk
+- probability distribution for acceptance
+  - bio-inspired simulated annealing
+- clever/fixed ways to compute neighborhood
+  - Nelder-Mead simplex method
 ****** Population-Based methods
+- GAs
+- PSO
+- Ant colony?
 ***** Mini-conclusion
 - Most of these methods are not parsimonious. Require many estimates
   of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
@@ -4564,7 +4576,6 @@ k = -6
 ***** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
-library(pracma)
 
 resolution = 100
 
@@ -4575,9 +4586,15 @@ df = data.frame(x = new_grid$Var1,
                 y = new_grid$Var2)
 
 noise_sd = 20
+grad_noise_sd = 30
 
 f <- function(y, x){
     return(((x + (2 * y) - 7) ^ 2) + (((2 * x) + y - 5)^ 2))
+}
+
+f_grad <- function(x, y){
+    return(data.frame(grad_x = (10 * x) + (8 * y) - 34,
+                      grad_y = (8 * x) + (10 * y) - 38))
 }
 
 lin_constraint <- function(x1, x2, l, k){
@@ -4586,22 +4603,33 @@ lin_constraint <- function(x1, x2, l, k){
 
 df$z = f(df$x, df$y)
 
-df$z_noisy = f(df$x, df$y) +
-    rnorm(resolution ^ 2,
-          mean = 0.0,
-          sd = noise_sd)
+noise = rnorm(resolution ^ 2,
+              mean = 0.0,
+              sd = noise_sd)
+
+grad_noise_x = rnorm(resolution ^ 2,
+                     mean = 0.0,
+                     sd = grad_noise_sd)
+grad_noise_y = rnorm(resolution ^ 2,
+                     mean = 0.0,
+                     sd = grad_noise_sd)
+
+df$z_noisy = f(df$x, df$y) + noise
 
 df$z_constrained = df$z_noisy
 df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
 
-grad_f = gradient(matrix(df$z, nrow = resolution))
-grad_f_noisy = gradient(matrix(df$z_noisy, nrow = resolution))
+grad_f = f_grad(df$x, df$y)
+grad_f_noisy = f_grad(df$x, df$y)
+
+grad_f_noisy$grad_x = grad_f_noisy$grad_x + grad_noise_x
+grad_f_noisy$grad_y = grad_f_noisy$grad_y + grad_noise_y
 
 plot_df = df %>%
-    mutate(x_grad = as.vector(grad_f$X),
-           y_grad = as.vector(grad_f$Y),
-           x_grad_noisy = as.vector(grad_f_noisy$X),
-           y_grad_noisy = as.vector(grad_f_noisy$Y))
+    mutate(x_grad = grad_f$grad_x,
+           y_grad = grad_f$grad_y,
+           x_grad_noisy = grad_f_noisy$grad_x,
+           y_grad_noisy = grad_f_noisy$grad_y)
 
 write.csv(plot_df,
           "data/search_spaces/gradient.csv",
@@ -4654,17 +4682,17 @@ theme_config = theme(axis.title.y = element_text(angle = 0,
 
 resolution = 100
 
-noise_sd = 20
-
 plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
 
 grad_resolution = 6
 grad_length = 0.83
-picked = unique(plot_df$x)[seq(1, resolution, by = grad_resolution)]
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
 
 p_no_noise = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_contour(data = plot_df,
                  aes(x = x,
                      y = y,
@@ -4676,12 +4704,12 @@ p_no_noise = ggplot() +
                  show.legend = FALSE) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
                               (x_grad / sqrt((x_grad ^ 2) +
                                              (y_grad ^ 2))))),
-                    y = (y + (grad_length *
+                    x = (y + (grad_length *
                               (y_grad / sqrt((x_grad ^ 2) +
                                              (y_grad ^ 2))))),
                     color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
@@ -4704,8 +4732,8 @@ p_no_noise = ggplot() +
     theme_config
 
 p_noise = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_contour(data = plot_df,
                  aes(x = x,
                      y = y,
@@ -4717,12 +4745,12 @@ p_noise = ggplot() +
                  show.legend = FALSE) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
                               (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
                                              (y_grad_noisy ^ 2))))),
-                    y = (y + (grad_length *
+                    x = (y + (grad_length *
                               (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
                                              (y_grad_noisy ^ 2))))),
                     color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
@@ -4745,8 +4773,8 @@ p_noise = ggplot() +
     theme_config
 
 p_constrained = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked) %>%
                     filter(!is.na(z_constrained)),
@@ -4871,11 +4899,13 @@ plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
 
 grad_resolution = 6
 grad_length = 0.83
-picked = unique(plot_df$x)[seq(1, resolution, by = grad_resolution)]
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
 
 p_no_noise = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_contour(data = plot_df,
                  aes(x = x,
                      y = y,
@@ -4887,12 +4917,12 @@ p_no_noise = ggplot() +
                  show.legend = FALSE) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
                               (x_grad / sqrt((x_grad ^ 2) +
                                              (y_grad ^ 2))))),
-                    y = (y + (grad_length *
+                    x = (y + (grad_length *
                               (y_grad / sqrt((x_grad ^ 2) +
                                              (y_grad ^ 2))))),
                     color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
@@ -4916,8 +4946,8 @@ p_no_noise = ggplot() +
     theme_config
 
 p_noise = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_contour(data = plot_df,
                  aes(x = x,
                      y = y,
@@ -4958,8 +4988,8 @@ p_noise = ggplot() +
     theme_config
 
 p_constrained = ggplot() +
-    scale_x_continuous(limits = c(-10, 10), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(-10, 10), expand = c(0, 0)) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked) %>%
                     filter(!is.na(z_constrained)),
@@ -5914,16 +5944,16 @@ construct a /surrogate model/
 \end{align}
 #+end_export
 where  $\theta$  is  a  parameter vector  usually  estimated  from  measurements
-$(\mathbf{X},\mathbf{y})$.    The   function   $\theta  :   \mathcal{X}   \times
+$(\mathbf{X},\mathbf{y})$.   The  function   $\theta  :  \mathcal{X}^{n}  \times
 \mathbb{R}^{n} \mapsto \Theta$ represents the  /estimation process/, that uses the
 /observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$   from  an  experimental  design
 $\mathbf{X}   =   [\mathbf{x}_1,\dots,\mathbf{x}_n]$.   The   /parameter   vector/
 $\theta(\mathbf{X},\mathbf{y})$ in the /parameter space/  $\Theta$ will be used to
-compute  the   estimate.
+compute the estimate.
 
-The constructed surrogate  model $\hat{f}(\cdot, \theta(\mathbf{X},\mathbf{y}))$
-can be used  as a tool to  attempt to describe and optimize  the underlying real
-function  $f$,  provided  we  are  able   to  construct  a  useful  estimate  of
+The constructed surrogate model $\hat{f}_{\theta(\mathbf{X},\mathbf{y})}$ can be
+used as a tool to attempt to  describe and optimize the underlying real function
+$f$,   provided   we   are   able    to   construct   a   useful   estimate   of
 $\theta(\mathbf{X},\mathbf{y})$.  We will  discuss in Chapters\nbsp{}[[Statistical
 Learning]] and\nbsp{}[[Design  of Experiments]]  methods that  use the  $m$ individual
 parameter        estimates        $\theta(\mathbf{X},       \mathbf{y})        =
@@ -5931,13 +5961,13 @@ parameter        estimates        $\theta(\mathbf{X},       \mathbf{y})        =
 /factors/.
 
 If  we use  the  Ordinary Least  Squares  (OLS) estimator  for  $\theta$ in  our
-compiler flag  example, the  parameter estimates  $\theta_2,\dots,\theta_m$ will
-correspond to one of the $p$ flags.  In this case, $\theta_1$ is the estimate of
-the intercept of the  linear model, and $m = p +  1$. Optimization methods using
-the Bayesian inference framework, such  as Gaussian Process Regression, which we
-discuss   in  Chapter\nbsp{}[[Statistical   Learning]],   associate  a   probability
-distribution   to   $\theta(\mathbf{X},\mathbf{y})$,   which   interferes   with
-$\hat{f}_{\theta}$ and can be exploited in our optimization context.
+compiler flag  example, the parameter estimates  $\theta_2,\dots,\theta_m$ could
+correspond  to each  one of  the $p$  flags.  In  this case,  $\theta_1$ is  the
+estimate of  the intercept of the  linear model, and  $m = p +  1$. Optimization
+methods  using  the  Bayesian  inference framework,  such  as  Gaussian  Process
+Regression, which we discuss  in Chapter\nbsp{}[[Statistical Learning]], associate a
+probability  distribution to  $\theta(\mathbf{X},\mathbf{y})$, which  propagates
+with $\hat{f}_{\theta}$ and can be exploited in our optimization context.
 
 Chapter\nbsp{}[[Statistical  Learning]]  differentiates between  /parametric/  methods
 which  make  the  hypothesis  that  the number  $m  =  \vert{}\Theta\vert{}$  of
@@ -6078,8 +6108,8 @@ minimization.
 ** Methods for Function Minimization
 This  chapter  aims  to  present  the  intuition  guiding  the  construction  of
 derivative-based and  stochastic methods for function  minimization.  We discuss
-the  key hypotheses  of these  groups of  methods, and  in for  which autotuning
-problems they can be most effective.
+the key hypotheses of these groups of methods, and for which autotuning problems
+they can be most effective.
 
 We will put  aside for the moment  the idea of using observations  to estimate a
 parameter  vector  and  construct   a  surrogate  function  $\hat{f}(\mathbf{x},
@@ -6117,6 +6147,7 @@ methods using first and second derivatives of $f$ respectively, which for convex
 functions quickly  converge to the  global optimum.   We will use  examples with
 Booth's function to discuss how noise and uncertainty impact these methods.
 
+**** Gradient Descent
 #+NAME: fig:booth-gradient
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$,
@@ -6168,7 +6199,7 @@ each step, according to the values of  $f$ in the neighborhood $x_{k - 1}$.
 
 The gradient descent method iterates along  the direction of greatest descent at
 each point  and easily  reaches the optimum  on the search  space of  panel (a),
-unless we make an unlucky choice of $\mathbf{x}_1$.  The descent paths on panels
+unless we make an unlucky choice of $\alpha_k$.  The descent paths on panels
 (b)  and  (c)  are  not  so straightforward  since  the  several  local  minima,
 represented by the crests and loops on  the contour lines, trap the descent path
 if $\alpha_k$ is not carefully chosen.
@@ -6196,19 +6227,20 @@ or $\alpha_k$ could help escaping the local minima along the basin.
 #+CAPTION: $\color{red}\boldsymbol{\times}$.
 [[file:img/booth_gradient_descent_path.pdf]]
 
+**** Newton's Method
 With Newton's method  we can improve upon the intuition  of descending along the
 opposite  of  the gradient  of  $f$  by  using  the second  partial  derivatives
 $f_{\mathbf{x}_{k -  1}}^{\prime\prime}$ to approximate $f$  in the neighborhood
 of $\mathbf{x}_{k - 1}$ using its second Taylor polynomial
 #+begin_export latex
 \begin{align}
-  f(\mathbf{x}_k) \approx f(\mathbf{x}_{k - 1}) \; + \;
-    \nabla{}f(\mathbf{x}_{k - 1})^{\top}(\mathbf{x}_k - \mathbf{x}_{k - 1}) \; + \;
-    \frac{1}{2}(\mathbf{x}_k - \mathbf{x}_{k - 1})^{\top}\mathbf{H}f(\mathbf{x}_{k - 1})
-    (\mathbf{x}_k - \mathbf{x}_{k - 1})\text{,}
+  f(\mathbf{x}) \approx f(\mathbf{x}_{k - 1}) \; + \;
+    \nabla{}f(\mathbf{x}_{k - 1})^{\top}(\mathbf{x} - \mathbf{x}_{k - 1}) \; + \;
+    \frac{1}{2}(\mathbf{x} - \mathbf{x}_{k - 1})^{\top}\mathbf{H}f(\mathbf{x}_{k - 1})
+    (\mathbf{x} - \mathbf{x}_{k - 1})\text{,}
 \end{align}
 #+end_export
-where  $\mathbf{x}_k$  is in  the  neighborhood  of  $\mathbf{x}_{k -  1}$,  and
+where  $\mathbf{x}$  is  in  the  neighborhood  of  $\mathbf{x}_{k  -  1}$,  and
 $\mathbf{H}f(\mathbf{x}_{k - 1})$ denotes the Hessian of $f$, a square matrix of
 second derivatives of $f$, with elements
 #+begin_export latex
@@ -6218,8 +6250,8 @@ second derivatives of $f$, with elements
 \end{align}
 #+end_export
 We are  not going  to consider  the approximation  of $f$  by the  second Taylor
-polynomial to be  an estimation process in the statistical  sense, because it is
-not a strategy to deal with measurement or modeling error.
+polynomial to be an estimation process in the statistical sense, because it does
+not involve dealing with measurement or modeling error.
 
 The second Taylor  polynomial uses information about the  partial derivatives of
 $f$  at $\mathbf{x}_{k  - 1}$  to  produce an  approximation of  $f$ for  points
@@ -6236,9 +6268,9 @@ $\mathbf{x}_1$, for points $\mathbf{x}_2, \dots, \mathbf{x}_n$, we have
 
 Provided the strong hypotheses of convexity and differentiability are respected,
 derivative-based  methods  are  extremely effective.   In  particular,  Newton's
-method converges to the  global optimum in a single step if,  in addition to the
-previous  hypotheses being  respected,  $f$ is  quadratic  and $\mathbf{H}f$  is
-positive definite.   This happens in the following  example with Booth's function
+method converges to the global optimum in  a single step if $f$ is quadratic and
+$\mathbf{H}f$ is positive definite.  This  happens in the following example with
+Booth's function
 #+begin_export latex
 \begin{align}
 y = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x + 2y - 7)^{2} + (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
@@ -6303,12 +6335,13 @@ Typical  autotuning   search  spaces,  such   as  the  one  we   encountered  in
 Chapter\nbsp{}[[The    Need   for    Autotuning]],    which    is   reproduced    in
 Figure\nbsp{}[[fig:search-space-2]],  clearly  present  considerable  challenges  to
 derivative-based methods,  due to  the abundance of  local minima,  valleys, and
-ridges.  Since the search  space in Figure\nbsp{}[[fig:search-space-2]] is discrete,
-we would have to perform a considerable number of evaluations of $f$ in order to
-estimate  its derivative  at each  step.   Although gradient  descent and  other
-derivative-based  methods  can  be  effective and  are  historically  important,
-measuring  $f$ is  usually not  cheap for  autotuning search  spaces. Therefore,
-minimizing  experimentation  cost is also a strong  concern.
+ridges.   Since  we  have  closed-form   expression  for  the  search  space  in
+Figure\nbsp{}[[fig:search-space-2]], we would have  to perform a considerable number
+of  evaluations  of $f$  in  order  to estimate  its  derivative  at each  step.
+Although gradient  descent and other  derivative-based methods can  be effective
+and  are  historically  important,  measuring  $f$  is  usually  not  cheap  for
+autotuning search spaces.  Therefore, minimizing  experimentation cost is also a
+strong concern.
 
 Before    discussing    methods    to     construct    surrogate    models    in
 Chapter\nbsp{}[[Statistical Learning]], and  how to use such  surrogates to minimize
@@ -6318,9 +6351,51 @@ stochastic  methods  for  function  minimization,  and  their  applicability  to
 autotuning.
 
 *** Stochastic Methods
-**** Single-State Methods
+In this  section we  discuss some stochastic  methods for  function minimization
+that  drop the  convexity and  differentiability requirements  of gradient-based
+methods, becoming applicable to a wider range of autotuning problems at the cost
+of providing no  convergence guarantees. In fact, these methods  have no clearly
+stated hypotheses  and are  based on  heuristics for  the exploration  of search
+spaces.   Often the  best possible  understanding of  how these  heuristics work
+comes  from the  intuition  and  motivation behind  their  definition, and  from
+the analysis of empirical tests.
 
-**** Methods Based on Populations
+Our  discussion makes  a distinction  between single-state  and population-based
+methods.  In  summary, single-state methods  have update rules mapping  a single
+point  $\mathbf{x}_k$  to  a  point   $\mathbf{x}_{k  +  1}$,  while  rules  for
+population-based     methods     map     a    population     $\mathbf{P}_k     =
+[\mathbf{x}_1,\dots,\mathbf{x}_n]^{\top}$ to a  population $\mathbf{P}_{k + 1}$,
+which may keep elements from $\mathbf{P}$.
+
+We will first  discuss single-state methods, building up  to Simulated Annealing
+from  Random Walk,  and then  discuss the  Nelder-Mead simplex  method. We  then
+briefly discuss Genetic Algorithms and  Particle Swarm Optimization, some of the
+most used population-based methods.
+
+**** Single-State Methods
+Random Sampling  is arguably the  simplest exploration heuristic,  consisting of
+picking uncorrelated samples  from a uniform distribution over  the search space
+$\mathcal{X}$.  There is no guarantee of finding local or global minima, but the
+chances  of  improving  over  a  starting point  $\mathbf{x}$  increase  if  the
+objective  function has  many local  minima or  large regions  of lower  points.
+Despite its simplicity, Random Sampling can be surprisingly effective.
+
+A simple way  to derive a single-state heuristic from  Random Sampling, which we
+will call Random Walk, is to take correlated samples so that each sample lies in
+a neighborhood of its predecessor.   The neighborhood $N(\mathbf{x})$ of a point
+$\mathbf{x}$  is the  set of  points within  a maximum  distance $d_{max}$  from
+$\mathbf{x}$, and can be defined as
+#+begin_export latex
+\begin{align}
+  N(\mathbf{x}) = \{\mathbf{x}_i \neq \mathbf{x}:
+    \; \lVert{}\mathbf{x}_i - \mathbf{x}\rVert{} \leq d_{max}\}\text{.}
+\end{align}
+#+end_export
+
+A   random   walk   of   length  $n$   starting   at   $\mathbf{x}_1$   produces
+$\mathbf{x}_2,\dots,\mathbf{x}_n$,  where   each  $\mathbf{x}_k$  is   a  random
+variable with  uniform distribution  over $N(\mathbf{x}_{k - 1})$.
+**** Population-Based Methods
 *** Summary
 ** Statistical Learning
 *** Introduction

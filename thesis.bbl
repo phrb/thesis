@@ -21,6 +21,32 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{ansel2014opentuner}
+J.~Ansel, S.~Kamil, K.~Veeramachaneni, J.~Ragan-Kelley, J.~Bosboom, U.-M.
+  O'Reilly, and S.~Amarasinghe, ``Opentuner: An extensible framework for
+  program autotuning,'' in \emph{Proceedings of the 23rd international
+  conference on Parallel architectures and compilation}.\hskip 1em plus 0.5em
+  minus 0.4em\relax ACM, 2014, pp. 303--316.
+
+\bibitem{bruel2017autotuning}
+P.~Bruel, M.~Amarís, and A.~Goldman, ``{Autotuning CUDA compiler parameters
+  for heterogeneous applications using the OpenTuner framework},''
+  \emph{Concurrency and Computation: Practice and Experience}, pp. e3973--n/a,
+  2017.
+
+\bibitem{bruel2017autotuninghls}
+P.~Bruel, A.~Goldman, S.~R. Chalamalasetti, and D.~Milojicic, ``{Autotuning
+  High-Level Synthesis for FPGAs Using OpenTuner and LegUp},'' in
+  \emph{International Conference on Reconfigurable Computing and FPGAs
+  (ReConFig)}, 2017.
+
+\bibitem{bruel2019autotuning}
+P.~Bruel, S.~Quinito~Masnada, B.~Videau, A.~Legrand, J.-M. Vincent, and
+  A.~Goldman, ``{Autotuning under Tight Budget Constraints: A Transparent
+  Design of Experiments Approach},'' in \emph{The 19th Annual IEEE/ACM
+  International Symposium in Cluster, Cloud, and Grid Computing (CCGrid
+  2019)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE/ACM, 2019.
+
 \bibitem{seymour2008comparison}
 K.~Seymour, H.~You, and J.~Dongarra, ``A comparison of search heuristics for
   empirical code optimization.'' in \emph{CLUSTER}, 2008, pp. 421--429.
@@ -148,13 +174,6 @@ P.~Balaprakash, S.~M. Wild, and B.~Norris, ``{SPAPT}: Search problems in
   automatic performance tuning,'' \emph{Procedia Computer Science}, vol.~9, pp.
   1959--1968, 2012.
 
-\bibitem{ansel2014opentuner}
-J.~Ansel, S.~Kamil, K.~Veeramachaneni, J.~Ragan-Kelley, J.~Bosboom, U.-M.
-  O'Reilly, and S.~Amarasinghe, ``Opentuner: An extensible framework for
-  program autotuning,'' in \emph{Proceedings of the 23rd international
-  conference on Parallel architectures and compilation}.\hskip 1em plus 0.5em
-  minus 0.4em\relax ACM, 2014, pp. 303--316.
-
 \bibitem{byun2012autotuning}
 J.-H. Byun, R.~Lin, K.~A. Yelick, and J.~Demmel, ``Autotuning sparse
   matrix-vector multiplication for multicore,'' \emph{EECS, UC Berkeley, Tech.
@@ -172,22 +191,10 @@ P.~Balaprakash, M.~Salim, T.~Uram, V.~Vishwanath, and S.~Wild, ``Deephyper:
   IEEE 25th International Conference on High Performance Computing
   (HiPC)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2018, pp. 42--51.
 
-\bibitem{bruel2019autotuning}
-P.~Bruel, S.~Quinito~Masnada, B.~Videau, A.~Legrand, J.-M. Vincent, and
-  A.~Goldman, ``{Autotuning under Tight Budget Constraints: A Transparent
-  Design of Experiments Approach},'' in \emph{The 19th Annual IEEE/ACM
-  International Symposium in Cluster, Cloud, and Grid Computing (CCGrid
-  2019)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE/ACM, 2019.
-
 \bibitem{bruel2015autotuning}
 P.~Bruel, M.~Amarís, and A.~Goldman, ``Autotuning gpu compiler parameters
   using opentuner,'' in \emph{Proceedings of the WSCAD (Simpósio em Sistemas
   Computacionais de Alto Desempenho), 2015}.
-
-\bibitem{bruel2017autotuning}
-------, ``{Autotuning CUDA compiler parameters for heterogeneous applications
-  using the OpenTuner framework},'' \emph{Concurrency and Computation: Practice
-  and Experience}, pp. e3973--n/a, 2017.
 
 \bibitem{mametjanov2015autotuning}
 A.~Mametjanov, P.~Balaprakash, C.~Choudary, P.~D. Hovland, S.~M. Wild, and
@@ -349,11 +356,9 @@ D.~Beckingsale, O.~Pearce, I.~Laguna, and T.~Gamblin, ``Apollo: Reusable models
   for fast, dynamic tuning of input-dependent code,'' in \emph{The 31th IEEE
   International Parallel and Distributed Processing Symposium}, 2017.
 
-\bibitem{bruel2017autotuninghls}
-P.~Bruel, A.~Goldman, S.~R. Chalamalasetti, and D.~Milojicic, ``{Autotuning
-  High-Level Synthesis for FPGAs Using OpenTuner and LegUp},'' in
-  \emph{International Conference on Reconfigurable Computing and FPGAs
-  (ReConFig)}, 2017.
+\bibitem{kochenderfer2019algorithms}
+M.~J. Kochenderfer and T.~A. Wheeler, \emph{Algorithms for optimization}.\hskip
+  1em plus 0.5em minus 0.4em\relax Mit Press, 2019.
 
 \bibitem{balaprakash2011can}
 P.~Balaprakash, S.~M. Wild, and P.~D. Hovland, ``Can search algorithms save

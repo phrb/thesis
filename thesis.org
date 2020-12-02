@@ -6372,7 +6372,7 @@ from  Random Walk,  and then  discuss the  Nelder-Mead simplex  method. We  then
 briefly discuss Genetic Algorithms and  Particle Swarm Optimization, some of the
 most used population-based methods.
 
-**** Single-State Methods
+**** Random Walk, Greedy, and Best Improvement
 Random Sampling  is arguably the  simplest exploration heuristic,  consisting of
 picking uncorrelated samples  from a uniform distribution over  the search space
 $\mathcal{X}$.  There is no guarantee of finding local or global minima, but the
@@ -6383,19 +6383,33 @@ Despite its simplicity, Random Sampling can be surprisingly effective.
 A simple way  to derive a single-state heuristic from  Random Sampling, which we
 will call Random Walk, is to take correlated samples so that each sample lies in
 a neighborhood of its predecessor.   The neighborhood $N(\mathbf{x})$ of a point
-$\mathbf{x}$  is the  set of  points within  a maximum  distance $d_{max}$  from
-$\mathbf{x}$, and can be defined as
+$\mathbf{x}$ is the set of points within distance $d$ from $\mathbf{x}$. One way
+to define it is
 #+begin_export latex
 \begin{align}
-  N(\mathbf{x}) = \{\mathbf{x}_i \neq \mathbf{x}:
-    \; \lVert{}\mathbf{x}_i - \mathbf{x}\rVert{} \leq d_{max}\}\text{.}
+  N(\mathbf{x}) = \{\mathbf{x}_i \in \mathcal{X}: \mathbf{x}_i \neq \mathbf{x},
+    \; \lVert{}\mathbf{x}_i - \mathbf{x}\rVert{}^{2} \leq d\}\text{.}
 \end{align}
 #+end_export
+As  long  as  it is  possible  to  compute  distances  between the  elements  of
+$\mathcal{X}$, we will be able to construct a definition for the neighborhood of
+a  point $\mathbf{x}$  and  employ the  stochastic methods  we  discuss in  this
+section.
 
-A   random   walk   of   length  $n$   starting   at   $\mathbf{x}_1$   produces
-$\mathbf{x}_2,\dots,\mathbf{x}_n$,  where   each  $\mathbf{x}_k$  is   a  random
-variable with  uniform distribution  over $N(\mathbf{x}_{k - 1})$.
-**** Population-Based Methods
+A random  walk of length $n$  starting at $\mathbf{x}_1$ produces  a sequence of
+points where each  point $\mathbf{x}_{k > 1}$ is a  random variable with uniform
+distribution over  $N(\mathbf{x}_{k - 1})$. There  is no guarantee that  we will
+ever find a better point with respect  to the objective function than the one we
+started with.   A straightforward extension  of Random Walk  is to pick  at each
+step $k > 1$ the first point $\mathbf{x}_k$ we come across in $N(\mathbf{x}_{k -
+1})$ for which $f(\mathbf{x}_k) <  f(\mathbf{x}_{k - 1})$.  This greedy strategy
+would  require  measuring  the  value  of $f$  for  possibly  many  elements  of
+$N(\mathbf{x}_{k - 1})$ but it ensures that if we ever move, it will be toward a
+better point.
+
+**** Simulated Annealing
+**** Nelder-Mead Simplex
+**** Genetic Algorithms
 *** Summary
 ** Statistical Learning
 *** Introduction

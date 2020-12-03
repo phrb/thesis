@@ -6574,13 +6574,13 @@ the best  possible understanding  of how  these heuristics  work comes  from the
 intuition  and motivation  behind their  definition,  and from  the analysis  of
 empirical tests.
 
-There  are multiple  ways to  categorize heuristics.  Our choice  was to  make a
+There are  multiple ways  to categorize  heuristics.  Our choice  was to  make a
 distinction  between single-state  and  population-based  methods.  In  summary,
 single-state methods have update rules  mapping a single point $\mathbf{x}_k$ to
 a point  $\mathbf{x}_{k + 1}$,  while rules  for population-based methods  map a
-population  $\mathbf{P}_k   =  [\mathbf{x}_1,\dots,\mathbf{x}_n]^{\top}$   to  a
-population $\mathbf{P}_{k + 1}$, which  may retain, combine, and modify elements
-from $\mathbf{P}$.
+population $\mathbf{P}_k =  \{\mathbf{x}_1,\dots,\mathbf{x}_s\}$ of size
+$s$ to a population $\mathbf{P}_{k +  1}$, which may retain, combine, and modify
+elements from $\mathbf{P}$.
 
 We will first  discuss single-state methods, building up  to Simulated Annealing
 from  Random  Walk,  then  we  discuss Genetic  Algorithms  and  Particle  Swarm
@@ -6696,6 +6696,22 @@ dependence on initial choices,  as is the idea of using  a population of points,
 which we discuss next.
 
 **** Population-Based Methods: Genetic Algorithms and Particle Swarm Optimization
+Instead of progressing from a starting point $\mathbf{x}_1$ toward a final state
+$\mathbf{x}_n$, we can employ a set rules to update a starting set of points, or
+population, $\mathbf{P}_1 = \{\mathbf{x}_{1,1},\dots,\mathbf{x}_{1,s}\}$ of size
+$s$,       toward      a       final       population      $\mathbf{P}_n       =
+[\mathbf{x}_{n,1},\dots,\mathbf{n,s}]^{\top}$.   For  simplicity,  we  keep  the
+population size constant.  During optimization,  we expect that the distribution
+of the population over the search space $\mathcal{X}$ can help exploration
+
+
+#+NAME: fig:genetic-crossover
+#+ATTR_LATEX: :width .9\textwidth :placement [t]
+#+CAPTION: Some ways of producing offspring from two parents with binary chromosomes.
+#+CAPTION: Crossover splits parent chromosomes and combine the resulting pieces. In general,
+#+CAPTION: pieces from multiple splits can be combined.
+#+CAPTION: Mutations are introduced randomly and correspond to flipping bits on binary chromosomes.
+[[file:img/genetic_algorithms_crossover.pdf]]
 
 #+NAME: fig:booth-genetic-path
 #+ATTR_LATEX: :width \textwidth :placement [t]

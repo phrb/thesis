@@ -180,8 +180,6 @@ what is possibly "wrong" with current approaches.
   - best random walk
 - probability distribution for acceptance
   - bio-inspired simulated annealing
-- clever/fixed ways to compute neighborhood
-  - Nelder-Mead simplex method
 ****** Population-Based methods
 - GAs
 - PSO
@@ -4564,6 +4562,222 @@ p_no_noise_line | p_constrained_line
 
 #+RESULTS:
 [[file:./img/optima_convexity.svg]]
+*** Descent Template for Booth's Function (With gradient)
+**** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+**** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(pracma)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Gray"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+grad_alpha = 0.45
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+noise_sd = 20
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
+
+p_no_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
+                              (x_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    x = (y + (grad_length *
+                              (y_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                alpha = grad_alpha,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                alpha = grad_alpha,
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_constrained = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked) %>%
+                    filter(!is.na(z_constrained)),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                alpha = grad_alpha,
+                show.legend = FALSE) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_constrained),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
+    geom_point(data = plot_df %>%
+                   filter(!is.na(z_constrained)) %>%
+                   filter(z_constrained == min(z_constrained)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_no_noise | p_noise | p_constrained
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_descent_gradient_template.pdf]]
+
 *** Methods Based on Derivatives
 **** Gradient of Booth's Function
 ***** Constants
@@ -6355,36 +6569,36 @@ In this  section we  discuss some stochastic  methods for  function minimization
 that  drop the  convexity and  differentiability requirements  of gradient-based
 methods, becoming applicable to a wider range of autotuning problems at the cost
 of providing no  convergence guarantees. In fact, these methods  have no clearly
-stated hypotheses  and are  based on  heuristics for  the exploration  of search
-spaces.   Often the  best possible  understanding of  how these  heuristics work
-comes  from the  intuition  and  motivation behind  their  definition, and  from
-the analysis of empirical tests.
+stated hypotheses and  are based on search space  exploration heuristics.  Often
+the best  possible understanding  of how  these heuristics  work comes  from the
+intuition  and motivation  behind their  definition,  and from  the analysis  of
+empirical tests.
 
-Our  discussion makes  a distinction  between single-state  and population-based
-methods.  In  summary, single-state methods  have update rules mapping  a single
-point  $\mathbf{x}_k$  to  a  point   $\mathbf{x}_{k  +  1}$,  while  rules  for
-population-based     methods     map     a    population     $\mathbf{P}_k     =
-[\mathbf{x}_1,\dots,\mathbf{x}_n]^{\top}$ to a  population $\mathbf{P}_{k + 1}$,
-which may keep elements from $\mathbf{P}$.
+There  are multiple  ways to  categorize heuristics.  Our choice  was to  make a
+distinction  between single-state  and  population-based  methods.  In  summary,
+single-state methods have update rules  mapping a single point $\mathbf{x}_k$ to
+a point  $\mathbf{x}_{k + 1}$,  while rules  for population-based methods  map a
+population  $\mathbf{P}_k   =  [\mathbf{x}_1,\dots,\mathbf{x}_n]^{\top}$   to  a
+population $\mathbf{P}_{k + 1}$, which  may retain, combine, and modify elements
+from $\mathbf{P}$.
 
 We will first  discuss single-state methods, building up  to Simulated Annealing
-from  Random Walk,  and then  discuss the  Nelder-Mead simplex  method. We  then
-briefly discuss Genetic Algorithms and  Particle Swarm Optimization, some of the
-most used population-based methods.
+from  Random  Walk,  then  we  discuss Genetic  Algorithms  and  Particle  Swarm
+Optimization, representing widely used population-based methods.
 
-**** Random Walk, Greedy, and Best Improvement
+**** Single-State Methods: Random Walk and Simulated Annealing
 Random Sampling  is arguably the  simplest exploration heuristic,  consisting of
 picking uncorrelated samples  from a uniform distribution over  the search space
 $\mathcal{X}$.  There is no guarantee of finding local or global minima, but the
-chances  of  improving  over  a  starting point  $\mathbf{x}$  increase  if  the
-objective  function has  many local  minima or  large regions  of lower  points.
-Despite its simplicity, Random Sampling can be surprisingly effective.
+chances of  improving over a starting  point increase if the  objective function
+has  many  local  minima.   Despite  its  simplicity,  Random  Sampling  can  be
+surprisingly effective.
 
-A simple way  to derive a single-state heuristic from  Random Sampling, which we
-will call Random Walk, is to take correlated samples so that each sample lies in
-a neighborhood of its predecessor.   The neighborhood $N(\mathbf{x})$ of a point
-$\mathbf{x}$ is the set of points within distance $d$ from $\mathbf{x}$. One way
-to define it is
+A simple way to derive a single-state  heuristic from Random Sampling is to take
+correlated  samples,  so  that  each  sample  lies  in  a  neighborhood  of  its
+predecessor, which is called Random Walk.  The neighborhood $N(\mathbf{x})$ of a
+point is  the set of  points within distance $d$  from $\mathbf{x}$. One  way to
+define it is
 #+begin_export latex
 \begin{align}
   N(\mathbf{x}) = \{\mathbf{x}_i \in \mathcal{X}: \mathbf{x}_i \neq \mathbf{x},
@@ -6392,24 +6606,110 @@ to define it is
 \end{align}
 #+end_export
 As  long  as  it is  possible  to  compute  distances  between the  elements  of
-$\mathcal{X}$, we will be able to construct a definition for the neighborhood of
-a  point $\mathbf{x}$  and  employ the  stochastic methods  we  discuss in  this
-section.
+$\mathcal{X}$, we  will be  able to  construct the neighborhood  of a  point and
+employ the stochastic methods we discuss in this section.
 
-A random  walk of length $n$  starting at $\mathbf{x}_1$ produces  a sequence of
-points where each  point $\mathbf{x}_{k > 1}$ is a  random variable with uniform
-distribution over  $N(\mathbf{x}_{k - 1})$. There  is no guarantee that  we will
-ever find a better point with respect  to the objective function than the one we
-started with.   A straightforward extension  of Random Walk  is to pick  at each
-step $k > 1$ the first point $\mathbf{x}_k$ we come across in $N(\mathbf{x}_{k -
-1})$ for which $f(\mathbf{x}_k) <  f(\mathbf{x}_{k - 1})$.  This greedy strategy
-would  require  measuring  the  value  of $f$  for  possibly  many  elements  of
-$N(\mathbf{x}_{k - 1})$ but it ensures that if we ever move, it will be toward a
-better point.
+A random walk of length $n$ starting at $\mathbf{x}_1$ produces a sequence where
+each point $\mathbf{x}_{k  > 1}$ is a random variable  with uniform distribution
+over $N(\mathbf{x}_{k  - 1})$. There  is no guarantee that  we will ever  find a
+better point  with respect  to the  objective function than  the one  we started
+with.  A straightforward extension  of Random Walk is to pick at  each step $k >
+1$ the first point $\mathbf{x}_k$ we  come across in $N(\mathbf{x}_{k - 1})$ for
+which $f(\mathbf{x}_k)  < f(\mathbf{x}_{k  - 1})$.   This greedy  strategy would
+require   measuring  the   value  of   $f$   for  possibly   many  elements   of
+$N(\mathbf{x}_{k - 1})$  but it ensures that  we will only move  toward a better
+point.
 
-**** Simulated Annealing
-**** Nelder-Mead Simplex
-**** Genetic Algorithms
+If are willing to  pay the cost to measure all the  points in $N(\mathbf{x}_{k -
+1})$ we can choose the $\mathbf{x}^{\ast}_{k}$ that brings the best improvement,
+for  which $f(\mathbf{x}^{\ast}_{k})  < f(\mathbf{x})$  for all  $\mathbf{x} \in
+N(\mathbf{x}_{k - 1})$. This best improvement  strategy always moves to the best
+point  in a  neighborhood, but  it can  still get  stuck in  lock minima  if the
+current point is already the best one in its neighborhood. Adapting the distance
+that  defines  a  neighborhood  can  help escape  local  minima,  but  the  best
+improvement  strategy still  requires  measuring the  entire  neighborhood of  a
+point.
+
+Simulated Annealing  is a  probabilistic improvement  heuristic inspired  by the
+process of annealing, where temperature is carefully controlled to first agitate
+a material's crystalline  structure with higher temperature, and  then settle it
+into  more  desirable  configurations.   Adapting  this  idea  to  optimization,
+Simulated Annealing makes a compromise  between a greedy approach to exploration
+and a  random walk.  At  each step $k$, we  pick a random  uniformly distributed
+$\mathbf{x}_{k} \in N(\mathbf{x}_{k - 1})$ and  move to it if $f(\mathbf{x}_k) <
+f(\mathbf{x}_{k  - 1})$.   In contrast  to a  greedy approach,  we also  move if
+$f(\mathbf{x}_k) \geq f(\mathbf{x}_{k - 1})$ with probability $p$.
+
+In analogy to the real annealing  process, $p$ starts high to enable exploration
+of  the  search  space  and  then  decreases  to  force  a  descent  towards  an
+optimum. All through  the process, a nonzero value of  $p$ permits the heuristic
+to leave a local  minimum.  The probability $p_k$ of moving to  a worse point at
+iteration $k$ is
+#+begin_export latex
+\begin{align}
+  p_k = exp\left(-{\dfrac{f(\mathbf{x}_{k}) -
+      f(\mathbf{x}_{k - 1})}{t_k}}\right)\text{,}
+\end{align}
+#+end_export
+where  $t_k$ is  the  temperature at  iteration $k$,  and  can follow  different
+decaying  rates. For  a  starting temperature  $t_1$  the logarithmic  annealing
+schedule is
+#+begin_export latex
+\begin{align}
+  t_k = \dfrac{t_1}{log(k + 1)}\text{.}
+\end{align}
+#+end_export
+
+#+NAME: fig:booth-sima-path
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Representation of paths taken by the Simulated Annealing method
+#+CAPTION: on the search spaces  defined by variations of the Booth function.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Contour plots and direction of greatest descent
+#+CAPTION: are also shown, and the global optimum is marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$.
+[[file:img/booth_simulated_annealing_descent_path.pdf]]
+
+Figure\nbsp{}[[fig:booth-sima-path]] shows the paths taken by Simulated Annealing on
+search spaces defined by variations of Booth's function. In panel (a) we can see
+the effects  of the  annealing schedule,  which enables  large detours  to worse
+points early on, but forces descent on later iterations. Since this search space
+has no local  minima, the descent eventually reaches the  optimum.  In panel (b)
+the higher initial temperature also allows  escaping the many local minima found
+during exploration, but as the path approaches the global optimum with the lower
+temperature of later  iterations it gets trapped by one  the local minima around
+the global optimum. Likewise, encountering a constraint border early on in panel
+(c) is not a challenge for Simulated  Annealing, since it can bounce back toward
+worse points, but on later iterations the  method is forced to wander around the
+border like gradient descent, also getting trapped at local minima.
+
+Single-state methods for optimization provide  heuristics for exploring a search
+space, usually  based on the  neighborhoods of the  points that compose  a path.
+The cost of  measuring the objective function $f$ for  an entire neighborhood is
+prohibitive in  large dimensional search  spaces, but methods such  as Simulated
+Annealing  provide  strategies  for  escaping local  minima  without  completely
+evaluating  a neighborhood.   Despite  that, the  local  nature of  single-state
+methods means that the final results  are heavily reliant on the starting point.
+Restarting and performing  parallel searches are among the  strategies to reduce
+dependence on initial choices,  as is the idea of using  a population of points,
+which we discuss next.
+
+**** Population-Based Methods: Genetic Algorithms and Particle Swarm Optimization
+
+#+NAME: fig:booth-genetic-path
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Representation of paths taken by a Genetic Algorithm
+#+CAPTION: on the search spaces  defined by variations of the Booth function.
+#+CAPTION: Hollow points and dashed lines mark members of previous populations
+#+CAPTION: and the regions they covered, while filled points and complete
+#+CAPTION: lines mark the final population.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Contour plots and direction of greatest descent
+#+CAPTION: are also shown, and the global optimum is marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$.
+[[file:img/booth_genetic_algorithm_descent_path.pdf]]
 *** Summary
 ** Statistical Learning
 *** Introduction

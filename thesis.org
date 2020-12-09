@@ -164,6 +164,7 @@ what is possibly "wrong" with current approaches.
 - mention very high cost of estimating derivatives
 - make hypotheses more clear and explicit
   - explain why hypothesis are restrictive for autotuning problems
+- Figure with Restarts
 ****** Gradient + Hessian based
 - Taylor expansion: Information about derivatives at a point --> (approximation)
   information about the function around a point
@@ -182,6 +183,7 @@ what is possibly "wrong" with current approaches.
   - bio-inspired simulated annealing
 ****** Population-Based methods
 - GAs
+  - Colors for generations, uniform points
 - PSO
 - Ant colony?
 ***** Mini-conclusion
@@ -6411,6 +6413,18 @@ Figure\nbsp{}[[fig:booth-gradient-descent-path]]  shows, in  equally marked  pan
 the paths  taken by a gradient  descent algorithm where $\alpha_k$  is chosen at
 each step, according to the values of  $f$ in the neighborhood $x_{k - 1}$.
 
+#+NAME: fig:booth-gradient-descent-path
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Representation of paths taken by the gradient descent method,
+#+CAPTION: with adaptive choice of $\alpha_k$,
+#+CAPTION: on the search spaces  defined by variations of the Booth function.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$
+#+CAPTION: are also shown, and the global optimum is marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$.
+[[file:img/booth_gradient_descent_path.pdf]]
+
 The gradient descent method iterates along  the direction of greatest descent at
 each point  and easily  reaches the optimum  on the search  space of  panel (a),
 unless we make an unlucky choice of $\alpha_k$.  The descent paths on panels
@@ -6427,11 +6441,12 @@ cannot cross it. Gradient  descent has a harder time on panels  (b) and (c) even
 upon reaching  the basin  where the optimum  lies, because  gradient information
 there is  also conflicting  due to noise  $\varepsilon$.  Gradient  descent gets
 stuck in our example paths, but restarting strategies picking new $\mathbf{x}_1$
-or $\alpha_k$ could help escaping the local minima along the basin.
+or $\alpha_k$ could help escaping the local minima along the basin, as is shown
+in Figure\nbsp{}[[fig:booth-gradient-descent-path-restart]].
 
-#+NAME: fig:booth-gradient-descent-path
+#+NAME: fig:booth-gradient-descent-path-restart
 #+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Representation of paths taken by the gradient descent method,
+#+CAPTION: Representation of paths taken by the gradient descent method with 4 restarts,
 #+CAPTION: with adaptive choice of $\alpha_k$,
 #+CAPTION: on the search spaces  defined by variations of the Booth function.
 #+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
@@ -6439,7 +6454,7 @@ or $\alpha_k$ could help escaping the local minima along the basin.
 #+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$
 #+CAPTION: are also shown, and the global optimum is marked with a
 #+CAPTION: $\color{red}\boldsymbol{\times}$.
-[[file:img/booth_gradient_descent_path.pdf]]
+[[file:img/booth_gradient_descent_path_restart.pdf]]
 
 **** Newton's Method
 With Newton's method  we can improve upon the intuition  of descending along the
@@ -6704,14 +6719,6 @@ population  size constant.   The  inspiration for  population-based methods  for
 function minimization  comes in general  from observations of processes  such as
 evolution by  natural selection  and animal group  behavior.
 
-#+NAME: fig:genetic-crossover
-#+ATTR_LATEX: :width .9\textwidth :placement [t]
-#+CAPTION: Some ways of producing offspring from two parents with binary chromosomes.
-#+CAPTION: Crossover splits parent chromosomes and combine the resulting pieces. In general,
-#+CAPTION: pieces from multiple splits can be combined.
-#+CAPTION: Mutations are introduced randomly and correspond to flipping bits on binary chromosomes.
-[[file:img/genetic_algorithms_crossover.pdf]]
-
 The intuition behind population-based methods is that the points in a population
 would provide variability that, when combined in specific ways, would eventually
 lead to  better values of  the objective  function $f$.  Genetic  Algorithms, in
@@ -6724,6 +6731,14 @@ variability.  Since  we do  not know how  mutations and  chromosome combinations
 might  impact the  fitness of  an individual,  keeping worse  individuals during
 optimization could pay off later.
 
+#+NAME: fig:genetic-crossover
+#+ATTR_LATEX: :width .9\textwidth :placement [t]
+#+CAPTION: Some ways of producing offspring from two parents with binary chromosomes.
+#+CAPTION: Crossover splits parent chromosomes and combine the resulting pieces. In general,
+#+CAPTION: pieces from multiple splits can be combined.
+#+CAPTION: Mutations are introduced randomly and correspond to flipping bits on binary chromosomes.
+[[file:img/genetic_algorithms_crossover.pdf]]
+
 The new  population is generated  by combining  the chromosomes of  each parent,
 using strategies  that are also inspired  by natural processes such  as mutation
 and  crossover. To  be able  to perform  these operations,  chromosomes must  be
@@ -6731,20 +6746,6 @@ encoded in a suitable representation. Individuals in the search space defined by
 compiler flags, for example, a binary array indicating whether each flag is used
 could be a suitable representation.  Figure\nbsp{}[[fig:genetic-crossover]] shows what the
 mutation and crossover operations could look like on a binary encoding.
-
-#+NAME: fig:booth-genetic-path
-#+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Representation of paths taken by a Genetic Algorithm
-#+CAPTION: on the search spaces  defined by variations of the Booth function.
-#+CAPTION: Hollow points and dashed lines mark members of previous populations
-#+CAPTION: and the regions they covered, while filled points and complete
-#+CAPTION: lines mark the final population.
-#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
-#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
-#+CAPTION: Contour plots and direction of greatest descent
-#+CAPTION: are also shown, and the global optimum is marked with a
-#+CAPTION: $\color{red}\boldsymbol{\times}$.
-[[file:img/booth_genetic_algorithm_descent_path.pdf]]
 
 Genetic Algorithms have  the potential to explore a search  space more globally,
 simultaneously maintaining several populations  distributed over a search space,
@@ -6761,6 +6762,20 @@ would be less impacted  by the noisy scenarios on panels (b)  and (c). Since the
 population can spread across the search space, it could still be possible to end
 the process with individuals in different  local minima, which is represented in
 panel (b).
+
+#+NAME: fig:booth-genetic-path
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Color-coded generation snapshots of a Genetic Algorithm
+#+CAPTION: on the search spaces  defined by variations of the Booth function.
+#+CAPTION: Hollow points and dashed lines mark members of previous populations
+#+CAPTION: and the regions they covered, while filled points and complete
+#+CAPTION: lines mark the final population.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Contour plots and direction of greatest descent
+#+CAPTION: are also shown, and the global optimum is marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$.
+[[file:img/booth_genetic_algorithm_descent_path.pdf]]
 
 Differential Evolution  presents an alternative  to the strategies  of mutations
 and  crossover, represented  in  Figure\nbsp{}[[fig:genetic-crossover]]. Consider  a
@@ -6824,6 +6839,18 @@ require  additional information,  such  as $\nabla{}f$  and $\mathbf{H}f$.   The
 strong hypotheses of derivative-based methods restrict the applicability of such
 methods, invalidating convergence guarantees. Stochastic methods have no such
 guarantees to begin with, and thus require costly exploration.
+
+#+NAME: fig:booth-minimization
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Representation of paths taken by the gradient descent method,
+#+CAPTION: with adaptive choice of $\alpha_k$,
+#+CAPTION: on the search spaces  defined by variations of the Booth function.
+#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$
+#+CAPTION: are also shown, and the global optimum is marked with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$.
+[[file:img/booth_minimization.pdf]]
 
 ** Statistical Learning
 *** Introduction

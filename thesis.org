@@ -185,14 +185,33 @@ what is possibly "wrong" with current approaches.
 - GAs
   - Colors for generations, uniform points
 - PSO
-- Ant colony?
+- +Ant colony?+
 ***** Mini-conclusion
 - Most of these methods are not parsimonious. Require many estimates
   of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
   worse as they need to explore whereas descent based methods head to
   the optimum more directly.
 **** Learning: Building a Surrogate
+- old ideas for introduction:
+  - Optimization with Surrogate Models
+  - The Bias-Variance Trade-Off
+  - Inference and prediction
+  - Supervised and Unsupervised Learning
+  - Parametric and Nonparametric Statistics
+  - Model Assessment:
+    - Train and Test Sets
+    - Train and Test Mean Squared Error
+    - Cross Validation, Bootstrapping
+    - Information Criteria for Model Assessment
+      - Mallow's C_p and AIC
+      - BIC
+
 ***** Statistical Learning: Linear Regression
+- old:
+  - Ordinary Least Squares: Gauss-Markov (BLUE)
+  - Transformations of $X$
+  - ANOVA
+
 - the model
 - how to fit
 - "Model quality" +how to check whether the model is correct or not ?+
@@ -201,11 +220,40 @@ what is possibly "wrong" with current approaches.
 
 Limitation: simple model with shape constraits, cannot "fit"
 everything
+
+****** Fitting the Linear Model to Data
+- paragraph: Computing $\hat{\beta}$: OLS
+- 1 paragraph: Projection matrix of $\mathbf{y}$, into column space of $\mathbf{X}$
+  - Use linear map of columns of $\mathbf{X}$ to describe $\mathbf{y}$
+- 1 paragraph: If $\varepsilon$ is normally distributed, equal to Maximum Likelihood Estimator
+- paragraph: Natural Extension: Transformations of $\mathbf{X}
+- 2 paragraphs: Example on Booth's function (3d?)
+  - Linear terms, quadratic terms
+- Example on "slice" of multidimensional function? (from pres. at Argonne)
+****** Quality of Fit Metrics
+- paragraph: Bias-Variance Trade-Off?
+- paragraph: Train and Test Sets
+- paragraph: MSE
+- paragraph: Cross Validation, Bootstrapping
+- paragraph: Information Criteria for Model Assessment
+  - Mallow's C_p and AIC
+  - BIC?
+****** Interpreting Significance
+- OLS Confidence Intervals
+- ANOVA
+
+
 ***** Gaussian Process
+- Sampling Functions from Multidimensional Gaussian Distributions
+- Nonparametric Modeling with Covariance Kernels
+- Sensitivity Analysis with Sobol Indices
+- Other Nonparametric Methods
+
 - the model
 - how to fit
 - provides mean estimates with confidence estimation
 - how to interpret the significance (sobol indices) but quite costly
+
 ***** Mini-Conclusion
 Two big classes of models. Generality vs. interpretability. Yet
 everything we mentioned assumes X is given, sampled from
@@ -701,14 +749,14 @@ explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
 Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
 structured  parameter  exploration,  and  can  be used  to  build  and  validate
 performance     models,     generating    transparent     and     cost-effective
-optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}. Other methods
-from   the  parametric   family   are   more  widely   used,   such  as   Bandit
-Algorithms\nbsp{}\cite{xu2017parallel}.   Nonparametric  learning   methods,  such  as
-Decision    Trees\nbsp{}\cite{balaprakash2016automomml}     and    Gaussian    Process
-Regression\nbsp{}\cite{parsa2019pabo}, are able  to reduce model bias  greatly, at the
-expense of increased prediction variance. Figure\nbsp{}\ref{fig:tree} categorizes some
-autotuning  methods  according to  some  of  the  key hypotheses  and  branching
-questions underlying each method.
+optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}.   Other
+methods  from  the parametric  family  are  more  widely  used, such  as  Bandit
+Algorithms\nbsp{}\cite{xu2017parallel}.  Nonparametric learning methods, such as
+Decision   Trees\nbsp{}\cite{balaprakash2016automomml}   and  Gaussian   Process
+Regression\nbsp{}\cite{parsa2019pabo}, are able to reduce model bias greatly, at
+the  expense  of   increased  prediction  variance.  Figure\nbsp{}\ref{fig:tree}
+categorizes some autotuning methods according to  some of the key hypotheses and
+branching questions underlying each method.
 
 During this  thesis I have  adapted and  studied the effectiveness  of different
 search heuristics and statistical learning  methods on optimizing performance on
@@ -6064,10 +6112,11 @@ with  the  most prominent  domains  in  this  sample being  parallel  computing,
 compiler parameters, and  High-Level Synthesis.  Systems using  methods based on
 Machine Learning become more common on later work than systems using heuristics.
 
-Chapter\nbsp{}[[]]  provides more  detailed definitions  and discussions  of the
-applicability, effectiveness, and explanatory  power of autotuning methods based
-on search  heuristics and statistical  learning.  The remainder of  this chapter
-details the contributions of this thesis and the structure of this document.
+Chapter\nbsp{}[[Methods   for  Function   Minimization]]   provides  more   detailed
+definitions and discussions of the applicability, effectiveness, and explanatory
+power of autotuning methods based on search heuristics and statistical learning.
+The remainder of  this chapter details the contributions of  this thesis and the
+structure of this document.
 * Optimization Methods for Autotuning
 ** Notation and Search Spaces
 The  following chapters  discuss the  optimization  methods that  we applied  to
@@ -6150,9 +6199,9 @@ discussed in Chapter\nbsp{}[[Methods for Function Minimization]].
 If we are not capable of directly measuring $f$, if it is unreasonably expensive
 or time-consuming  to do so,  or if constructing statistical  performance models
 for our application is of crucial  importance, we can employ the surrogate-based
-methods   discussed  in   Chapters\nbsp{}[[Statistical  Learning]],   [[Design  of
-Experiments]], and  [[Online Learning]].   These methods  use different  strategies to
-construct a /surrogate model/
+methods discussed  in Chapters\nbsp{}[[Learning:  Building Surrogates]],
+[[Design  of  Experiments]],  and  [[Online Learning]].   These  methods  use  different
+strategies to construct a /surrogate model/
 #+begin_export latex
 \begin{align}
   \hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}\text{, with }
@@ -6170,9 +6219,9 @@ compute the estimate.
 The constructed surrogate model $\hat{f}_{\theta(\mathbf{X},\mathbf{y})}$ can be
 used as a tool to attempt to  describe and optimize the underlying real function
 $f$,   provided   we   are   able    to   construct   a   useful   estimate   of
-$\theta(\mathbf{X},\mathbf{y})$.  We will  discuss in Chapters\nbsp{}[[Statistical
-Learning]] and\nbsp{}[[Design  of Experiments]]  methods that  use the  $m$ individual
-parameter        estimates        $\theta(\mathbf{X},       \mathbf{y})        =
+$\theta(\mathbf{X},\mathbf{y})$.   We will  discuss in  Chapters\nbsp{}[[Learning:
+Building Surrogates]]  and\nbsp{}[[Design of  Experiments]] methods  that use  the $m$
+individual    parameter    estimates     $\theta(\mathbf{X},    \mathbf{y})    =
 [\theta_1,\dots,\theta_m]^{\top}$  to   assess  the  significance   of  specific
 /factors/.
 
@@ -6181,13 +6230,14 @@ compiler flag  example, the parameter estimates  $\theta_2,\dots,\theta_m$ could
 correspond  to each  one of  the $p$  flags.  In  this case,  $\theta_1$ is  the
 estimate of  the intercept of the  linear model, and  $m = p +  1$. Optimization
 methods  using  the  Bayesian  inference framework,  such  as  Gaussian  Process
-Regression, which we discuss  in Chapter\nbsp{}[[Statistical Learning]], associate a
-probability  distribution to  $\theta(\mathbf{X},\mathbf{y})$, which  propagates
-with $\hat{f}_{\theta}$ and can be exploited in our optimization context.
+Regression,  which we  discuss in  Chapter\nbsp{}[[Learning: Building  Surrogates]],
+associate a  probability distribution to  $\theta(\mathbf{X},\mathbf{y})$, which
+propagates  with $\hat{f}_{\theta}$  and can  be exploited  in our  optimization
+context.
 
-Chapter\nbsp{}[[Statistical  Learning]]  differentiates between  /parametric/  methods
-which  make  the  hypothesis  that  the number  $m  =  \vert{}\Theta\vert{}$  of
-estimated  parameters  is finite  and  often  interpretable, and  /non-parametric/
+Chapter\nbsp{}[[Learning:  Building Surrogates]]  differentiates between  parametric
+methods which make the hypothesis that  the number $m = \vert{}\Theta\vert{}$ of
+estimated  parameters  is  finite  and often  interpretable,  and  nonparametric
 methods, which operate in parameter spaces of infinite dimension.
 
 Table\nbsp{}[[tab:notation]] summarizes the notation  and concepts we have discussed
@@ -6573,10 +6623,10 @@ autotuning search spaces.  Therefore, minimizing  experimentation cost is also a
 strong concern.
 
 Before    discussing    methods    to     construct    surrogate    models    in
-Chapter\nbsp{}[[Statistical Learning]], and  how to use such  surrogates to minimize
-experimental  cost on  Chapter\nbsp{}[[Design of  Experiments]], we  will relax  the
-convexity and differentiability requirements  on objective functions and discuss
-stochastic  methods  for  function  minimization,  and  their  applicability  to
+Chapter\nbsp{}[[Learning: Building Surrogates]],  and how to use  such surrogates to
+minimize experimental cost on Chapter\nbsp{}[[Design of Experiments]], we will relax
+the  convexity and  differentiability  requirements on  objective functions  and
+discuss stochastic methods for function minimization, and their applicability to
 autotuning.
 
 *** Stochastic Methods
@@ -6833,48 +6883,98 @@ optimization, reliant on the initial distribution of individuals over the search
 space to provide variability.
 
 *** Summary
-The methods for function minimization we  have discussed in this chapter are not
-parsimonious,  in that  they require  many estimates  of values  of $f$  and may
-require  additional information,  such  as $\nabla{}f$  and $\mathbf{H}f$.   The
-strong hypotheses of derivative-based methods restrict the applicability of such
-methods, invalidating convergence guarantees. Stochastic methods have no such
-guarantees to begin with, and thus require costly exploration.
+The methods for  function minimization we have discussed in  this chapter do not
+strive to be parsimonious. To be effective they require many estimates of values
+of  $f$  and  may  require  additional  information,  such  as  $\nabla{}f$  and
+$\mathbf{H}f$.  The strong hypotheses of derivative-based methods restrict their
+applicability by invalidating convergence guarantees. Stochastic methods have no
+such guarantees to begin with, and thus require costly exploration.
+
+Figure\nbsp{}[[fig:booth-minimization]]   shows   representations  of   optimization
+trajectories for  Booth's function  made by Gradient  Descent with  restarts, on
+panels (a), (b), and (c), Simulated Annealing,  on panels (d), (e), and (f), and
+a Genetic Algorithm, on panels (g), (h), and (i). Restarting optimization from a
+different point, seem on  panels (a), (b), and (c), is a  common and widely used
+technique to reduce reliance on starting conditions.
+
+Despite the high cost of exploration and strong hypotheses, methods for function
+minimization are used for autotuning  and can indeed achieve interesting results
+in  certain  problems.  We  will  present  our  results  with these  methods  on
+Chapters\nbsp{}[[Application  1:  CUDA  Compiler]]  and  [[Application  3:  High-Level
+Synthesis  for FPGAs]],  where  we  also review  their  application to  autotuning
+problems in different domains.  The  explorations performed by these methods are
+not structured in a way that  favors statistical analysis.  We will postpone the
+discussion   of  how   to   obtain  well-structured   experimental  data   until
+Chapter\nbsp{}[[Design  of  Experiments]], and  in  the  following chapter  we  will
+discuss learning  methods that  enable building  surrogate models  $\hat{f}$ and
+identifying relationships  between parameters  $\mathbf{X}$ in the  search space
+$\mathcal{X}$ and observations of the objective function $f$.
 
 #+NAME: fig:booth-minimization
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Representation of paths taken by the gradient descent method,
 #+CAPTION: with adaptive choice of $\alpha_k$,
 #+CAPTION: on the search spaces  defined by variations of the Booth function.
-#+CAPTION: Panels (a), (b), and (c) correspond to Equations\nbsp{}\ref{eq:f0},
+#+CAPTION: Panel groups (a,d,g), (b,e,h), and (c,f,i) correspond to
+#+CAPTION: Equations\nbsp{}\ref{eq:f0},
 #+CAPTION: \ref{eq:f1}, and \ref{eq:f2} respectively.
+#+CAPTION: Panel groups (a,b,c), (d,e,f), and (g,h,i) correspond to
+#+CAPTION: Gradient Descent with restarts, Simulated Annealing,
+#+CAPTION: and a Genetic Algorithm, respectively.
 #+CAPTION: Contour plots and direction of greatest descent $-\nabla{}f(\mathbf{x})$
 #+CAPTION: are also shown, and the global optimum is marked with a
 #+CAPTION: $\color{red}\boldsymbol{\times}$.
 [[file:img/booth_minimization.pdf]]
 
-** Statistical Learning
-*** Introduction
-- Optimization with Surrogate Models
-- The Bias-Variance Trade-Off
-- Inference and prediction
-- Supervised and Unsupervised Learning
-- Parametric and Nonparametric Statistics
-- Model Assessment:
-  - Train and Test Sets
-  - Train and Test Mean Squared Error
-  - Cross Validation, Bootstrapping
-  - Information Criteria for Model Assessment
-    - Mallow's C_p and AIC
-    - BIC
+** Learning: Building Surrogates
+This  chapter  discusses  Linear  Regression, a  parametric  method  capable  of
+modeling a restricted  class of surrogates for which it  is relatively simple to
+interpret   significance,   and   Gaussian  Process   Regression,   a   flexible
+nonparametric method capable  of modeling a large class of  surrogates for which
+interpreting significance is possible, but costly.
+
+In the  context of this  thesis the  surrogate $\hat{f}_{\theta}$ is  a function
+that  maps a  point $\mathbf{x}$  in the  search space  $\mathcal{X}$ to  a real
+number.   The  function  $\hat{f}_{\theta}$  depends  on  the  parameter  vector
+$\theta(\mathbf{X},  \mathbf{y})   \in  \Theta$,  constructed  from   a  set  of
+experiments  $\mathbf{X}$ and  corresponding  observations  $\mathbf{y}$ of  the
+objective function $f$.   The process of using the  available data $(\mathbf{X},
+\mathbf{y})$ to construct a surrogate model  is called training, or fitting, the
+model.  The class  of surrogates we can fit depends  on each method's definition
+of  the  parameter  space  $\Theta$. Chapter\nbsp{}[[Notation  and  Search  Spaces]]
+presents a more detailed discussion on the notation.
+
+In this chapter we make the  hypotheses that the set of experiments $\mathbf{X}$
+and the observations  $\mathbf{y}$ are given, and that we  can no longer observe
+the value of $f$ for new $\mathbf{x} \notin \mathbf{X}$.  For the two methods we
+discuss, we will  present the model classes that compose  $\Theta$, and how each
+method fits a  surrogate to the available data. We  will also discuss strategies
+to  evaluate  the  quality  of  and interpret  parameter  significance  for  the
+surrogates built by the methods discussed.
+
 *** Linear Regression
-- Ordinary Least Squares: Gauss-Markov (BLUE)
-- Transformations of $X$
+**** Fitting the Linear Model to Data
+- paragraph: Computing $\hat{\beta}$: OLS
+- 1 paragraph: Projection matrix of $\mathbf{y}$, into column space of $\mathbf{X}$
+  - Use linear map of columns of $\mathbf{X}$ to describe $\mathbf{y}$
+- 1 paragraph: If $\varepsilon$ is normally distributed, equal to Maximum Likelihood Estimator
+- paragraph: Natural Extension: Transformations of $\mathbf{X}
+- 2 paragraphs: Example on Booth's function (3d?)
+  - Linear terms, quadratic terms
+- Example on "slice" of multidimensional function? (from pres. at Argonne)
+**** Quality of Fit Metrics
+- paragraph: Bias-Variance Trade-Off?
+- paragraph: Train and Test Sets
+- paragraph: MSE
+- paragraph: Cross Validation, Bootstrapping
+- paragraph: Information Criteria for Model Assessment
+  - Mallow's C_p and AIC
+  - BIC?
+**** Interpreting Significance
+- OLS Confidence Intervals
 - ANOVA
+
 *** Gaussian Process Regression
-- Sampling Functions from Multidimensional Gaussian Distributions
-- Nonparametric Modeling with Covariance Kernels
-- Sensitivity Analysis with Sobol Indices
-- Other Nonparametric Methods
 *** Summary
 ** Design of Experiments
 *** Introduction

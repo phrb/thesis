@@ -7025,77 +7025,120 @@ $\mathcal{X}$ and observations of the objective function $f$.
 [[file:img/booth_minimization.pdf]]
 
 ** Learning: Building Surrogates
-This  chapter  discusses  Linear  Regression, a  parametric  method  capable  of
-modeling a restricted  class of surrogates for which it  is relatively simple to
-interpret   significance,   and   Gaussian  Process   Regression,   a   flexible
-nonparametric method capable  of modeling a large class of  surrogates for which
-interpreting significance is possible, but costly.
+This  chapter  discusses  Linear  Regression and  Gaussian  Process  Regression.
+Linear Regression is a parametric method  capable of modeling a restricted class
+of  surrogates, for  which it  is relatively  simple to  interpret significance.
+Gaussian  Process  Regression is  a  flexible  nonparametric method  capable  of
+modeling  a large  class of  surrogates, for  which interpreting  significance is
+possible, but costly.
 
-In the  context of this  thesis the  surrogate $\hat{f}_{\theta}$ is  a function
-that  maps a  point $\mathbf{x}$  in the  search space  $\mathcal{X}$ to  a real
-number.   The  function  $\hat{f}_{\theta}$  depends  on  the  parameter  vector
-$\theta(\mathbf{X},  \mathbf{y})   \in  \Theta$,  constructed  from   a  set  of
-experiments  $\mathbf{X}$ and  corresponding  observations  $\mathbf{y}$ of  the
-objective function $f$.   The process of using the  available data $(\mathbf{X},
-\mathbf{y})$ to construct a surrogate model  is called training, or fitting, the
-model.  The class  of surrogates we can fit depends  on each method's definition
-of  the  parameter  space  $\Theta$. Chapter\nbsp{}[[Notation  and  Search  Spaces]]
-presents a more detailed discussion on the notation.
+In  the context  of this  thesis, the  surrogate $\hat{f}_{\theta}:  \mathcal{X}
+\mapsto  \mathbb{R}$   depends  on  the  parameter   vector  $\theta(\mathbf{X},
+\mathbf{y}) \in  \Theta$ constructed using the  pair $(\mathbf{X}, \mathbf{y})$,
+where $\mathbf{X}$ is  a set of experiments, and  $\mathbf{y}$ the corresponding
+vector of observations of the objective  function $f$.  The process of using the
+available data  to construct a surrogate  model is called /learning/  and involves
+training, or fitting,  the surrogate model.  The class of  surrogates we can fit
+depends  on   each  method's  definition   of  the  parameter   space  $\Theta$.
+Chapter\nbsp{}[[Notation and Search Spaces]] the notation in detail.
 
-In this chapter we make the  hypotheses that the set of experiments $\mathbf{X}$
-and the observations  $\mathbf{y}$ are given, and that we  can no longer observe
-the value of $f$ for new $\mathbf{x} \notin \mathbf{X}$.  For the two methods we
-discuss, we will  present the model classes that compose  $\Theta$, and how each
-method fits a  surrogate to the available data. We  will also discuss strategies
-to  evaluate  the  quality  of  and interpret  parameter  significance  for  the
-surrogates built by the methods discussed.
+In this chapter we assume that  an initial pair of $(\mathbf{X}, \mathbf{y})$ is
+given,  and  that   we  can  no  longer   observe  $f(\mathbf{x}^{\prime})$  for
+$\mathbf{x}^{\prime} \notin  \mathbf{X}$.  For  the two  methods we  discuss, we
+will present the model classes represented by each parameter space $\Theta$, and
+how each method  fits a surrogate to  the available data.  We  will also discuss
+strategies to evaluate  the quality of and interpret  parameter significance for
+the   surrogates   built   by   the    methods   discussed.    We   discuss   on
+Chapter\nbsp{}[[Design of Experiments ]]how we can construct better distributions of
+experiments over  a search space,  and we assume  for now that  $\mathbf{X} \sim
+\text{Uniform}(\mathcal{X})$.
 
 *** Linear Regression
-We  are  going to  build  a  surrogate  $\hat{f}_{\theta}$  for a  function  $f:
-\mathcal{X} \mapsto  \mathbb{R}$ using a fixed  experimental design $\mathbf{X}$
-and its associated measurements $\mathbf{y}$. The parameter vector $\theta$ will
-be constructed using the Ordinary Least Squares estimator for a linear model.
-
-The experimental  design is an  $n\times{}p$ matrix $\mathbf{X}  = [\mathbf{x}_1
-\;\dots\; \mathbf{x}_n]^{\top}$, where  $\mathbf{x}_{1},\dots, \mathbf{x}_n$ are
-experiments.  Running all experiments produces a response vector $\mathbf{y}$ of
-size $n$, where each element $y_i$ is a measurement of $f(\mathbf{x}_i)$ subject
-to measurement error.
-
-Our linear surrogate model for $f$ is
+We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
+\mapsto  \mathbb{R}$ using  a  fixed experimental  design  $\mathbf{X}$ and  the
+associated measurements $\mathbf{y}$.  In a parameter space
 #+begin_export latex
 \begin{align}
-  \hat{f}_{\theta}(\mathbf{x}) =
-  \mathcal{M}(\mathbf{x})\theta(\mathbf{X},\mathbf{y}) +
-  \varepsilon\text{.}
+  \Theta  = \{(\theta_0, \dots, \theta_{m-1}):
+  \theta_0,\dots,\theta_{m  -   1}  \in
+  \mathbb{R}\}\text{,}
 \end{align}
 #+end_export
-The  $\varepsilon$ term  represents  the effects  of  reducible and  irreducible
-error,  emerging from  modeling  assumptions and  experimental conditions.   The
-function $\mathcal{M}: \mathcal{X}^{n\times{}p} \mapsto \mathbb{R}^{n\times{}m}$
-generates  the $n\times{}m$  /model  matrix/  for our  linear  model,  where $m  =
-\vert{}\theta\vert{}$.
+the  parameter vector  $\theta$ will  be  constructed using  the Ordinary  Least
+Squares (OLS) estimator for a linear model.
 
-For  an  $n\times{}2$  experimental  design   $\mathbf{X}$  in  a  search  space
-$\mathcal{X} = \{(x_1,  x_2): x_1,x_2 \in \mathbb{R}\}$,  the $n\times{}m$ model
-matrix $\mathcal{M}(\mathbf{X})$ corresponding to a linear model with all second
-order effects is
+The  initial  experimental  design  is  an  $n\times{}p$  matrix  $\mathbf{X}  =
+[\mathbf{x}_1  \;\dots\;   \mathbf{x}_n]^{\top}$,  where  $\mathbf{x}_{1},\dots,
+\mathbf{x}_n$  are experiments.   Running  all experiments  produces a  response
+vector $\mathbf{y}$ of  size $n$, where each element $y_i$  is an observation of
+$f(\mathbf{x}_i)$ subject to measurement error.
+
+The  process  of  constructing  $\theta(\mathbf{X}, \mathbf{y})$  with  the  OLS
+estimator, which we discuss in the  next section, generates the linear surrogate
+model for $f$, written
+#+begin_export latex
+\begin{align}
+  \label{eq:linear-model}
+  \hat{y}_i = \hat{f}_{\theta}(\mathbf{x}_i) =
+  \mathcal{M}(\mathbf{x}_i)\theta(\mathbf{X},\mathbf{y}) +
+  \varepsilon_i\text{,} \;\; i = 1,\dots,k\text{,}
+\end{align}
+#+end_export
+where $\varepsilon_i$ represents the effects of reducible and irreducible error,
+emerging from  modeling assumptions and experimental  conditions.  The resulting
+vector $\hat{\mathbf{y}} =  [\hat{y}_1 \; \dots \;  \hat{y}_n]^{\top}$ is called
+the   prediction   of  the   surrogate   model.    The  function   $\mathcal{M}:
+\mathcal{X}^{n\times{}p}   \mapsto    \mathbb{R}^{n\times{}m}$   generates   the
+$n\times{}m$   /model    matrix/   for    our   linear    model,   where    $m   =
+\vert{}\theta\vert{}$.       In      particular,       $n      =      1$      in
+Equation\nbsp{}\ref{eq:linear-model}.
+
+The  class  of  linear  models  is   relatively  limited  but  allows  for  some
+flexibility.  In  a simple and  less abstract  example, consider a  search space
+$\mathcal{X} = \{(x_1,  x_2): x_1, x_2 \in \mathbb{R}\}$  and objective function
+$f$,  for which  we collected  experimental data  $\mathbf{y} =  f(\mathbf{X}) +
+\varepsilon$, for  an $n\times{}p$ design  $\mathbf{X}$.  We construct  a linear
+model    surrogate,     for    which     the    $n\times{}m$     model    matrix
+$\mathcal{M}(\mathbf{X})$, corresponding to a linear model with all second order
+effects, is written
 #+begin_export latex
 \begin{align}
   \mathcal{M}(\mathbf{X}) =
   \begin{bmatrix}
-    1 & x_{1,1} & x_{1,2} & x_{1,2}^{2} & x_{1,2}^{2} & x_{1,1}x_{1,2} \\
+    1 & x_{1,1} & x_{1,2} & x_{1,1}^{2} & x_{1,2}^{2} & x_{1,1}x_{1,2} \\
     \multicolumn{6}{c}{$\vdots$} \\
     1 & x_{n,1} & x_{n,2} & x_{n,1}^{2} & x_{n,2}^{2} & x_{n,1}x_{n,2}
   \end{bmatrix}\text{,}
 \end{align}
 #+end_export
-with $m = 6$, and the $m\times{}1$ parameter vector is
+with $m = 6$, and the $m\times{}1$ parameter vector
 #+begin_export latex
 \begin{align}
-  \theta(\mathbf{X}, \mathbf{y}) = [\theta_0 \; \dots \; \theta_5]^{\top}\text{,}
+  \theta(\mathbf{X}, \mathbf{y}) = [\theta_0 \; \dots \; \theta_5]^{\top}
 \end{align}
 #+end_export
+is  constructed  using the  OLS  estimator  and  the  data we  collected.   From
+Equation\nbsp{}\ref{eq:linear-model}, the resulting prediction vector is
+#+begin_export latex
+\begin{align}
+  \hat{\mathbf{y}} = \begin{bmatrix}
+    \hat{y_1} \\
+    \vdots \\
+    \hat{y_n}
+  \end{bmatrix} = \begin{bmatrix}
+    \theta_0 + \theta_1x_{1,1} + \theta_2x_{1,2} + \theta_3x_{1,1}^{2} +
+    \theta_4x_{1,2}^{2} + \theta_5x_{1,1}x_{1,2} + \varepsilon_1\\
+    \vdots \\
+    \theta_0 + \theta_1x_{n,1} + \theta_2x_{n,2} + \theta_3x_{n,1}^{2} +
+    \theta_4x_{n,2}^{2} + \theta_5x_{n,1}x_{n,2} + \varepsilon_n\\
+  \end{bmatrix}\text{.}
+\end{align}
+#+end_export
+
+In  general, we  can use  $\hat{f}_{\theta}$  to predict  the value  of $f$  for
+$\mathbf{x}^{\prime} \notin  \mathbf{X}$.  For the OLS  estimator, among others,
+we can  also determine  prediction standard deviations  and the  significance of
+each model term. The interpretation of the
 
 **** Fitting the Linear Model
 #+NAME: fig:regression-fitting

@@ -10,7 +10,7 @@
 #+TAGS: FAPESP(f)
 #+TAGS: DataVis(v) PaperReview(W)
 #+EXPORT_SELECT_TAGS: Blog
-#+OPTIONS:   H:4 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   H:5 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -222,25 +222,28 @@ Limitation: simple model with shape constraits, cannot "fit"
 everything
 
 ****** Fitting the Linear Model to Data
-- paragraph: Computing $\hat{\beta}$: OLS
-- 1 paragraph: Projection matrix of $\mathbf{y}$, into column space of $\mathbf{X}$
+- [X] paragraph: Computing $\hat{\beta}$: OLS
+- [X] 1/2  paragraph: Projection  matrix of  $\mathbf{y}$, into  column space  of
+  $\mathbf{X}$
   - Use linear map of columns of $\mathbf{X}$ to describe $\mathbf{y}$
-- 1 paragraph: If $\varepsilon$ is normally distributed, equal to Maximum Likelihood Estimator
-- paragraph: Natural Extension: Transformations of $\mathbf{X}
-- 2 paragraphs: Example on Booth's function (3d?)
-  - Linear terms, quadratic terms
-- Example on "slice" of multidimensional function? (from pres. at Argonne)
+- [X]  1/2 paragraph: If $\varepsilon$  is normally distributed, equal  to Maximum
+  Likelihood Estimator
+- [X] paragraph: Natural Extension: Transformations of $\mathbf{X}
+  - Basis function sets
+- [ ] 2 paragraphs: Example on Booth's function (3d?)
+  - Linear terms, quadratic terms, interactions
+- +[ ] Example on "slice" of multidimensional function? (from pres. at Argonne)+
 ****** Quality of Fit Metrics
-- paragraph: Bias-Variance Trade-Off?
-- paragraph: Train and Test Sets
-- paragraph: MSE
-- paragraph: Cross Validation, Bootstrapping
-- paragraph: Information Criteria for Model Assessment
+- [ ] paragraph: MSE
+- [ ] paragraph: Bias-Variance Trade-Off
+- [ ] paragraph: Train and Test Sets?
+- [ ] paragraph: Cross Validation?
+- [ ] paragraph: Information Criteria for Model Assessment
   - Mallow's C_p and AIC
   - BIC?
 ****** Interpreting Significance
 - OLS standard deviation and Confidence Intervals
-- ANOVA (as a modification of the linear model?)
+- ANOVA (as a special case of the linear model?)
 
 ***** Gaussian Process
 - Sampling Functions from Multidimensional Gaussian Distributions
@@ -5320,7 +5323,312 @@ p_no_noise | p_noise | p_constrained
 [[file:./img/booth_descent_gradient_template.pdf]]
 ** Learning
 *** Linear Regression
-**** Generating Data
+**** 3d Booth's Function Example
+***** Loading Data
+Using data from [[Gradient of Booth's Function]]
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+sampled = sample_n(plot_df, size = 10)
+plot_df$linear_prediction = predict(lm(z_noisy ~ x + y, data = sampled), plot_df)
+plot_df$quadratic_prediction = predict(lm(z_noisy ~ x + y +
+                                              I(x ^ 2) +
+                                              I(y ^ 2), data = sampled), plot_df)
+plot_df$interaction_prediction = predict(lm(z_noisy ~ x * y +
+                                                I(x ^ 2) +
+                                                I(y ^ 2), data = sampled), plot_df)
+#+end_SRC
+
+#+RESULTS:
+***** 3D Noisy
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(z_noisy ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy.pdf]]
+
+***** 3D Noisy: Linear Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_linear.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(linear_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_linear.pdf]]
+
+***** 3D Noisy: Quadratic Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(quadratic_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_quadratic.pdf]]
+
+***** 3D Noisy: Quadratic + Interactions Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_interactions.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(interaction_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_quadratic_interactions.pdf]]
+
+**** 2d ad-hoc example
+***** Generating Data
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example.pdf" :width 10 :height 10 :eval no-export
 library(latex2exp)
 library(ggplot2)
@@ -5374,7 +5682,7 @@ p1
 
 #+RESULTS:
 [[file:./img/regression_example.pdf]]
-**** Full Model
+***** Full Model
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example_full_model.pdf" :width 10 :height 10 :eval no-export
 library(latex2exp)
 library(ggplot2)
@@ -5406,7 +5714,7 @@ p2
 
 #+RESULTS:
 [[file:./img/regression_example_full_model.pdf]]
-**** Full Figure
+***** Full Figure
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example_full.pdf" :width 20 :height 10 :eval no-export
 library(patchwork)
 
@@ -7055,8 +7363,33 @@ experiments over  a search space,  and we assume  for now that  $\mathbf{X} \sim
 
 *** Linear Regression
 We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
-\mapsto  \mathbb{R}$ using  a  fixed experimental  design  $\mathbf{X}$ and  the
-associated measurements $\mathbf{y}$.  In a parameter space
+\mapsto  \mathbb{R}$   using  a  fixed  experimental   design  $\mathbf{X}$  and
+observations  $\mathbf{y}$. We make the hypothesis that $f$ is a linear model on
+$\theta$, with error $\varepsilon$, written
+#+begin_export latex
+\begin{align}
+  \label{eq:linear-model}
+  f(\mathbf{X}) = \mathbf{X}\theta(\mathbf{X}, \mathbf{y}) + \varepsilon\text{.}
+\end{align}
+#+end_export
+The  experimental  design, or  model  matrix, is  an
+$n\times{}p$ matrix $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top}$,
+where  $\mathbf{x}_{1},\dots,   \mathbf{x}_n$  are  experiments.    Running  all
+experiments  produces   the  response   vector  $\mathbf{y}  =   [y_1  \;\dots\;
+y_n]^{\top}$, where each element is an observation of $f$ subject to measurement
+error.
+
+The linear model surrogate for $f$ is written
+#+begin_export latex
+\begin{align}
+  \label{eq:linear-model-surrogate}
+  \hat{f}_{\theta}(\mathbf{X}) =
+  \mathbf{X}\hat{\theta}(\mathbf{X},\mathbf{y})\text{,}
+\end{align}
+#+end_export
+The resulting vector $\hat{\mathbf{y}} = \hat{f}_{\theta}(\mathbf{X})$ is called
+the prediction of  the surrogate model.  The parameter space  for a linear model
+is
 #+begin_export latex
 \begin{align}
   \Theta  = \{(\theta_0, \dots, \theta_{m-1}):
@@ -7064,35 +7397,123 @@ associated measurements $\mathbf{y}$.  In a parameter space
   \mathbb{R}\}\text{,}
 \end{align}
 #+end_export
-the  parameter vector  $\theta$ will  be  constructed using  the Ordinary  Least
-Squares (OLS) estimator for a linear model.
+and the parameter  vector $\hat{\theta}$ will be constructed  using the Ordinary
+Least Squares (OLS) estimator, which we discuss in the next section.
 
-The  initial  experimental  design  is  an  $n\times{}p$  matrix  $\mathbf{X}  =
-[\mathbf{x}_1  \;\dots\;   \mathbf{x}_n]^{\top}$,  where  $\mathbf{x}_{1},\dots,
-\mathbf{x}_n$  are experiments.   Running  all experiments  produces a  response
-vector $\mathbf{y}$ of  size $n$, where each element $y_i$  is an observation of
-$f(\mathbf{x}_i)$ subject to measurement error.
+A key advantage  of a surrogate model  is that we can  use $\hat{f}_{\theta}$ to
+estimate  the  value of  $f$  for  a  new design  $\mathbf{X}^{\prime}$  without
+evaluating  $f(\mathbf{X}^{\prime})$.  For  well  chosen  $\mathbf{X}$ and  well
+fitted $\theta$, these estimates can be accurate and useful. We will discuss how
+to  choose  experiments  on  Chapter\nbsp{}[[Design of  Experiments]],  and  how  to
+evaluate the  quality of fit for  linear models on Section\nbsp{}[[Quality  of Fit
+Metrics]].
 
-The  process  of  constructing  $\theta(\mathbf{X}, \mathbf{y})$  with  the  OLS
-estimator, which we discuss in the  next section, generates the linear surrogate
-model for $f$, written
+**** Fitting the Model: The Ordinary Least Squares Estimator
+For   simplicity,    we   will    for   now   use    $\theta$   to    refer   to
+$\theta(\mathbf{X},\mathbf{y})$.  The sum of the squared differences between $f$
+and $\hat{f}_{\theta}$ for all points in $\mathbf{X}$ is the squared model error
 #+begin_export latex
 \begin{align}
-  \label{eq:linear-model}
-  \hat{y}_i = \hat{f}_{\theta}(\mathbf{x}_i) =
-  \mathcal{M}(\mathbf{x}_i)\theta(\mathbf{X},\mathbf{y}) +
-  \varepsilon_i\text{,} \;\; i = 1,\dots,k\text{,}
+  \left\lVert\varepsilon\right\rVert^{2} =
+  \left\lVert\mathbf{y} - \hat{\mathbf{y}}\right\rVert^{2} =
+  (\mathbf{y} - \mathbf{X}\theta)^{\top}(\mathbf{y} - \mathbf{X}\theta)\text{,}
 \end{align}
 #+end_export
-where $\varepsilon_i$ represents the effects of reducible and irreducible error,
-emerging from  modeling assumptions and experimental  conditions.  The resulting
-vector $\hat{\mathbf{y}} =  [\hat{y}_1 \; \dots \;  \hat{y}_n]^{\top}$ is called
-the   prediction   of  the   surrogate   model.    The  function   $\mathcal{M}:
-\mathcal{X}^{n\times{}p}   \mapsto    \mathbb{R}^{n\times{}m}$   generates   the
-$n\times{}m$   /model    matrix/   for    our   linear    model,   where    $m   =
-\vert{}\theta\vert{}$.       In      particular,       $n      =      1$      in
-Equation\nbsp{}\ref{eq:linear-model}.
+which is a quadratic function of $\theta$. We can therefore differentiate it
+with respect to $\theta$ and set it to zero to obtain the OLS estimator
+#+begin_export latex
+\begin{align}
+  \hat{\theta} = (\mathbf{X}^{\top}\mathbf{X})^{-1}
+  \mathbf{X}^{\top}\mathbf{y}\text{,}
+\end{align}
+#+end_export
+provided $\mathbf{X}^{\top}\mathbf{X}$  is invertible.  The variance of  the OLS
+estimator is written
+#+begin_export latex
+\begin{align}
+  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\top}\mathbf{X})^{-1}\sigma^{2}\text{,}
+\end{align}
+#+end_export
+assuming the observations $\mathbf{y}$  are uncorrelated and homoscedastic, with
+constant variance $\sigma^{2}$.  We can use the variance of the OLS estimator to
+compute confidence intervals for the predictions of the surrogate model. We will
+use   the    fact   that   the    variance   of   $\hat{\theta}$    depends   on
+$(\mathbf{X}^{\top}\mathbf{X})^{-1}$   when  we   discuss   Optimal  Design   on
+Section\nbsp{}[[Optimal Design]].
 
+An interesting interpretation  of the OLS estimator is that  it approximates the
+observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
+space spanned  by the columns  of $\mathbf{X}$.  Substituting  $\hat{\theta}$ on
+the   surrogate  model\nbsp{}\ref{eq:linear-model-surrogate},   we  obtain   the
+projection matrix
+#+begin_export latex
+\begin{align}
+  H = \mathbf{X}(\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\text{.}
+\end{align}
+#+end_export
+The difference between $\mathbf{y}$ and its projection $\hat{\mathbf{y}}$ is the
+model error  $\varepsilon$, orthogonal to  the column space of  $\mathbf{X}$, as
+represented  in Figure\nbsp{}[[fig:regression-projection]].   The OLS  estimator can
+also  be derived  as a  special case  of the  Maximum Likelihood  Estimator with
+$\varepsilon \sim \mathcal{N}(\mu,\sigma^2)$.
+
+#+NAME: fig:regression-projection
+#+ATTR_LATEX: :width 0.48\textwidth :placement [t]
+#+CAPTION: Fitting a linear regression model to data
+[[file:img/linear_regression_projection.pdf]]
+
+We  assumed  that the  design  matrix  $\mathbf{X}$  was  used directly  in  the
+surrogate  model\nbsp{}\ref{eq:linear-model-surrogate},  but   this  limits  the
+models we can represent with $\theta_{0,\dots,m-1}$ to those with $m = p$ linear
+terms on each  factor $\mathbf{x}_{1,\dots,p}$, without an  intercept term. More
+generally, we  can have a  linear model surrogate  with $m\neq{}p$ terms.   In a
+straightforward expansion  of the linear  model, we  can obtain $m$  model terms
+from  an  $n\times{}p$  design  matrix $\mathbf{X}$  by  using  basis  functions
+$h_{0,\dots,m-1}: \mathcal{X}  \mapsto \mathbb{R}$, generating  the $n\times{}m$
+model matrix
+#+begin_export latex
+\begin{align}
+  M\left(\mathbf{X} = \begin{bmatrix}
+    \mathbf{x}_1 \\
+    \vdots \\
+    \mathbf{x}_n
+  \end{bmatrix}_{n\times{}p}\right) =
+  \begin{bmatrix}
+    h_0(\mathbf{x_1}) & \dots & h_{m - 1}(\mathbf{x_1}) \\
+    \vdots & \ddots & \vdots \\
+    h_0(\mathbf{x_n}) & \dots & h_{m - 1}(\mathbf{x_n})
+  \end{bmatrix}_{n\times{}m}\text{.}
+\end{align}
+#+end_export
+The OLS  estimator does  not change if  we write the  linear model  surrogate in
+Equation\nbsp{}\ref{eq:linear-model-surrogate} with $M(\mathbf{X})$.
+
+#+begin_export latex
+\begin{align}
+  h_{(b)} &= \{\;h_0(\mathbf{x}) = 1,\;h_1(\mathbf{x}) = x_1,
+  \;h_2(\mathbf{x}) = x_2)\;\} \label{eq:hb} \\
+  h_{(c)} &= h_{(b)} \cup \{\;h_3(\mathbf{x}) = x_1^{2},
+  \;h_4(\mathbf{x}) = x_2^{2})\;\} \label{eq:hc} \\
+  h_{(d)} &= h_{(c)} \cup \{\;h_5(\mathbf{x}) = x_1x_2 )\;\} \label{eq:hd}
+\end{align}
+#+end_export
+
+#+NAME: fig:regression-fitting
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Three linear model surrogates for the Booth function, with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$ marking the
+#+CAPTION: global optimum and best surrogate predictions.
+#+CAPTION: The fixed experimental design $\mathbf{X}$ used to fit all
+#+CAPTION: surrogates is marked by
+#+CAPTION: $\color{blue}\boldsymbol{\times}$ s.
+#+CAPTION: Panel (a) shows noisy measurements of Booth's function,
+#+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
+#+CAPTION: basis functions sets
+#+CAPTION: from Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}, respectively
+[[file:img/booth_3d.pdf]]
+
+
+***** Attempt to formalize Model Matrices (Better to use Basis Expansion) :noexport:
 The  class  of  linear  models  is   relatively  limited  but  allows  for  some
 flexibility.  In  a simple and  less abstract  example, consider a  search space
 $\mathcal{X} = \{(x_1,  x_2): x_1, x_2 \in \mathbb{R}\}$  and objective function
@@ -7118,7 +7539,8 @@ with $m = 6$, and the $m\times{}1$ parameter vector
 \end{align}
 #+end_export
 is  constructed  using the  OLS  estimator  and  the  data we  collected.   From
-Equation\nbsp{}\ref{eq:linear-model}, the resulting prediction vector is
+Equation\nbsp{}\ref{eq:linear-model-surrogate}, the  resulting prediction vector
+is
 #+begin_export latex
 \begin{align}
   \hat{\mathbf{y}} = \begin{bmatrix}
@@ -7135,19 +7557,11 @@ Equation\nbsp{}\ref{eq:linear-model}, the resulting prediction vector is
 \end{align}
 #+end_export
 
-In  general, we  can use  $\hat{f}_{\theta}$  to predict  the value  of $f$  for
-$\mathbf{x}^{\prime} \notin  \mathbf{X}$.  For the OLS  estimator, among others,
-we can  also determine  prediction standard deviations  and the  significance of
-each model term. The interpretation of the
-
-**** Fitting the Linear Model
-#+NAME: fig:regression-fitting
-#+ATTR_LATEX: :width 0.85\textwidth :placement [t]
-#+CAPTION: Fitting a linear regression model to data
-[[file:img/regression_example_full.pdf]]
-
 **** Quality of Fit Metrics
+
+
 **** Interpreting Significance
+
 *** Gaussian Process Regression
 *** Summary
 ** Design of Experiments

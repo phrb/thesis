@@ -230,20 +230,30 @@ everything
   Likelihood Estimator
 - [X] paragraph: Natural Extension: Transformations of $\mathbf{X}
   - Basis function sets
-- [ ] 2 paragraphs: Example on Booth's function (3d?)
   - Linear terms, quadratic terms, interactions
 - +[ ] Example on "slice" of multidimensional function? (from pres. at Argonne)+
 ****** Quality of Fit Metrics
-- [ ] paragraph: MSE
+- [X] 2 paragraphs: Example on Booth's function (3d?)
+- [X] paragraph: MSE
+- [X] paragraph: Train and Test Sets?
+- +[ ] paragraph: Cross Validation?+
 - [ ] paragraph: Bias-Variance Trade-Off
-- [ ] paragraph: Train and Test Sets?
-- [ ] paragraph: Cross Validation?
-- [ ] paragraph: Information Criteria for Model Assessment
+  - number of parameters -> complexity
+  - as we change the training set, for the same point x_0:
+    - bias: distance between \hat{f}(x_0) and f(x_0)
+    - variance: distance between \hat{f}_1(x_0) and \hat{f}_2(x_0)
+  - complexity reduces  bias, but increases variance
+- [ ] paragraph: Model space figure from ESLII?
+- +[ ] paragraph: Information Criteria for Model Assessment+
   - Mallow's C_p and AIC
   - BIC?
 ****** Interpreting Significance
-- OLS standard deviation and Confidence Intervals
-- ANOVA (as a special case of the linear model?)
+- [ ] OLS standard deviation and Confidence Intervals
+  - Coefficients as main effects, interactions, ...
+  - p-values: may mislead
+- [ ] ANOVA, as a special case of the linear model?
+  - partition the sums of squares
+  - indicator variables in a linear model
 
 ***** Gaussian Process
 - Sampling Functions from Multidimensional Gaussian Distributions
@@ -5339,6 +5349,62 @@ plot_df$interaction_prediction = predict(lm(z_noisy ~ x * y +
 #+end_SRC
 
 #+RESULTS:
+***** Computing Model Quality Assessment Metrics
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+model_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+model_sampled = sample_n(model_df, size = 10)
+
+lin_model = lm(z_noisy ~ x + y, data = model_sampled)
+quad_model = lm(z_noisy ~ x + y +
+                    I(x ^ 2) +
+                    I(y ^ 2), data = model_sampled)
+inter_model = lm(z_noisy ~ x * y +
+                     I(x ^ 2) +
+                     I(y ^ 2), data = model_sampled)
+
+model_df$linear_prediction = predict(lin_model, model_df)
+model_df$quadratic_prediction = predict(quad_model, model_df)
+model_df$interaction_prediction = predict(inter_model, model_df)
+
+print("Training MSE")
+print(mean(summary(lin_model)$residuals ^ 2))
+print(mean(summary(quad_model)$residuals ^ 2))
+print(mean(summary(inter_model)$residuals ^ 2))
+
+print("Test MSE")
+print(mean((model_df$linear_prediction - model_df$z_noisy) ^ 2))
+print(mean((model_df$quadratic_prediction - model_df$z_noisy) ^ 2))
+print(mean((model_df$interaction_prediction - model_df$z_noisy) ^ 2))
+
+print("True MSE")
+print(mean((model_df$linear_prediction - model_df$z) ^ 2))
+print(mean((model_df$quadratic_prediction - model_df$z) ^ 2))
+print(mean((model_df$interaction_prediction - model_df$z) ^ 2))
+
+print(summary(lin_model)$adj.r.squared)
+print(summary(quad_model)$adj.r.squared)
+print(summary(inter_model)$adj.r.squared)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+[1] "Training MSE"
+[1] 161923.6
+[1] 23798.68
+[1] 60.55198
+[1] "Test MSE"
+[1] 192522.4
+[1] 344631.6
+[1] 773.7406
+[1] "True MSE"
+[1] 191847.5
+[1] 343833.3
+[1] 381.1807
+[1] 0.3240868
+[1] 0.860921
+[1] 0.9995577
+#+end_example
+
 ***** 3D Noisy
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
@@ -6684,7 +6750,7 @@ from  the  last  section,  consisting  of finding  the  global  optimum  of  the
 paraboloid surface defined by the Booth function,
 #+begin_export latex
 \begin{align}
-y_a = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x + 2y - 7)^{2} + (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.} \label{eq:f0}
+y_a = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} + (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.} \label{eq:f0}
 \end{align}
 #+end_export
 In our notation, the search space for  this example is $\mathcal{X} = (x_1, x_2)
@@ -7333,33 +7399,36 @@ $\mathcal{X}$ and observations of the objective function $f$.
 [[file:img/booth_minimization.pdf]]
 
 ** Learning: Building Surrogates
-This  chapter  discusses  Linear  Regression and  Gaussian  Process  Regression.
-Linear Regression is a parametric method  capable of modeling a restricted class
-of  surrogates, for  which it  is relatively  simple to  interpret significance.
+This  chapter  discusses two  methods  for  building surrogate  models.   Linear
+Regression is  a parametric  method capable  of modeling  a restricted  class of
+surrogates,  for  which  it  is relatively  simple  to  interpret  significance.
 Gaussian  Process  Regression is  a  flexible  nonparametric method  capable  of
-modeling  a large  class of  surrogates, for  which interpreting  significance is
+modeling a  large class  of surrogates, for  which interpreting  significance is
 possible, but costly.
 
-In  the context  of this  thesis, the  surrogate $\hat{f}_{\theta}:  \mathcal{X}
-\mapsto  \mathbb{R}$   depends  on  the  parameter   vector  $\theta(\mathbf{X},
-\mathbf{y}) \in  \Theta$ constructed using the  pair $(\mathbf{X}, \mathbf{y})$,
-where $\mathbf{X}$ is  a set of experiments, and  $\mathbf{y}$ the corresponding
-vector of observations of the objective  function $f$.  The process of using the
+The surrogate $\hat{f}_{\theta}: \mathcal{X}  \mapsto \mathbb{R}$ depends on the
+parameter  vector  $\theta(\mathbf{X},  \mathbf{y})$   in  the  parameter  space
+$\Theta$   constructed  using   the  pair   $(\mathbf{X},  \mathbf{y})$,   where
+$\mathbf{X}$ is a set of  experiments, and $\mathbf{y}$ the corresponding vector
+of  observations of  the  objective  function $f$.   The  process  of using  the
 available data  to construct a surrogate  model is called /learning/  and involves
-training, or fitting,  the surrogate model.  The class of  surrogates we can fit
-depends  on   each  method's  definition   of  the  parameter   space  $\Theta$.
-Chapter\nbsp{}[[Notation and Search Spaces]] the notation in detail.
+fitting the  surrogate model, which can  also be called training.   The class of
+surrogates  we  can  fit  depends  on  each  method's  definition  of  $\Theta$.
 
 In this chapter we assume that  an initial pair of $(\mathbf{X}, \mathbf{y})$ is
-given,  and  that   we  can  no  longer   observe  $f(\mathbf{x}^{\prime})$  for
-$\mathbf{x}^{\prime} \notin  \mathbf{X}$.  For  the two  methods we  discuss, we
-will present the model classes represented by each parameter space $\Theta$, and
-how each method  fits a surrogate to  the available data.  We  will also discuss
-strategies to evaluate  the quality of and interpret  parameter significance for
-the   surrogates   built   by   the    methods   discussed.    We   discuss   on
-Chapter\nbsp{}[[Design of Experiments ]]how we can construct better distributions of
-experiments over  a search space,  and we assume  for now that  $\mathbf{X} \sim
-\text{Uniform}(\mathcal{X})$.
+given, and  that we can no  longer observe $f(\mathbf{x})$ for  new $\mathbf{x}$
+outside of $\mathbf{X}$.   In this sense we say  we do not know $f$,  but we can
+make hypotheses  about it in  order to construct  surrogate models. For  the two
+methods we  discuss, we will present  the hypotheses embedded in  each parameter
+space $\Theta$, and how each method fits  a surrogate to the available data.  We
+will also discuss strategies to evaluate the  quality of fit of a surrogate, and
+to interpret  parameter significance.
+
+We assume  for now  that $\mathbf{X}  \sim \text{Uniform}(\mathcal{X})$,  and we
+discuss how we  can construct better distributions of experiments  over a search
+space  on  Chapter\nbsp{}[[Design  of  Experiments]]. We  will  now  discuss  Linear
+Regression, a method  to build surrogates using linear models  on the parameters
+$\theta$.
 
 *** Linear Regression
 We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
@@ -7372,41 +7441,45 @@ $\theta$, with error $\varepsilon$, written
   f(\mathbf{X}) = \mathbf{X}\theta(\mathbf{X}, \mathbf{y}) + \varepsilon\text{.}
 \end{align}
 #+end_export
-The  experimental  design, or  model  matrix, is  an
-$n\times{}p$ matrix $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top}$,
-where  $\mathbf{x}_{1},\dots,   \mathbf{x}_n$  are  experiments.    Running  all
-experiments  produces   the  response   vector  $\mathbf{y}  =   [y_1  \;\dots\;
-y_n]^{\top}$, where each element is an observation of $f$ subject to measurement
-error.
+The  experimental  design  $\mathbf{X}$  is an  $n\times{}p$  matrix  of  column
+vectors,  where   each  element   $\mathbf{x}_{1},\dots,  \mathbf{x}_n$   is  an
+experiment.  We do not know how  well the linear model hypothesis represents the
+true $f$, but we assume that  each experiment in $\mathbf{X}$ was run, producing
+the  response  vector $\mathbf{y}  =  [y_1  \;\dots\; y_n]^{\top}$,  where  each
+element  is  an  observation  of   $f$  subject  to  measurement  error.
 
-The linear model surrogate for $f$ is written
-#+begin_export latex
-\begin{align}
-  \label{eq:linear-model-surrogate}
-  \hat{f}_{\theta}(\mathbf{X}) =
-  \mathbf{X}\hat{\theta}(\mathbf{X},\mathbf{y})\text{,}
-\end{align}
-#+end_export
-The resulting vector $\hat{\mathbf{y}} = \hat{f}_{\theta}(\mathbf{X})$ is called
-the prediction of  the surrogate model.  The parameter space  for a linear model
-is
+Using $\mathbf{y}$ we can construct  parameter vectors $\theta$ in the parameter
+space
 #+begin_export latex
 \begin{align}
   \Theta  = \{(\theta_0, \dots, \theta_{m-1}):
   \theta_0,\dots,\theta_{m  -   1}  \in
-  \mathbb{R}\}\text{,}
+  \mathbb{R}\}\text{.}
 \end{align}
 #+end_export
-and the parameter  vector $\hat{\theta}$ will be constructed  using the Ordinary
-Least Squares (OLS) estimator, which we discuss in the next section.
+For linear models  we can construct the optimal  parameter vector $\hat{\theta}$
+using the Ordinary  Least Squares (OLS) estimator, which we  discuss in the next
+section, and use it to write the linear model surrogate
+#+begin_export latex
+\begin{align}
+  \label{eq:linear-model-surrogate}
+  \hat{f}_{\theta}(\mathbf{X}) =
+  \mathbf{X}\hat{\theta}(\mathbf{X},\mathbf{y})\text{.}
+\end{align}
+#+end_export
+The   vector  $\hat{\mathbf{y}}$   produced   by  evaluating   $\hat{f}_{\theta}
+(\mathbf{X})$ is  called the prediction  of the surrogate model  for experiments
+$\mathbf{X}$, and  the distance between $\mathbf{y}$  and $\hat{\mathbf{y}}$ can
+be used to optimize the parameter vector  and estimate the quality of fit of the
+surrogate.
 
-A key advantage  of a surrogate model  is that we can  use $\hat{f}_{\theta}$ to
-estimate  the  value of  $f$  for  a  new design  $\mathbf{X}^{\prime}$  without
-evaluating  $f(\mathbf{X}^{\prime})$.  For  well  chosen  $\mathbf{X}$ and  well
-fitted $\theta$, these estimates can be accurate and useful. We will discuss how
-to  choose  experiments  on  Chapter\nbsp{}[[Design of  Experiments]],  and  how  to
-evaluate the  quality of fit for  linear models on Section\nbsp{}[[Quality  of Fit
-Metrics]].
+A  key  advantage of  a  surrogate  model  is  that we  can  use
+$\hat{f}_{\theta}$   to  estimate   the  value   of   $f$  for   a  new   design
+$\mathbf{X}^{\prime}$  without  evaluating $f(\mathbf{X}^{\prime})$.   For  well
+chosen $\mathbf{X}$  and well fitted  $\theta$, these estimates can  be accurate
+and useful. We will discuss how to choose experiments on Chapter\nbsp{}[[Design of
+Experiments]],  and how  to  evaluate the  quality  of fit  for  linear models  on
+Section\nbsp{}[[Assessing Quality of Fit of Linear Model Surrogates]].
 
 **** Fitting the Model: The Ordinary Least Squares Estimator
 For   simplicity,    we   will    for   now   use    $\theta$   to    refer   to
@@ -7435,11 +7508,13 @@ estimator is written
 \end{align}
 #+end_export
 assuming the observations $\mathbf{y}$  are uncorrelated and homoscedastic, with
-constant variance $\sigma^{2}$.  We can use the variance of the OLS estimator to
-compute confidence intervals for the predictions of the surrogate model. We will
-use   the    fact   that   the    variance   of   $\hat{\theta}$    depends   on
-$(\mathbf{X}^{\top}\mathbf{X})^{-1}$   when  we   discuss   Optimal  Design   on
-Section\nbsp{}[[Optimal Design]].
+constant  variance  $\sigma^{2}$.    Since  we  assume  in   this  chapter  that
+$\mathbf{X}$  is fixed,  the  variance of  $\hat{\theta}$  shows explicitly  how
+uncertainty  in  measurements  due  to  error propagates  to  the  linear  model
+surrogate, and we  can use this uncertainty to compute  confidence intervals for
+the surrogate's predictions.   Later, we will use the fact  that the variance of
+$\hat{\theta}$ depends  on $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ when  we discuss
+Optimal Design on Section\nbsp{}[[Optimal Design]].
 
 An interesting interpretation  of the OLS estimator is that  it approximates the
 observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
@@ -7451,15 +7526,18 @@ projection matrix
   H = \mathbf{X}(\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\text{.}
 \end{align}
 #+end_export
-The difference between $\mathbf{y}$ and its projection $\hat{\mathbf{y}}$ is the
-model error  $\varepsilon$, orthogonal to  the column space of  $\mathbf{X}$, as
-represented  in Figure\nbsp{}[[fig:regression-projection]].   The OLS  estimator can
-also  be derived  as a  special case  of the  Maximum Likelihood  Estimator with
-$\varepsilon \sim \mathcal{N}(\mu,\sigma^2)$.
+The  difference   between  $\mathbf{y}$   and  its  projection   $H\mathbf{y}  =
+\hat{\mathbf{y}}$ is  the model  error $\varepsilon$,  orthogonal to  the column
+space of $\mathbf{X}$, as represented in Figure\nbsp{}[[fig:regression-projection]].
+The  OLS  estimator can  also  be  derived as  a  special  case of  the  Maximum
+Likelihood Estimator with $\varepsilon \sim \mathcal{N}(\mu,\sigma^2)$.
 
 #+NAME: fig:regression-projection
 #+ATTR_LATEX: :width 0.48\textwidth :placement [t]
-#+CAPTION: Fitting a linear regression model to data
+#+CAPTION: In Linear Regression, the prediction vector $\hat{\mathbf{y}}$
+#+CAPTION: is the orthogonal projection of the observations vector $\mathbf{y}$
+#+CAPTION: into the vector space
+#+CAPTION: spanned by the columns of $\mathbf{X}$.
 [[file:img/linear_regression_projection.pdf]]
 
 We  assumed  that the  design  matrix  $\mathbf{X}$  was  used directly  in  the
@@ -7468,12 +7546,12 @@ models we can represent with $\theta_{0,\dots,m-1}$ to those with $m = p$ linear
 terms on each  factor $\mathbf{x}_{1,\dots,p}$, without an  intercept term. More
 generally, we  can have a  linear model surrogate  with $m\neq{}p$ terms.   In a
 straightforward expansion  of the linear  model, we  can obtain $m$  model terms
-from  an  $n\times{}p$  design  matrix $\mathbf{X}$  by  using  basis  functions
-$h_{0,\dots,m-1}: \mathcal{X}  \mapsto \mathbb{R}$, generating  the $n\times{}m$
-model matrix
+from an  $n\times{}p$ design matrix $\mathbf{X}$  by using a basis  function set
+$\mathcal{H} = \{h_{0,\dots,m-1}:  \mathcal{X} \mapsto \mathbb{R}\}$, generating
+the $n\times{}m$ model matrix
 #+begin_export latex
 \begin{align}
-  M\left(\mathbf{X} = \begin{bmatrix}
+  \mathcal{M}\left(\mathbf{X} = \begin{bmatrix}
     \mathbf{x}_1 \\
     \vdots \\
     \mathbf{x}_n
@@ -7486,32 +7564,10 @@ model matrix
 \end{align}
 #+end_export
 The OLS  estimator does  not change if  we write the  linear model  surrogate in
-Equation\nbsp{}\ref{eq:linear-model-surrogate} with $M(\mathbf{X})$.
-
-#+begin_export latex
-\begin{align}
-  h_{(b)} &= \{\;h_0(\mathbf{x}) = 1,\;h_1(\mathbf{x}) = x_1,
-  \;h_2(\mathbf{x}) = x_2)\;\} \label{eq:hb} \\
-  h_{(c)} &= h_{(b)} \cup \{\;h_3(\mathbf{x}) = x_1^{2},
-  \;h_4(\mathbf{x}) = x_2^{2})\;\} \label{eq:hc} \\
-  h_{(d)} &= h_{(c)} \cup \{\;h_5(\mathbf{x}) = x_1x_2 )\;\} \label{eq:hd}
-\end{align}
-#+end_export
-
-#+NAME: fig:regression-fitting
-#+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Three linear model surrogates for the Booth function, with a
-#+CAPTION: $\color{red}\boldsymbol{\times}$ marking the
-#+CAPTION: global optimum and best surrogate predictions.
-#+CAPTION: The fixed experimental design $\mathbf{X}$ used to fit all
-#+CAPTION: surrogates is marked by
-#+CAPTION: $\color{blue}\boldsymbol{\times}$ s.
-#+CAPTION: Panel (a) shows noisy measurements of Booth's function,
-#+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
-#+CAPTION: basis functions sets
-#+CAPTION: from Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}, respectively
-[[file:img/booth_3d.pdf]]
-
+Equation\nbsp{}\ref{eq:linear-model-surrogate}  with  $\mathcal{M}(\mathbf{X})$.
+Unless we need to discuss the underlying model terms, we assume from now on that
+$\mathbf{X}$ represents a suitable  model matrix $\mathcal{M} (\mathbf{X})$.  We
+will now discuss how to evaluate the quality of fit of a linear model surrogate.
 
 ***** Attempt to formalize Model Matrices (Better to use Basis Expansion) :noexport:
 The  class  of  linear  models  is   relatively  limited  but  allows  for  some
@@ -7557,8 +7613,88 @@ is
 \end{align}
 #+end_export
 
-**** Quality of Fit Metrics
+**** Assessing Quality of Fit of Linear Model Surrogates
+We will construct  three linear model surrogates for the  Booth function and use
+the   model    fits   to    discuss   the    assessment   of    model   quality.
+Figure\nbsp{}[[fig:regression-fitting]]  shows  the   three  surrogate  model  fits,
+constructed using  the same design $\mathbf{X}$  with $n = 10$  random uniformly
+distributed measurements of the Booth function
+#+begin_export latex
+\begin{align}
+  f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} +
+  (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
+\end{align}
+#+end_export
+subject  to  measurement  error  $\varepsilon$.  Panel  (a)  shows  the  surface
+produced  by measuring  $f$ in  its entire  domain. The  10 random  measurements
+composing $\mathbf{X}$ are highlighted. Panels (b),  (c), and (d) show the three
+surrogates, which used basis function sets
+#+begin_export latex
+\begin{align}
+  \mathcal{H}_{(b)} &= \{\;h_0(\mathbf{x}) = 1,\;h_1(\mathbf{x}) = x_1,
+  \;h_2(\mathbf{x}) = x_2)\;\}\text{,} \label{eq:hb} \\
+  \mathcal{H}_{(c)} &= h_{(b)} \cup \{\;h_3(\mathbf{x}) = x_1^{2},
+  \;h_4(\mathbf{x}) = x_2^{2})\;\}\text{, and} \label{eq:hc} \\
+  \mathcal{H}_{(d)} &= h_{(c)} \cup \{\;h_5(\mathbf{x}) = x_1x_2 )\;\}\text{.}
+   \label{eq:hd}
+\end{align}
+#+end_export
 
+Panels (b), (c), and (d) also show  the training, testing, and true Mean Squared
+Error (MSE) for each surrogate on the design $\mathbf{X}$, written
+#+begin_export latex
+\begin{align}
+  MSE_{\hat{f}_{\theta}(\mathbf{X})} &= \dfrac{1}{n}
+  \sum_{i = 1}^{n}{\left(\left(f(\mathbf{x}_i) + \varepsilon\right) -
+    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{,} \label{eq:mse-test} \\[1em]
+  MSE_{\hat{f}_{\theta}} &= \dfrac{1}{\vert{}\mathcal{X}\vert{}}
+  \sum_{i = 1}^{\vert{}\mathcal{X}\vert{}}{\left(\left(f(\mathbf{x}_i) + \varepsilon\right) -
+    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{, and} \label{eq:mse-train} \\[1em]
+  MSE_{f} &= \dfrac{1}{\vert{}\mathcal{X}\vert{}}
+  \sum_{i = 1}^{\vert{}\mathcal{X}\vert{}}{\left(f(\mathbf{x}_i) -
+    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{.} \label{eq:mse-true}
+\end{align}
+#+end_export
+
+The training error $MSE_{\hat{f}_{\theta}(\mathbf{X})}$ can be computed with the
+design  points and  the fitted  model.  In  real applications  we can  sometimes
+compute the  testing error $MSE_{\hat{f}_\theta}$  for the entire  search space,
+but usually we settle for the error on a testing set distinct from $\mathbf{X}$.
+We can almost  never compute the true  error $MSE_{f}$ of our  surrogate, but in
+our toy example we  can use the Booth function without the error  term, to get a
+sense of how well our models generalize.  As we could expect, since the true $f$
+in   our  example   can  be   represented  by   the  basis   functions  on   set
+$\mathcal{H}_{(d)}$  from Equation\nbsp{}\ref{eq:hd},  the surrogate  from panel
+(c)  has the  smallest MSE  and the  best generalization,  although it  is still
+differs from the true $f$.
+
+Figure\nbsp{}[[fig:regression-fitting]]  also  shows  the  adjusted  coefficient  of
+determination
+#+begin_export latex
+\begin{align}
+  \bar{R}^{2}  = 1  - \left(\dfrac{n - 1}{n - p - 1} \cdot
+  \dfrac{\lVert{}\mathbf{y}  - \hat{\mathbf{y}}\rVert{}^{2}}
+      {\lVert{}\mathbf{y} - \bar{\mathbf{y}}\rVert{}^{2}}\right)\text{,}
+\end{align}
+#+end_export
+where $\bar{\mathbf{y}}$ represents the mean  of the observations of experiments
+in $\mathbf{X}$.  The  coefficient compares the squared error of  a given linear
+model with the  error of the model  that predicts the mean  of all observations,
+adjusted by the flexibility introduced by new parameters.
+
+#+NAME: fig:regression-fitting
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Three linear model surrogates for the Booth function, with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$ marking the
+#+CAPTION: global optimum and best surrogate predictions.
+#+CAPTION: The fixed experimental design $\mathbf{X}$ used to fit all
+#+CAPTION: surrogates is marked by
+#+CAPTION: $\color{blue}\boldsymbol{\times}$ s.
+#+CAPTION: Panel (a) shows noisy measurements of Booth's function,
+#+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
+#+CAPTION: basis functions sets
+#+CAPTION: from Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}, respectively
+[[file:img/booth_3d.pdf]]
 
 **** Interpreting Significance
 

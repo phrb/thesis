@@ -776,7 +776,7 @@ proposal and application to the Microsoft Latin America PhD Award.
 
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{references}
-* Thesis Outline Draft                                :noexport:
+* Thesis Outline Draft with Arnaud                                 :noexport:
 ** Introduction
 General presentation of the manuscript
 ** Context

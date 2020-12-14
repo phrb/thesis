@@ -138,235 +138,8 @@
 # #+LATEX_HEADER: \pagestyle{mystyle}
 :end:
 
-* Thesis Drafts                                                    :noexport:
-** Outlining the draft with Arnaud
-*** Introduction
-General presentation of the manuscript
-*** Context
-**** Observation: Historical Trends in Hardware Design
-**** Consequences for compilers and application developers: Generating optimized code has become increasingly difficult
-**** Autotuning approaches and difficulties
-- Describe existing approaches (opentuner, etc.) and provide examples
-  of autotuning problems with their dimension
-
-All this leads you to explain the current state of the technology and
-what is possibly "wrong" with current approaches.
-- Huge dimension and unclear geometry
-- Many black/box search heuristics whose effectiveness is difficult to
-  evaluate/interpret
-*** Optimization (in Autotuning context)
-**** Optimization Methods
-***** Methods Based on Derivatives (Local Descent)
-****** Gradient based
-- Classical hypothesis: convex
-- convergence difficulties
-- path of GD on 3 booth versions?
-- mention very high cost of estimating derivatives
-- make hypotheses more clear and explicit
-  - explain why hypothesis are restrictive for autotuning problems
-- Figure with Restarts
-****** Gradient + Hessian based
-- Taylor expansion: Information about derivatives at a point --> (approximation)
-  information about the function around a point
-- hessian definition
-- fast convergence
-  - Example: converging in 1 step for the booth function
-****** This requires too strong hypothesis, hence the needs for more "general" methods
-- high cost of estimating derivatives
-***** Stochastic Methods (Derivative-Free)
-****** Single-State
-- compute neighborhood of x --> perturb x
-  - random walk
-  - greedy random walk
-  - best random walk
-- probability distribution for acceptance
-  - bio-inspired simulated annealing
-****** Population-Based methods
-- GAs
-  - Colors for generations, uniform points
-- PSO
-- +Ant colony?+
-***** Mini-conclusion
-- Most of these methods are not parsimonious. Require many estimates
-  of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
-  worse as they need to explore whereas descent based methods head to
-  the optimum more directly.
-**** Learning: Building a Surrogate
-- old ideas for introduction:
-  - Optimization with Surrogate Models
-  - The Bias-Variance Trade-Off
-  - Inference and prediction
-  - Supervised and Unsupervised Learning
-  - Parametric and Nonparametric Statistics
-  - Model Assessment:
-    - Train and Test Sets
-    - Train and Test Mean Squared Error
-    - Cross Validation, Bootstrapping
-    - Information Criteria for Model Assessment
-      - Mallow's C_p and AIC
-      - BIC
-
-***** Statistical Learning: Linear Regression
-- old:
-  - Ordinary Least Squares: Gauss-Markov (BLUE)
-  - Transformations of $X$
-  - ANOVA
-
-- the model
-- how to fit
-- "Model quality" +how to check whether the model is correct or not ?+
-- how to interpret the significance (LM-CI, ANOVA). May hint to good
-  values for optimization
-
-Limitation: simple model with shape constraits, cannot "fit"
-everything
-
-****** Fitting the Linear Model to Data
-- [X] paragraph: Computing $\hat{\beta}$: OLS
-- [X] 1/2  paragraph: Projection  matrix of  $\mathbf{y}$, into  column space  of
-  $\mathbf{X}$
-  - Use linear map of columns of $\mathbf{X}$ to describe $\mathbf{y}$
-- [X]  1/2 paragraph: If $\varepsilon$  is normally distributed, equal  to Maximum
-  Likelihood Estimator
-- [X] paragraph: Natural Extension: Transformations of $\mathbf{X}
-  - Basis function sets
-  - Linear terms, quadratic terms, interactions
-- +[ ] Example on "slice" of multidimensional function? (from pres. at Argonne)+
-****** Quality of Fit Metrics
-- [X] 2 paragraphs: Example on Booth's function (3d?)
-- [X] paragraph: MSE
-- [X] paragraph: Train and Test Sets?
-- +[ ] paragraph: Cross Validation?+
-- [ ] paragraph: Bias-Variance Trade-Off
-  - number of parameters -> complexity
-  - as we change the training set, for the same point x_0:
-    - bias: distance between \hat{f}(x_0) and f(x_0)
-    - variance: distance between \hat{f}_1(x_0) and \hat{f}_2(x_0)
-  - complexity reduces  bias, but increases variance
-- [ ] paragraph: Model space figure from ESLII?
-- +[ ] paragraph: Information Criteria for Model Assessment+
-  - Mallow's C_p and AIC
-  - BIC?
-****** Interpreting Significance
-- [ ] OLS standard deviation and Confidence Intervals
-  - Coefficients as main effects, interactions, ...
-  - p-values: may mislead
-- [ ] ANOVA, as a special case of the linear model?
-  - partition the sums of squares
-  - indicator variables in a linear model
-
-***** Gaussian Process
-- Sampling Functions from Multidimensional Gaussian Distributions
-- Nonparametric Modeling with Covariance Kernels
-- Sensitivity Analysis with Sobol Indices
-- Other Nonparametric Methods
-
-- the model
-- how to fit
-- provides mean estimates with confidence estimation
-- how to interpret the significance (sobol indices) but quite costly
-
-***** Mini-Conclusion
-Two big classes of models. Generality vs. interpretability. Yet
-everything we mentioned assumes X is given, sampled from
-observations. In our contects, We can choose which X to test, either
-to test the model, or to improve its quality, or to find a "good"
-value in our space $\mathcal{X}$.
-**** Design of Experiments
-***** 2-level factorial designs
-***** Screening
-Super efficient but very limited
-***** Optimal designs
-A "flexible" screening: allows to include non-linear terms,
-interactions, etc. if needed.
-
-Awesome but if a parameter was not included in the model or if the
-model is too simple (e.g. only comprised a linear term where a
-quadratic one would have been needed, or an important interaction was
-not included), we won't be able to detect it (lack of fit).
-***** Space-filling Designs
-Not very efficient for parameter estimate but good to evaluate the
-lack of fit.
-
-Also good for variance minimization in GP.
-***** Mini-conclusion
-- Designs to obtain good-quality parameter estimates
-  - Screening and D-opt for LM
-  - SFD for GP
-- Designs to test the model quality (lack of fit)
-  - SFD fo LM
-
-If model based, parameter significance and estimation can be used to
-reduce dimension and guide the optimization. With this DoE approach,
-we have a clear separation between the sampling phase and the
-interpretation phase. But what if no parameter really appears
-significant anymore ?
-**** Online Learning: the exploration / exploitation trade-off
-***** Bandits: simple (discrete choice, optimize regret = \sum_t R_t), USB
-***** EI for GP (continuous choice, optimize EI = \max_t R_t)
-Also mention GP-UCB and contrast with EGO. There are also variants for
-Linear Model (LinUCB).
-***** Mini-conclusion
-These methods seamlessly mix exploration and exploitation but the
-overal objective function is generally the regret, which makes sense
-for a self-optimizing system (e.g. facebook) but not in an autotuning
-context (where EI is more meaningful).
-**** Summary and Proposal
-- use glassbox (DoE based) approach to perform the optimization,
-  always try to interpret the results
-- 2 big methods based on different exploration/exploitation strategy:
-  1. Evaluate parameter significance and reduce dimension (two phases,
-     iterative)
-  2. Expected Improvement (first a general exploration phase with a
-     SFD, then seamlessly mix exploration and exploitation)
-  Possibly combinations of both approaches could be used back and
-  forth depending on the specific information we learn on the use
-  case.
-- In this thesis, we evaluate these DoE-based approaches for several
-  autotuning use cases and try to compare them with approaches that
-  had beed previously proposed fot these use cases.
-*** Evaluation
-**** Reproducible Research Methodology
-- Tools and such
-- Explain difficulty of finding a needle in a haystack:
-  - how to know whether we found the optimal value ?
-  - how to know how far we are from the optimal value ?
-  - how to know whether there is anything to find ?
-  - how to know whether the geometry hypothesis we make are sound in
-    an unknown space ?
-  - ...
-**** Use Case 1: GPU compiling flags
-- mix binaire/numérique, opentuner (multi-armed to select the right
-  stochastic descent algorithm)
-- Tried to use clustering to identify significant parameters
-- On the interest of using a Screening design.
-  - Once the significant parameters are, they can easily be
-    fixed. Are there the same as the ones found by opentuner.
-**** Use Case 2: Kernel GPU Steven
-- Base strategies (RS, GAs, Local Descent, ...)
-- D-opt based approach \to excellent results
-- GP-EI based approach (TODO)
-**** Use Case 3: SPAPT
-- Base strategies (RS because equivalent to other classical strategies
-  s.a. GAs and others)
-- D-opt based approach \to not really impressive compared to RS but
-  maybe there is nothing to find.
-  - Ability to interpret = unclear. Nothing to see or model too simple ?
-**** Use Case 4: FPGA
-- 100 of numerical parameters
-- several metrics to optimize \to weighted combination
-- OpenTuner with heuristic and bandits gave "good" results
-  (improvement over the default one)
-- +DoE+ because no more access to the code. Ideally GP-EI. But we could
-  see that the OpenTuner exploration makes it very hard to interprete
-  the geometry.
-**** Use Case 5: Bit Quantization in Neural Nets
-- 54 discrete numerical parameters
-- several objective functions
-- RL
-- GP-EI
-*** Conclusion and Perspectives
-** Structure Drafts
+* Old Drafts                                                       :noexport:
+** First Draft
 1. Introduction
    1. Autotuning
       1. Algorithm Selection Problem?
@@ -405,7 +178,7 @@ context (where EI is more meaningful).
 4. Conclusion
    - Expressing structure with kernels? (Duvenaud's thesis)
    - Performance of the Federov Algorithm for D-Optimal design construction?
-*** Structure Draft
+** Structure Draft
 - Course on performance optimization for HPC, and why it's hard
 - Difficulty to optimize programs comes from complexity in:
   - Computer architecture
@@ -712,7 +485,9 @@ implementation and the justification of optimization heuristics.
   \end{tikzpicture}
 }
 #+end_export
-** Application to the Microsoft Latin America PhD Award
+
+* Misc                                                             :noexport:
+** Application to the Microsoft Latin America PhD Award (didn't pan out)
 *** Search Heuristics and Statistical Learning methods for Autotuning HPC Programs
 :PROPERTIES:
 :EXPORT_DATE:
@@ -1001,6 +776,233 @@ proposal and application to the Microsoft Latin America PhD Award.
 
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{references}
+* Thesis Outline Draft                                :noexport:
+** Introduction
+General presentation of the manuscript
+** Context
+*** Observation: Historical Trends in Hardware Design
+*** Consequences for compilers and application developers: Generating optimized code has become increasingly difficult
+*** Autotuning approaches and difficulties
+- Describe existing approaches (opentuner, etc.) and provide examples
+  of autotuning problems with their dimension
+
+All this leads to explain the current state of the technology and
+what is possibly "wrong" with current approaches.
+- Huge dimension and unclear geometry
+- Many black/box search heuristics whose effectiveness is difficult to
+  evaluate/interpret
+** Optimization (in Autotuning context)
+*** Optimization Methods
+**** Methods Based on Derivatives (Local Descent)
+***** Gradient based
+- Classical hypothesis: convex
+- convergence difficulties
+- path of GD on 3 booth versions?
+- mention very high cost of estimating derivatives
+- make hypotheses more clear and explicit
+  - explain why hypothesis are restrictive for autotuning problems
+- Figure with Restarts
+***** Gradient + Hessian based
+- Taylor expansion: Information about derivatives at a point --> (approximation)
+  information about the function around a point
+- hessian definition
+- fast convergence
+  - Example: converging in 1 step for the booth function
+***** This requires too strong hypothesis, hence the needs for more "general" methods
+- high cost of estimating derivatives
+**** Stochastic Methods (Derivative-Free)
+***** Single-State
+- compute neighborhood of x --> perturb x
+  - random walk
+  - greedy random walk
+  - best random walk
+- probability distribution for acceptance
+  - bio-inspired simulated annealing
+***** Population-Based methods
+- GAs
+  - Colors for generations, uniform points
+- PSO
+- +Ant colony?+
+**** Mini-conclusion
+- Most of these methods are not parsimonious. Require many estimates
+  of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
+  worse as they need to explore whereas descent based methods head to
+  the optimum more directly.
+*** Learning: Building a Surrogate
+**** Statistical Learning: Linear Regression
+- the model
+- how to fit
+- "Model quality" +how to check whether the model is correct or not ?+
+- how to interpret the significance (LM-CI, ANOVA). May hint to good
+  values for optimization
+
+Limitation: simple model with shape constraits, cannot "fit"
+everything
+
+***** Fitting the Linear Model to Data
+- [X] paragraph: Computing $\hat{\beta}$: OLS
+- [X] 1/2  paragraph: Projection  matrix of  $\mathbf{y}$, into  column space  of
+  $\mathbf{X}$
+  - Use linear map of columns of $\mathbf{X}$ to describe $\mathbf{y}$
+- [X]  1/2 paragraph: If $\varepsilon$  is normally distributed, equal  to Maximum
+  Likelihood Estimator
+- [X] paragraph: Natural Extension: Transformations of $\mathbf{X}
+  - Basis function sets
+  - Linear terms, quadratic terms, interactions
+- +[ ] Example on "slice" of multidimensional function? (from pres. at Argonne)+
+***** Quality of Fit Metrics
+- [X] 2 paragraphs: Example on Booth's function (3d?)
+- [X] paragraph: MSE
+- [X] paragraph: Train and Test Sets?
+- +[ ] paragraph: Cross Validation?+
+- [X] paragraph: Bias-Variance Trade-Off
+  - number of parameters -> complexity
+  - as we change the training set, for the same point x_0:
+    - bias: distance between \hat{f}(x_0) and f(x_0)
+    - variance: distance between \hat{f}_1(x_0) and \hat{f}_2(x_0)
+  - complexity reduces  bias, but increases variance
+- [ ] paragraph: Model space figure from ESLII?
+- +[ ] paragraph: Information Criteria for Model Assessment+
+  - Mallow's C_p and AIC
+  - BIC?
+***** Interpreting Significance
+- [X] OLS standard deviation and Confidence Intervals
+  - Coefficients as main effects, interactions, ...
+  - p-values: may mislead
+- [-] ANOVA
+  - [X] 1, 2? paragraphs: Rationale
+    - Group observations:
+      - Group by factor levels: One-way
+        - Group by factor levels and factors: Two-way
+    - Compute separate group means:
+      - Partition of the sums of squares
+      - Compute partitioned MSEs
+    - Test the differences between group means:
+      - Using the F-Test
+  - [X] 1 paragraph: Formal Hypotheses
+    - Uncorrelated observations
+    - Normally distributed residuals
+    - Homoscedasticity (identical group variances)
+  - [ ] 1 paragraph: Computing ANOVA
+    - As a special case of the linear model
+      - Group observations by factor levels and factor
+      - Form model matrix with indicator variables for group membership
+        - Add interactions
+      - Assume sums of in-group coefficients are zero
+      - Generate "power set" of all groups of model terms
+      - Compare resulting models with F-tests
+
+**** Gaussian Process
+- Sampling Functions from Multidimensional Gaussian Distributions
+- Nonparametric Modeling with Covariance Kernels
+- Sensitivity Analysis with Sobol Indices
+- Other Nonparametric Methods
+
+- the model
+- how to fit
+- provides mean estimates with confidence estimation
+- how to interpret the significance (sobol indices) but quite costly
+
+**** Mini-Conclusion
+Two big classes of models. Generality vs. interpretability. Yet
+everything we mentioned assumes X is given, sampled from
+observations. In our contects, We can choose which X to test, either
+to test the model, or to improve its quality, or to find a "good"
+value in our space $\mathcal{X}$.
+*** Design of Experiments
+**** 2-level factorial designs
+**** Screening
+Super efficient but very limited
+**** Optimal designs
+A "flexible" screening: allows to include non-linear terms,
+interactions, etc. if needed.
+
+Awesome but if a parameter was not included in the model or if the
+model is too simple (e.g. only comprised a linear term where a
+quadratic one would have been needed, or an important interaction was
+not included), we won't be able to detect it (lack of fit).
+**** Space-filling Designs
+Not very efficient for parameter estimate but good to evaluate the
+lack of fit.
+
+Also good for variance minimization in GP.
+**** Mini-conclusion
+- Designs to obtain good-quality parameter estimates
+  - Screening and D-opt for LM
+  - SFD for GP
+- Designs to test the model quality (lack of fit)
+  - SFD fo LM
+
+If model based, parameter significance and estimation can be used to
+reduce dimension and guide the optimization. With this DoE approach,
+we have a clear separation between the sampling phase and the
+interpretation phase. But what if no parameter really appears
+significant anymore ?
+*** Online Learning: the exploration / exploitation trade-off
+**** Bandits: simple (discrete choice, optimize regret = \sum_t R_t), USB
+**** EI for GP (continuous choice, optimize EI = \max_t R_t)
+Also mention GP-UCB and contrast with EGO. There are also variants for
+Linear Model (LinUCB).
+**** Mini-conclusion
+These methods seamlessly mix exploration and exploitation but the
+overal objective function is generally the regret, which makes sense
+for a self-optimizing system (e.g. facebook) but not in an autotuning
+context (where EI is more meaningful).
+*** Summary and Proposal
+- use glassbox (DoE based) approach to perform the optimization,
+  always try to interpret the results
+- 2 big methods based on different exploration/exploitation strategy:
+  1. Evaluate parameter significance and reduce dimension (two phases,
+     iterative)
+  2. Expected Improvement (first a general exploration phase with a
+     SFD, then seamlessly mix exploration and exploitation)
+  Possibly combinations of both approaches could be used back and
+  forth depending on the specific information we learn on the use
+  case.
+- In this thesis, we evaluate these DoE-based approaches for several
+  autotuning use cases and try to compare them with approaches that
+  had beed previously proposed fot these use cases.
+** Evaluation
+*** Reproducible Research Methodology
+- Tools and such
+- Explain difficulty of finding a needle in a haystack:
+  - how to know whether we found the optimal value ?
+  - how to know how far we are from the optimal value ?
+  - how to know whether there is anything to find ?
+  - how to know whether the geometry hypothesis we make are sound in
+    an unknown space ?
+  - ...
+*** Use Case 1: GPU compiling flags
+- mix binaire/numérique, opentuner (multi-armed to select the right
+  stochastic descent algorithm)
+- Tried to use clustering to identify significant parameters
+- On the interest of using a Screening design.
+  - Once the significant parameters are, they can easily be
+    fixed. Are there the same as the ones found by opentuner.
+*** Use Case 2: Kernel GPU Steven
+- Base strategies (RS, GAs, Local Descent, ...)
+- D-opt based approach \to excellent results
+- GP-EI based approach (TODO)
+*** Use Case 3: SPAPT
+- Base strategies (RS because equivalent to other classical strategies
+  s.a. GAs and others)
+- D-opt based approach \to not really impressive compared to RS but
+  maybe there is nothing to find.
+  - Ability to interpret = unclear. Nothing to see or model too simple ?
+*** Use Case 4: FPGA
+- 100 of numerical parameters
+- several metrics to optimize \to weighted combination
+- OpenTuner with heuristic and bandits gave "good" results
+  (improvement over the default one)
+- +DoE+ because no more access to the code. Ideally GP-EI. But we could
+  see that the OpenTuner exploration makes it very hard to interprete
+  the geometry.
+*** Use Case 5: Bit Quantization in Neural Nets
+- 54 discrete numerical parameters
+- several objective functions
+- RL
+- GP-EI
+** Conclusion and Perspectives
 * Generating Figures                                               :noexport:
 ** Historical Trends
 *** Introduction
@@ -5354,6 +5356,7 @@ plot_df$interaction_prediction = predict(lm(z_noisy ~ x * y +
 model_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
 model_sampled = sample_n(model_df, size = 10)
 
+mean_model = lm(z_noisy ~ 1, data = model_sampled)
 lin_model = lm(z_noisy ~ x + y, data = model_sampled)
 quad_model = lm(z_noisy ~ x + y +
                     I(x ^ 2) +
@@ -5362,25 +5365,31 @@ inter_model = lm(z_noisy ~ x * y +
                      I(x ^ 2) +
                      I(y ^ 2), data = model_sampled)
 
+model_df$mean_prediction = predict(mean_model, model_df)
 model_df$linear_prediction = predict(lin_model, model_df)
 model_df$quadratic_prediction = predict(quad_model, model_df)
 model_df$interaction_prediction = predict(inter_model, model_df)
 
 print("Training MSE")
+print(mean(summary(mean_model)$residuals ^ 2))
 print(mean(summary(lin_model)$residuals ^ 2))
 print(mean(summary(quad_model)$residuals ^ 2))
 print(mean(summary(inter_model)$residuals ^ 2))
 
 print("Test MSE")
+print(mean((model_df$mean_prediction - model_df$z_noisy) ^ 2))
 print(mean((model_df$linear_prediction - model_df$z_noisy) ^ 2))
 print(mean((model_df$quadratic_prediction - model_df$z_noisy) ^ 2))
 print(mean((model_df$interaction_prediction - model_df$z_noisy) ^ 2))
 
 print("True MSE")
+print(mean((model_df$mean_prediction - model_df$z) ^ 2))
 print(mean((model_df$linear_prediction - model_df$z) ^ 2))
 print(mean((model_df$quadratic_prediction - model_df$z) ^ 2))
 print(mean((model_df$interaction_prediction - model_df$z) ^ 2))
 
+print("Adj R2")
+print(summary(mean_model)$adj.r.squared)
 print(summary(lin_model)$adj.r.squared)
 print(summary(quad_model)$adj.r.squared)
 print(summary(inter_model)$adj.r.squared)
@@ -5389,20 +5398,25 @@ print(summary(inter_model)$adj.r.squared)
 #+RESULTS:
 #+begin_example
 [1] "Training MSE"
-[1] 161923.6
-[1] 23798.68
-[1] 60.55198
+[1] 195976.4
+[1] 35683.63
+[1] 16529.28
+[1] 126.1449
 [1] "Test MSE"
-[1] 192522.4
-[1] 344631.6
-[1] 773.7406
+[1] 210773.1
+[1] 203607.6
+[1] 159856.1
+[1] 867.6703
 [1] "True MSE"
-[1] 191847.5
-[1] 343833.3
-[1] 381.1807
-[1] 0.3240868
-[1] 0.860921
-[1] 0.9995577
+[1] 210393.6
+[1] 203146.2
+[1] 159442.2
+[1] 457.4678
+[1] "Adj R2"
+[1] 0
+[1] 0.7658955
+[1] 0.8481822
+[1] 0.9985517
 #+end_example
 
 ***** 3D Noisy
@@ -7417,12 +7431,12 @@ surrogates  we  can  fit  depends  on  each  method's  definition  of  $\Theta$.
 
 In this chapter we assume that  an initial pair of $(\mathbf{X}, \mathbf{y})$ is
 given, and  that we can no  longer observe $f(\mathbf{x})$ for  new $\mathbf{x}$
-outside of $\mathbf{X}$.   In this sense we say  we do not know $f$,  but we can
+outside of  $\mathbf{X}$.  In this sense,  we do not  know $f$ but we  can still
 make hypotheses  about it in  order to construct  surrogate models. For  the two
-methods we  discuss, we will present  the hypotheses embedded in  each parameter
-space $\Theta$, and how each method fits  a surrogate to the available data.  We
-will also discuss strategies to evaluate the  quality of fit of a surrogate, and
-to interpret  parameter significance.
+methods we discuss,  we present the hypotheses embedded in  each parameter space
+$\Theta$ and  how each method fits  a surrogate.  We also  discuss strategies to
+evaluate  the  quality  of  fit  of a  surrogate,  and  to  interpret  parameter
+significance.
 
 We assume  for now  that $\mathbf{X}  \sim \text{Uniform}(\mathcal{X})$,  and we
 discuss how we  can construct better distributions of experiments  over a search
@@ -7512,7 +7526,7 @@ constant  variance  $\sigma^{2}$.    Since  we  assume  in   this  chapter  that
 $\mathbf{X}$  is fixed,  the  variance of  $\hat{\theta}$  shows explicitly  how
 uncertainty  in  measurements  due  to  error propagates  to  the  linear  model
 surrogate, and we  can use this uncertainty to compute  confidence intervals for
-the surrogate's predictions.   Later, we will use the fact  that the variance of
+the  surrogate's  predictions.  We  will  use  the  fact  that the  variance  of
 $\hat{\theta}$ depends  on $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ when  we discuss
 Optimal Design on Section\nbsp{}[[Optimal Design]].
 
@@ -7628,7 +7642,7 @@ distributed measurements of the Booth function
 subject  to  measurement  error  $\varepsilon$.  Panel  (a)  shows  the  surface
 produced  by measuring  $f$ in  its entire  domain. The  10 random  measurements
 composing $\mathbf{X}$ are highlighted. Panels (b),  (c), and (d) show the three
-surrogates, which used basis function sets
+surrogates, which used the basis function sets
 #+begin_export latex
 \begin{align}
   \mathcal{H}_{(b)} &= \{\;h_0(\mathbf{x}) = 1,\;h_1(\mathbf{x}) = x_1,
@@ -7661,29 +7675,14 @@ design  points and  the fitted  model.  In  real applications  we can  sometimes
 compute the  testing error $MSE_{\hat{f}_\theta}$  for the entire  search space,
 but usually we settle for the error on a testing set distinct from $\mathbf{X}$.
 We can almost  never compute the true  error $MSE_{f}$ of our  surrogate, but in
-our toy example we  can use the Booth function without the error  term, to get a
+our toy example  we can use the Booth  function without the error term  to get a
 sense of how well our models generalize.  As we could expect, since the true $f$
 in   our  example   can  be   represented  by   the  basis   functions  on   set
-$\mathcal{H}_{(d)}$  from Equation\nbsp{}\ref{eq:hd},  the surrogate  from panel
-(c)  has the  smallest MSE  and the  best generalization,  although it  is still
-differs from the true $f$.
-
-Figure\nbsp{}[[fig:regression-fitting]]  also  shows  the  adjusted  coefficient  of
-determination
-#+begin_export latex
-\begin{align}
-  \bar{R}^{2}  = 1  - \left(\dfrac{n - 1}{n - p - 1} \cdot
-  \dfrac{\lVert{}\mathbf{y}  - \hat{\mathbf{y}}\rVert{}^{2}}
-      {\lVert{}\mathbf{y} - \bar{\mathbf{y}}\rVert{}^{2}}\right)\text{,}
-\end{align}
-#+end_export
-where $\bar{\mathbf{y}}$ represents the mean  of the observations of experiments
-in $\mathbf{X}$.  The  coefficient compares the squared error of  a given linear
-model with the  error of the model  that predicts the mean  of all observations,
-adjusted by the flexibility introduced by new parameters.
+$\mathcal{H}_{(d)}$, the surrogate  from panel (c) has the smallest  MSE and the
+generalizes the best, although it still differs from the true $f$.
 
 #+NAME: fig:regression-fitting
-#+ATTR_LATEX: :width \textwidth :placement [t]
+#+ATTR_LATEX: :width \textwidth :placement [h!]
 #+CAPTION: Three linear model surrogates for the Booth function, with a
 #+CAPTION: $\color{red}\boldsymbol{\times}$ marking the
 #+CAPTION: global optimum and best surrogate predictions.
@@ -7696,7 +7695,109 @@ adjusted by the flexibility introduced by new parameters.
 #+CAPTION: from Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}, respectively
 [[file:img/booth_3d.pdf]]
 
-**** Interpreting Significance
+#+latex: \clearpage
+
+We can  use the mean  $\bar{\mathbf{y}}$ of  the observations of  experiments in
+$\mathbf{X}$ as a surrogate, for which the MSE is written
+#+begin_export latex
+\begin{align}
+  MSE_{\bar{\mathbf{y}}} &= \dfrac{1}{n}
+  \sum_{i = 1}^{n}{\left(\left(f(\mathbf{x}_i) + \varepsilon\right) -
+    \bar{\mathbf{y}}\right)^2}\text{,} \label{eq:mse-mean}
+\end{align}
+#+end_export
+shown in  panel (a) from Figure\nbsp{}[[fig:regression-fitting]]. We can use
+this surrogate to compute the adjusted coefficient of determination
+#+begin_export latex
+\begin{align}
+  \bar{R}^{2}  = 1  - \left(\dfrac{n - 1}{n - p - 1} \cdot
+  \dfrac{MSE_{\hat{f}_{\theta}(\mathbf{X})}}
+        {MSE_{\bar{\mathbf{y}}}}\right)\text{,}
+\end{align}
+#+end_export
+which compares the squared  error of a given linear model with  the error of the
+model that  predicts the mean of  all observations, adjusted by  the flexibility
+introduced by new parameters.
+
+In general, we can measure the complexity  of a surrogate model by the number of
+parameters that we  need to estimate when fitting it  to experimental data.  The
+bias of a surrogate, for a fixed  point $\mathbf{x}_0$, is the expected value of
+the  distance between  the  surrogate's prediction  and $f(\mathbf{x}_0)$,  over
+surrogate  fits using  a large  number of  different experimental  designs.  The
+squared bias is written
+#+begin_export latex
+\begin{align}
+  \text{Bias}^{2}\left(\hat{f}_{\theta}(\mathbf{x}_0)\right) =
+  \left(E\left[\hat{f}_{\theta}(\mathbf{x}_0)\right] - f(\mathbf{x}_0)\right)^2\text{,}
+\end{align}
+#+end_export
+because $E[f(\mathbf{x}_0)] = f(\mathbf{x}_0)$.   As we increase the flexibility
+of  a  model  by adding  parameters  we  allow  the  surrogate model  to  better
+approximate design  points, reducing its  bias.  Concomitantly, we  increase the
+number of  different parameter vectors  that can describe the  experimental data,
+increasing the surrogate's variance
+#+begin_export latex
+\begin{align}
+  \text{Var}\left(\hat{f}_{\theta}(\mathbf{x}_0)\right) =
+  E\left[\hat{f}_{\theta}(\mathbf{x}_0) - E\left[\hat{f}_{\theta}(\mathbf{x}_0)\right]\right]^{2}\text{.}
+\end{align}
+#+end_export
+The total model  error for the prediction of $\mathbf{x}_0$  still has to factor
+in the irreducible error $\varepsilon$  associated with the measurements of $f$,
+and is written
+#+begin_export latex
+\begin{align}
+  \text{Error}\left(\mathbf{x}_0\right) =
+  \text{Var}(\varepsilon) +
+  \text{Bias}^{2}\left(\hat{f}_{\theta}(\mathbf{x}_0)\right) +
+  \text{Var}\left(\hat{f}_{\theta}(\mathbf{x}_0)\right)\text{.}
+\end{align}
+#+end_export
+Increasing surrogate  complexity reduces bias  but increases variance,  and this
+trade-off is central to selecting and assessing the quality of surrogate models,
+however we define the parameter space $\Theta$.
+
+**** Inference: Interpreting Significance
+The variance of the OLS estimator enables us to compute confidence intervals and
+/p/-values for the effects  of each model term, or factor,  for a single surrogate
+model fit.   In a frequentist interpretation  a 95% confidence interval  for the
+estimate of  a mean  of a factor's  effect is interpreted  as the  interval that
+would contain  95% of our estimates,  were we to repeat  the estimation multiple
+times.  The /p/-value of a factor  effect's estimate is interpreted in frequentist
+inference as the probability of observing a  an effect at least as large as what
+was observed, if  the factor's true effect  is zero. When they  can be computed,
+confidence intervals  are in general more  useful than /p/-values for  judging the
+accuracy of a  factor effect's estimate, because they are  explicitly defined in
+the context of the magnitude of an effect's estimate.
+
+Analysis of Variance (ANOVA) is a more refined statistical tool for significance
+testing, able  to estimate relative factor  significance. The steps of  an ANOVA
+test are  grouping the observations  $\mathbf{y}$ by factors and  factor levels,
+computing separate group means, and  testing the significance of the differences
+between group means with an /F/-test.
+
+The ANOVA test can  be understood as a special case of the  linear model we have
+discussed in this section,  in which case its formal hypotheses  are the same as
+the  linear   model's,  that   is,  that   the  observations   $\mathbf{y}$  are
+uncorrelated, the residuals are normally  distributed, and the variances of each
+group are homoscedastic.
+
+Running an ANOVA test as a special  case of the linear model consists of running
+/F/-tests for  multiple models  $\mathbf{y} = \mathbf{X}_i\theta$,  with specially
+constructed  model  matrices   of  indicator  variables  for   group  and  group
+interaction membership.  A  detailed description of ANOVA in  relation to linear
+models      can      be     found      Chapter      6      of     Dobson      /et
+al./\nbsp{}\cite{dobson2018introduction},       among       other       reference
+texts\nbsp{}\cite{agresti2015foundations,seber2015linear}.
+
+**** Linear Models: Interpretable but Biased Surrogates
+Linear regression can  be successful in learning  and interpreting relationships
+between factors and an objective function $f$.  If the underlying functions have
+complex  structure that  cannot be  sufficiently  well represented  by a  finite
+number of parameters,  linear models might not be useful  beyond identifying the
+strongest factor  effects. The following  section will discuss  Gaussian Process
+Regression,  a  nonparametric approach  that  fits  a  model by  conditioning  a
+probability distribution over functions.
 
 *** Gaussian Process Regression
 *** Summary

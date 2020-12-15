@@ -5803,6 +5803,660 @@ p1 | p2
 
 #+RESULTS:
 [[file:./img/regression_example_full.pdf]]
+*** Gaussian Process Regression
+**** Sampling from Multivariate Normal Distributions
+***** 2-Dimensional Example
+****** Generate Data
+Sampling from  a 2-dimension  normal distribution,  with no  correlation between
+dimensions, that is, identity covariance matrix:
+
+|----+-----+-----|
+|    |  v1 |  v2 |
+|----+-----+-----|
+| v1 | 1.0 | 0.0 |
+| v2 | 0.0 | 1.0 |
+|----+-----+-----|
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(MASS)
+
+n <- 2
+sigma_0 <- data.frame(d1 = c(1, 0), d2 = c(0, 1))
+sigma_1 <- data.frame(d1 = c(1, 0.85), d2 = c(0.85, 1))
+means <- c(0, 0)
+
+sample_size = 1000
+
+mv_sample_0 <- mvrnorm(n = sample_size, means, as.matrix(sigma_0))
+mv_sample_0 <- as.data.frame(mv_sample_0)
+
+mv_sample_1 <- mvrnorm(n = sample_size, means, as.matrix(sigma_1))
+mv_sample_1 <- as.data.frame(mv_sample_1)
+#+end_SRC
+
+#+RESULTS:
+
+****** 2D-uncorrelated plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/2d_gaussian_uncorrelated.pdf" :width 40 :height 20 :eval no-export
+library(ggplot2)
+library(patchwork)
+library(latex2exp)
+library(paletteer)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Gray"
+
+darkest_viridis = paletteer_c(palette = "viridis::viridis",
+                              n = 2)[[1]]
+
+light_gray = "gray65"
+title_size = 38
+
+lims = c(-3.5, 3.5)
+
+plot_margin = margin(t = -0.45,
+                     r = -0.45,
+                     b = -0.45,
+                     l = -0.45,
+                     unit = "cm")
+
+theme_config = theme_bw(base_size = 30) +
+    theme(axis.title.y = element_text(angle = 0,
+                                      margin = margin(t = 0,
+                                                      b = 0,
+                                                      r = 0,
+                                                      l = 0,
+                                                      unit = "cm"),
+                                      vjust = 0.5,
+                                      size = title_size),
+          axis.title.x = element_text(margin = margin(t = 0,
+                                                      b = 0,
+                                                      r = 0,
+                                                      l = 0,
+                                                      unit = "cm"),
+                                      size = title_size),
+          axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          plot.margin = margin(t = -0.45,
+                               r = -0.45,
+                               b = 0.0,
+                               l = 0.0),
+          axis.text.y = element_blank())
+
+p1 = ggplot() +
+    geom_density(data = mv_sample_0,
+                 aes(x = V1),
+                 size = 2,
+                 alpha = 0.7,
+                 color = darkest_viridis) +
+    xlim(lims) +
+    theme_minimal() +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.margin = plot_margin)
+
+p2 = ggplot() +
+    geom_density(data = mv_sample_0,
+                 aes(x = V2),
+                 size = 2,
+                 alpha = 0.8,
+                 color = darkest_viridis) +
+    xlim(lims) +
+    coord_flip() +
+    theme_minimal() +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.margin = plot_margin)
+
+p3 = ggplot() +
+    geom_point(data = mv_sample_0,
+               aes(x = V1,
+                   y = V2),
+               size = 5,
+               #shape = 1,
+               alpha = 0.6,
+               #stroke = 1.5,
+               color = darkest_viridis) +
+    xlim(lims) +
+    ylim(lims) +
+    ylab(TeX("$x_2")) +
+    xlab(TeX("$x_1")) +
+    theme_config
+
+p4 = ggplot(data = data.frame(x = c(0.0),
+                              y = c(0.0)),
+            aes(x = x,
+                y = x)) +
+    theme_minimal() +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.margin = plot_margin)
+
+p1_1 = ggplot() +
+    geom_density(data = mv_sample_1,
+                 aes(x = V1),
+                 size = 2,
+                 alpha = 0.7,
+                 color = darkest_viridis) +
+    xlim(lims) +
+    theme_minimal() +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.margin = plot_margin)
+
+p2_1 = ggplot() +
+    geom_density(data = mv_sample_1,
+                 aes(x = V2),
+                 size = 2,
+                 alpha = 0.8,
+                 color = darkest_viridis) +
+    xlim(lims) +
+    coord_flip() +
+    theme_minimal() +
+    theme(axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          plot.margin = plot_margin)
+
+p3_1 = ggplot() +
+    geom_point(data = mv_sample_1,
+               aes(x = V1,
+                   y = V2),
+               size = 5,
+               alpha = 0.6,
+               color = darkest_viridis) +
+    xlim(lims) +
+    ylim(lims) +
+    ylab(TeX("$x_2")) +
+    xlab(TeX("$x_1")) +
+    theme_config
+((p1 | p4) / (p3 | p2)) |
+    ((p1_1 | p4) / (p3_1 | p2_1))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/2d_gaussian_uncorrelated.pdf]]
+
+***** The Matérn Kernel
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(kergp)
+library(latex2exp)
+
+n = 300
+x0 = 0
+x = seq(from = 0, to = 3, length.out = n)
+
+df = data.frame(x = x,
+                y = as.vector(k1FunMatern5_2(x0,
+                                             x,
+                                             par = c(range = 1,
+                                                     var = 2))),
+                label = c("Matérn 5/2"))
+
+df = bind_rows(df,
+               data.frame(x = x,
+                          y = as.vector(k1FunMatern3_2(x0,
+                                                       x,
+                                                       par = c(range = 1,
+                                                               var = 2))),
+                          label = c("Matérn 3/2")))
+
+df = bind_rows(df,
+               data.frame(x = x,
+                          y = as.vector(k1FunGauss(x0,
+                                                   x,
+                                                   par = c(range = 1,
+                                                           var = 2))),
+                          label = c("Gaussian")))
+
+df = bind_rows(df,
+               data.frame(x = x,
+                          y = 1 + as.vector(k1Fun1Cos(x)),
+                          label = c("Cosine")))
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/radial_basis_kernels.pdf" :width 14 :height 10 :eval no-export
+library(ggplot2)
+
+ggplot() +
+    geom_line(data = df,
+              aes(x = x,
+                  y = y,
+                  color = label),
+              size = 1.7) +
+    scale_color_brewer(palette = "Set1",
+                       labels = unname(TeX(unique(df$label)))) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    theme(axis.title = element_blank(),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank(),
+          legend.position = c(0.87, 0.9),
+          legend.title = element_blank(),
+          legend.background = element_blank())
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/radial_basis_kernels.pdf]]
+***** 50-Dimensional Example
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(kergp)
+library(dplyr)
+library(tidyr)
+library(latex2exp)
+library(MASS)
+
+n = 50
+x = seq(from = 0, to = 3, length.out = n)
+means = rep(0, n)
+
+sigma_0 = k1FunMatern5_2(x, x, par = c(range = 1, var = 1))
+sample_size = 100
+
+obs_1 = data.frame(x_obs = c(1.5), y_obs = c(-1.0))
+
+sigma_1_2 = k1FunMatern5_2(x, obs_1$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_1$x_obs, obs_1$x_obs, par = c(range = 1, var = 1))
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_1 = as.vector(sigma_1_2 %*% solve(sigma_2_2) * obs_1$y_obs)
+sigma_1 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+obs_2 = data.frame(x_obs = c(0.3, 1.5, 2),
+                   y_obs = c(-0.45, -1.0, -0.4))
+
+sigma_1_2 = k1FunMatern5_2(x, obs_2$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_2$x_obs, obs_2$x_obs, par = c(range = 1, var = 1))
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_2 = as.vector(sigma_1_2 %*% solve(sigma_2_2) %*% obs_2$y_obs)
+sigma_2 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+mv_sample_0 = ys %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_1 = data.frame(t(mvrnorm(n = sample_size, means_1, sigma_1))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_mv_samples.pdf" :width 30 :height 10 :eval no-export
+library(ggplot2)
+library(paletteer)
+library(latex2exp)
+library(patchwork)
+
+p_limits = c(-4, 4)
+p_palette = "palettesForR::Topographic"
+s_size = 6
+
+p1 = ggplot() +
+    geom_line(data = mv_sample_0,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p2 = ggplot() +
+    geom_line(data = mv_sample_1,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_1,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "red",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{x}_1, y_1)$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p3 = ggplot() +
+    geom_line(data = mv_sample_2,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_2,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "red",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{X}, \\mathbf{y})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p1 | p2 | p3
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/matern52_50d_mv_samples.pdf]]
+
+***** Fitting Data
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(kergp)
+library(dplyr)
+library(tidyr)
+library(latex2exp)
+library(MASS)
+
+n = 50
+x = seq(from = 0, to = 3, length.out = n)
+means = rep(0, n)
+
+sigma_0 = k1FunMatern5_2(x, x, par = c(range = 1, var = 1))
+sample_size = 100
+
+obs_1 = data.frame(x_obs = c(1.5), y_obs = c(-1.0))
+
+sigma_1_2 = k1FunMatern5_2(x, obs_1$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_1$x_obs, obs_1$x_obs, par = c(range = 1, var = 1))
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_1 = as.vector(sigma_1_2 %*% solve(sigma_2_2) * obs_1$y_obs)
+sigma_1 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+obs_2 = data.frame(x_obs = c(0.3, 1.5, 2),
+                   y_obs = c(-0.45, -1.0, -0.4))
+
+sigma_1_2 = k1FunMatern5_2(x, obs_2$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_2$x_obs, obs_2$x_obs, par = c(range = 1, var = 1))
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_2 = as.vector(sigma_1_2 %*% solve(sigma_2_2) %*% obs_2$y_obs)
+sigma_2 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+mv_sample_0 = ys %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_1 = data.frame(t(mvrnorm(n = sample_size, means_1, sigma_1))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_fitting.pdf" :width 30 :height 10 :eval no-export
+library(ggplot2)
+library(paletteer)
+library(latex2exp)
+library(patchwork)
+
+p_limits = c(-4, 4)
+p_palette = "palettesForR::Topographic"
+s_size = 6
+
+p1 = ggplot() +
+    geom_line(data = mv_sample_0,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p2 = ggplot() +
+    geom_line(data = mv_sample_1,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_1,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "red",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{x}_1, y_1)$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p3 = ggplot() +
+    geom_line(data = mv_sample_2,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_2,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "red",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{X}, \\mathbf{y})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p1 | p2 | p3
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/matern52_50d_fitting.pdf]]
+
+***** Old
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(latex2exp)
+library(MASS)
+
+n <- 10
+sigma <- data.frame(diag(10))
+names(sigma) <- paste("d", seq(1, n), sep = "")
+
+means <- rep(0, n)
+
+mv_sample <- mvrnorm(n = 300, means, as.matrix(sigma))
+mv_sample <- as.data.frame(mv_sample)
+
+names(mv_sample) <- paste("d", seq(1, n), sep = "")
+#+end_SRC
+
+#+RESULTS:
+
+#+begin_SRC R :results graphics output :session *R* :file (org-babel-temp-file "figure" ".png") :width 800 :height 720 :eval no-export
+library(ggplot2)
+library(GGally)
+
+ggpairs(mv_sample) +
+  theme_bw(base_size = 22)
+#+end_SRC
+
+#+RESULTS:
+[[file:/tmp/babel-oICNIQ/figurec4TROr.png]]
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(latex2exp)
+library(MASS)
+
+n <- 10
+sigma <- data.frame(diag(10))
+names(sigma) <- paste("d", seq(1, n), sep = "")
+
+means <- rep(0, n)
+
+mv_sample <- mvrnorm(n = 1000, means, as.matrix(sigma))
+mv_sample <- as.data.frame(mv_sample)
+
+names(mv_sample) <- paste("d", seq(1, n), sep = "")
+#+end_SRC
+
+#+RESULTS:
+
+#+begin_SRC R :results graphics output :session *R* :file (org-babel-temp-file "figure" ".png") :width 800 :height 720 :eval no-export
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(latex2exp)
+
+plot_data <- mv_sample
+sampled_function <- sample_n(plot_data, 1)
+
+plot_data <- plot_data %>%
+  gather("x", "f_x") %>%
+  mutate(x = ordered(x, levels = names(mv_sample)))
+
+sampled_function <- sampled_function %>%
+  gather("x", "f_x") %>%
+  mutate(x = ordered(x, levels = names(mv_sample)))
+
+ggplot(plot_data, aes(x = x, y = f_x)) +
+  geom_jitter(color = "gray48", size = 3, width = 0.25, alpha = 0.2) +
+  geom_point(data = sampled_function,
+             aes(color = "Sample of Multivariate Normal"),
+             size = 4) +
+  geom_line(data = sampled_function,
+            color = "red",
+            size = 1,
+            alpha = 0.3) +
+  ylab(TeX("Sampled Values")) +
+  xlab(TeX("Dimensions")) +
+  scale_fill_manual("", values = "gray48") +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw(base_size = 26) +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent"),
+        legend.position = c(0.24, 0.06))
+
+#+end_SRC
+
+#+RESULTS:
+[[file:/tmp/babel-oICNIQ/figureNntbaA.png]]
+
+#+begin_SRC R :results graphics output :session *R* :file (org-babel-temp-file "figure" ".png") :width 800 :height 720 :eval no-export
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(latex2exp)
+
+n <- 10
+
+plot_data <- mv_sample
+names(plot_data) <- seq(1, n)
+
+sampled_function <- sample_n(plot_data, 1)
+
+plot_data <- plot_data %>%
+  gather("x", "f_x") %>%
+  mutate(x = as.numeric(x))
+
+sampled_function <- sampled_function %>%
+  gather("x", "f_x") %>%
+  mutate(x = as.numeric(x))
+
+ggplot(plot_data, aes(x = x, y = f_x)) +
+  geom_jitter(color = "gray48", size = 3, width = 0.25, alpha = 0.2) +
+  geom_point(data = sampled_function,
+             aes(color = "Sampled Function"),
+             size = 4) +
+  geom_line(data = sampled_function,
+            color = "red",
+            size = 1,
+            alpha = 0.3) +
+  ylab(TeX("Samples of $(d_1,\\ldots,d_{10})$ interpreted as $f(x \\in \\lbrack 1,10 \\rbrack)$")) +
+  xlab(TeX("$(d_1,\\ldots,d_{10})$ interpreted as discrete $x \\in \\lbrack 1,10 \\rbrack$")) +
+  scale_x_discrete(limits = seq(1, 10)) +
+  scale_fill_manual("", values = "gray48") +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw(base_size = 26) +
+  theme(legend.title = element_blank(),
+        legend.background = element_rect(fill = "transparent"),
+        legend.position = c(0.2, 0.06))
+
+#+end_SRC
+
+#+RESULTS:
+[[file:/tmp/babel-oICNIQ/figure128cP4.png]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -7757,7 +8411,7 @@ Increasing surrogate  complexity reduces bias  but increases variance,  and this
 trade-off is central to selecting and assessing the quality of surrogate models,
 however we define the parameter space $\Theta$.
 
-**** Inference: Interpreting Significance
+**** Inference: Interpreting Significance with ANOVA
 The variance of the OLS estimator enables us to compute confidence intervals and
 /p/-values for the effects  of each model term, or factor,  for a single surrogate
 model fit.   In a frequentist interpretation  a 95% confidence interval  for the
@@ -7800,6 +8454,25 @@ Regression,  a  nonparametric approach  that  fits  a  model by  conditioning  a
 probability distribution over functions.
 
 *** Gaussian Process Regression
+#+NAME: fig:2d-gaussian
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/2d_gaussian_annotated.pdf]]
+
+#+NAME: fig:radial-basis-kernels
+#+ATTR_LATEX: :width 0.5\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/radial_basis_kernels.pdf]]
+
+#+NAME: fig:matern52-50d-fitting
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/matern52_50d_fitting.pdf]]
+
+**** Fitting the Model: Posterior Distributions over Functions
+**** Assessing Quality of Fit
+**** Inference: Interpreting Significance with Sobol Indices
+**** Gaussian Processes: Flexible but Hard to Interpret Surrogates
 *** Summary
 ** Design of Experiments
 *** Introduction

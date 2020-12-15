@@ -6062,7 +6062,7 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/radial_basis_kernels.pdf]]
-***** 50-Dimensional Example
+***** Larger Dimensional Example: Change of Perspective
 ****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
@@ -6071,129 +6071,123 @@ library(tidyr)
 library(latex2exp)
 library(MASS)
 
-n = 50
+n = 20
 x = seq(from = 0, to = 3, length.out = n)
 means = rep(0, n)
 
 sigma_0 = k1FunMatern5_2(x, x, par = c(range = 1, var = 1))
 sample_size = 100
 
-obs_1 = data.frame(x_obs = c(1.5), y_obs = c(-1.0))
-
-sigma_1_2 = k1FunMatern5_2(x, obs_1$x_obs, par = c(range = 1, var = 1))
-sigma_2_1 = t(sigma_1_2)
-sigma_2_2 = k1FunMatern5_2(obs_1$x_obs, obs_1$x_obs, par = c(range = 1, var = 1))
-
 ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
 
-means_1 = as.vector(sigma_1_2 %*% solve(sigma_2_2) * obs_1$y_obs)
-sigma_1 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
-
-obs_2 = data.frame(x_obs = c(0.3, 1.5, 2),
-                   y_obs = c(-0.45, -1.0, -0.4))
-
-sigma_1_2 = k1FunMatern5_2(x, obs_2$x_obs, par = c(range = 1, var = 1))
-sigma_2_1 = t(sigma_1_2)
-sigma_2_2 = k1FunMatern5_2(obs_2$x_obs, obs_2$x_obs, par = c(range = 1, var = 1))
-
-ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
-
-means_2 = as.vector(sigma_1_2 %*% solve(sigma_2_2) %*% obs_2$y_obs)
-sigma_2 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
-
-mv_sample_0 = ys %>%
-    mutate(x = x) %>%
-    pivot_longer(-x, names_to = "sample", values_to = "value")
-
-mv_sample_1 = data.frame(t(mvrnorm(n = sample_size, means_1, sigma_1))) %>%
-    mutate(x = x) %>%
-    pivot_longer(-x, names_to = "sample", values_to = "value")
-
-mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
+mv_sample_3 = ys %>%
     mutate(x = x) %>%
     pivot_longer(-x, names_to = "sample", values_to = "value")
 #+end_SRC
 
 #+RESULTS:
 ****** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_mv_samples.pdf" :width 30 :height 10 :eval no-export
+#+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_mv_samples.pdf" :width 20 :height 10 :eval no-export
 library(ggplot2)
 library(paletteer)
 library(latex2exp)
 library(patchwork)
 
 p_limits = c(-4, 4)
-p_palette = "palettesForR::Topographic"
+p_palette = "khroma::stratigraphy"
 s_size = 6
 
+colors = paletteer_d(palette = p_palette, n = 175)
+point_color = colors[length(colors) / 2]
+
+plot_df = mv_sample_3 %>%
+    group_by(x) %>%
+    mutate(y_mean = mean(value),
+           y_95ci = (1.96 * sd(value)) / sqrt(n())) %>%
+    ungroup()
+
+sample_select = "X1"
+
 p1 = ggplot() +
-    geom_line(data = mv_sample_0,
+    geom_jitter(data = mv_sample_3,
+               aes(x = x,
+                   y = value),
+               height = 0.0,
+               width = 0.03,
+               color = "gray55",
+               alpha = 0.6,
+               size = 3) +
+    geom_point(data = plot_df %>% filter(sample == sample_select),
               aes(x = x,
-                  y = value,
-                  color = sample),
-              show.legend = FALSE,
-              size = 1.7) +
+                  y = value),
+              color = point_color,
+              size = 5.5) +
+    # geom_point(data = plot_df,
+    #            aes(x = x,
+    #                y = y_mean),
+    #            color = "black",
+    #            stat = "unique",
+    #            show.legend = FALSE,
+    #            size = 4) +
+    # geom_errorbar(data = plot_df,
+    #               aes(x = x,
+    #                   ymin = y_mean - y_95ci,
+    #                   ymax = y_mean + y_95ci),
+    #               color = "black",
+    #               stat = "unique",
+    #               show.legend = FALSE) +
     scale_color_paletteer_d(palette = p_palette) +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
     theme_bw(base_size = 35) +
-    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$")) +
-    xlab(TeX("$\\mathbf{x}$")) +
+    ylab(TeX("Sampled Values")) +
+    xlab(TeX("Dimensions $d_{1},\\ldots,d_{20}$")) +
     theme(axis.ticks = element_blank(),
           axis.text = element_blank(),
           panel.grid = element_blank())
 
 p2 = ggplot() +
-    geom_line(data = mv_sample_1,
+    geom_jitter(data = mv_sample_3,
+               aes(x = x,
+                   y = value),
+               height = 0.0,
+               width = 0.03,
+               color = "gray55",
+               alpha = 0.6,
+               show.legend = FALSE,
+               size = 3) +
+    geom_point(data = plot_df %>% filter(sample == sample_select),
               aes(x = x,
-                  y = value,
-                  color = sample),
+                  y = value),
+              color = point_color,
+              show.legend = FALSE,
+              size = 5.5) +
+    geom_line(data = plot_df %>% filter(sample == sample_select),
+              aes(x = x,
+                  y = value),
+              color = point_color,
               show.legend = FALSE,
               size = 1.7) +
-    geom_point(data = obs_1,
-                aes(x = x_obs,
-                    y = y_obs),
-                color = "red",
-                size = s_size) +
     scale_color_paletteer_d(palette = p_palette) +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
     theme_bw(base_size = 35) +
-    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{x}_1, y_1)$")) +
-    xlab(TeX("$\\mathbf{x}$")) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x}_{1},\\ldots,\\mathbf{x}_{20})$")) +
+    xlab(TeX(paste("$d_1,\\ldots,d_{20}$ ",
+                   "interpreted as ",
+                   "$\\mathbf{x}_{1},\\ldots,\\mathbf{x}_{20}$",
+                   sep = ""))) +
     theme(axis.ticks = element_blank(),
           axis.text = element_blank(),
           panel.grid = element_blank())
 
-p3 = ggplot() +
-    geom_line(data = mv_sample_2,
-              aes(x = x,
-                  y = value,
-                  color = sample),
-              show.legend = FALSE,
-              size = 1.7) +
-    geom_point(data = obs_2,
-                aes(x = x_obs,
-                    y = y_obs),
-                color = "red",
-                size = s_size) +
-    scale_color_paletteer_d(palette = p_palette) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
-    theme_bw(base_size = 35) +
-    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{X}, \\mathbf{y})$")) +
-    xlab(TeX("$\\mathbf{x}$")) +
-    theme(axis.ticks = element_blank(),
-          axis.text = element_blank(),
-          panel.grid = element_blank())
-
-p1 | p2 | p3
+p1 | p2
 #+end_SRC
 
 #+RESULTS:
 [[file:./img/matern52_50d_mv_samples.pdf]]
 
-***** Fitting Data
+***** Fitting Data & Change of Perspective
 ****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
@@ -6246,7 +6240,7 @@ mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
 #+end_SRC
 
 #+RESULTS:
-****** Plot
+****** Fitting Data
 #+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_fitting.pdf" :width 30 :height 10 :eval no-export
 library(ggplot2)
 library(paletteer)
@@ -6254,7 +6248,7 @@ library(latex2exp)
 library(patchwork)
 
 p_limits = c(-4, 4)
-p_palette = "palettesForR::Topographic"
+p_palette = "khroma::stratigraphy"
 s_size = 6
 
 p1 = ggplot() +
@@ -8463,6 +8457,11 @@ probability distribution over functions.
 #+ATTR_LATEX: :width 0.5\textwidth :placement [t]
 #+CAPTION: Test
 [[file:img/radial_basis_kernels.pdf]]
+
+#+NAME: fig:matern52-50d-mv-samples
+#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/matern52_50d_mv_samples.pdf]]
 
 #+NAME: fig:matern52-50d-fitting
 #+ATTR_LATEX: :width \textwidth :placement [t]

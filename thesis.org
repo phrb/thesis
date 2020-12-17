@@ -6164,6 +6164,9 @@ library(patchwork)
 p_limits = c(-4, 4)
 p_palette = "khroma::stratigraphy"
 s_size = 6
+point_size = 5
+leg_size = 34
+point_alpha = 0.45
 
 colors = paletteer_d(palette = p_palette, n = 175)
 point_color = colors[length(colors) / 2]
@@ -6183,13 +6186,13 @@ p1 = ggplot() +
                height = 0.0,
                width = 0.03,
                color = "gray55",
-               alpha = 0.6,
-               size = 3) +
+               alpha = point_alpha,
+               size = point_size) +
     geom_point(data = plot_df %>% filter(sample == sample_select),
               aes(x = x,
-                  y = value),
-              color = point_color,
-              size = 5.5) +
+                  y = value,
+                  color = sample),
+              size = s_size) +
     # geom_point(data = plot_df,
     #            aes(x = x,
     #                y = y_mean),
@@ -6204,7 +6207,10 @@ p1 = ggplot() +
     #               color = "black",
     #               stat = "unique",
     #               show.legend = FALSE) +
-    scale_color_paletteer_d(palette = p_palette) +
+    scale_color_manual(labels = c(unname(TeX(paste("Single sample of ",
+                                                   "$N(\\mu,\\Sigma)$",
+                                                   sep = "")))),
+                       values = c(point_color)) +
     scale_x_continuous(expand = c(0.025, 0.025)) +
     #scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
     theme_bw(base_size = 35) +
@@ -6212,6 +6218,10 @@ p1 = ggplot() +
     xlab(TeX("Dimensions $d_{1},\\ldots,d_{20}$")) +
     theme(axis.ticks = element_blank(),
           axis.text = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size = leg_size),
+          legend.background = element_blank(),
+          legend.position = c(0.35, 0.051),
           panel.grid = element_blank())
 
 p2 = ggplot() +
@@ -6221,33 +6231,46 @@ p2 = ggplot() +
                height = 0.0,
                width = 0.03,
                color = "gray55",
-               alpha = 0.6,
+               alpha = point_alpha,
                show.legend = FALSE,
-               size = 3) +
-    geom_point(data = plot_df %>% filter(sample == sample_select),
+               size = point_size) +
+    geom_point(data = plot_df %>%
+                   filter(sample == sample_select),
               aes(x = x,
-                  y = value),
-              color = point_color,
-              show.legend = FALSE,
-              size = 5.5) +
-    geom_line(data = plot_df %>% filter(sample == sample_select),
+                  y = value,
+                  color = sample),
+              size = s_size) +
+    geom_line(data = plot_df %>%
+                  filter(sample == sample_select),
               aes(x = x,
                   y = value),
               color = point_color,
               show.legend = FALSE,
               size = 1.7) +
-    scale_color_paletteer_d(palette = p_palette) +
+    scale_color_manual(labels = unname(TeX(paste("Single sample of ",
+                                                   "$\\hat{f}_{\\theta}(",
+                                                   "\\mathbf{x}_1,\\ldots,",
+                                                   "\\mathbf{x}_{20})$",
+                                                   sep = ""))),
+                       values = c(point_color)) +
     scale_x_continuous(expand = c(0.025, 0.025)) +
-    #scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
     theme_bw(base_size = 35) +
-    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x}_{1},\\ldots,\\mathbf{x}_{20})$")) +
+    ylab(TeX("$\\hat{f}_{\\theta}$")) +
     xlab(TeX(paste("$d_1,\\ldots,d_{20}$ ",
                    "interpreted as ",
                    "$\\mathbf{x}_{1},\\ldots,\\mathbf{x}_{20}$",
                    sep = ""))) +
     theme(axis.ticks = element_blank(),
           axis.text = element_blank(),
-          panel.grid = element_blank())
+          axis.title.y = element_text(angle = 0,
+                                      vjust = 0.5),
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          legend.key = element_blank(),
+          legend.position = c(0.42, 0.051),
+          legend.text = element_text(size = leg_size),
+          panel.grid = element_blank()) +
+    guides(color = guide_legend(label.vjust = 1.7))
 
 p1 | p2
 #+end_SRC
@@ -6255,7 +6278,7 @@ p1 | p2
 #+RESULTS:
 [[file:./img/matern52_50d_mv_samples.pdf]]
 
-***** Fitting Data & Change of Perspective
+***** Fitting Noiseless Data
 ****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
@@ -6268,14 +6291,19 @@ n = 50
 x = seq(from = 0, to = 3, length.out = n)
 means = rep(0, n)
 
+
 sigma_0 = k1FunMatern5_2(x, x, par = c(range = 1, var = 1))
-sample_size = 100
+sample_size = 300
 
 obs_1 = data.frame(x_obs = c(1.5), y_obs = c(-1.0))
+noise = 0.00
 
 sigma_1_2 = k1FunMatern5_2(x, obs_1$x_obs, par = c(range = 1, var = 1))
 sigma_2_1 = t(sigma_1_2)
-sigma_2_2 = k1FunMatern5_2(obs_1$x_obs, obs_1$x_obs, par = c(range = 1, var = 1))
+sigma_2_2 = k1FunMatern5_2(obs_1$x_obs,
+                           obs_1$x_obs,
+                           par = c(range = 1,
+                                   var = 1)) + noise
 
 ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
 
@@ -6284,10 +6312,14 @@ sigma_1 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
 
 obs_2 = data.frame(x_obs = c(0.3, 1.5, 2),
                    y_obs = c(-0.45, -1.0, -0.4))
+noise = noise * diag(3)
 
 sigma_1_2 = k1FunMatern5_2(x, obs_2$x_obs, par = c(range = 1, var = 1))
 sigma_2_1 = t(sigma_1_2)
-sigma_2_2 = k1FunMatern5_2(obs_2$x_obs, obs_2$x_obs, par = c(range = 1, var = 1))
+sigma_2_2 = k1FunMatern5_2(obs_2$x_obs,
+                           obs_2$x_obs,
+                           par = c(range = 1,
+                                   var = 1)) + noise
 
 ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
 
@@ -6315,9 +6347,9 @@ library(paletteer)
 library(latex2exp)
 library(patchwork)
 
-p_limits = c(-4, 4)
+p_limits = c(-3.4, 3.4)
 p_palette = "khroma::stratigraphy"
-s_size = 6
+s_size = 5
 
 p1 = ggplot() +
     geom_line(data = mv_sample_0,
@@ -6346,7 +6378,7 @@ p2 = ggplot() +
     geom_point(data = obs_1,
                 aes(x = x_obs,
                     y = y_obs),
-                color = "red",
+                color = "black",
                 size = s_size) +
     scale_color_paletteer_d(palette = p_palette) +
     scale_x_continuous(expand = c(0, 0)) +
@@ -6368,7 +6400,7 @@ p3 = ggplot() +
     geom_point(data = obs_2,
                 aes(x = x_obs,
                     y = y_obs),
-                color = "red",
+                color = "black",
                 size = s_size) +
     scale_color_paletteer_d(palette = p_palette) +
     scale_x_continuous(expand = c(0, 0)) +
@@ -6385,7 +6417,145 @@ p1 | p2 | p3
 
 #+RESULTS:
 [[file:./img/matern52_50d_fitting.pdf]]
+***** Fitting Noisy Data
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(kergp)
+library(dplyr)
+library(tidyr)
+library(latex2exp)
+library(MASS)
 
+n = 50
+x = seq(from = 0, to = 3, length.out = n)
+means = rep(0, n)
+
+
+sigma_0 = k1FunMatern5_2(x, x, par = c(range = 1, var = 1))
+sample_size = 300
+
+obs_1 = data.frame(x_obs = c(1.5), y_obs = c(-1.0))
+noise = 0.008
+
+sigma_1_2 = k1FunMatern5_2(x, obs_1$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_1$x_obs,
+                           obs_1$x_obs,
+                           par = c(range = 1,
+                                   var = 1)) + noise
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_1 = as.vector(sigma_1_2 %*% solve(sigma_2_2) * obs_1$y_obs)
+sigma_1 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+obs_2 = data.frame(x_obs = c(0.3, 1.5, 2),
+                   y_obs = c(-0.45, -1.0, -0.4))
+noise = noise * diag(3)
+
+sigma_1_2 = k1FunMatern5_2(x, obs_2$x_obs, par = c(range = 1, var = 1))
+sigma_2_1 = t(sigma_1_2)
+sigma_2_2 = k1FunMatern5_2(obs_2$x_obs,
+                           obs_2$x_obs,
+                           par = c(range = 1,
+                                   var = 1)) + noise
+
+ys = data.frame(t(mvrnorm(n = sample_size, means, sigma_0)))
+
+means_2 = as.vector(sigma_1_2 %*% solve(sigma_2_2) %*% obs_2$y_obs)
+sigma_2 = sigma_0 - (sigma_1_2 %*% solve(sigma_2_2) %*% sigma_2_1)
+
+mv_sample_0 = ys %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_1 = data.frame(t(mvrnorm(n = sample_size, means_1, sigma_1))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+
+mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
+    mutate(x = x) %>%
+    pivot_longer(-x, names_to = "sample", values_to = "value")
+#+end_SRC
+
+#+RESULTS:
+****** Fitting Data
+#+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_fitting_noisy.pdf" :width 30 :height 10 :eval no-export
+library(ggplot2)
+library(paletteer)
+library(latex2exp)
+library(patchwork)
+
+p_limits = c(-3.4, 3.4)
+p_palette = "khroma::stratigraphy"
+s_size = 5
+
+p1 = ggplot() +
+    geom_line(data = mv_sample_0,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p2 = ggplot() +
+    geom_line(data = mv_sample_1,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_1,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "black",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{x}_1, y_1)$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p3 = ggplot() +
+    geom_line(data = mv_sample_2,
+              aes(x = x,
+                  y = value,
+                  color = sample),
+              show.legend = FALSE,
+              size = 1.7) +
+    geom_point(data = obs_2,
+                aes(x = x_obs,
+                    y = y_obs),
+                color = "black",
+                size = s_size) +
+    scale_color_paletteer_d(palette = p_palette) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(limits = p_limits, expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 35) +
+    ylab(TeX("$\\hat{f}_{\\theta}(\\mathbf{x})$ $|$ $(\\mathbf{X}, \\mathbf{y})$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+
+p1 | p2 | p3
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/matern52_50d_fitting_noisy.pdf]]
 ***** Old
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
@@ -8516,25 +8686,53 @@ Regression,  a  nonparametric approach  that  fits  a  model by  conditioning  a
 probability distribution over functions.
 
 *** Gaussian Process Regression
-Similarly to  the surrogate model  we built using linear  models, we will  fit a
-surrogate  $\hat{f}_{\theta}:   \mathcal{X}  \mapsto  \mathbb{R}$  to   a  fixed
-experimental design $\mathbf{X}$ and  observations $\mathbf{y}$. In this section
-we make the hypothesis that $f$ is a Gaussian Process, that is, that $f$ belongs
-to the class of  models containing all the functions whose values  on any set of
-experiments $\mathbf{X}$ can be represented by a single sample of a multivariate
-normal  distribution   with  dimension  $d  =   \vert{}\mathbf{X}\vert{}$.   Our
-hypothesis over $f$ can be written as the prior probability distribution
+Similarly to the  surrogate model we built using linear  models, in this section
+we will fit a surrogate  $\hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}$ to a
+fixed experimental design $\mathbf{X}$,  with observations $\mathbf{y}$. We make
+the hypothesis that the observations $y_1, \dots, y_n$ are normally distributed.
+This is  a reasonable  hypothesis to  make, especially  after our  discussion on
+linear models, where our hypothesis over $f$ was
 #+begin_export latex
 \begin{align}
-  f(\mathbf{X}) \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})\text{,}
+  f(\mathbf{X}) = \mathbf{X}\theta + \varepsilon\text{,}
 \end{align}
 #+end_export
-where the  mean vector $\boldsymbol{\mu}$ is  usually a vector of  $d$ zeros and
-the  covariance  matrix  $\boldsymbol{\Sigma}$   depends  on  $\mathbf{X}$.
+with $\varepsilon \sim \mathcal{N}(0,\sigma^{2})$, which makes $f(\mathbf{X})$ a
+multivariate random variable, written
+#+begin_export latex
+\begin{align}
+  \label{eq:lin-mod-prob}
+  f(\mathbf{X}) \sim \mathcal{N}(\mathbf{X}\theta,
+  \sigma^{2}\text{\textbf{I}})\text{.}
+\end{align}
+#+end_export
+
+Another way to  state this key idea is  to say that we make  the hypothesis that
+$f$ is a Gaussian Process (GP), that is,  that it belongs to the class of models
+containing all the functions whose values on any set of experiments $\mathbf{X}$
+can be  represented by a  single sample  of a multivariate  normal distribution,
+with dimension $n = \vert{}\mathbf{X}\vert{}$.   We can write this hypothesis as
+a prior probability distribution
+#+begin_export latex
+\begin{align}
+  f(\mathbf{X}) = [y_1\;\dots\;y_n]^{\top} \sim
+  \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})\text{,}
+\end{align}
+#+end_export
+where the  mean vector $\boldsymbol{\mu}$ is  usually a vector of  $n$ zeros and
+the covariance matrix $\boldsymbol{\Sigma}$ depends on $\mathbf{X}$.
+
+This   prior   is  more   general   than   the   linear  model   hypothesis   in
+Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  much  further.   In
+Chapter       /6/       of        /Gaussian       Processes       for       Machine
+Learning/\nbsp{}\cite{williams2006gaussian},    Rasmussen   /et.     al/   describe
+relationships and equivalences of GPs to  other methods such as Splines, Support
+Vector  Machines, and  Ordinary Least  Squares.  They  also describe  how Neural
+Networks can be represented by specific GPs in Section /4.2.3/.
 
 In contrast to the linear model discussed in the previous section, the parameter
-space $\Theta$  for Gaussian Processes depends  on the size of  the experimental
-design, and  changes as  we increase  the data  we collect.  For a  given design
+space  $\Theta$ for  GPs depends  on the  size of  the experimental  design, and
+increases  as  more  training  data  becomes  available.   For  a  given  design
 $\mathbf{X}$, the parameter space is
 #+begin_export latex
 \begin{align}
@@ -8545,20 +8743,24 @@ $\mathbf{X}$, the parameter space is
   \mathbb{R}^{\vert{}\mathbf{X}\vert{} \times{}\vert{}\mathbf{X}\vert{}}\;\right\}\text{.}
 \end{align}
 #+end_export
-Note that  only the mean vector  depends on the observations  $\mathbf{y}$.  The
-surrogate model is  a posterior multivariate normal  distribution conditioned by
-the observed data, written
+Note that  the mean vector depends  on the observations $\mathbf{y}$,  while the
+covariance matrix depends only on $\mathbf{X}$.  In a multivariate Gaussian, the
+diagonal of  the covariance  matrix contains the  variances associated  with its
+dimensions, and the off-diagonal elements  contain the covariances between pairs
+of  dimensions.    Figure\nbsp{}[[fig:2d-gaussian]]  shows   the  impact   of  three
+covariance matrices, which must always be symmetric and positive semi-definite.
+
+The  a  posterior  distribution  representing  our surrogate  model  is  also  a
+multivariate normal,  but it  now is  conditioned by the  observed data,  and is
+written
 #+begin_export latex
 \begin{align}
   \hat{f}_{\theta}(\mathbf{X}) \sim f(\mathbf{X}) \; \vert{} \; \mathbf{X}, \mathbf{y}\text{.}
 \end{align}
 #+end_export
-
-As  we perform  experiments the  length of  the parameter  vector $\theta$  of a
-surrogate model $\hat{f}_{\theta}$  increases, and it would  require an infinite
-parameter vector  to fit  a Gaussian Process  for all points  in a  search space
-$\mathcal{X}$  consisting of  a single  real  number.  In  this sense,  Gaussian
-Process Regression is a nonparametric method.
+It would require an infinite parameter vector  to fit a Gaussian Process for all
+points in a  search space $\mathcal{X}$ consisting of a  single real number.  In
+this sense, Gaussian Process Regression is a nonparametric method.
 
 #+NAME: fig:2d-gaussian
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -8568,28 +8770,24 @@ Process Regression is a nonparametric method.
 #+CAPTION: shown on the upper right corner of plot
 [[file:img/2d_gaussian_uncorrelated_annotated.pdf]]
 
-A perhaps useful intuitive  understanding of a Gaussian Process is  that it is a
+It can  help to build an  intuitive understanding of GPs  to think of them  as a
 reinterpretation  of  the  dimensions  of  a sample  of  a  multivariate  normal
-distribution. In  a multivariate Gaussian,  the diagonal of a  covariance matrix
-contains  the variances  associated with  each dimension,  and the  off-diagonal
-elements   contain   the   covariances   between  each   pair   of   dimensions.
-Figure\nbsp{}[[fig:2d-gaussian]]  shows the  impact  of  three covariance  matrices,
-which must be symmetric and positive semi-definite.  If we take 100 samples of a
-20-dimension Gaussian  and "unroll" each dimension  in a single axis,  we end up
-with the left panel of Figure\nbsp{}[[fig:matern52-50d-mv-samples]].  Each column of
-points  contains the  100 values  on  each dimension  of our  samples, and  each
-dimension is correlated  according to the distribution's  covariance matrix. The
-values for one arbitrary sample are marked in larger red dots.
-
-#+NAME: fig:matern52-50d-mv-samples
-#+ATTR_LATEX: :width .75\textwidth :placement [t]
-#+CAPTION: Test
-[[file:img/matern52_50d_mv_samples.pdf]]
+distribution.   If  we take  100
+samples of a 20-dimension Gaussian and unroll each dimension into a single axis,
+we end up with the left panel of Figure\nbsp{}[[fig:matern52-50d-mv-samples]].  Each
+column of points contains  the 100 values on each dimension  of our samples, and
+each  dimension  is  correlated   according  to  the  distribution's  covariance
+matrix. The values for one arbitrary sample are marked in larger red dots.
 
 The right panel of  Figure\nbsp{}[[fig:matern52-50d-mv-samples]] shows the same data
 in the left panel  but we now interpret the values of  each dimension $d_i$, for
 all   100   samples,  as   a   distribution   of   values  for   the   surrogate
 $\hat{f}_{\theta}$ evaluated at point $\mathbf{x}_i$.
+
+#+NAME: fig:matern52-50d-mv-samples
+#+ATTR_LATEX: :width .75\textwidth :placement [b]
+#+CAPTION: Test
+[[file:img/matern52_50d_mv_samples.pdf]]
 
 #+NAME: fig:radial-basis-kernels
 #+ATTR_LATEX: :width 0.4\textwidth :placement [t]
@@ -8604,9 +8802,15 @@ In particular, fitting $\hat{f}_{\theta}$ to data $(\mathbf{X},\mathbf{y})$
 #+CAPTION: Test
 [[file:img/matern52_50d_fitting.pdf]]
 
+#+NAME: fig:matern52-50d-fitting
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/matern52_50d_fitting_noisy.pdf]]
+
 **** Assessing Quality of Fit
 **** Inference: Interpreting Significance with Sobol Indices
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
+
 *** Summary
 ** Design of Experiments
 *** Introduction

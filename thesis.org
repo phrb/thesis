@@ -802,6 +802,7 @@ what is possibly "wrong" with current approaches.
 - make hypotheses more clear and explicit
   - explain why hypothesis are restrictive for autotuning problems
 - Figure with Restarts
+- [ ] Mention stochastic gradient descent -> used in NNs
 ***** Gradient + Hessian based
 - Taylor expansion: Information about derivatives at a point --> (approximation)
   information about the function around a point
@@ -8703,9 +8704,10 @@ multivariate random variable, written
 \begin{align}
   \label{eq:lin-mod-prob}
   f(\mathbf{X}) \sim \mathcal{N}(\mathbf{X}\theta,
-  \sigma^{2}\text{\textbf{I}})\text{.}
+  \sigma^{2}\text{\textbf{I}})\text{,}
 \end{align}
 #+end_export
+where *I* is the $n\times{}p$ identity matrix.
 
 Another way to  state this key idea is  to say that we make  the hypothesis that
 $f$ is a Gaussian Process (GP), that is,  that it belongs to the class of models
@@ -8723,7 +8725,7 @@ where the  mean vector $\boldsymbol{\mu}$ is  usually a vector of  $n$ zeros and
 the covariance matrix $\boldsymbol{\Sigma}$ depends on $\mathbf{X}$.
 
 This   prior   is  more   general   than   the   linear  model   hypothesis   in
-Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  much  further.   In
+Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  even  further.   In
 Chapter       /6/       of        /Gaussian       Processes       for       Machine
 Learning/\nbsp{}\cite{williams2006gaussian},    Rasmussen   /et.     al/   describe
 relationships and equivalences of GPs to  other methods such as Splines, Support
@@ -8736,10 +8738,10 @@ increases  as  more  training  data  becomes  available.   For  a  given  design
 $\mathbf{X}$, the parameter space is
 #+begin_export latex
 \begin{align}
-  \Theta = \left\{\;\left(\boldsymbol{\mu}_\mathbf{y},\;
-  \boldsymbol{\Sigma}\right),\;
-  \boldsymbol{\mu}_\mathbf{y} \in \mathbb{R}^{\vert{}\mathbf{X}\vert{}},\;
-  \boldsymbol{\Sigma} \in
+  \Theta = \left\{\;\left(\boldsymbol{\mu}_{\mathbf{X},\mathbf{y}},\;
+  \boldsymbol{\Sigma}_{\mathbf{X}}\right),\;
+  \boldsymbol{\mu}_{\mathbf{X},\mathbf{y}} \in \mathbb{R}^{\vert{}\mathbf{X}\vert{}},\;
+  \boldsymbol{\Sigma}_{\mathbf{X}} \in
   \mathbb{R}^{\vert{}\mathbf{X}\vert{} \times{}\vert{}\mathbf{X}\vert{}}\;\right\}\text{.}
 \end{align}
 #+end_export
@@ -8750,17 +8752,18 @@ dimensions, and the off-diagonal elements  contain the covariances between pairs
 of  dimensions.    Figure\nbsp{}[[fig:2d-gaussian]]  shows   the  impact   of  three
 covariance matrices, which must always be symmetric and positive semi-definite.
 
-The  a  posterior  distribution  representing  our surrogate  model  is  also  a
-multivariate normal,  but it  now is  conditioned by the  observed data,  and is
+The  posterior  distribution   representing  our  surrogate  model   is  also  a
+multivariate normal,  but now  it is  conditioned by the  observed data,  and is
 written
 #+begin_export latex
 \begin{align}
   \hat{f}_{\theta}(\mathbf{X}) \sim f(\mathbf{X}) \; \vert{} \; \mathbf{X}, \mathbf{y}\text{.}
 \end{align}
 #+end_export
-It would require an infinite parameter vector  to fit a Gaussian Process for all
-points in a  search space $\mathcal{X}$ consisting of a  single real number.  In
-this sense, Gaussian Process Regression is a nonparametric method.
+We will see how to compute this  posterior in the next section. It would require
+an infinite  parameter vector  to fit  a Gaussian  Process for  all points  in a
+search space $\mathcal{X}$  consisting of a single real number.   In this sense,
+Gaussian Process Regression is a nonparametric method.
 
 #+NAME: fig:2d-gaussian
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -8772,30 +8775,38 @@ this sense, Gaussian Process Regression is a nonparametric method.
 
 It can  help to build an  intuitive understanding of GPs  to think of them  as a
 reinterpretation  of  the  dimensions  of  a sample  of  a  multivariate  normal
-distribution.   If  we take  100
-samples of a 20-dimension Gaussian and unroll each dimension into a single axis,
-we end up with the left panel of Figure\nbsp{}[[fig:matern52-50d-mv-samples]].  Each
-column of points contains  the 100 values on each dimension  of our samples, and
-each  dimension  is  correlated   according  to  the  distribution's  covariance
-matrix. The values for one arbitrary sample are marked in larger red dots.
+distribution.  If we take 100 samples of a 20-dimension Gaussian and unroll each
+dimension   into  a   single  axis,   we  end   up  with   the  left   panel  of
+Figure\nbsp{}[[fig:matern52-50d-mv-samples]].   Each column  of points  contains the
+100 values  on each dimension of  our samples, and each  dimension is correlated
+according to the distribution's covariance  matrix. The values for one arbitrary
+sample are marked in larger red dots.
 
 The right panel of  Figure\nbsp{}[[fig:matern52-50d-mv-samples]] shows the same data
 in the left panel  but we now interpret the values of  each dimension $d_i$, for
 all   100   samples,  as   a   distribution   of   values  for   the   surrogate
-$\hat{f}_{\theta}$ evaluated at point $\mathbf{x}_i$.
+$\hat{f}_{\theta}$     evaluated     at      point     $\mathbf{x}_i$.      Each
+$\hat{f}_{\theta}(\mathbf{x}_i)$ is correlated to  other values of the surrogate
+function,  with  covariance  given  by  the covariance  matrix  used  to  sample
+functions.  In  this example we  used the Matérn  kernel, discussed in  the next
+section, to compute  the covariance matrix.  This prior  over functions directly
+estimates a mean  and its associated variance, for each  value of the surrogate.
+We will now discuss how to fit  a GP to observed data, generating predictions of
+means and variances conditioned to observations.
 
 #+NAME: fig:matern52-50d-mv-samples
-#+ATTR_LATEX: :width .75\textwidth :placement [b]
+#+ATTR_LATEX: :width .75\textwidth :placement [t]
 #+CAPTION: Test
 [[file:img/matern52_50d_mv_samples.pdf]]
+
+**** Fitting the Model: Posterior Distributions over Functions
+In particular, fitting $\hat{f}_{\theta}$ to data $(\mathbf{X},\mathbf{y})$
 
 #+NAME: fig:radial-basis-kernels
 #+ATTR_LATEX: :width 0.4\textwidth :placement [t]
 #+CAPTION: Test
 [[file:img/radial_basis_kernels.pdf]]
 
-**** Fitting the Model: Posterior Distributions over Functions
-In particular, fitting $\hat{f}_{\theta}$ to data $(\mathbf{X},\mathbf{y})$
 
 #+NAME: fig:matern52-50d-fitting
 #+ATTR_LATEX: :width \textwidth :placement [t]

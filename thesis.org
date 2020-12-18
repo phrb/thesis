@@ -8717,6 +8717,7 @@ with dimension $n = \vert{}\mathbf{X}\vert{}$.   We can write this hypothesis as
 a prior probability distribution
 #+begin_export latex
 \begin{align}
+  \label{eq:gauss-prior}
   f(\mathbf{X}) = [y_1\;\dots\;y_n]^{\top} \sim
   \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})\text{,}
 \end{align}
@@ -8757,6 +8758,7 @@ multivariate normal,  but now  it is  conditioned by the  observed data,  and is
 written
 #+begin_export latex
 \begin{align}
+  \label{eq:gauss-posterior}
   \hat{f}_{\theta}(\mathbf{X}) \sim f(\mathbf{X}) \; \vert{} \; \mathbf{X}, \mathbf{y}\text{.}
 \end{align}
 #+end_export
@@ -8796,11 +8798,21 @@ means and variances conditioned to observations.
 
 #+NAME: fig:matern52-50d-mv-samples
 #+ATTR_LATEX: :width .75\textwidth :placement [t]
-#+CAPTION: Test
+#+CAPTION: Reinterpreting the unrolled dimensions of 100 samples of a 20 dimension
+#+CAPTION: multivariate normal, on the left panel, to obtain 100 samples of functions
+#+CAPTION: evaluated on 20 different input points, on the right panel
 [[file:img/matern52_50d_mv_samples.pdf]]
 
 **** Fitting the Model: Posterior Distributions over Functions
-In particular, fitting $\hat{f}_{\theta}$ to data $(\mathbf{X},\mathbf{y})$
+The posterior  distribution $\hat{f}_{\theta}$  is computed by  conditioning the
+prior  distribution from  Equation\nbsp{}\ref{eq:gauss-prior}  to observed  data
+$(\mathbf{X},\mathbf{y})$       obtaining        the       distribution       in
+Equation\nbsp{}\ref{eq:gauss-posterior} which is also a Gaussian, written
+#+begin_export latex
+\begin{align}
+  \hat{f}_{\theta}(\mathbf{X}^{\prime}) \sim \mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma}) \; \vert{} \; \mathbf{X},\mathbf{y} \sim \mathcal{N}(\boldsymbol{\mu}^{\prime},\boldsymbol{\Sigma})
+\end{align}
+#+end_export
 
 #+NAME: fig:radial-basis-kernels
 #+ATTR_LATEX: :width 0.4\textwidth :placement [t]

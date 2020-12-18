@@ -6072,7 +6072,7 @@ library(latex2exp)
 
 n = 300
 x0 = 0
-x = seq(from = -3, to = 3, length.out = n)
+x = seq(from = 0, to = 3, length.out = n)
 
 df = data.frame(x = x,
                 y = as.vector(k1FunMatern5_2(x0,
@@ -6095,18 +6095,22 @@ df = bind_rows(df,
                                                    x,
                                                    par = c(range = 1,
                                                            var = 2))),
-                          label = c("Gaussian")))
+                          label = c("Squared Exponential")))
 
 df = bind_rows(df,
                data.frame(x = x,
-                          y = 1 + as.vector(k1Fun1Cos(x)),
-                          label = c("Cosine")))
+                          y = as.vector(k1FunExp(x0,
+                                                 x,
+                                                 par = c(range = 1,
+                                                         var = 2))),
+                          label = c("Exponential")))
 #+end_SRC
 
 #+RESULTS:
 ****** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/radial_basis_kernels.pdf" :height 10 :width 16 :eval no-export
+#+begin_SRC R :results graphics output :session *R* :file "./img/radial_basis_kernels.pdf" :height 10 :width 13 :eval no-export
 library(ggplot2)
+library(latex2exp)
 
 ggplot() +
     geom_line(data = df,
@@ -6116,16 +6120,17 @@ ggplot() +
               alpha = 0.8,
               size = 5) +
     scale_color_brewer(palette = "Set1") +
+    ylab(TeX("$Cov(\\mathbf{x},\\,\\mathbf{x}\\prime)$")) +
+    xlab(TeX("$||\\,\\mathbf{x} -\\,\\mathbf{x}\\prime\\,||$")) +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(expand = c(0.01, 0.01)) +
-    theme_bw(base_size = 13) +
-    theme(axis.title = element_blank(),
-          axis.ticks = element_blank(),
+    theme_bw(base_size = 40) +
+    theme(axis.ticks = element_blank(),
           axis.text = element_blank(),
           panel.grid = element_blank(),
-          legend.position = c(0.87, 0.87),
+          legend.position = c(0.74, 0.87),
           legend.title = element_blank(),
-          legend.text = element_text(size = 42),
+          legend.text = element_text(size = 36),
           legend.background = element_blank())
 #+end_SRC
 
@@ -8804,18 +8809,51 @@ means and variances conditioned to observations.
 [[file:img/matern52_50d_mv_samples.pdf]]
 
 **** Fitting the Model: Posterior Distributions over Functions
+Before fitting our surrogate, we must compute the covariance matrix of the prior
+Gaussian   distribution   from   Equation\nbsp{}\ref{eq:gauss-prior}   using   a
+covariance function, or kernel, $K: \mathcal{X}^{2} \mapsto \mathbb{R}$. For any
+pair  $(\mathbf{x},   \mathbf{x}^{\prime})  \in  \mathcal{X}^{2}$,   the  kernel
+computes how  strong is  the covariance  between $(\hat{f}_{\theta}(\mathbf{x}),
+\hat{f}_{\theta}(\mathbf{x}^{\prime}))$,      based     on      the     distance
+$\lVert{}\mathbf{x}                -               \mathbf{x}^{\prime}\rVert{}$.
+Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  five   exponential  kernels,  also
+called    radial    basis   functions,    whose    formulas    are   shown    in
+Table\nbsp{}\ref{tab:kernel-formulas}.
+
+#+begin_export latex
+\begin{center}
+\label{tab:kernel-formulas}
+\begin{tabular}{ll}
+\toprule
+Kernel & Formula\\
+\midrule
+Exponential & \(exp\left(-\dfrac{\lVert{}\mathbf{x} -
+  \mathbf{x}^{\prime}\rVert{}}{l}\right)\)\\
+\addlinespace[1em]
+Squared Exponential & \(exp\left(-\dfrac{\lVert{}\mathbf{x} -
+  \mathbf{x}^{\prime}\rVert{}^{2}}{2l^{2}}\right)\)\\
+\addlinespace[1em]
+Matérn & $\dfrac{1}{2^{v - 1}\Gamma(v)}\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
+\mathbf{x}^{\prime}\rVert{}\right)^{v} K_v\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
+\mathbf{x}^{\prime}\rVert{}\right)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+#+end_export
+
 The posterior  distribution $\hat{f}_{\theta}$  is computed by  conditioning the
 prior  distribution from  Equation\nbsp{}\ref{eq:gauss-prior}  to observed  data
-$(\mathbf{X},\mathbf{y})$       obtaining        the       distribution       in
-Equation\nbsp{}\ref{eq:gauss-posterior} which is also a Gaussian, written
+$(\mathbf{X},\mathbf{y})$,       obtaining       the       distribution       in
+Equation\nbsp{}\ref{eq:gauss-posterior},  which is  also a  Gaussian and  can be
+written
 #+begin_export latex
 \begin{align}
-  \hat{f}_{\theta}(\mathbf{X}^{\prime}) \sim \mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma}) \; \vert{} \; \mathbf{X},\mathbf{y} \sim \mathcal{N}(\boldsymbol{\mu}^{\prime},\boldsymbol{\Sigma})
+  \hat{f}_{\theta}(\mathbf{X}) \sim \mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma})
 \end{align}
 #+end_export
 
 #+NAME: fig:radial-basis-kernels
-#+ATTR_LATEX: :width 0.4\textwidth :placement [t]
+#+ATTR_LATEX: :width 0.5\textwidth :placement [t]
 #+CAPTION: Test
 [[file:img/radial_basis_kernels.pdf]]
 

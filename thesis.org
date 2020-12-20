@@ -7933,8 +7933,7 @@ Booth's function
 y = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x + 2y - 7)^{2} + (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
 \end{align}
 #+end_export
-adapted          from          the         book          Algorithms          for
-Optimization\nbsp{}\cite{kochenderfer2019algorithms}.
+adapted from Kochenderfer and Wheeler\nbsp{}\cite{kochenderfer2019algorithms}.
 
 If we start with $\mathbf{x}_1 = [9, 8]^{\top}$ and plug
 #+begin_export latex
@@ -8700,6 +8699,7 @@ This is  a reasonable  hypothesis to  make, especially  after our  discussion on
 linear models, where our hypothesis over $f$ was
 #+begin_export latex
 \begin{align}
+  \label{eq:model-noisy}
   f(\mathbf{X}) = \mathbf{X}\theta + \varepsilon\text{,}
 \end{align}
 #+end_export
@@ -8724,31 +8724,39 @@ a prior probability distribution
 \begin{align}
   \label{eq:gauss-prior}
   f(\mathbf{X}) = [y_1\;\dots\;y_n]^{\top} \sim
-  \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})\text{,}
+  \mathcal{N}(\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)\text{,}
 \end{align}
 #+end_export
-where the  mean vector $\boldsymbol{\mu}$ is  usually a vector of  $n$ zeros and
-the covariance matrix $\boldsymbol{\Sigma}$ depends on $\mathbf{X}$.
+where the mean vector $\boldsymbol{\mu}_0$ is  usually a vector of $n$ zeros and
+the covariance matrix $\boldsymbol{\Sigma}_0$ depends on $\mathbf{X}$.
 
 This   prior   is  more   general   than   the   linear  model   hypothesis   in
 Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  even  further.   In
 Chapter       /6/       of        /Gaussian       Processes       for       Machine
-Learning/\nbsp{}\cite{williams2006gaussian},    Rasmussen   /et.     al/   describe
+Learning/\nbsp{}\cite{williams2006gaussian},  Rasmussen   and  Williams  describe
 relationships and equivalences of GPs to  other methods such as Splines, Support
 Vector  Machines, and  Ordinary Least  Squares.  They  also describe  how Neural
 Networks can be represented by specific GPs in Section /4.2.3/.
 
+#+NAME: fig:2d-gaussian
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+CAPTION: Effects of three covariance matrices on a multivariate normal distribution
+#+CAPTION: with mean vector $\boldsymbol{\mu} = [0\; 0]^{\top}$ and covariance matrix
+#+CAPTION: $\boldsymbol{\Sigma}$ as
+#+CAPTION: shown on the upper right corner of plot
+[[file:img/2d_gaussian_uncorrelated_annotated.pdf]]
+
 In contrast to the linear model discussed in the previous section, the parameter
 space  $\Theta$ for  GPs depends  on the  size of  the experimental  design, and
 increases  as  more  training  data  becomes  available.   For  a  given  design
-$\mathbf{X}$, the parameter space is
+$\mathbf{X}$ of size $n$, the parameter space is
 #+begin_export latex
 \begin{align}
   \Theta = \left\{\;\left(\boldsymbol{\mu}_{\mathbf{X},\mathbf{y}},\;
   \boldsymbol{\Sigma}_{\mathbf{X}}\right),\;
-  \boldsymbol{\mu}_{\mathbf{X},\mathbf{y}} \in \mathbb{R}^{\vert{}\mathbf{X}\vert{}},\;
+  \boldsymbol{\mu}_{\mathbf{X},\mathbf{y}} \in \mathbb{R}^{n},\;
   \boldsymbol{\Sigma}_{\mathbf{X}} \in
-  \mathbb{R}^{\vert{}\mathbf{X}\vert{} \times{}\vert{}\mathbf{X}\vert{}}\;\right\}\text{.}
+  \mathbb{R}^{n\times{}n}\;\right\}\text{.}
 \end{align}
 #+end_export
 Note that  the mean vector depends  on the observations $\mathbf{y}$,  while the
@@ -8772,13 +8780,12 @@ an infinite  parameter vector  to fit  a Gaussian  Process for  all points  in a
 search space $\mathcal{X}$  consisting of a single real number.   In this sense,
 Gaussian Process Regression is a nonparametric method.
 
-#+NAME: fig:2d-gaussian
-#+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Effects of three covariance matrices on a multivariate normal distribution
-#+CAPTION: with mean vector $\boldsymbol{\mu} = [0\; 0]^{\top}$ and covariance matrix
-#+CAPTION: $\boldsymbol{\Sigma}$ as
-#+CAPTION: shown on the upper right corner of plot
-[[file:img/2d_gaussian_uncorrelated_annotated.pdf]]
+#+NAME: fig:matern52-50d-mv-samples
+#+ATTR_LATEX: :width .75\textwidth :placement [t]
+#+CAPTION: Reinterpreting the unrolled dimensions of 100 samples of a 20 dimension
+#+CAPTION: multivariate normal, on the left panel, to obtain 100 samples of functions
+#+CAPTION: evaluated on 20 different input points, on the right panel
+[[file:img/matern52_50d_mv_samples.pdf]]
 
 It can  help to build an  intuitive understanding of GPs  to think of them  as a
 reinterpretation  of  the  dimensions  of  a sample  of  a  multivariate  normal
@@ -8801,13 +8808,6 @@ estimates a mean  and its associated variance, for each  value of the surrogate.
 We will now discuss how to fit  a GP to observed data, generating predictions of
 means and variances conditioned to observations.
 
-#+NAME: fig:matern52-50d-mv-samples
-#+ATTR_LATEX: :width .75\textwidth :placement [t]
-#+CAPTION: Reinterpreting the unrolled dimensions of 100 samples of a 20 dimension
-#+CAPTION: multivariate normal, on the left panel, to obtain 100 samples of functions
-#+CAPTION: evaluated on 20 different input points, on the right panel
-[[file:img/matern52_50d_mv_samples.pdf]]
-
 **** Fitting the Model: Posterior Distributions over Functions
 Before fitting our surrogate, we must compute the covariance matrix of the prior
 Gaussian   distribution   from   Equation\nbsp{}\ref{eq:gauss-prior}   using   a
@@ -8818,53 +8818,150 @@ computes how  strong is  the covariance  between $(\hat{f}_{\theta}(\mathbf{x}),
 $\lVert{}\mathbf{x}                -               \mathbf{x}^{\prime}\rVert{}$.
 Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  five   exponential  kernels,  also
 called    radial    basis   functions,    whose    formulas    are   shown    in
-Table\nbsp{}\ref{tab:kernel-formulas}.
+Table\nbsp{}\ref{tab:kernel-expressions}.
 
 #+begin_export latex
-\begin{center}
-\label{tab:kernel-formulas}
-\begin{tabular}{ll}
-\toprule
-Kernel & Formula\\
-\midrule
-Exponential & \(exp\left(-\dfrac{\lVert{}\mathbf{x} -
-  \mathbf{x}^{\prime}\rVert{}}{l}\right)\)\\
-\addlinespace[1em]
-Squared Exponential & \(exp\left(-\dfrac{\lVert{}\mathbf{x} -
-  \mathbf{x}^{\prime}\rVert{}^{2}}{2l^{2}}\right)\)\\
-\addlinespace[1em]
-Matérn & $\dfrac{1}{2^{v - 1}\Gamma(v)}\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
-\mathbf{x}^{\prime}\rVert{}\right)^{v} K_v\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
-\mathbf{x}^{\prime}\rVert{}\right)$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{table}
+  \caption{Expressions for the covariance functions, or kernels, shown in
+    Figure\ref{fig:radial-basis-kernels}.
+    The variables $v$ and $l$ are kernel parameters that can themselves be estimated.
+    The Matérn kernel depends on the gamma function $\Gamma$ and on the
+    Bessel function of the second kind $K_{v}$.
+    We refer the reader to
+    Chapter\textit{4} of Rasmussen and
+    Williams\cite{williams2006gaussian} for detailed definitions
+    and discussions}
+  \label{tab:kernel-expressions}
+  \begin{center}
+    \begin{tabular}{ll}
+      \toprule
+      Kernel & Expressions\\
+      \midrule
+      Exponential & \(k(\mathbf{x},\mathbf{x}^{\prime}) =
+      exp\left(-\dfrac{\lVert{}\mathbf{x} -
+        \mathbf{x}^{\prime}\rVert{}}{l}\right)\)\\
+      \addlinespace[1em]
+      Squared Exponential & \(k(\mathbf{x},\mathbf{x}^{\prime}) =
+      exp\left(-\dfrac{\lVert{}\mathbf{x} -
+        \mathbf{x}^{\prime}\rVert{}^{2}}{2l^{2}}\right)\)\\
+      \addlinespace[1em]
+      Matérn & \(k(\mathbf{x},\mathbf{x}^{\prime}) =
+      \dfrac{1}{2^{v - 1}\Gamma(v)}\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
+      \mathbf{x}^{\prime}\rVert{}\right)^{v} K_v\left(\dfrac{\sqrt{2v}}{l}\lVert{}\mathbf{x} -
+      \mathbf{x}^{\prime}\rVert{}\right)\) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{table}
 #+end_export
 
 The posterior  distribution $\hat{f}_{\theta}$  is computed by  conditioning the
 prior  distribution from  Equation\nbsp{}\ref{eq:gauss-prior}  to observed  data
-$(\mathbf{X},\mathbf{y})$,       obtaining       the       distribution       in
-Equation\nbsp{}\ref{eq:gauss-posterior},  which is  also a  Gaussian and  can be
-written
+$(\mathbf{X}_k,\mathbf{y}_k)$,      obtaining      the      distribution      in
+Equation\nbsp{}\ref{eq:gauss-posterior}, which is  also a Gaussian distribution,
+and can be written
 #+begin_export latex
 \begin{align}
-  \hat{f}_{\theta}(\mathbf{X}) \sim \mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma})
+  \label{eq:gauss-posterior}
+  \hat{f}_{\theta}(\mathbf{X}_k) \sim
+  \mathcal{N}(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)\text{,}
 \end{align}
 #+end_export
+where the  conditioned vector  mean, of size  $\vert{}\mathbf{X}_{k}\vert{}$, is
+#+begin_export latex
+\begin{align}
+  \label{eq:posterior-mean}
+  \boldsymbol{\mu}_{k} = \mathbf{K}(\mathbf{X}_k,\mathbf{X}_{k - 1})
+  \; \mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1}
+  \; \mathbf{y}_{k - 1}^{\top}\text{,}
+\end{align}
+#+end_export
+and   the  conditioned   $\vert{}   \mathbf{X}_{k}   \vert{}  \times{}   \vert{}
+\mathbf{X}_{k} \vert{}$ covariance matrix is written
+#+begin_export latex
+\begin{align}
+  \label{eq:posterior-cov}
+  \boldsymbol{\Sigma}_k = \mathbf{K}(\mathbf{X}_k, \mathbf{X}_k)\;
+  - \;\mathbf{K}(\mathbf{X}_k, \mathbf{X}_{k - 1})
+  \;\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1}
+  \;\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_k)\text{.}
+\end{align}
+#+end_export
+The   function  $\mathbf{K}$   in  Equations\nbsp{}\ref{eq:posterior-mean}   and
+\ref{eq:posterior-cov}  produces   the  covariance  matrices   corresponding  to
+applying one of the covariance kernels $k(\mathbf{x}, \mathbf{x}^{\prime})$ from
+Table\nbsp{}\ref{tab:kernel-expressions}  to all  pairs of  points on  the input
+designs   for    $\mathbf{K}$.    The    complete   text   of    Rasmussen   and
+Williams\nbsp{}\cite{williams2006gaussian},      the      Chapter      6      of
+Bishop\nbsp{}\cite{bishop2006pattern}, and  the Chapter  15 of  Kochenderfer and
+Wheeler\nbsp{}\cite{kochenderfer2019algorithms} are among the texts that present
+detailed discussions and derivations of important properties of Gaussian Process
+Regression.
 
 #+NAME: fig:radial-basis-kernels
 #+ATTR_LATEX: :width 0.5\textwidth :placement [t]
-#+CAPTION: Test
+#+CAPTION: Covariance of points $(\mathbf{x}, \mathbf{x}^{\prime})$
+#+CAPTION: according to four covariance functions based on the distance
+#+CAPTION: $\lVert{}\mathbf{x} - \mathbf{x}^{\prime}\rVert{}$.
+#+CAPTION: Expressions for each kernel are shown in
+#+CAPTION: Table\nbsp{}\ref{tab:kernel-expressions}, and Matérn kernels use parameters
+#+CAPTION: $v_1,v_2 = \{\frac{3}{2},\frac{5}{2}\}$
 [[file:img/radial_basis_kernels.pdf]]
 
+The  left  panel  of  Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  100  sampled
+functions  from   the  prior   in  Equation\nbsp{}\ref{eq:gauss-prior},   for  a
+50-dimension Gaussian  distribution, with covariance  matrix $\mathbf{\Sigma}_0$
+given by the Matérn  kernel from Table \nbsp{}\ref{tab:kernel-expressions}, with
+$v =  \frac{5}{2}$. The  starting mean  vector $\mathbf{\mu}$  is zero.   We see
+that,      for      all      radial      basis      functions      shown      in
+Figure\nbsp{}[[fig:radial-basis-kernels]], the  covariance between  inputs decreases
+as  the distance  between  them increases,  approaching  zero.  Using  different
+kernels we can  control properties of sampled functions, such  as smoothness and
+periodicity.   The center  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows
+the conditioned posterior after a single observation $(\mathbf{x}, \mathbf{y})$,
+computed             using             Equations\nbsp{}\ref{eq:gauss-posterior},
+\ref{eq:posterior-mean}, and  \ref{eq:posterior-cov}. The right panel  shows the
+posterior  after  observing two  additional  observations.   Note that  all  100
+functions sampled  from the conditioned  distributions pass exactly  through the
+observations on the center and rightmost panels.
 
 #+NAME: fig:matern52-50d-fitting
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Test
 [[file:img/matern52_50d_fitting.pdf]]
 
-#+NAME: fig:matern52-50d-fitting
-#+ATTR_LATEX: :width \textwidth :placement [t]
+Although  in   specific  autotuning  applications  involving   deterministic  or
+extremely  fast processes  we can  observe consistent  measurements and  produce
+useful models with fits  such as those in Figure\nbsp{}[[fig:matern52-50d-fitting]],
+we can also produce a GP fit  that incorporates the uncertainty from noisy data.
+Figure\nbsp{}[[fig:matern52-50d-fitting-noisy]]  shows the  results of  conditioning
+the  prior  distribution under  the  assumption  that the  underlying  objective
+function  is  subject  to  measurement error  $\varepsilon  \sim  \mathcal{N}(0,
+\sigma^2)$,  as  described   in  Equation\nbsp{}\ref{eq:model-noisy}.   In  this
+scenario,   we   write    the   mean   vector   and    covariance   matrix   for
+Equation\nbsp{}\ref{eq:gauss-posterior} as
+#+begin_export latex
+\begin{align}
+  \label{eq:posterior-mean-noisy}
+  \boldsymbol{\mu}_{k} = \mathbf{K}(\mathbf{X}_k,\mathbf{X}_{k - 1})
+  \; (\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1} +
+  \sigma^{2}\mathbf{I})\;\mathbf{y}_{k - 1}^{\top}\text{,}
+\end{align}
+#+end_export
+and
+#+begin_export latex
+\begin{align}
+  \label{eq:posterior-cov-noisy}
+  \boldsymbol{\Sigma}_k = \mathbf{K}(\mathbf{X}_k, \mathbf{X}_k)\;
+  - \;\mathbf{K}(\mathbf{X}_k, \mathbf{X}_{k - 1})
+  \;(\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1} +
+  \sigma^{2}\mathbf{I})
+  \;\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_k)\text{.}
+\end{align}
+#+end_export
+
+#+NAME: fig:matern52-50d-fitting-noisy
+#+ATTR_LATEX: :width \textwidth :placement [b]
 #+CAPTION: Test
 [[file:img/matern52_50d_fitting_noisy.pdf]]
 

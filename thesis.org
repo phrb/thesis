@@ -8693,7 +8693,7 @@ probability distribution over functions.
 *** Gaussian Process Regression
 Similarly to the  surrogate model we built using linear  models, in this section
 we will fit a surrogate  $\hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}$ to a
-fixed experimental design $\mathbf{X}$,  with observations $\mathbf{y}$. We make
+fixed experimental  design $\mathbf{X}$  and observations $\mathbf{y}$.  We make
 the hypothesis that the observations $y_1, \dots, y_n$ are normally distributed.
 This is  a reasonable  hypothesis to  make, especially  after our  discussion on
 linear models, where our hypothesis over $f$ was
@@ -8728,28 +8728,31 @@ a prior probability distribution
 \end{align}
 #+end_export
 where the mean vector $\boldsymbol{\mu}_0$ is  usually a vector of $n$ zeros and
-the covariance matrix $\boldsymbol{\Sigma}_0$ depends on $\mathbf{X}$.
+the covariance  matrix $\boldsymbol{\Sigma}_0$ is  computed using a  kernel, and
+depends on $\mathbf{X}$.
 
 This   prior   is  more   general   than   the   linear  model   hypothesis   in
 Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  even  further.   In
 Chapter       /6/       of        /Gaussian       Processes       for       Machine
 Learning/\nbsp{}\cite{williams2006gaussian},  Rasmussen   and  Williams  describe
 relationships and equivalences of GPs to  other methods such as Splines, Support
-Vector  Machines, and  Ordinary Least  Squares.  They  also describe  how Neural
-Networks can be represented by specific GPs in Section /4.2.3/.
+Vector Machines, and OLS estimation.  They also describe how Neural Networks can
+be represented by specific GPs in Section /4.2.3/.
 
 #+NAME: fig:2d-gaussian
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Effects of three covariance matrices on a multivariate normal distribution
 #+CAPTION: with mean vector $\boldsymbol{\mu} = [0\; 0]^{\top}$ and covariance matrix
 #+CAPTION: $\boldsymbol{\Sigma}$ as
-#+CAPTION: shown on the upper right corner of plot
+#+CAPTION: shown on the upper right corner of each plot
 [[file:img/2d_gaussian_uncorrelated_annotated.pdf]]
 
-In contrast to the linear model discussed in the previous section, the parameter
-space  $\Theta$ for  GPs depends  on the  size of  the experimental  design, and
-increases  as  more  training  data  becomes  available.   For  a  given  design
-$\mathbf{X}$ of size $n$, the parameter space is
+In contrast to the  linear model discussed in the previous  section, there is no
+need to explicitly  define and explore a parameter space  for GP Regression.  We
+can nonetheless use the same framework we used for Linear Regression to describe
+a parameter  space $\Theta$ for  GP Regression that depends  on the size  of the
+experimental design, and increases as more training data becomes available.  For
+a given design $\mathbf{X}$ of size $n$, this parameter space is
 #+begin_export latex
 \begin{align}
   \Theta = \left\{\;\left(\boldsymbol{\mu}_{\mathbf{X},\mathbf{y}},\;
@@ -8766,19 +8769,20 @@ dimensions, and the off-diagonal elements  contain the covariances between pairs
 of  dimensions.    Figure\nbsp{}[[fig:2d-gaussian]]  shows   the  impact   of  three
 covariance matrices, which must always be symmetric and positive semi-definite.
 
-The  posterior  distribution   representing  our  surrogate  model   is  also  a
-multivariate normal,  but now  it is  conditioned by the  observed data,  and is
-written
+Instead of looking for the best  parameter vector in $\Theta$, we will condition
+the  prior Gaussian  distribution to  the observed  data, obtaining  a posterior
+distribution.  The conditioned distribution  representing our surrogate model is
+also a multivariate normal written
 #+begin_export latex
 \begin{align}
   \label{eq:gauss-posterior}
   \hat{f}_{\theta}(\mathbf{X}) \sim f(\mathbf{X}) \; \vert{} \; \mathbf{X}, \mathbf{y}\text{.}
 \end{align}
 #+end_export
-We will see how to compute this  posterior in the next section. It would require
-an infinite  parameter vector  to fit  a Gaussian  Process for  all points  in a
+We will  see how to  compute this  posterior in the  next section. Note  that it
+would require  an infinite  parameter vector  to fit a  GP for  all points  in a
 search space $\mathcal{X}$  consisting of a single real number.   In this sense,
-Gaussian Process Regression is a nonparametric method.
+GP Regression is a nonparametric method.
 
 #+NAME: fig:matern52-50d-mv-samples
 #+ATTR_LATEX: :width .75\textwidth :placement [t]
@@ -8787,8 +8791,8 @@ Gaussian Process Regression is a nonparametric method.
 #+CAPTION: evaluated on 20 different input points, on the right panel
 [[file:img/matern52_50d_mv_samples.pdf]]
 
-It can  help to build an  intuitive understanding of GPs  to think of them  as a
-reinterpretation  of  the  dimensions  of  a sample  of  a  multivariate  normal
+To build an intuitive understanding of GPs it can be helpful to think of them as
+a  reinterpretation of  the  dimensions of  a sample  of  a multivariate  normal
 distribution.  If we take 100 samples of a 20-dimension Gaussian and unroll each
 dimension   into  a   single  axis,   we  end   up  with   the  left   panel  of
 Figure\nbsp{}[[fig:matern52-50d-mv-samples]].   Each column  of points  contains the
@@ -8801,20 +8805,20 @@ in the left panel  but we now interpret the values of  each dimension $d_i$, for
 all   100   samples,  as   a   distribution   of   values  for   the   surrogate
 $\hat{f}_{\theta}$     evaluated     at      point     $\mathbf{x}_i$.      Each
 $\hat{f}_{\theta}(\mathbf{x}_i)$ is correlated to  other values of the surrogate
-function,  with  covariance  given  by  the covariance  matrix  used  to  sample
-functions.  In  this example we  used the Matérn  kernel, discussed in  the next
-section, to compute  the covariance matrix.  This prior  over functions directly
-estimates a mean  and its associated variance, for each  value of the surrogate.
-We will now discuss how to fit  a GP to observed data, generating predictions of
-means and variances conditioned to observations.
+function, with  covariance given  by the  distribution's covariance  matrix.  In
+this  example we  used the  Matérn  kernel, discussed  in the  next section,  to
+compute the covariance  matrix.  This prior over functions  directly estimates a
+mean and its associated variance, for each  value of the surrogate.  We will now
+discuss how to  fit a GP to  observed data, generating predictions  of means and
+variances conditioned to observations.
 
 **** Fitting the Model: Posterior Distributions over Functions
 Before fitting our surrogate, we must compute the covariance matrix of the prior
 Gaussian   distribution   from   Equation\nbsp{}\ref{eq:gauss-prior}   using   a
 covariance function, or kernel, $K: \mathcal{X}^{2} \mapsto \mathbb{R}$. For any
 pair  $(\mathbf{x},   \mathbf{x}^{\prime})  \in  \mathcal{X}^{2}$,   the  kernel
-computes how  strong is  the covariance  between $(\hat{f}_{\theta}(\mathbf{x}),
-\hat{f}_{\theta}(\mathbf{x}^{\prime}))$,      based     on      the     distance
+determines how strong the  covariance between $\hat{f}_{\theta}(\mathbf{x})$ and
+$\hat{f}_{\theta}(\mathbf{x}^{\prime})$  should   be,  based  on   the  distance
 $\lVert{}\mathbf{x}                -               \mathbf{x}^{\prime}\rVert{}$.
 Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  five   exponential  kernels,  also
 called    radial    basis   functions,    whose    formulas    are   shown    in
@@ -8823,13 +8827,13 @@ Table\nbsp{}\ref{tab:kernel-expressions}.
 #+begin_export latex
 \begin{table}
   \caption{Expressions for the covariance functions, or kernels, shown in
-    Figure\ref{fig:radial-basis-kernels}.
+    Figure \ref{fig:radial-basis-kernels}.
     The variables $v$ and $l$ are kernel parameters that can themselves be estimated.
     The Matérn kernel depends on the gamma function $\Gamma$ and on the
     Bessel function of the second kind $K_{v}$.
     We refer the reader to
-    Chapter\textit{4} of Rasmussen and
-    Williams\cite{williams2006gaussian} for detailed definitions
+    Chapter \textit{4} of Rasmussen and
+    Williams \cite{williams2006gaussian} for detailed definitions
     and discussions}
   \label{tab:kernel-expressions}
   \begin{center}
@@ -8912,10 +8916,10 @@ The  left  panel  of  Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  100  sam
 functions  from   the  prior   in  Equation\nbsp{}\ref{eq:gauss-prior},   for  a
 50-dimension Gaussian  distribution, with covariance  matrix $\mathbf{\Sigma}_0$
 given by the Matérn  kernel from Table \nbsp{}\ref{tab:kernel-expressions}, with
-$v =  \frac{5}{2}$. The  starting mean  vector $\mathbf{\mu}$  is zero.   We see
-that,      for      all      radial      basis      functions      shown      in
+$v =  \frac{5}{2}$. The starting  mean vector $\boldsymbol{\mu}_0$ is  zero.  We
+see     that,     for     all     radial    basis     functions     shown     in
 Figure\nbsp{}[[fig:radial-basis-kernels]], the  covariance between  inputs decreases
-as  the distance  between  them increases,  approaching  zero.  Using  different
+as the  distance between  inputs increases,  approaching zero.   Using different
 kernels we can  control properties of sampled functions, such  as smoothness and
 periodicity.   The center  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows
 the conditioned posterior after a single observation $(\mathbf{x}, \mathbf{y})$,

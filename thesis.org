@@ -904,6 +904,20 @@ everything
 - provides mean estimates with confidence estimation
 - how to interpret the significance (sobol indices) but quite costly
 
+***** Quality of Fit
+- [ ] MSE
+  - mean of observations -done
+  - on training set (cross validation?)
+  - on testing set
+  - on the real function
+- [ ] Model trends
+  - Guide surrogate mean outside measurements
+
+***** Inference: Sensitivity Analysis
+- [ ] Sobol indices (brief)
+- [ ] Three levels of inference (Rasmussen Chap. 5)
+  - Hypothesis, hyperparameters, parameters
+
 **** Mini-Conclusion
 Two big classes of models. Generality vs. interpretability. Yet
 everything we mentioned assumes X is given, sampled from
@@ -5340,6 +5354,8 @@ p_no_noise | p_noise | p_constrained
 ***** Loading Data
 Using data from [[Gradient of Booth's Function]]
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
 plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
 sampled = sample_n(plot_df, size = 10)
 plot_df$linear_prediction = predict(lm(z_noisy ~ x + y, data = sampled), plot_df)
@@ -6695,6 +6711,465 @@ ggplot(plot_data, aes(x = x, y = f_x)) +
 
 #+RESULTS:
 [[file:/tmp/babel-oICNIQ/figure128cP4.png]]
+**** 3d Booth Example
+***** Loading Data
+Using data from [[Gradient of Booth's Function]]
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+sampled = sample_n(plot_df, size = 10)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+replacing previous import ‘vctrs::data_frame’ by ‘tibble::data_frame’ when loading ‘dplyr’
+#+end_example
+***** Computing GP Fits
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(DiceKriging)
+
+linear_trend_gp = km(formula = z_noisy ~ x + y,
+                     design = sampled %>% select(x, y),
+                     response = sampled %>% select(z_noisy),
+                     covtype = "matern5_2",
+                     nugget = 1e-6)
+
+quad_trend_gp = km(formula = z_noisy ~ x + y +
+                         I(x ^ 2) + I(y ^ 2),
+                     design = sampled %>% select(x, y),
+                     response = sampled %>% select(z_noisy),
+                     covtype = "matern5_2",
+                     nugget = 1e-6)
+
+inter_trend_gp = km(formula = z_noisy ~ x * y +
+                        I(x ^ 2) + I(y ^ 2),
+                    design = sampled %>% select(x, y),
+                    response = sampled %>% select(z_noisy),
+                    covtype = "matern5_2",
+                    nugget = 1e-6)
+
+plot_df$linear_prediction = predict(linear_trend_gp,
+                                    plot_df %>% select(x, y),
+                                    "UK")$mean
+
+plot_df$quadratic_prediction = predict(quad_trend_gp,
+                                    plot_df %>% select(x, y),
+                                    "UK")$mean
+
+plot_df$interaction_prediction = predict(inter_trend_gp,
+                                    plot_df %>% select(x, y),
+                                    "UK")$mean
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~x + y
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-06
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  29.09091 31.11111
+  - variance bounds :  12781.32 1826251
+  - best initial criterion value(s) :  -69.89655
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       69.897  |proj g|=      0.39673
+At iterate     1  f =       69.705  |proj g|=       0.32801
+At iterate     2  f =       69.077  |proj g|=      0.092363
+At iterate     3  f =       69.049  |proj g|=      0.021779
+At iterate     4  f =       69.046  |proj g|=     0.0013497
+At iterate     5  f =       69.046  |proj g|=    2.6322e-05
+At iterate     6  f =       69.046  |proj g|=    2.3738e-06
+
+iterations 6
+function evaluations 7
+segments explored during Cauchy searches 6
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 2.37377e-06
+final function value 69.0462
+
+F = 69.0462
+final  value 69.046191
+converged
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~x + y + I(x^2) + I(y^2)
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-06
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  29.09091 31.11111
+  - variance bounds :  6683.518 944293.5
+  - best initial criterion value(s) :  -66.03803
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       66.038  |proj g|=      0.44354
+At iterate     1  f =       65.875  |proj g|=       0.28833
+At iterate     2  f =       65.748  |proj g|=      0.025947
+At iterate     3  f =       65.746  |proj g|=      0.022668
+At iterate     4  f =       65.742  |proj g|=      0.012989
+At iterate     5  f =       65.741  |proj g|=     0.0025982
+At iterate     6  f =       65.741  |proj g|=    0.00023444
+At iterate     7  f =       65.741  |proj g|=    4.9078e-06
+
+iterations 7
+function evaluations 8
+segments explored during Cauchy searches 7
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 4.90785e-06
+final function value 65.741
+
+F = 65.741
+final  value 65.741006
+converged
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~x + y + I(x^2) + I(y^2) + x:y
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-06
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  29.09091 31.11111
+  - variance bounds :  2.431172 596.0268
+  - best initial criterion value(s) :  -365.3632
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       365.36  |proj g|=       9.9236
+At iterate     1  f =       34.207  |proj g|=      0.025028
+At iterate     2  f =       34.182  |proj g|=      0.021133
+At iterate     3  f =       34.108  |proj g|=     0.0050862
+At iterate     4  f =       34.102  |proj g|=      0.001366
+At iterate     5  f =       34.101  |proj g|=     0.0001272
+At iterate     6  f =       34.101  |proj g|=    3.5854e-06
+At iterate     7  f =       34.101  |proj g|=    9.7517e-09
+
+iterations 7
+function evaluations 12
+segments explored during Cauchy searches 8
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 9.75169e-09
+final function value 34.1011
+
+F = 34.1011
+final  value 34.101085
+converged
+#+end_example
+
+***** Computing Quality Assessment Metrics
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+print("linear trend, LOO train MSE")
+print(log10(mean((sampled$z_noisy -
+                  leaveOneOut.km(linear_trend_gp, "UK", FALSE)$mean) ^ 2)))
+print("quad trend, LOO train MSE")
+print(log10(mean((sampled$z_noisy -
+           leaveOneOut.km(quad_trend_gp, "UK", FALSE)$mean) ^ 2)))
+print("interaction trend, LOO train MSE")
+print(log10(mean((sampled$z_noisy -
+           leaveOneOut.km(inter_trend_gp, "UK", FALSE)$mean) ^ 2)))
+
+print("linear trend, test MSE")
+print(log10(mean((plot_df$z_noisy -
+            predict(linear_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+print("quad trend, test MSE")
+print(log10(mean((plot_df$z_noisy -
+            predict(quad_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+print("interaction trend, test MSE")
+print(log10(mean((plot_df$z_noisy -
+            predict(inter_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+
+print("linear trend, true MSE")
+print(log10(mean((plot_df$z -
+            predict(linear_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+print("quad trend, true MSE")
+print(log10(mean((plot_df$z -
+            predict(quad_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+print("interaction trend, true MSE")
+print(log10(mean((plot_df$z -
+            predict(inter_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+[1] "linear trend, LOO train MSE"
+[1] 4.752425
+[1] "quad trend, LOO train MSE"
+[1] 4.406717
+[1] "interaction trend, LOO train MSE"
+[1] 1.729508
+[1] "linear trend, test MSE"
+[1] 4.317886
+[1] "quad trend, test MSE"
+[1] 4.335772
+[1] "interaction trend, test MSE"
+[1] 2.72918
+[1] "linear trend, true MSE"
+[1] 4.309728
+[1] "quad trend, true MSE"
+[1] 4.325536
+[1] "interaction trend, true MSE"
+[1] 2.136654
+#+end_example
+
+***** 3D Noisy: Linear Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_gp_linear.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(linear_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_gp_linear.pdf]]
+
+***** 3D Noisy: Quadratic Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_gp.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(quadratic_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_quadratic_gp.pdf]]
+
+***** 3D Noisy: Quadratic + Interactions Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_interactions_gp.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(interaction_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_quadratic_interactions_gp.pdf]]
 
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
@@ -8584,7 +9059,7 @@ generalizes the best, although it still differs from the true $f$.
 #+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
 #+CAPTION: basis functions sets
 #+CAPTION: from Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}, respectively
-[[file:img/booth_3d.pdf]]
+[[file:img/booth_3d_linear_regression.pdf]]
 
 #+latex: \clearpage
 
@@ -8820,7 +9295,7 @@ pair  $(\mathbf{x},   \mathbf{x}^{\prime})  \in  \mathcal{X}^{2}$,   the  kernel
 determines how strong the  covariance between $\hat{f}_{\theta}(\mathbf{x})$ and
 $\hat{f}_{\theta}(\mathbf{x}^{\prime})$  should   be,  based  on   the  distance
 $\lVert{}\mathbf{x}                -               \mathbf{x}^{\prime}\rVert{}$.
-Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  five   exponential  kernels,  also
+Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  four   exponential  kernels,  also
 called    radial    basis   functions,    whose    formulas    are   shown    in
 Table\nbsp{}\ref{tab:kernel-expressions}.
 
@@ -8912,7 +9387,7 @@ Regression.
 #+CAPTION: $v_1,v_2 = \{\frac{3}{2},\frac{5}{2}\}$
 [[file:img/radial_basis_kernels.pdf]]
 
-The  left  panel  of  Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  100  sampled
+The  left  panel  of  Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  300  sampled
 functions  from   the  prior   in  Equation\nbsp{}\ref{eq:gauss-prior},   for  a
 50-dimension Gaussian  distribution, with covariance  matrix $\mathbf{\Sigma}_0$
 given by the Matérn  kernel from Table \nbsp{}\ref{tab:kernel-expressions}, with
@@ -8922,16 +9397,21 @@ Figure\nbsp{}[[fig:radial-basis-kernels]], the  covariance between  inputs decre
 as the  distance between  inputs increases,  approaching zero.   Using different
 kernels we can  control properties of sampled functions, such  as smoothness and
 periodicity.   The center  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows
-the conditioned posterior after a single observation $(\mathbf{x}, \mathbf{y})$,
-computed             using             Equations\nbsp{}\ref{eq:gauss-posterior},
-\ref{eq:posterior-mean}, and  \ref{eq:posterior-cov}. The right panel  shows the
-posterior  after  observing two  additional  observations.   Note that  all  100
-functions sampled  from the conditioned  distributions pass exactly  through the
-observations on the center and rightmost panels.
+samples from the conditioned posterior  after a single observation $(\mathbf{x},
+\mathbf{y})$,    computed     using    Equations\nbsp{}\ref{eq:gauss-posterior},
+\ref{eq:posterior-mean},  and  \ref{eq:posterior-cov}.  The  right  panel  shows
+samples from  the posterior after  observing two additional  observations.  Note
+that all 300  functions sampled from the conditioned  distributions pass exactly
+through the observations on the center and rightmost panels.
 
 #+NAME: fig:matern52-50d-fitting
 #+ATTR_LATEX: :width \textwidth :placement [t]
-#+CAPTION: Test
+#+CAPTION: Fitting a Gaussian Process to three noise-free observations.
+#+CAPTION: The left panel shows 300 samples from a Gaussian prior,
+#+CAPTION: using the Matérn kernel to compute the covariance matrix.
+#+CAPTION: The center and right panels show 300 samples from the
+#+CAPTION: posterior distributions conditioned by one, then two more, successive
+#+CAPTION: noise-free observations
 [[file:img/matern52_50d_fitting.pdf]]
 
 Although  in   specific  autotuning  applications  involving   deterministic  or
@@ -8966,10 +9446,29 @@ and
 
 #+NAME: fig:matern52-50d-fitting-noisy
 #+ATTR_LATEX: :width \textwidth :placement [b]
-#+CAPTION: Test
+#+CAPTION: Fitting a Gaussian Process to three noisy observations.
+#+CAPTION: The left panel shows 300 samples from a Gaussian prior,
+#+CAPTION: using the Matérn kernel to compute the covariance matrix.
+#+CAPTION: The center and right panels show 300 samples from the
+#+CAPTION: posterior distributions conditioned by one, then two more, successive
+#+CAPTION: noisy observations
 [[file:img/matern52_50d_fitting_noisy.pdf]]
 
 **** Assessing Quality of Fit
+#+NAME: fig:gp-fitting
+#+ATTR_LATEX: :width \textwidth :placement [h!]
+#+CAPTION: Three Gaussian Process Regression surrogates with noisy fits for the
+#+CAPTION: Booth function, with a
+#+CAPTION: $\color{red}\boldsymbol{\times}$ marking the
+#+CAPTION: global optimum and best surrogate predictions.
+#+CAPTION: The fixed experimental design $\mathbf{X}$ used to fit all
+#+CAPTION: surrogates is marked by
+#+CAPTION: $\color{blue}\boldsymbol{\times}$ s.
+#+CAPTION: Panel (a) shows noisy measurements of Booth's function,
+#+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
+#+CAPTION: linear, quadratic, and quadratic plus interactions trend models,
+#+CAPTION: respectively
+[[file:img/booth_3d_gp.pdf]]
 **** Inference: Interpreting Significance with Sobol Indices
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
 

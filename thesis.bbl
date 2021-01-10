@@ -376,6 +376,13 @@ G.~Seber, \emph{The Linear Model and Hypothesis: A General Unifying
 C.~M. Bishop, \emph{Pattern recognition and machine learning}.\hskip 1em plus
   0.5em minus 0.4em\relax springer, 2006.
 
+\bibitem{roustant2018dicekriging}
+\BIBentryALTinterwordspacing
+{Roustant, Olivier and Ginsbourger, David and Deville, Yves and Chevalier,
+  Clement and Richet, Yann}, ``{DiceKriging}.'' [Online]. Available:
+  \url{https://cran.r-project.org/web/packages/DiceKriging/index.html}
+\BIBentrySTDinterwordspacing
+
 \bibitem{balaprakash2011can}
 P.~Balaprakash, S.~M. Wild, and P.~D. Hovland, ``Can search algorithms save
   large-scale automatic performance tuning?'' in \emph{ICCS}, 2011, pp.

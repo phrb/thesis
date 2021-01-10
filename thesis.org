@@ -905,13 +905,22 @@ everything
 - how to interpret the significance (sobol indices) but quite costly
 
 ***** Quality of Fit
+- [ ] Introduction
+  - 3 trend model types
+  - 10 samples -> fit a GP
+  - Compute MSE (assess quality)
+- [ ] Model Trends
+  - Guide surrogate mean outside measurements
 - [ ] MSE
-  - mean of observations -done
-  - on training set (cross validation?)
+  - mean of observations
+  - on training set: Leave One Out Cross Validation
   - on testing set
   - on the real function
-- [ ] Model trends
-  - Guide surrogate mean outside measurements
+- [ ] Kernel Hyperparameters
+  - lengthscale
+  - optimized during fit: MSE, MAP
+- [ ] Other assessment metrics
+  - MAP?
 
 ***** Inference: Sensitivity Analysis
 - [ ] Sobol indices (brief)
@@ -6711,6 +6720,694 @@ ggplot(plot_data, aes(x = x, y = f_x)) +
 
 #+RESULTS:
 [[file:/tmp/babel-oICNIQ/figure128cP4.png]]
+**** Trends
+***** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+library(DiceKriging)
+
+df = data.frame(x = c(-0.8, 0.1, 0.3, 0.5, 0.7, 0.9),
+                y = c(0.4, 0.5, 0.4, 0.3, 0.25, 0.4))
+
+target_x = data.frame(x = seq(from = -2.0,
+                              to = 2.0,
+                              length.out = 100))
+
+const_trend_gp = km(design = df %>% select(x),
+                    response = df %>% select(y),
+                    multistart = 10,
+                    estim.method = "LOO",
+                    covtype = "gauss")
+
+linear_trend_gp = km(formula = y ~ x,
+                     design = df %>% select(x),
+                     response = df %>% select(y),
+                     multistart = 10,
+                     estim.method = "LOO",
+                     covtype = "gauss")
+
+quad_trend_gp = km(formula = y ~ x + I(x ^ 2),
+                     design = df %>% select(x),
+                     response = df %>% select(y),
+                     multistart = 10,
+                     estim.method = "LOO",
+                     covtype = "gauss")
+
+target_x$const_prediction = predict(const_trend_gp,
+                                    target_x %>% select(x),
+                                    "UK")$mean
+
+target_x$linear_prediction = predict(linear_trend_gp,
+                                     target_x %>% select(x),
+                                     "UK")$mean
+
+target_x$quadratic_prediction = predict(quad_trend_gp,
+                                        target_x %>% select(x),
+                                        "UK")$mean
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+
+optimisation start
+------------------
+,* estimation method   : LOO
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  gauss
+  - nugget : NO
+  - parameters lower bounds :  1e-10
+  - parameters upper bounds :  3.4
+  - best initial criterion value(s) :  0.538556 0.7236078 1.265375 1.394417 1.531472 1.736053 1.934439 2.076638 2.278273 2.499264
+
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.53856  |proj g|=      0.72654
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.72361  |proj g|=      0.79668
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.2654  |proj g|=       1.0143
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.3944  |proj g|=       1.0744
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.5315  |proj g|=       1.1445
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.7361  |proj g|=       1.2649
+At iterate     1  f =       0.0093  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.9344  |proj g|=       1.2362
+At iterate     1  f =    0.0049177  |proj g|=     0.0013682
+At iterate     2  f =    0.0049165  |proj g|=    0.00036938
+At iterate     3  f =    0.0049164  |proj g|=    1.2369e-05
+At iterate     4  f =    0.0049164  |proj g|=    1.0501e-07
+
+iterations 4
+function evaluations 5
+segments explored during Cauchy searches 4
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 1.0501e-07
+final function value 0.00491641
+
+F = 0.00491641
+final  value 0.004916
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.0766  |proj g|=       1.0167
+At iterate     1  f =      0.10857  |proj g|=       0.51797
+ys=-2.380e-01  -gs= 1.034e+00, BFGS update SKIPPED
+At iterate     2  f =       0.0093  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.2783  |proj g|=      0.71868
+At iterate     1  f =       1.3458  |proj g|=        1.0512
+ys=-1.010e+00  -gs= 5.165e-01, BFGS update SKIPPED
+At iterate     2  f =       0.0093  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.4993  |proj g|=      0.42264
+At iterate     1  f =       2.2608  |proj g|=       0.74368
+ys=-1.357e-01  -gs= 1.786e-01, BFGS update SKIPPED
+At iterate     2  f =       0.0093  |proj g|=             0
+
+iterations 2
+function evaluations 4
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 0
+final function value 0.0093
+
+F = 0.0093
+final  value 0.009300
+converged
+
+,* The 10 best values (multistart) obtained are:
+ 0.0093 0.0093 0.0093 0.0093 0.0093 0.0093 0.004916414 0.0093 0.0093 0.0093
+,* The model corresponding to the best one (0.004916414) is stored.
+
+optimisation start
+------------------
+,* estimation method   : LOO
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~x
+,* covariance model :
+  - type :  gauss
+  - nugget : NO
+  - parameters lower bounds :  1e-10
+  - parameters upper bounds :  3.4
+  - best initial criterion value(s) :  0.007912638 0.01124534 0.01184891 0.01500916 0.1992156 0.2393992 1.857197 1.96498 1.969283 2.105195
+
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=    0.0079126  |proj g|=     0.020771
+At iterate     1  f =    0.0075231  |proj g|=      0.016539
+At iterate     2  f =    0.0071191  |proj g|=     0.0069969
+At iterate     3  f =    0.0070768  |proj g|=     0.0045511
+At iterate     4  f =    0.0070595  |proj g|=     0.0007455
+At iterate     5  f =    0.0070589  |proj g|=     6.867e-05
+At iterate     6  f =    0.0070589  |proj g|=    1.1583e-06
+At iterate     7  f =    0.0070589  |proj g|=    1.7668e-09
+
+iterations 7
+function evaluations 9
+segments explored during Cauchy searches 7
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 1.76676e-09
+final function value 0.00705891
+
+F = 0.00705891
+final  value 0.007059
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=     0.011245  |proj g|=     0.038275
+At iterate     1  f =     0.010333  |proj g|=      0.015619
+At iterate     2  f =     0.007065  |proj g|=     0.0025819
+At iterate     3  f =    0.0070589  |proj g|=    4.7106e-05
+At iterate     4  f =    0.0070589  |proj g|=    2.5366e-06
+
+iterations 4
+function evaluations 10
+segments explored during Cauchy searches 4
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 2.53656e-06
+final function value 0.00705891
+
+F = 0.00705891
+final  value 0.007059
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=     0.011849  |proj g|=     0.052394
+At iterate     1  f =      0.01032  |proj g|=      0.015533
+At iterate     2  f =    0.0071997  |proj g|=       0.01014
+At iterate     3  f =    0.0070811  |proj g|=     0.0044346
+At iterate     4  f =    0.0070609  |proj g|=     0.0014409
+At iterate     5  f =    0.0070589  |proj g|=    0.00015242
+At iterate     6  f =    0.0070589  |proj g|=    4.7196e-06
+At iterate     7  f =    0.0070589  |proj g|=    1.6014e-08
+
+iterations 7
+function evaluations 12
+segments explored during Cauchy searches 7
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 1.60142e-08
+final function value 0.00705891
+
+F = 0.00705891
+final  value 0.007059
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=     0.015009  |proj g|=     0.045573
+At iterate     1  f =     0.012178  |proj g|=      0.058198
+ys=-5.754e-04  -gs= 2.077e-03, BFGS update SKIPPED
+At iterate     2  f =     0.010323  |proj g|=      0.015548
+At iterate     3  f =    0.0071872  |proj g|=     0.0097433
+At iterate     4  f =    0.0070643  |proj g|=     0.0022521
+At iterate     5  f =    0.0070593  |proj g|=    0.00065554
+At iterate     6  f =    0.0070589  |proj g|=     3.405e-05
+At iterate     7  f =    0.0070589  |proj g|=    4.8752e-07
+
+iterations 7
+function evaluations 12
+segments explored during Cauchy searches 7
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 4.87518e-07
+final function value 0.00705891
+
+F = 0.00705891
+final  value 0.007059
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.19922  |proj g|=      0.70148
+At iterate     1  f =     0.015661  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       0.2394  |proj g|=      0.72664
+At iterate     1  f =     0.015661  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.8572  |proj g|=       1.0692
+At iterate     1  f =     0.071637  |proj g|=       0.59544
+At iterate     2  f =     0.015661  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=        1.965  |proj g|=      0.93656
+At iterate     1  f =      0.44383  |proj g|=       0.83567
+ys=-1.031e+00  -gs= 8.771e-01, BFGS update SKIPPED
+At iterate     2  f =     0.015661  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.9693  |proj g|=       0.9313
+At iterate     1  f =      0.46404  |proj g|=       0.84554
+ys=-1.048e+00  -gs= 8.673e-01, BFGS update SKIPPED
+At iterate     2  f =     0.015661  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.1052  |proj g|=      0.76714
+At iterate     1  f =       1.1358  |proj g|=        1.1703
+ys=-8.633e-01  -gs= 5.885e-01, BFGS update SKIPPED
+At iterate     2  f =     0.015661  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.0156606
+
+F = 0.0156606
+final  value 0.015661
+converged
+
+,* The 10 best values (multistart) obtained are:
+ 0.00705891 0.00705891 0.00705891 0.00705891 0.01566064 0.01566064 0.01566064 0.01566064 0.01566064 0.01566064
+,* The model corresponding to the best one (0.00705891) is stored.
++ +
+optimisation start
+------------------
+,* estimation method   : LOO
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~x + I(x^2)
+,* covariance model :
+  - type :  gauss
+  - nugget : NO
+  - parameters lower bounds :  1e-10
+  - parameters upper bounds :  3.4
+  - best initial criterion value(s) :  0.5485256 0.8030316 0.8301607 1.320869 2.06434 2.22403 2.231048 2.381351 2.51904 2.688355
+
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.54853  |proj g|=      0.14021
+At iterate     1  f =      0.54801  |proj g|=      0.095903
+At iterate     2  f =       0.5471  |proj g|=      0.030753
+At iterate     3  f =      0.54704  |proj g|=      0.014972
+At iterate     4  f =      0.54703  |proj g|=    0.00087944
+At iterate     5  f =      0.54703  |proj g|=     2.117e-05
+At iterate     6  f =      0.54703  |proj g|=    3.2282e-08
+
+iterations 6
+function evaluations 8
+segments explored during Cauchy searches 6
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 3.2282e-08
+final function value 0.547027
+
+F = 0.547027
+final  value 0.547027
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.80303  |proj g|=      0.37505
+At iterate     1  f =      0.55164  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=      0.83016  |proj g|=      0.38961
+At iterate     1  f =      0.55164  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       1.3209  |proj g|=      0.61229
+At iterate     1  f =      0.55164  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.0643  |proj g|=       1.0219
+At iterate     1  f =      0.55164  |proj g|=             0
+
+iterations 1
+function evaluations 2
+segments explored during Cauchy searches 1
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=        2.224  |proj g|=       1.0204
+At iterate     1  f =      0.54847  |proj g|=       0.13986
+At iterate     2  f =        0.548  |proj g|=        0.0957
+Nonpositive definiteness in Cholesky factorization in formk;
+   refresh the lbfgs memory and restart the iteration.
+At iterate     3  f =      0.54711  |proj g|=      0.034297
+At iterate     4  f =      0.54705  |proj g|=      0.017114
+At iterate     5  f =      0.54703  |proj g|=     0.0011351
+At iterate     6  f =      0.54703  |proj g|=    3.0953e-05
+At iterate     7  f =      0.54703  |proj g|=    6.1007e-08
+
+iterations 7
+function evaluations 10
+segments explored during Cauchy searches 8
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 6.10069e-08
+final function value 0.547027
+
+F = 0.547027
+final  value 0.547027
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=        2.231  |proj g|=       1.0081
+At iterate     1  f =      0.55337  |proj g|=       0.15903
+At iterate     2  f =      0.55164  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.3814  |proj g|=      0.74986
+At iterate     1  f =       1.2691  |proj g|=       0.58968
+ys=-1.162e+00  -gs= 5.623e-01, BFGS update SKIPPED
+At iterate     2  f =      0.55164  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=        2.519  |proj g|=      0.52576
+At iterate     1  f =       2.0779  |proj g|=        1.0324
+ys=-3.945e-01  -gs= 2.764e-01, BFGS update SKIPPED
+At iterate     2  f =      0.55164  |proj g|=             0
+
+iterations 2
+function evaluations 3
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       2.6884  |proj g|=      0.27928
+At iterate     1  f =       2.5932  |proj g|=       0.41288
+ys=-3.731e-02  -gs= 7.800e-02, BFGS update SKIPPED
+At iterate     2  f =      0.55164  |proj g|=             0
+
+iterations 2
+function evaluations 4
+segments explored during Cauchy searches 2
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 0
+final function value 0.551638
+
+F = 0.551638
+final  value 0.551638
+converged
+
+,* The 10 best values (multistart) obtained are:
+ 0.5470274 0.551638 0.551638 0.551638 0.551638 0.5470274 0.551638 0.551638 0.551638 0.551638
+,* The model corresponding to the best one (0.5470274) is stored.
+#+end_example
+***** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/gp_trends.pdf" :width 10 :height 10 :eval no-export
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+plot_df = target_x %>%
+    pivot_longer(cols = c(const_prediction,
+                          linear_prediction,
+                          quadratic_prediction),
+                 names_to = "Trends",
+                 values_to = "y") %>%
+    mutate(Trends = factor(Trends,
+                           levels = c("const_prediction",
+                                      "linear_prediction",
+                                      "quadratic_prediction"),
+                           labels = c("No trend",
+                                      "Linear trend",
+                                      "Quadratic trend")))
+
+ggplot() +
+    geom_line(data = plot_df,
+              size = 3,
+              alpha = 0.6,
+              aes(x = x,
+                  y = y,
+                  color = Trends)) +
+    geom_point(data = df,
+               size = 4,
+               shape = 1,
+               stroke = 2,
+               aes(x = x,
+                   y = y),
+               color = "black") +
+    ylim(0, 1.0) +
+    scale_color_brewer(name = "Predicted Means", palette = "Set1") +
+    theme_bw(base_size = 32) +
+    theme(axis.title.y = element_text(angle = 0,
+                                      vjust = 0.5),
+          legend.position = c(0.25, 0.86),
+          legend.direction = "vertical",
+          legend.background = element_rect(fill = "transparent"))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/gp_trends.pdf]]
+
 **** 3d Booth Example
 ***** Loading Data
 Using data from [[Gradient of Booth's Function]]
@@ -6722,24 +7419,14 @@ sampled = sample_n(plot_df, size = 10)
 #+end_SRC
 
 #+RESULTS:
-#+begin_example
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-Warning message:
-replacing previous import ‘vctrs::data_frame’ by ‘tibble::data_frame’ when loading ‘dplyr’
-#+end_example
 ***** Computing GP Fits
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(DiceKriging)
+
+const_trend_gp = km(design = sampled %>% select(x, y),
+                    response = sampled %>% select(z_noisy),
+                    covtype = "matern5_2",
+                    nugget = 1e-6)
 
 linear_trend_gp = km(formula = z_noisy ~ x + y,
                      design = sampled %>% select(x, y),
@@ -6760,6 +7447,10 @@ inter_trend_gp = km(formula = z_noisy ~ x * y +
                     response = sampled %>% select(z_noisy),
                     covtype = "matern5_2",
                     nugget = 1e-6)
+
+plot_df$const_prediction = predict(const_trend_gp,
+                                   plot_df %>% select(x, y),
+                                   "UK")$mean
 
 plot_df$linear_prediction = predict(linear_trend_gp,
                                     plot_df %>% select(x, y),
@@ -6782,35 +7473,74 @@ optimisation start
 ,* estimation method   : MLE
 ,* optimisation method : BFGS
 ,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-06
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  38.38384 33.53535
+  - variance bounds :  10588.31 1198707
+  - best initial criterion value(s) :  -69.15038
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=        69.15  |proj g|=       1.0591
+At iterate     1  f =       68.245  |proj g|=       0.51666
+At iterate     2  f =       67.684  |proj g|=       0.22174
+At iterate     3  f =       67.361  |proj g|=      0.062222
+At iterate     4  f =       67.344  |proj g|=      0.017177
+At iterate     5  f =       67.343  |proj g|=     0.0059212
+At iterate     6  f =       67.343  |proj g|=     0.0016697
+At iterate     7  f =       67.343  |proj g|=    0.00020049
+At iterate     8  f =       67.343  |proj g|=    1.1044e-05
+At iterate     9  f =       67.343  |proj g|=    5.8017e-05
+
+iterations 9
+function evaluations 13
+segments explored during Cauchy searches 9
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 5.80172e-05
+final function value 67.343
+
+F = 67.343
+final  value 67.342994
+converged
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
 ,* trend model : ~x + y
 ,* covariance model :
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  29.09091 31.11111
-  - variance bounds :  12781.32 1826251
-  - best initial criterion value(s) :  -69.89655
+  - parameters upper bounds :  38.38384 33.53535
+  - variance bounds :  5884.415 608500.8
+  - best initial criterion value(s) :  -65.11035
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       69.897  |proj g|=      0.39673
-At iterate     1  f =       69.705  |proj g|=       0.32801
-At iterate     2  f =       69.077  |proj g|=      0.092363
-At iterate     3  f =       69.049  |proj g|=      0.021779
-At iterate     4  f =       69.046  |proj g|=     0.0013497
-At iterate     5  f =       69.046  |proj g|=    2.6322e-05
-At iterate     6  f =       69.046  |proj g|=    2.3738e-06
+At iterate     0  f=        65.11  |proj g|=      0.36238
+At iterate     1  f =       64.959  |proj g|=       0.28619
+At iterate     2  f =       64.724  |proj g|=      0.035067
+At iterate     3  f =       64.722  |proj g|=     0.0066773
+At iterate     4  f =       64.721  |proj g|=     0.0029722
+At iterate     5  f =       64.721  |proj g|=    1.8046e-05
+At iterate     6  f =       64.721  |proj g|=    1.0031e-05
 
 iterations 6
 function evaluations 7
 segments explored during Cauchy searches 6
 BFGS updates skipped 0
 active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 2.37377e-06
-final function value 69.0462
+norm of the final projected gradient 1.00307e-05
+final function value 64.7214
 
-F = 69.0462
-final  value 69.046191
+F = 64.7214
+final  value 64.721351
 converged
 
 optimisation start
@@ -6823,31 +7553,30 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  29.09091 31.11111
-  - variance bounds :  6683.518 944293.5
-  - best initial criterion value(s) :  -66.03803
+  - parameters upper bounds :  38.38384 33.53535
+  - variance bounds :  4739.433 516844.1
+  - best initial criterion value(s) :  -67.35271
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       66.038  |proj g|=      0.44354
-At iterate     1  f =       65.875  |proj g|=       0.28833
-At iterate     2  f =       65.748  |proj g|=      0.025947
-At iterate     3  f =       65.746  |proj g|=      0.022668
-At iterate     4  f =       65.742  |proj g|=      0.012989
-At iterate     5  f =       65.741  |proj g|=     0.0025982
-At iterate     6  f =       65.741  |proj g|=    0.00023444
-At iterate     7  f =       65.741  |proj g|=    4.9078e-06
+At iterate     0  f=       67.353  |proj g|=       1.2091
+At iterate     1  f =        66.15  |proj g|=       0.71586
+At iterate     2  f =       65.413  |proj g|=       0.17312
+At iterate     3  f =       65.343  |proj g|=      0.042875
+At iterate     4  f =       65.339  |proj g|=     0.0045831
+At iterate     5  f =       65.339  |proj g|=    9.0744e-05
+At iterate     6  f =       65.339  |proj g|=    9.0756e-05
 
-iterations 7
-function evaluations 8
-segments explored during Cauchy searches 7
+iterations 6
+function evaluations 7
+segments explored during Cauchy searches 6
 BFGS updates skipped 0
 active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 4.90785e-06
-final function value 65.741
+norm of the final projected gradient 9.07564e-05
+final function value 65.3391
 
-F = 65.741
-final  value 65.741006
+F = 65.3391
+final  value 65.339062
 converged
 
 optimisation start
@@ -6860,36 +7589,39 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  29.09091 31.11111
-  - variance bounds :  2.431172 596.0268
-  - best initial criterion value(s) :  -365.3632
+  - parameters upper bounds :  38.38384 33.53535
+  - variance bounds :  3.737058 568.1909
+  - best initial criterion value(s) :  -45.0685
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       365.36  |proj g|=       9.9236
-At iterate     1  f =       34.207  |proj g|=      0.025028
-At iterate     2  f =       34.182  |proj g|=      0.021133
-At iterate     3  f =       34.108  |proj g|=     0.0050862
-At iterate     4  f =       34.102  |proj g|=      0.001366
-At iterate     5  f =       34.101  |proj g|=     0.0001272
-At iterate     6  f =       34.101  |proj g|=    3.5854e-06
-At iterate     7  f =       34.101  |proj g|=    9.7517e-09
+At iterate     0  f=       45.069  |proj g|=      0.75398
+At iterate     1  f =       42.139  |proj g|=       0.15773
+At iterate     2  f =       34.359  |proj g|=      0.023091
+At iterate     3  f =       34.039  |proj g|=      0.017983
+At iterate     4  f =       33.862  |proj g|=    0.00015446
+At iterate     5  f =       33.862  |proj g|=    0.00011581
+At iterate     6  f =       33.862  |proj g|=    3.6625e-07
+At iterate     7  f =       33.862  |proj g|=    8.6504e-10
 
 iterations 7
-function evaluations 12
+function evaluations 16
 segments explored during Cauchy searches 8
 BFGS updates skipped 0
-active bounds at final generalized Cauchy point 1
-norm of the final projected gradient 9.75169e-09
-final function value 34.1011
+active bounds at final generalized Cauchy point 2
+norm of the final projected gradient 8.65044e-10
+final function value 33.8619
 
-F = 34.1011
-final  value 34.101085
+F = 33.8619
+final  value 33.861945
 converged
 #+end_example
 
 ***** Computing Quality Assessment Metrics
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
+print("const trend, LOO train MSE")
+print(log10(mean((sampled$z_noisy -
+                  leaveOneOut.km(const_trend_gp, "UK", FALSE)$mean) ^ 2)))
 print("linear trend, LOO train MSE")
 print(log10(mean((sampled$z_noisy -
                   leaveOneOut.km(linear_trend_gp, "UK", FALSE)$mean) ^ 2)))
@@ -6900,6 +7632,10 @@ print("interaction trend, LOO train MSE")
 print(log10(mean((sampled$z_noisy -
            leaveOneOut.km(inter_trend_gp, "UK", FALSE)$mean) ^ 2)))
 
+print("const trend, test MSE")
+print(log10(mean((plot_df$z_noisy -
+            predict(const_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
 print("linear trend, test MSE")
 print(log10(mean((plot_df$z_noisy -
             predict(linear_trend_gp, newdata = plot_df %>% select(x, y),
@@ -6913,6 +7649,10 @@ print(log10(mean((plot_df$z_noisy -
             predict(inter_trend_gp, newdata = plot_df %>% select(x, y),
                     "UK", FALSE)$mean) ^ 2)))
 
+print("const trend, true MSE")
+print(log10(mean((plot_df$z -
+            predict(linear_trend_gp, newdata = plot_df %>% select(x, y),
+                    "UK", FALSE)$mean) ^ 2)))
 print("linear trend, true MSE")
 print(log10(mean((plot_df$z -
             predict(linear_trend_gp, newdata = plot_df %>% select(x, y),
@@ -6929,25 +7669,105 @@ print(log10(mean((plot_df$z -
 
 #+RESULTS:
 #+begin_example
+[1] "const trend, LOO train MSE"
+[1] 4.248826
 [1] "linear trend, LOO train MSE"
-[1] 4.752425
+[1] 4.480169
 [1] "quad trend, LOO train MSE"
-[1] 4.406717
+[1] 4.51261
 [1] "interaction trend, LOO train MSE"
-[1] 1.729508
+[1] 1.708737
+[1] "const trend, test MSE"
+[1] 4.421653
 [1] "linear trend, test MSE"
-[1] 4.317886
+[1] 4.7298
 [1] "quad trend, test MSE"
-[1] 4.335772
+[1] 4.403773
 [1] "interaction trend, test MSE"
-[1] 2.72918
+[1] 2.71315
+[1] "const trend, true MSE"
+[1] 4.726364
 [1] "linear trend, true MSE"
-[1] 4.309728
+[1] 4.726364
 [1] "quad trend, true MSE"
-[1] 4.325536
+[1] 4.396952
 [1] "interaction trend, true MSE"
-[1] 2.136654
+[1] 2.046654
 #+end_example
+
+***** 3D Noisy: Constant Trend Prediction
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_gp_const.pdf" :width 10 :height 10 :eval no-export
+library(lattice)
+library(akima)
+library(RColorBrewer)
+library(latex2exp)
+library(paletteer)
+library(dplyr)
+
+new3d_frame <- function(x, y, z,
+                        xlim, ylim, zlim,
+                        xlim.scaled, ylim.scaled, zlim.scaled,
+                        pts,
+                        ...) {
+    # xlim = c(-10, 10)
+    # ylim = c(-10, 10)
+    # zlim = c(-57.03081, 2578.93100)
+    # xlim.scaled = c(-0.5, 0.5)
+    # ylim.scaled = c(-0.5, 0.5)
+    # zlim.scaled = c(-0.5, 0.5)
+
+    panel.3dwire(x = x, y = y, z = z,
+                 xlim = xlim,
+                 ylim = ylim,
+                 zlim = zlim,
+                 xlim.scaled = xlim.scaled,
+                 ylim.scaled = ylim.scaled,
+                 zlim.scaled = zlim.scaled,
+                 col = NA,
+                 ...)
+    xx <- xlim.scaled[1] + diff(xlim.scaled) *
+        (sampled$x - xlim[1]) / diff(xlim)
+    yy <- ylim.scaled[1] + diff(ylim.scaled) *
+        (sampled$y - ylim[1]) / diff(ylim)
+    zz <- zlim.scaled[1] + diff(zlim.scaled) *
+        (sampled$z_noisy - zlim[1]) / diff(zlim)
+
+    panel.3dscatter(x = xx,
+                    y = yy,
+                    z = zz,
+                    xlim = xlim,
+                    ylim = ylim,
+                    zlim = zlim,
+                    xlim.scaled = xlim.scaled,
+                    ylim.scaled = ylim.scaled,
+                    zlim.scaled = zlim.scaled,
+                    col = colors[length(colors)],
+                    type = "p",
+                    ...)
+}
+
+colors = paletteer_c(palette = "viridis::viridis", n = 200, direction = -1)
+
+wireframe(const_prediction ~ x * y,
+          data = plot_df,
+          xlab = list(TeX("$x_1$"), cex = 2.5),
+          ylab = list(TeX("$x_2$"), cex = 2.5),
+          zlab = list(TeX("$\\hat{f}_{\\theta}(x_1, x_2)$"),
+                      rot = "90", cex = 2.5),
+          colorkey = FALSE,
+          col.regions = colors,
+          drape = TRUE,
+          perspective = TRUE,
+          lattice.options = lattice.options(list(border = FALSE)),
+          scales = list(arrows = FALSE, draw = FALSE),
+          screen = list(z = 155, x = -70, y = 0),
+          pts = sampled,
+          panel.3d.wireframe = new3d_frame,
+          par.box = list(col = colors[length(colors)]))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_3d_noisy_gp_const.pdf]]
 
 ***** 3D Noisy: Linear Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_gp_linear.pdf" :width 10 :height 10 :eval no-export
@@ -9416,13 +10236,15 @@ through the observations on the center and rightmost panels.
 
 Although  in   specific  autotuning  applications  involving   deterministic  or
 extremely  fast processes  we can  observe consistent  measurements and  produce
-useful models with fits  such as those in Figure\nbsp{}[[fig:matern52-50d-fitting]],
-we can also produce a GP fit  that incorporates the uncertainty from noisy data.
-Figure\nbsp{}[[fig:matern52-50d-fitting-noisy]]  shows the  results of  conditioning
-the  prior  distribution under  the  assumption  that the  underlying  objective
-function  is  subject  to  measurement error  $\varepsilon  \sim  \mathcal{N}(0,
-\sigma^2)$,  as  described   in  Equation\nbsp{}\ref{eq:model-noisy}.   In  this
-scenario,   we   write    the   mean   vector   and    covariance   matrix   for
+useful  models  with  fits  that  assume  noiseless  measurements,  such  as  in
+Figure\nbsp{}[[fig:matern52-50d-fitting]],  we  can  also  produce  a  GP  fit  that
+incorporates        the        uncertainty        from        noisy        data.
+Figure\nbsp{}[[fig:matern52-50d-fitting-noisy]] shows 300 prior samples, in the left
+panel, and results of conditioning the  prior distribution to one and then three
+observations, under  the assumption  that the  underlying objective  function is
+subject  to measurement  error $\varepsilon  \sim \mathcal{N}(0,  \sigma^2)$, as
+described in  Equation\nbsp{}\ref{eq:model-noisy}.  In  this scenario,  we write
+the        mean       vector        and       covariance        matrix       for
 Equation\nbsp{}\ref{eq:gauss-posterior} as
 #+begin_export latex
 \begin{align}
@@ -9454,7 +10276,25 @@ and
 #+CAPTION: noisy observations
 [[file:img/matern52_50d_fitting_noisy.pdf]]
 
+We can incorporate hypotheses to the  fitted surrogate using the basis functions
+we    described    previously    to    describe    trends    in    measurements.
+Figure\nbsp{}[[fig:gp-trends]]  shows GP  surrogates fitted  with and  without trend
+models.   The  fits  and  predictions  were computed  using  the  /DiceKriging/  /R/
+package\nbsp{}\cite{roustant2018dicekriging}.
+
+#+NAME: fig:gp-trends
+#+ATTR_LATEX: :width 0.6\textwidth :placement [t]
+#+CAPTION: Trend models
+[[file:img/gp_trends.pdf]]
+
+As we did for the Linear Model  surrogates discussed earlier in this chapter, in
+the  next  section  we will  assess  the  quality  of  fit of  Gaussian  Process
+surrogates, and quantify their prediction error  on a testing set outside of the
+measurements used for fitting.
+
 **** Assessing Quality of Fit
+
+
 #+NAME: fig:gp-fitting
 #+ATTR_LATEX: :width \textwidth :placement [h!]
 #+CAPTION: Three Gaussian Process Regression surrogates with noisy fits for the

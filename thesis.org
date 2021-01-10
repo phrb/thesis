@@ -7362,7 +7362,7 @@ converged
 ,* The model corresponding to the best one (0.5470274) is stored.
 #+end_example
 ***** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/gp_trends.pdf" :width 10 :height 10 :eval no-export
+#+begin_SRC R :results graphics output :session *R* :file "./img/gp_trends.pdf" :width 13 :height 10 :eval no-export
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -7377,30 +7377,32 @@ plot_df = target_x %>%
                            levels = c("const_prediction",
                                       "linear_prediction",
                                       "quadratic_prediction"),
-                           labels = c("No trend",
-                                      "Linear trend",
-                                      "Quadratic trend")))
+                           labels = c("Constant",
+                                      "Linear",
+                                      "Quadratic")))
 
 ggplot() +
     geom_line(data = plot_df,
-              size = 3,
+              size = 3.4,
               alpha = 0.6,
               aes(x = x,
                   y = y,
                   color = Trends)) +
     geom_point(data = df,
-               size = 4,
+               size = 4.5,
                shape = 1,
-               stroke = 2,
+               stroke = 3,
                aes(x = x,
                    y = y),
                color = "black") +
     ylim(0, 1.0) +
-    scale_color_brewer(name = "Predicted Means", palette = "Set1") +
-    theme_bw(base_size = 32) +
+    scale_color_brewer(name = "Surrogate Trend", palette = "Set1") +
+    scale_x_continuous(expand = c(0.01, 0.01)) +
+    scale_y_continuous(expand = c(0.01, 0.01)) +
+    theme_bw(base_size = 39) +
     theme(axis.title.y = element_text(angle = 0,
                                       vjust = 0.5),
-          legend.position = c(0.25, 0.86),
+          legend.position = c(0.22, 0.84),
           legend.direction = "vertical",
           legend.background = element_rect(fill = "transparent"))
 #+end_SRC
@@ -10234,6 +10236,13 @@ through the observations on the center and rightmost panels.
 #+CAPTION: noise-free observations
 [[file:img/matern52_50d_fitting.pdf]]
 
+#+NAME: fig:matern52-50d-fitting-noisy
+#+ATTR_LATEX: :width \textwidth :placement [h]
+#+CAPTION: Fitting a Gaussian Process to three noisy observations,
+#+CAPTION: in the same conditions and with the same panel structure
+#+CAPTION: in Figure\nbsp{}\ref{fig:matern52-50d-fitting}
+[[file:img/matern52_50d_fitting_noisy.pdf]]
+
 Although  in   specific  autotuning  applications  involving   deterministic  or
 extremely  fast processes  we can  observe consistent  measurements and  produce
 useful  models  with  fits  that  assume  noiseless  measurements,  such  as  in
@@ -10266,24 +10275,32 @@ and
 \end{align}
 #+end_export
 
-#+NAME: fig:matern52-50d-fitting-noisy
-#+ATTR_LATEX: :width \textwidth :placement [b]
-#+CAPTION: Fitting a Gaussian Process to three noisy observations.
-#+CAPTION: The left panel shows 300 samples from a Gaussian prior,
-#+CAPTION: using the Matérn kernel to compute the covariance matrix.
-#+CAPTION: The center and right panels show 300 samples from the
-#+CAPTION: posterior distributions conditioned by one, then two more, successive
-#+CAPTION: noisy observations
-[[file:img/matern52_50d_fitting_noisy.pdf]]
+We can incorporate  hypotheses over the search space to  fitted surrogates using
+the basis  functions we  described when we  discussed linear  regression.  Trend
+functions can be added to the  surrogate's predicted mean to leverage underlying
+trends  in  data,  that  should  be followed  on  prediction  regions  far  from
+measurements.  Figure\nbsp{}[[fig:gp-trends]]  shows GP  surrogates fitted  with and
+without  model trends.   Black  circles   represent  six  measurements   of  a
+single-input function, and  each colored band represents a model  trend.  We are
+considering noise-free  measurements in these  fits, so all surrogates  agree on
+the predictions  at the  measurements.  We  can see  that predictions  for input
+between or  sufficiently far from  measurements present stronger  influence from
+the  underlying trend.   A trend  can help  leverage previous  knowledge of  the
+relationships  between  factors  and  the  values  of  the  objective  function,
+especially when the cost  of measuring a single point is  expensive, or when new
+experiments cannot be performed. However, if we can choose which measurements to
+perform   we   can   use   space-filling    designs,   which   we   discuss   on
+Chapter\nbsp{}[[Design of  Experiments]], to decrease  or sometimes remove  the need
+for a model trend.
 
-We can incorporate hypotheses to the  fitted surrogate using the basis functions
-we    described    previously    to    describe    trends    in    measurements.
-Figure\nbsp{}[[fig:gp-trends]]  shows GP  surrogates fitted  with and  without trend
-models.   The  fits  and  predictions  were computed  using  the  /DiceKriging/  /R/
-package\nbsp{}\cite{roustant2018dicekriging}.
+The fits and predictions shown in Figure\nbsp{}[[fig:gp-trends]] were computed using
+the  /DiceKriging/ /R/  package\nbsp{}\cite{roustant2018dicekriging}.  We  refer the
+reader to the detailed descriptions of  trend functions and their application to
+Gaussian  Process  Regression   presented  in  Section  /2.1/   of  the  package's
+accompanying paper\nbsp{}\cite{roustant2012dicekriging}.
 
 #+NAME: fig:gp-trends
-#+ATTR_LATEX: :width 0.6\textwidth :placement [t]
+#+ATTR_LATEX: :width 0.5\textwidth :placement [t]
 #+CAPTION: Trend models
 [[file:img/gp_trends.pdf]]
 
@@ -10293,7 +10310,6 @@ surrogates, and quantify their prediction error  on a testing set outside of the
 measurements used for fitting.
 
 **** Assessing Quality of Fit
-
 
 #+NAME: fig:gp-fitting
 #+ATTR_LATEX: :width \textwidth :placement [h!]

@@ -383,6 +383,11 @@ C.~M. Bishop, \emph{Pattern recognition and machine learning}.\hskip 1em plus
   \url{https://cran.r-project.org/web/packages/DiceKriging/index.html}
 \BIBentrySTDinterwordspacing
 
+\bibitem{roustant2012dicekriging}
+O.~Roustant, D.~Ginsbourger, and Y.~Deville, ``{{DiceKriging}, {DiceOptim}: Two
+  {R} Packages for the Analysis of Computer Experiments by Kriging-Based
+  Metamodeling and Optimization},'' vol.~51, no.~1, 2012, pp. 1--55.
+
 \bibitem{balaprakash2011can}
 P.~Balaprakash, S.~M. Wild, and P.~D. Hovland, ``Can search algorithms save
   large-scale automatic performance tuning?'' in \emph{ICCS}, 2011, pp.

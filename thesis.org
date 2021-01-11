@@ -905,13 +905,13 @@ everything
 - how to interpret the significance (sobol indices) but quite costly
 
 ***** Quality of Fit
-- [ ] Introduction
+- [X] Introduction
   - 3 trend model types
   - 10 samples -> fit a GP
   - Compute MSE (assess quality)
-- [ ] Model Trends
+- [X] Model Trends
   - Guide surrogate mean outside measurements
-- [ ] MSE
+- [X] MSE
   - mean of observations
   - on training set: Leave One Out Cross Validation
   - on testing set
@@ -921,11 +921,11 @@ everything
   - optimized during fit: MSE, MAP
 - [ ] Other assessment metrics
   - MAP?
+- [ ] Three levels of inference (Rasmussen Chap. 5)
+  - Hypothesis, hyperparameters, parameters
 
 ***** Inference: Sensitivity Analysis
 - [ ] Sobol indices (brief)
-- [ ] Three levels of inference (Rasmussen Chap. 5)
-  - Hypothesis, hyperparameters, parameters
 
 **** Mini-Conclusion
 Two big classes of models. Generality vs. interpretability. Yet
@@ -7366,6 +7366,7 @@ converged
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(latex2exp)
 
 plot_df = target_x %>%
     pivot_longer(cols = c(const_prediction,
@@ -7396,12 +7397,17 @@ ggplot() +
                    y = y),
                color = "black") +
     ylim(0, 1.0) +
+    ylab(TeX("$\\hat{f}_{\\theta}(x)$")) +
+    xlab(TeX("$x$")) +
     scale_color_brewer(name = "Surrogate Trend", palette = "Set1") +
     scale_x_continuous(expand = c(0.01, 0.01)) +
     scale_y_continuous(expand = c(0.01, 0.01)) +
     theme_bw(base_size = 39) +
-    theme(axis.title.y = element_text(angle = 0,
+    theme(axis.title.y = element_text(angle = 90,
                                       vjust = 0.5),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank(),
           legend.position = c(0.22, 0.84),
           legend.direction = "vertical",
           legend.background = element_rect(fill = "transparent"))
@@ -9848,10 +9854,10 @@ Error (MSE) for each surrogate on the design $\mathbf{X}$, written
 \begin{align}
   MSE_{\hat{f}_{\theta}(\mathbf{X})} &= \dfrac{1}{n}
   \sum_{i = 1}^{n}{\left(\left(f(\mathbf{x}_i) + \varepsilon\right) -
-    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{,} \label{eq:mse-test} \\[1em]
+    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{,} \label{eq:mse-train} \\[1em]
   MSE_{\hat{f}_{\theta}} &= \dfrac{1}{\vert{}\mathcal{X}\vert{}}
   \sum_{i = 1}^{\vert{}\mathcal{X}\vert{}}{\left(\left(f(\mathbf{x}_i) + \varepsilon\right) -
-    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{, and} \label{eq:mse-train} \\[1em]
+    \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{, and} \label{eq:mse-test} \\[1em]
   MSE_{f} &= \dfrac{1}{\vert{}\mathcal{X}\vert{}}
   \sum_{i = 1}^{\vert{}\mathcal{X}\vert{}}{\left(f(\mathbf{x}_i) -
     \hat{f}_\theta(\mathbf{x}_i)\right)^2}\text{.} \label{eq:mse-true}
@@ -10275,23 +10281,25 @@ and
 \end{align}
 #+end_export
 
-We can incorporate  hypotheses over the search space to  fitted surrogates using
-the basis  functions we  described when we  discussed linear  regression.  Trend
-functions can be added to the  surrogate's predicted mean to leverage underlying
-trends  in  data,  that  should  be followed  on  prediction  regions  far  from
-measurements.  Figure\nbsp{}[[fig:gp-trends]]  shows GP  surrogates fitted  with and
-without  model trends.   Black  circles   represent  six  measurements   of  a
-single-input function, and  each colored band represents a model  trend.  We are
-considering noise-free  measurements in these  fits, so all surrogates  agree on
-the predictions  at the  measurements.  We  can see  that predictions  for input
-between or  sufficiently far from  measurements present stronger  influence from
-the  underlying trend.   A trend  can help  leverage previous  knowledge of  the
-relationships  between  factors  and  the  values  of  the  objective  function,
-especially when the cost  of measuring a single point is  expensive, or when new
-experiments cannot be performed. However, if we can choose which measurements to
-perform   we   can   use   space-filling    designs,   which   we   discuss   on
-Chapter\nbsp{}[[Design of  Experiments]], to decrease  or sometimes remove  the need
-for a model trend.
+Before discussing quality  of fit assessment metrics for GP  surrogates, we will
+discuss how to incorporate hypotheses over the search space to fitted surrogates
+using basis functions,  which we described when we  discussed linear regression.
+Trend  functions can  be added  to the  surrogate's predicted  mean to  leverage
+underlying trends  in data, that  should be  followed on prediction  regions far
+from measurements.
+
+Figure\nbsp{}[[fig:gp-trends]]  shows GP  surrogates fitted  with and  without model
+trends.  Black  circles represent six  measurements of a  single-input function,
+and  each  line  represents  a  model  trend.   We  are  considering  noise-free
+measurements in  these fits, so all  surrogates agree on the  predictions at the
+measurements.  We can see that predictions for input between or sufficiently far
+from measurements present stronger influence from the underlying trend.  A trend
+can help  leverage previous knowledge  of the relationships between  factors and
+the values  of the objective function,  especially when the cost  of measuring a
+single point is expensive, or when new experiments cannot be performed. However,
+if we can choose which measurements to perform we can use space-filling designs,
+which  we  discuss  on  Chapter\nbsp{}[[Design  of  Experiments]],  to  decrease  or
+sometimes remove the need for a model trend.
 
 The fits and predictions shown in Figure\nbsp{}[[fig:gp-trends]] were computed using
 the  /DiceKriging/ /R/  package\nbsp{}\cite{roustant2018dicekriging}.  We  refer the
@@ -10301,15 +10309,66 @@ accompanying paper\nbsp{}\cite{roustant2012dicekriging}.
 
 #+NAME: fig:gp-trends
 #+ATTR_LATEX: :width 0.5\textwidth :placement [t]
-#+CAPTION: Trend models
+#+CAPTION: Gaussian Process surrogates using three different model trends,
+#+CAPTION: fit to six noise-free observations of a single-input objective function,
+#+CAPTION: marked with black circles
 [[file:img/gp_trends.pdf]]
 
-As we did for the Linear Model  surrogates discussed earlier in this chapter, in
+As we did for the linear model  surrogates discussed earlier in this chapter, in
 the  next  section  we will  assess  the  quality  of  fit of  Gaussian  Process
 surrogates, and quantify their prediction error  on a testing set outside of the
 measurements used for fitting.
 
-**** Assessing Quality of Fit
+**** Assessing the Quality of Fit of Gaussian Process Surrogates
+We will construct three  GP surrogates for the Booth function  and use the model
+fits to  discuss the  assessment of model  quality.  Figure\nbsp{}[[fig:gp-fitting]]
+shows the three  surrogate fits, constructed using the  same design $\mathbf{X}$
+with $n = 10$ random uniformly distributed measurements of the Booth function
+#+begin_export latex
+\begin{align}
+  f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} +
+  (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
+\end{align}
+#+end_export
+subject  to  measurement  error  $\varepsilon$.  Panel  (a)  shows  the  surface
+produced by measuring $f$ in its entire  domain and the MSE of the constant mean
+predictor $MSE_{\bar{\mathbf{y}}}$.  The 10  random measurements in $\mathbf{X}$
+are highlighted.  Panels (b), (c), and (d) show the three surrogates, which used
+model    trends    using    the     basis    function    sets    described    by
+Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}.  Panels (b), (c), and
+(d)  show the  testing  $MSE_{\hat{f}_{\theta}}$ and  true $MSE_{f}$  prediction
+errors for  each surrogate, described by  Equations\nbsp{}\ref{eq:mse-test} and
+\ref{eq:mse-true}.
+
+We  have assumed  noisy  measurements when  fitting the  GP  surrogates in  this
+example.   In this  setting,  we  could compute  the  training prediction  error
+$MSE_{\hat{f}_{\theta}(\mathbf{X})}$          as           described          by
+Equation\nbsp{}\ref{eq:mse-train},  but  this would  not  work  for a  surrogate
+assuming noise-free  measurements.  Since  all surrogates would  interpolate the
+observations, the prediction  error for points in the training  set would always
+be zero.   Still, analogously, in our  example we also controlled  the variances
+representing      the     measurement      errors,      as     described      by
+Equations\nbsp{}\ref{eq:posterior-mean-noisy} and \ref{eq:posterior-cov-noisy}.
+
+The strategy we used for computing test prediction error for linear models would
+not  be  accurate   for  this  example,  and  we  used   a  Leave-One-Out  (LOO)
+cross-validation     strategy      to     compute     the      testing     error
+$MSE^{LOO}_{\hat{f}_{\theta}}(\mathbf{X})$.  The strategy  consists of computing
+the mean  of all  $MSE_{\hat{f}_{\theta}(\mathbf{X})}$ for  different surrogates,
+with the  same model trend,  fit to the testing  sets generated by  removing one
+distinct training point at a time,  for all training points.  This strategy also
+works to compute the testing prediction error for noise-free GP fits.
+
+The training error $MSE_{\hat{f}_{\theta}(\mathbf{X})}$ can be computed with the
+design  points and  the fitted  model.  In  real applications  we can  sometimes
+compute the  testing error $MSE_{\hat{f}_\theta}$  for the entire  search space,
+but usually we settle for the error on a testing set distinct from $\mathbf{X}$.
+We can almost  never compute the true  error $MSE_{f}$ of our  surrogate, but in
+our toy example  we can use the Booth  function without the error term  to get a
+sense of how well our models generalize.  As we could expect, since the true $f$
+in   our  example   can  be   represented  by   the  basis   functions  on   set
+$\mathcal{H}_{(d)}$, the surrogate  from panel (c) has the smallest  MSE and the
+generalizes the best, although it still differs from the true $f$.
 
 #+NAME: fig:gp-fitting
 #+ATTR_LATEX: :width \textwidth :placement [h!]
@@ -10322,9 +10381,12 @@ measurements used for fitting.
 #+CAPTION: $\color{blue}\boldsymbol{\times}$ s.
 #+CAPTION: Panel (a) shows noisy measurements of Booth's function,
 #+CAPTION: panels (b), (c), and (d) show surrogate predictions for models fit with
-#+CAPTION: linear, quadratic, and quadratic plus interactions trend models,
+#+CAPTION: linear, quadratic, and quadratic plus interactions trends,
 #+CAPTION: respectively
 [[file:img/booth_3d_gp.pdf]]
+
+#+latex: \clearpage
+
 **** Inference: Interpreting Significance with Sobol Indices
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
 

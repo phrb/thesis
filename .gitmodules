@@ -1,3 +1,9 @@
 [submodule "bibliography"]
 	path = bibliography
 	url = git@github.com:phrb/bibliography.git
+[submodule "dopt_anova_experiments"]
+	path = dopt_anova_experiments
+	url = git@github.com:phrb/dopt_anova_experiments.git
+[submodule "ccgrid19"]
+	path = ccgrid19
+	url = git@github.com:phrb/ccgrid19.git

@@ -64,6 +64,7 @@
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
 #+LATEX_HEADER: \usepackage{indentfirst}
+#+LATEX_HEADER: \usepackage{tabularx}
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
@@ -776,6 +777,28 @@ proposal and application to the Microsoft Latin America PhD Award.
 
 #+LATEX: \bibliographystyle{IEEEtran}
 #+LATEX: \bibliography{references}
+* Cloning Repositories with Data                                   :noexport:
+** Adding Sub-modules
+*** Bibliography
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule add --depth=1 git@github.com:phrb/bibliography.git
+#+end_SRC
+
+*** DLMT and ANOVA Experiments
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule add --depth=1 git@github.com:phrb/dopt_anova_experiments.git
+#+end_SRC
+
+*** CCGRID2019 Paper
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule add --depth=1 git@github.com:phrb/ccgrid19.git
+#+end_SRC
+
+** Initializing Sub-modules
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule init
+#+end_SRC
+
 * Thesis Outline Draft with Arnaud                                 :noexport:
 ** Introduction
 General presentation of the manuscript
@@ -916,16 +939,21 @@ everything
   - on training set: Leave One Out Cross Validation
   - on testing set
   - on the real function
-- [ ] Kernel Hyperparameters
+- [X] Kernel Hyperparameters
   - lengthscale
   - optimized during fit: MSE, MAP
-- [ ] Other assessment metrics
+- [X] Other assessment metrics
   - MAP?
 - [ ] Three levels of inference (Rasmussen Chap. 5)
   - Hypothesis, hyperparameters, parameters
 
 ***** Inference: Sensitivity Analysis
 - [ ] Sobol indices (brief)
+  - variance-based sensitivity analysis
+  - variance decomposition for a general objective function of $p$ factors
+    - for each factor $x_i$, what is the variance of the expected value
+      of the objective function, given a specific value of the factor?
+    - estimators
 
 **** Mini-Conclusion
 Two big classes of models. Generality vs. interpretability. Yet
@@ -10166,9 +10194,8 @@ Table\nbsp{}\ref{tab:kernel-expressions}.
 
 The actual  parameter space $\Theta$  over which optimization is  performed when
 fitting a Gaussian Process surrogate is composed by the parameters of the chosen
-covariance  kernel, called  hyperparameters.   As discussed  on  Section /5.1/  of
-Rasmussen   and   Williams\nbsp{}\cite{williams2006gaussian},   typical   kernel
-hyperparameters  are   the  amplitude  $\sigma_f$  and   the  /length-scale/  $l$.
+covariance  kernel, called  hyperparameters.   Typical  hyperparameters are  the
+Section  /5.1/  of  Rasmussen  and  Williams\nbsp{}\cite{williams2006gaussian},  .
 Explicitly  listing the  hyperparameters for  a Gaussian  Process fit  using the
 exponential kernel from Table\nbsp{}\ref{tab:kernel-expressions} would result in
 #+begin_export latex
@@ -10186,7 +10213,8 @@ and the parameter space $\Theta$ would be defined as
 We  can then  use the  conditioned posterior  distribution, discussed  below, to
 determine   the  best   specific   hyperparameter  values   by  minimizing   the
 cross-validated  mean   squared  error,  for   example,  which  we   discuss  in
-Section\nbsp{}[[Assessing the Quality of Fit of Gaussian Process Surrogates]].
+Section\nbsp{}[[Assessing the Quality of Fit of Gaussian Process Surrogates]], or by
+maximizing the posterior likelihood.
 
 The posterior  distribution $\hat{f}_{\theta}$  is computed by  conditioning the
 prior  distribution from  Equation\nbsp{}\ref{eq:gauss-prior}  to observed  data
@@ -10195,7 +10223,7 @@ Equation\nbsp{}\ref{eq:gauss-posterior}, which is  also a Gaussian distribution,
 and can be written
 #+begin_export latex
 \begin{align}
-  \label{eq:gauss-posterior}
+  \label{eq:gauss-posterior-dist}
   \hat{f}_{\theta}(\mathbf{X}_k) \sim
   \mathcal{N}(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)\text{,}
 \end{align}
@@ -10252,8 +10280,8 @@ as the  distance between  inputs increases,  approaching zero.   Using different
 kernels we can  control properties of sampled functions, such  as smoothness and
 periodicity.   The center  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows
 samples from the conditioned posterior  after a single observation $(\mathbf{x},
-\mathbf{y})$,    computed     using    Equations\nbsp{}\ref{eq:gauss-posterior},
-\ref{eq:posterior-mean},  and  \ref{eq:posterior-cov}.  The  right  panel  shows
+\mathbf{y})$,   computed  using   Equations\nbsp{}\ref{eq:gauss-posterior-dist},
+\ref{eq:posterior-mean},  and  \ref{eq:posterior-cov}.   The right  panel  shows
 samples from  the posterior after  observing two additional  observations.  Note
 that all 300  functions sampled from the conditioned  distributions pass exactly
 through the observations on the center and rightmost panels.
@@ -10286,7 +10314,7 @@ observations, under  the assumption  that the  underlying objective  function is
 subject  to measurement  error $\varepsilon  \sim \mathcal{N}(0,  \sigma^2)$, as
 described in  Equation\nbsp{}\ref{eq:model-noisy}.  In  this scenario,  we write
 the        mean       vector        and       covariance        matrix       for
-Equation\nbsp{}\ref{eq:gauss-posterior} as
+Equation\nbsp{}\ref{eq:gauss-posterior-dist} as
 #+begin_export latex
 \begin{align}
   \label{eq:posterior-mean-noisy}
@@ -10406,22 +10434,839 @@ fits.
 #+latex: \clearpage
 
 **** Inference: Interpreting Significance with Sobol Indices
+Sobol  indices\nbsp{}\cite{sobol1993sensitivity}  are  a  variance-based  global
+sensitivity analysis method, which computes the relative importance of the input
+factors  $\mathbf{x}_1,\dots,\mathbf{x}_p$  of  an  objective  function  $f$  by
+decomposing the variance observed in measurements of $f$.  The first-order Sobol
+index $S_i$ for each factor $\mathbf{x}_i$ represents the normalized variance of
+the expected value of $f$ given a fixed factor value, written
+#+begin_export latex
+\begin{align}
+  S_i = \dfrac{V_{\mathbf{x}_i}\left(
+    E_{\mathbf{X} \setminus \mathbf{x}_i}\left(f(\mathbf{X})
+    \;\vert\;\mathbf{x}_i\right)\right)}
+  {V\left(f(\mathbf{X})\right)}\text{.}
+\end{align}
+#+end_export
+The variance  of a  function can be  further decomposed to  produce $2^{p}  - 1$
+indexes  that measure  the  sensitivity  of factor  interactions  of  up to  the
+$p^{\text{th}}$  level.  Additionally,  we  can aggregate  the  effects  of  the
+interactions of a factor and compute  total-effect indices, in order to decrease
+the total number of  indices to compute.
+
+Sobol sensitivity indices can be estimated using  $N (p + 2)$ evaluations of the
+objective  function, where  $N$ controls  the accuracy  of the  estimate and  is
+typically in the order of thousands. The Monte Carlo method described in Section
+/4.1.6/  of  Saltelli  /et al./\nbsp{}\cite{saltelli2008global}  determines  how  to
+construct  the experiment  matrices  containing all  samples,  and computes  the
+sensitivity  indices  using the  estimators  described  in  the book  and  later
+reviewed and summarized by the authors\nbsp{}\cite{saltelli2010variance}.
+
+
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
 
 *** Summary
 ** Design of Experiments
-*** Introduction
-- Reducing Experimental Cost
-- Improving Model Inference and Prediction
-*** 2-Level Factorial Designs
-*** Screening
+In  this  section  we  first  present  the  assumptions  of  a  traditional  DoE
+methodology using an  example of /2-level screening designs/, an  efficient way to
+identify  main effects.  We  then  discuss techniques  for  the construction  of
+efficient designs  for factors with arbitrary  numbers and types of  levels, and
+present /D-Optimal/ designs, the technique used in this paper.
+
+*** Search Space Exploration Strategies
+#+NAME: fig:sampling_comparison
+#+CAPTION: Exploration of the search space, using a fixed budget of 50 points. The red ``$+$'' represents the best point found by each strategy, and ``$\times$''s denote neighborhood exploration
+#+ATTR_LATEX: :width .95\columnwidth :placement [b]
+[[./img/ccgrid-2019/sampling_comparison.pdf]]
+
+Figure\nbsp{}[[fig:sampling_comparison]] shows the contour of a search space defined
+by a function of the form $z =  x^2 + y^2 + \varepsilon$, where $\varepsilon$ is
+a local perturbation, and the exploration  of that search space by six different
+strategies. In such a simple search space, even a uniform random sample can find
+points  close  to  the  optimum,  despite  not  exploiting  geometry.   A  Latin
+Hypercube\nbsp{}\cite{carnell2018lhs} sampling strategy  covers the search space
+more evenly, but  still does not exploit the space's  geometry. Strategies based
+on neighborhood exploration such as simulated annealing and gradient descent can
+exploit local structures, but may get trapped in local minima. Their performance
+is strongly dependent on search starting point. These strategies do not leverage
+global  search   space  structure,   or  provide  exploitable   knowledge  after
+optimization.
+
+Measurement  of  the  kernels  optimized   on  the  performance  evaluations  in
+Section\nbsp{}Performance Evaluation  can exceed 20 minutes,  including the time
+of  code  transformation, compilation,  and  execution.   Measurements in  other
+problem  domains  can  take  much  longer to  complete.   This  strengthens  the
+motivation to consider search space  exploration strategies capable of operating
+under  tight  budget constraints.   These  strategies  have been  developed  and
+improved by  statisticians for  a long time,  and can be  grouped under  the DoE
+term.
+
+The D-Optimal  sampling strategies shown on  the two rightmost bottom  panels of
+Figure\nbsp{}[[fig:sampling_comparison]]  are  based  on the  DoE  methodology,  and
+leverage previous  knowledge about search  spaces for an  efficient exploration.
+These  strategies   provide  transparent   analyses  that  enable   focusing  on
+interesting  subspaces.  In  the  next  section  we  describe  our  approach  to
+autotuning based on the DoE methodology.
+*** Screening & Plackett-Burman Designs
+Screening designs identify parsimoniously the main effects of 2-level factors in
+the initial stages of studying a  problem. While interactions are not considered
+at this stage, identifying main effects  early enables focusing on a smaller set
+of factors on subsequent experiments.  A specially efficient design construction
+technique   for    screening   designs    was   presented   by    Plackett   and
+Burman\nbsp{}\cite{plackett1946design}  in 1946,  and is  available in  the =FrF2=
+package\nbsp{}\cite{gromping2014frf2}            of             the            =R=
+language\nbsp{}\cite{team2018rlanguage}.
+
+Despite  having  strong  restrictions  on   the  number  of  factors  supported,
+Plackett-Burman designs enable the identification of main effects of $n$ factors
+with $n  + 1$  experiments. Factors  may have  many levels,  but Plackett-Burman
+designs  can  only  be  constructed  for  2-level  factors.   Therefore,  before
+constructing a Plackett-Burman  design we must identify /high/ and  /low/ levels for
+each factor.
+
+Assuming a linear  relationship between factors and the  response is fundamental
+for  running ANOVA  tests using  a Plackett-Burman  design. Consider  the linear
+relationship
+#+LATEX: \vspace{-2pt}
+#+BEGIN_EXPORT latex
+\begin{equation}
+\mathbf{Y} = \bm{\beta}\mathbf{X} + \varepsilon\text{,}
+\label{eq:linear_assumption}
+\vspace{-2pt}
+\end{equation}\noindent
+#+END_EXPORT
+where $\varepsilon$  is the error  term, $\mathbf{Y}$ is the  observed response,
+$\mathbf{X}  =  \left\{1,  x_1,\dots,x_n\right\}$  is the  set  of  $n$  2-level
+factors, and $\bm{\beta} = \left\{\beta_0,\dots,\beta_n\right\}$ is the set with
+the /intercept/  $\beta_0$ and the  corresponding /model coefficients/.  ANOVA tests
+can rigorously  compute the significance  of each factor,  we can think  of that
+intuitively  by noting  that less  significant factors  will have  corresponding
+values in $\bm{\beta}$ close to zero.
+
+The  next example  illustrates the  screening  methodology. Suppose  we wish  to
+minimize  a performance  metric $Y$  of a  problem with  factors $x_1,\dots,x_8$
+assuming values  in $\left\{-1,  -0.8, -0.6, \dots,  0.6, 0.8,  1\right\}$. Each
+$y_i \in Y$ is defined as
+#+LATEX: \vspace{-2pt}
+#+BEGIN_EXPORT latex
+\begin{align}
+\label{eq:real_model}
+y_i = & -1.5x_1 + 1.3x_3 + 3.1x_5 + \\
+& -1.4x_7 + 1.35x_8^2 + 1.6x_3x_5 + \varepsilon\text{.} \nonumber
+\vspace{-2pt}
+\end{align}\noindent
+#+END_EXPORT
+Suppose that, for the purpose of this example, the computation is done by a very
+expensive  black-box procedure.   Note  that factors  $\{x_2,x_4,x_6\}$ have  no
+contribution to the  response, and we can think of  the error term $\varepsilon$
+as representing not only noise, but  our uncertainty regarding the model. Higher
+amplitudes of $\varepsilon$  might make isolating factors  with low significance
+harder to justify.
+
+To  study this  problem efficiently  we decided  to construct  a Plackett-Burman
+design, which minimizes the experiments  needed to identify significant factors.
+The analysis of this design will enable decreasing the dimension of the problem.
+Table\nbsp{}\ref{tab:plackett} presents the Plackett-Burman design we generated.
+It contains  high and low  values, chosen  to be $-1$  and $1$, for  the factors
+$x_1,\dots,x_8$, and the observed response  $\mathbf{Y}$.  It is a required step
+to add the 3 ``dummy'' factors $d_1,\dots,d_3$ to complete the 12 columns needed
+to       construct       a        Plackett-Burman       design       for       8
+factors\nbsp{}\cite{plackett1946design}.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(FrF2)
+library(xtable)
+
+set.seed(3138989)
+
+get_cost <- function(data) {
+    return((-1.5 * as.numeric(data$x1)) + (1.3 * as.numeric(data$x3)) +
+           (1.6 * as.numeric(data$x1) * as.numeric(data$x3)) +
+           (1.35 * as.numeric(data$x8) * as.numeric(data$x8)) +
+           (3.1 * as.numeric(data$x5)) + (-1.4 * as.numeric(data$x7)) +
+           rnorm(nrow(data), sd = 0.6))
+}
+
+objective_data <- expand.grid(seq(-1, 1, 0.2),
+                              seq(-1, 1, 0.2),
+                              seq(-1, 1, 0.2),
+                              seq(-1, 1, 0.2),
+                              seq(-1, 1, 0.2))
+
+names(objective_data) <- c("x1", "x3", "x5",
+                           "x7", "x8")
+
+objective_data$Y <- get_cost(objective_data)
+
+options(warn = -1)
+design <- pb(12, factor.names = c("x1", "x2", "x3",
+                                  "x4", "x5", "x6",
+                                  "x7", "x8", "d1",
+                                  "d2", "d3"))
+options(warn = 0)
+
+design$Y <- get_cost(design)
+
+names(design) <- c("$x_1$", "$x_2$", "$x_3$",
+                   "$x_4$", "$x_5$", "$x_6$",
+                   "$x_7$", "$x_8$", "$d_1$",
+                   "$d_2$", "$d_3$", "$Y$")
+
+cap <- "Randomized Plackett-Burman design for factors $x_1, \\dots, x_8$, using 12 experiments and ``dummy'' factors $d_1, \\dots, d_3$, and computed response $\\mathbf{Y}$"
+tab <- xtable(design, caption = cap, label = "tab:plackett")
+align(tab) <- "ccccccccccccc"
+print(tab, booktabs = TRUE,
+      include.rownames = FALSE,
+      caption.placement = "top",
+      size = "\\scriptsize",
+      table.placement="b",
+      sanitize.text.function = function(x){x})
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:04:00 2018
+\begin{table}[b]
+\centering
+\caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, using 12 experiments and ``dummy'' factors $d_1, \dots, d_3$, and computed response $\mathbf{Y}$}
+\label{tab:plackett}
+\begingroup\scriptsize
+\begin{tabular}{cccccccccccc}
+  \toprule
+$x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $d_1$ & $d_2$ & $d_3$ & $Y$ \\
+  \midrule
+1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 13.74 \\
+  -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & 10.19 \\
+  -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & 9.22 \\
+  1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 7.64 \\
+  1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 8.63 \\
+  -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & 11.53 \\
+  -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & 2.09 \\
+  1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 9.02 \\
+  1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 10.68 \\
+  1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 11.23 \\
+  -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & 5.33 \\
+  -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & 14.79 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+So    far,    we     have    performed    steps    1,    2,     and    3    from
+Figure\nbsp{}[[fig:doe_anova_strategy]].    We    use    our   initial    assumption    in
+Equation\nbsp{}\eqref{eq:linear_assumption} to identify the most significant factors by
+performing     an      ANOVA     test,     which     is      step     5     from
+Figure\nbsp{}[[fig:doe_anova_strategy]].      The      results      are      shown      in
+Table\nbsp{}\ref{tab:anova_linear},   where  the   /significance/  of   each  factor   is
+interpreted    from    the    F-test    and    $\text{Pr}(>\text{F})$    values.
+Table\nbsp{}\ref{tab:anova_linear}  uses ``$*$'',  as is  convention in  the \texttt{R}
+language, to represent the significance values for each factor.
+
+We see on  Table\nbsp{}\ref{tab:anova_linear} that factors $\left\{x_3,x_5,x_7,x_8\right\}$
+have at least one ``$*$'' of significance. For the purpose of this example, this
+is sufficient reason to  include them in our linear model for  the next step. We
+decide as well to discard  factors $\left\{x_2,x_4,x_6\right\}$ from our model, due
+to their low  significance. We see that  factor $x_1$ has a  significance mark of
+``\cdot'', but  comparing F-test  and $\text{Pr}(>\text{F})$  values we  decide that
+they are fairly smaller than the values of factors that had no significance, and
+we keep this factor.
+
+#+HEADER: :results graphics output :session *R* :exports none :eval no-export
+#+HEADER: :file ./img/ccgrid-2019/main_effects.pdf
+#+HEADER: :width 12 :height 4
+#+BEGIN_SRC R
+library(extrafont)
+
+names(design) <- c("x1", "x2", "x3",
+                   "x4", "x5", "x6",
+                   "x7", "x8", "d1",
+                   "d2", "d3", "Y")
+
+regression <- lm(Y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8, data = design)
+
+par(family = 'serif')
+MEPlot(regression, main = NULL, pch = 19,
+       lwd = 0, cex.xax = 2.9, cex.main = 3.1,
+       cex.axis = 1)
+#+END_SRC
+
+#+RESULTS:
+[[file:./img/ccgrid-2019/main_effects.pdf]]
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(xtable)
+
+options(warn = -1)
+names(design) <- c("x1", "x2", "x3",
+                   "x4", "x5", "x6",
+                   "x7", "x8", "d1",
+                   "d2", "d3", "Y")
+
+regression <- aov(Y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8, data = design)
+s_regression <- as.data.frame(summary.aov(regression)[[1]])
+s_regression <- s_regression[1:8, c("F value", "Pr(>F)")]
+
+s_regression$stars <- symnum(s_regression[ , "Pr(>F)"], na = FALSE,
+                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                             symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
+
+names(s_regression) <- c("F value", "$\\text{Pr}(>\\text{F})$", "Signif.")
+
+rownames(s_regression) <- c("$x_1$", "$x_2$", "$x_3$",
+                            "$x_4$", "$x_5$", "$x_6$",
+                            "$x_7$", "$x_8$")
+
+cap <- "Shortened ANOVA table for the fit of the naive model, with significance intervals from the \\texttt{R} language"
+x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "s"), label = "tab:anova_linear")
+align(x) <- xalign(x)
+options(warn = 0)
+print(x, size = "\\small",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      sanitize.text.function = function(x){x},
+      table.placement="t",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:04:10 2018
+\begin{table}[t]
+\centering
+\caption{Shortened ANOVA table for the fit of the naive model, with significance intervals from the \texttt{R} language}
+\label{tab:anova_linear}
+\begingroup\small
+\begin{tabular}{lrrl}
+  \toprule
+ & F value & $\text{Pr}(>\text{F})$ & Signif. \\
+  \midrule
+$x_1$ & 8.382 & 0.063 & $\cdot$ \\
+  $x_2$ & 0.370 & 0.586 &   \\
+  $x_3$ & 80.902 & 0.003 & $**$ \\
+  $x_4$ & 0.215 & 0.675 &   \\
+  $x_5$ & 46.848 & 0.006 & $**$ \\
+  $x_6$ & 5.154 & 0.108 &   \\
+  $x_7$ & 13.831 & 0.034 & $*$ \\
+  $x_8$ & 59.768 & 0.004 & $**$ \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+Moving forward  to steps 6, 7,  and 8 in Figure\nbsp{}[[fig:doe_anova_strategy]],  we will
+build  a linear  model  using factors  $\left\{x_1,x_3,x_5,x_7,x_8\right\}$, fit  the
+model using the values of $Y$ we obtained when running our design, and use model
+coefficients  to predict  the  levels  of each  factor  that  minimize the  real
+response. We can  do that because these factors are  numerical, even though only
+discrete values are allowed.
+
+We now proceed to  the prediction step, where we wish to  identify the levels of
+factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$ that minimize  our fitted model, without
+running any new experiments. This can be  done by, for example, using a gradient
+descent algorithm  or finding  the point  where the  derivative of  the function
+given by the linear regression equals to zero.
+
+Table\nbsp{}\ref{tab:linear_prediction_comparison} compares the  prediction for $Y$ from
+our linear model with  the selected factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$ with
+the   actual  global   minimum  $Y$   for  this   problem.  Note   that  factors
+$\left\{x_2,x_4,x_6\right\}$ are included for the global minimum. This happens here
+because of  the error term $\varepsilon$,  but could also  be interpreted as due  to model
+uncertainty.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(xtable)
+library(dplyr)
+
+names(design) <- c("x1", "x2", "x3",
+                   "x4", "x5", "x6",
+                   "x7", "x8", "d1",
+                   "d2", "d3", "Y")
+
+design <- lapply(design, function(x){return(as.numeric(as.character(x)))})
+
+regression <- lm(Y ~ x1 + x3 + x5 + x7 + x8, data = design)
+prediction <- predict(regression, newdata = objective_data)
+
+comparison_data <- objective_data[prediction == min(prediction), ]
+comparison_data <- bind_rows(comparison_data, objective_data[objective_data$Y == min(objective_data$Y), ])
+rownames(comparison_data) <- c(" Lin.", "Min.")
+
+names(comparison_data) <- c("$x_1$", "$x_3$", "$x_5$",
+                            "$x_7$", "$x_8$", "$Y$")
+
+comparison_data[ , "$x_2$"] <- c("--", -0.2)
+comparison_data[ , "$x_4$"] <- c("--", 0.6)
+comparison_data[ , "$x_6$"] <- c("--", 0.4)
+
+comparison_data <- comparison_data[ , c("$x_1$", "$x_2$", "$x_3$",
+                                        "$x_4$", "$x_5$", "$x_6$",
+                                        "$x_7$", "$x_8$", "$Y$")]
+
+names(comparison_data) <- c("$\\bm{x_1}$", "$x_2$", "$\\bm{x_3}$",
+                            "$x_4$", "$\\bm{x_5}$", "$x_6$",
+                            "$\\bm{x_7$}", "$\\bm{x_8}$", "$Y$")
+
+cap <- "Comparison of the response $Y$ predicted by the linear model and the true global minimum. Factors used in the model are bolded"
+x <- xtable(comparison_data, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3), label = "tab:linear_prediction_comparison")
+align(x) <- xalign(x)
+options(warn = 0)
+print(x,
+      size = "\\footnotesize",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      include.rownames = TRUE,
+      sanitize.text.function = function(x){x},
+      tabular.environment = "tabularx",
+      width = "\\columnwidth",
+      table.placement="b",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:04:58 2018
+\begin{table}[b]
+\centering
+\caption{Comparison of the response $Y$ predicted by the linear model and the true global minimum. Factors used in the model are bolded}
+\label{tab:linear_prediction_comparison}
+\begingroup\footnotesize
+\begin{tabularx}{\columnwidth}{lrlrlrlrrr}
+  \toprule
+ & $\bm{x_1}$ & $x_2$ & $\bm{x_3}$ & $x_4$ & $\bm{x_5}$ & $x_6$ & $\bm{x_7$} & $\bm{x_8}$ & $Y$ \\
+  \midrule
+ Lin. & -1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -1.0 & -1.046 \\
+  Min. & 1.0 & -0.2 & -1.0 & 0.6 & -1.0 & 0.4 & 0.8 & 0.0 & -9.934 \\
+   \bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+Using 12 measurements and a simple linear model, the predicted best value of $Y$
+was around $10\times$  larger than the global optimum. Note  that the model predicted
+the correct  levels for  $x_3$ and $x_5$,  and almost for  $x_7$. The  linear model
+predicted wrong levels  for $x_1$, perhaps due to this  factor's interaction with
+$x_3$, and  for $x_8$.  Arguably, it  would be impossible  to predict  the correct
+level for $x_8$ using this linear model, since a quadratic term composes the true
+formula  of $Y$.  As we  showed in  Figure\nbsp{}[[fig:sampling_comparison]], a  D-Optimal
+design using a  linear model could detect the significance  of a quadratic term,
+but the resulting regression will often lead to the wrong level.
+
+We  can improve  upon this  result if  we introduce  some information  about the
+problem and  use a more  flexible design  construction technique. Next,  we will
+discuss the  construction of  efficient designs using  problem-specific formulas
+and continue the optimization of our example.
 *** Optimal Design
-**** Mixing Categorical and Numerical Factors
-**** Optimality Criteria
-**** Exchange Algorithms for Optimal Design Construction
-- KL-Exchange
-*** Space-Filling Designs
-*** Summary
+The  application of  DoE  to autotuning  problems  requires design  construction
+techniques  that  support factors  of  arbitrary  types  and number  of  levels.
+Autotuning problems typically combine factors  such as binary flags, integer and
+floating point numerical values, and  unordered enumerations of abstract values.
+Because Plackett-Burman designs only support 2-level factors, we had to restrict
+factor levels  to interval extremities in  our example.  We have  seen that this
+restriction makes it  difficult to measure the significance  of quadratic terms.
+We will now show how to optimize our example further by using /D-Optimal designs/,
+which increase  the number of levels  we can efficiently screen  for and enables
+detecting the significance of more complex terms.
+
+To construct  a D-Optimal  design it  is necessary to  choose an  initial model,
+which can be  done based on previous  experiments or on expert  knowledge of the
+problem.  Once  a model  is selected, algorithmic  construction is  performed by
+searching for the  set of experiments that minimizes /D-Optimality/,  a measure of
+the /variance/ of  the /estimators/ for the /regression  coefficients/ associated with
+the selected model. This search is usually done by swapping experiments from the
+current candidate design  with experiments from a pool  of possible experiments,
+according  to certain  rules,  until some  stopping criterion  is  met.  In  the
+example   in   this   section   and   in   our   approach   we   use   Fedorov's
+algorithm\nbsp{}\cite{fedorov1972theory}  for  constructing  D-Optimal  designs,
+implemented in =R= in the =AlgDesign= package\nbsp{}\cite{wheeler2014algdesign}.
+
+In our example, suppose that in addition to using our previous screening results
+we decide  to hire an  expert in our problem's  domain. The expert  confirms our
+initial assumptions that the factor $x_1$  should be included in our model since
+it is usually significant for this kind  of problem and has a strong interaction
+with factor $x_3$. She also mentions we should replace the linear term for $x_8$
+by a quadratic term for this factor.
+
+Using our previous screening and the domain knowledge provided by our expert, we
+choose a new performance model and use  it to construct a D-Optimal design using
+Fedorov's algorithm. Since  we need enough degrees of freedom  to fit our model,
+we     construct    the     design    with     12    experiments     shown    in
+Table\nbsp{}\ref{tab:d_optimal}.   Note that  the design  includes levels  $-1$,
+$0$, and $1$ for factor $x_8$. The  design will sample from different regions of
+the   search   space   due   to   the  quadratic   term,   as   was   shown   in
+Figure\nbsp{}[[fig:sampling_comparison]].
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(xtable)
+library(dplyr)
+library(AlgDesign)
+
+output <- optFederov(~ x1 + x3 + x5 + x7 + x8 + I(x8 ^ 2) + x1:x3,
+                     nTrials = 12,
+                     data = objective_data)
+
+dopt_design <- output$design
+
+dopt_regression <- lm(Y ~ x1 + x3 + x5 + x7 + x8 + I(x8 ^ 2) + x1:x3, data = dopt_design)
+dopt_prediction <- predict(dopt_regression, newdata = objective_data)
+
+dopt_data <- objective_data[dopt_prediction == min(dopt_prediction), ]
+names(dopt_data) <- c("$x_1$", "$x_3$", "$x_5$",
+                      "$x_7$", "$x_8$", "$Y$")
+
+names(dopt_design) <- c("$x_1$", "$x_3$", "$x_5$",
+                        "$x_7$", "$x_8$", "$Y$")
+
+cap <- "D-Optimal design constructed for the factors $\\left\\{x_1,x_3,x_5,x_7,x_8\\right\\}$ and computed response $Y$"
+x <- xtable(dopt_design, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 3), label = "tab:d_optimal")
+align(x) <- xalign(x)
+options(warn = 0)
+print(x,
+      size = "\\footnotesize",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      include.rownames = FALSE,
+      sanitize.text.function = function(x){x},
+      table.placement="t",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:05:40 2018
+\begin{table}[t]
+\centering
+\caption{D-Optimal design constructed for the factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$ and computed response $Y$}
+\label{tab:d_optimal}
+\begingroup\footnotesize
+\begin{tabular}{rrrrrr}
+  \toprule
+$x_1$ & $x_3$ & $x_5$ & $x_7$ & $x_8$ & $Y$ \\
+  \midrule
+-1.0 & -1.0 & -1.0 & -1.0 & -1.0 & 2.455 \\
+  -1.0 & 1.0 & 1.0 & -1.0 & -1.0 & 6.992 \\
+  1.0 & -1.0 & -1.0 & 1.0 & -1.0 & -7.776 \\
+  1.0 & 1.0 & 1.0 & 1.0 & -1.0 & 4.163 \\
+  1.0 & 1.0 & -1.0 & -1.0 & 0.0 & 0.862 \\
+  -1.0 & 1.0 & 1.0 & -1.0 & 0.0 & 5.703 \\
+  1.0 & -1.0 & -1.0 & 1.0 & 0.0 & -9.019 \\
+  -1.0 & -1.0 & 1.0 & 1.0 & 0.0 & 2.653 \\
+  -1.0 & -1.0 & -1.0 & -1.0 & 1.0 & 1.951 \\
+  1.0 & -1.0 & 1.0 & -1.0 & 1.0 & 0.446 \\
+  -1.0 & 1.0 & -1.0 & 1.0 & 1.0 & -2.383 \\
+  1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 4.423 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+#+HEADER: :results output latex :session *R* :exports none :eval no-export
+#+BEGIN_SRC R
+s_regression <- as.data.frame(summary.aov(dopt_regression)[[1]])
+s_regression <- s_regression[1:7, c("F value", "Pr(>F)")]
+
+rownames(s_regression) <- c("$x_1$", "$x_3$", "$x_5$",
+                            "$x_7$", "$x_8$", "I($x_8^2$)",
+                            "$x_1$:$x_3$")
+
+s_regression$stars <- symnum(s_regression[ , "Pr(>F)"], na = FALSE,
+                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                             symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
+
+names(s_regression) <- c("F value", "Pr$(<\\text{F})$", "Signif.")
+
+cap <- paste("Shortened ANOVA table for the fit of the naive model (", attributes(s_regression[ , "Signif."])$legend, ")", sep = "")
+x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "s"))
+align(x) <- xalign(x)
+options(warn = 0)
+print(x, size = "\\small",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      sanitize.text.function = function(x){x},
+      table.placement="ht",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:05:50 2018
+\begin{table}[ht]
+\centering
+\caption{Shortened ANOVA table for the fit of the naive model (0 ‘$***$’ 0.001 ‘$**$’ 0.01 ‘$*$’ 0.05 ‘$\cdot$’ 0.1 ‘ ’ 1)}
+\begingroup\small
+\begin{tabular}{lrrl}
+  \toprule
+ & F value & Pr$(<\text{F})$ & Signif. \\
+  \midrule
+$x_1$ & 461.596 & 0.000 & $***$ \\
+  $x_3$ & 661.241 & 0.000 & $***$ \\
+  $x_5$ & 721.313 & 0.000 & $***$ \\
+  $x_7$ & 293.822 & 0.000 & $***$ \\
+  $x_8$ & 2.297 & 0.204 &   \\
+  I($x_8^2$) & 38.191 & 0.003 & $**$ \\
+  $x_1$:$x_3$ & 398.202 & 0.000 & $***$ \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+We  now fit  this model  using the  results of  the experiments  in our  design.
+Table\nbsp{}\ref{tab:correct_fit} shows the model fit  table and compares the estimated
+and real model coefficients. This example  illustrates that the DoE approach can
+achieve close  model estimations using  few resources, provided the  approach is
+able to use user input to  identify significant factors, and knowledge about the
+problem domain to tweak the model.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+s_regression <- as.data.frame(coef(summary.lm(dopt_regression)))
+s_regression <- s_regression[, c("Estimate", "t value", "Pr(>|t|)")]
+
+rownames(s_regression) <- c("Intercept", "$x_1$", "$x_3$", "$x_5$",
+                            "$x_7$", "$x_8$", "$x_8^2$","$x_1x_3$")
+
+s_regression$Significance <- symnum(s_regression[ , "Pr(>|t|)"], na = FALSE,
+                                    cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                                    symbols = c("***", "**", "*", ".", " "))
+
+names(s_regression) <- c("Estimated", "t value", "Pr$(>|\\text{t}|)$", "Signif.")
+s_regression$Real <- c(0, -1.5, 1.3, 3.1, -1.4, 0, 1.35, 1.6)
+
+s_regression <- s_regression[ , c("Real", "Estimated", "t value", "Pr$(>|\\text{t}|)$", "Signif.")]
+
+cap <- "Correct model fit comparing real and estimated coefficients, with significance intervals from the \\texttt{R} language"
+x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "f", "f", "s"), label = "tab:correct_fit")
+align(x) <- xalign(x)
+options(warn = 0)
+print(x, size = "\\small",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      sanitize.text.function = function(x){x},
+      table.placement="b",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:06:01 2018
+\begin{table}[b]
+\centering
+\caption{Correct model fit comparing real and estimated coefficients, with significance intervals from the \texttt{R} language}
+\label{tab:correct_fit}
+\begingroup\small
+\begin{tabular}{lrrrrl}
+  \toprule
+ & Real & Estimated & t value & Pr$(>|\text{t}|)$ & Signif. \\
+  \midrule
+Intercept & 0.000 & 0.050 & 0.305 & 0.776 &   \\
+  $x_1$ & -1.500 & -1.452 & -14.542 & 0.000 & *** \\
+  $x_3$ & 1.300 & 1.527 & 15.292 & 0.000 & *** \\
+  $x_5$ & 3.100 & 2.682 & 26.857 & 0.000 & *** \\
+  $x_7$ & -1.400 & -1.712 & -17.141 & 0.000 & *** \\
+  $x_8$ & 0.000 & -0.175 & -1.516 & 0.204 &   \\
+  $x_8^2$ & 1.350 & 1.234 & 6.180 & 0.003 & ** \\
+  $x_1x_3$ & 1.600 & 1.879 & 19.955 & 0.000 & *** \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+Table\nbsp{}\ref{tab:prediction_comparisons}  compares  the   global  minimum  of  this
+example with the predictions made by our initial linear model from the screening
+step, and  our improved  model. Using screening,  D-Optimal designs,  and domain
+knowledge, we  found an optimization within  $10\%$ of the global  optimum while
+computing $Y$  only 24  times. We  were able to  do that  by first  reducing the
+problem's dimension  when we eliminated  insignificant factors in  the screening
+step.  We then  constructed  a  more careful  exploration  of  this new  problem
+subspace, aided  by domain knowledge provided  by an expert. Note  that we could
+have reused some of the 12 experiments from the previous step to reduce the size
+of the new design further.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+dopt_data[ , "$x_2$"] <- c("--")
+dopt_data[ , "$x_4$"] <- c("--")
+dopt_data[ , "$x_6$"] <- c("--")
+
+tab_dopt_data <- dopt_data[ , c("$x_1$", "$x_2$", "$x_3$",
+                                "$x_4$", "$x_5$", "$x_6$",
+                                "$x_7$", "$x_8$", "$Y$")]
+
+names(tab_dopt_data) <- c("$\\bm{x_1}$", "$x_2$", "$\\bm{x_3}$",
+                          "$x_4$", "$\\bm{x_5}$", "$x_6$",
+                          "$\\bm{x_7$}", "$\\bm{x_8}$", "$Y$")
+
+dopt_comparison_data <- bind_rows(tab_dopt_data, comparison_data)
+rownames(dopt_comparison_data) <- c(" Quad.", "Lin.", "Min.")
+
+cap <- "Comparison of the response $Y$ predicted by our models and the true global minimum. Factors used in the models are bolded"
+x <- xtable(dopt_comparison_data, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3), label = "tab:prediction_comparisons")
+align(x) <- xalign(x)
+options(warn = 0)
+print(x,
+      size = "\\footnotesize",
+      math.style.exponents = TRUE,
+      booktabs = TRUE,
+      include.rownames = TRUE,
+      sanitize.text.function = function(x){x},
+      table.placement="ht",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXPORT latex
+% latex table generated in R 3.5.1 by xtable 1.8-2 package
+% Mon Oct 15 18:06:07 2018
+\begin{table}[ht]
+\centering
+\caption{Comparison of the response $Y$ predicted by our models and the true global minimum. Factors used in the models are bolded}
+\label{tab:prediction_comparisons}
+\begingroup\footnotesize
+\begin{tabular}{lrlrlrlrrr}
+  \toprule
+ & $\bm{x_1}$ & $x_2$ & $\bm{x_3}$ & $x_4$ & $\bm{x_5}$ & $x_6$ & $\bm{x_7$} & $\bm{x_8}$ & $Y$ \\
+  \midrule
+ Quad. & 1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & 0.0 & -9.019 \\
+  Lin. & -1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -1.0 & -1.046 \\
+  Min. & 1.0 & -0.2 & -1.0 & 0.6 & -1.0 & 0.4 & 0.8 & 0.0 & -9.934 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+END_EXPORT
+
+We are able to explain the performance  improvements we obtained in each step of
+the process, because we finish steps  with a performance model and a performance
+prediction. Each  factor is  included or removed  using information  obtained in
+statistical tests,  or expert  knowledge. If  we need  to optimize  this problem
+again,  for a  different  architecture  or with  larger  input,  we could  start
+exploring the search space  with a less naive model. We  could also continue the
+optimization    of   this    problem    by   exploring    levels   of    factors
+$\left\{x_2,x_4,x_6\right\}$.  The  significance of  these factors could  now be
+detectable by  ANOVA tests since  the other factors are  now fixed. If  we still
+cannot  identify any  significant factor,  it might  be advisable  to spend  the
+remaining budget  using another exploration  strategy such as uniform  random or
+latin hypercube sampling.
+
+The process of  screening for factor significance using ANOVA  and fitting a new
+model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
+Figure\nbsp{}[[fig:doe_anova_strategy]].  In  the  next   section  we  evaluate  the
+performance of our DoE approach in two scenarios.
+
+*** Autotuning with Design of Experiments
+An /experimental design/ determines a  selection of experiments whose objective is
+to identify the  relationships between /factors/ and /responses/.  While factors and
+responses can refer to different concrete entities in other domains, in computer
+experiments  factors   can  be  configuration  parameters   for  algorithms  and
+compilers, and  responses can be the  execution time or memory  consumption of a
+program. Each  possible value of  a factor  is called a  /level/. The /effect/  of a
+factor on  the measured response,  without the factor's /interactions/  with other
+factors,  is  the /main  effect/  of  that  factor.  Experimental designs  can  be
+constructed  with different  goals,  such  as identifying  the  main effects  or
+building an analytical model for the response.
+
+In this section  we discuss in detail our iterative  DoE approach to autotuning.
+Figure\nbsp{}[[fig:doe_anova_strategy]]  presents  an  overview   of  our  approach,  with
+numbered steps.  In step  1 we define  the factors and  levels that  compose the
+search space of the  target problem, in step 2 we  select an initial performance
+model, and in step 3 we generate  an experimental design. We run the experiments
+in step 4 and  then, as we discuss in the next  section, we identify significant
+factors with an ANOVA  test in step 5. This enables selecting  and fitting a new
+performance  model in  steps 6  and  7. The  new model  is  used in  step 8  for
+predicting  levels for  each significant  factor.  We then  go back  to step  3,
+generating a new design for the new problem subspace with the remaining factors.
+Informed decisions  made by  the user  at each  step guide  the outcome  of each
+iteration.
+
+#+NAME: fig:doe_anova_strategy
+#+CAPTION: Overview of the DoE approach to autotuning proposed in this paper
+#+ATTR_LATEX: :width .95\columnwidth :placement [b]\vspace{-.5cm}
+#+ATTR_ORG: :width 400 :placement [b]
+[[./ccgrid19/img/doe_anova_strategy.pdf]]
+
+Step 1 of our approach is to define target factors and which of their levels are
+worth exploring.  Then, the  user must  select an  initial performance  model in
+step  2.  Compilers  typically  expose  many 2-level  factors  in  the  form  of
+configuration flags, and the  performance model for a single flag  can only be a
+linear term,  since there  are only  2 values  to measure.  Interactions between
+flags  and numerical  factors  such as  block  sizes in  CUDA  programs or  loop
+unrolling amounts  are also common. Deciding  which levels to include  for these
+kinds of factors requires more careful  analysis. For example, if we suspect the
+performance model has  a quadratic term for a certain  factor, the design should
+include at least  three factor levels. The ordering between  the levels of other
+compiler parameters,  such as \texttt{-O(0,1,2,3)}, is  not obviously translated
+to  a number.  Factors like  these are  named /categorical/,  and must  be treated
+differently when constructing designs in step 3 and analyzing results in step 5.
+
+We decided to use D-Optimal designs because their construction techniques enable
+mixing categorical  and numerical  factors in the  same screening  design, while
+biasing sampling according to the  performance model. This enables the autotuner
+to  exploit global  search space  structures  if we  use the  right model.  When
+constructing a  D-Optimal design in  step 3 the  user can require  that specific
+points in the search space are included,  or that others are not. Algorithms for
+constructing D-Optimal designs are capable  of adapting to these requirements by
+optimizing a starting design. Before  settling on D-Optimal designs, we explored
+other      design       construction      techniques      such       as      the
+Plackett-Burman\nbsp{}\cite{plackett1946design}  screening designs  shown in  the next
+section,       the       /contractive        replacement/       technique       of
+Addelman-Kempthorne\nbsp{}\cite{addelman1961some} and the  /direct generation/ algorithm
+by Grömping and Fontana\nbsp{}\cite{ulrike2018algorithm}. These techniques have strong
+requirements on design  size and level mixing,  so we opted for  a more flexible
+technique that would  enable exploring a more comprehensive  class of autotuning
+problems.
+
+After the design  is constructed in step  3, we run each  selected experiment in
+step 4. This step can run in parallel since experiments are independent. Not all
+target programs  run successfully  in their entire  input range,  making runtime
+failures common  in this step.  The user can decide  whether to construct  a new
+design  using the  successfully  completed  experiments or  to  continue to  the
+analysis step if enough experiments succeed.
+
+After running the ANOVA  test in step 5, the user  should apply domain knowledge
+to analyze the ANOVA table and  determine which factors are significant. Certain
+factors  might  not  appear  significant  and should  not  be  included  in  the
+regression  model. Selecting  the model  after  the ANOVA  test in  step 6  also
+benefits from domain knowledge.
+
+A central assumption of ANOVA is the /homoscedasticity/ of the response, which can
+be interpreted as requiring the observed error on measurements to be independent
+of  factor levels  and of  the number  of measurements.  Fortunately, there  are
+statistical tests  and corrections  for lack  of homoscedasticity.  Our approach
+uses the homoscedasticity check and correction by power transformations from the
+=car= package\nbsp{}\cite{fox2011car} of the =R= language.
+
+We fit  the selected model to  our design's data in  step 7, and use  the fitted
+model in  step 8 to find  levels that minimize  the response. The choice  of the
+method used to find  these levels depends on factor types  and on the complexity
+of the  model and search  space. If  factors have discrete  levels, neighborhood
+exploration might  be needed to  find levels  that minimize the  response around
+predicted  levels. Constraints  might put  predicted levels  on an  undefined or
+invalid region on the search space. This presents challenge, because the borders
+of valid regions would have to be explored.
+
+In  step  8 we  also  fix  factor levels  to  those  predicted to  achieve  best
+performance.  The  user  can also  decide  the  level  of  trust placed  on  the
+prediction at this step, by keeping other levels available. In step 8 we perform
+a reduction of problem dimension by  eliminating factors and decreasing the size
+of the search space. If we  identified significant parameters correctly, we will
+have restricted further search to better regions. In the next section we present
+a simple fictional application our approach that illustrates the fundamentals of
+the DoE methodology, screening designs and D-Optimal designs.
 ** Online Learning
 ** Summary
 The  effectiveness   of  stochastic  descent   methods  on  autotuning   can  be
@@ -10469,9 +11314,1379 @@ branching questions underlying each method.
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
 ** Application 1: CUDA Compiler
+A Graphics Processing Unit (GPU) is a parallel computing coprocessor specialized
+in  accelerating  vector operations  such  as  graphics rendering.  The  General
+Purpose computing on Graphics Processing Unit methodology, or GPGPU, consists in
+providing accessible programming  interfaces for languages such as  C and Python
+that  enable the  use  of GPUs  in different  parallel  computing domains.   The
+Compute Unified Device Architecture (CUDA) is a GPGPU platform introduced by the
+NVIDIA corporation.
+
+The objective  of this case  study was  to measure the  performance improvements
+that  a domain-agnostic  autotuning  strategy would  achieve  for CUDA  compiler
+parameters. We implemented an autotuner for  the CUDA compiler using the use the
+OpenTuner  framework~\cite{ansel2014opentuner} and  used  it to  search for  the
+compilation parameters  that optimize  the performance  of 17  heterogeneous GPU
+applications,    12    of    which    are    from    the    Rodinia    Benchmark
+Suite~\cite{che2009rodinia}.    We  used   3  different   NVIDIA  GPUs   in  the
+experiments,  the Tesla  K40,  the GTX  980  and  the GTX  750.  We worked  with
+Hewlett-Packard Enterprise on this project.
+
+The  optimization achieved  by  autotuning often  beat  the compiler  high-level
+optimization options, such as  \texttt{-O1}, \texttt{-O2} and \texttt{-O3}.  The
+autotuner  found compilation  options  that  achieved over  2x  speedup for  the
+\textit{Gaussian Elimination}  problem from the Rodinia  Benchmark Suite, almost
+2x speedup for \emph{Heart Wall} problem, also from Rodinia, and over 4x speedup
+for  one  of  the  matrix  multiplication optimizations  in  our  benchmark,  in
+comparison with  the high-level compiler  optimizations.  We also show  that the
+compilation parameters that  optimize an algorithm for a  given GPU architecture
+will not always achieve the same performance in different hardware.
+
+*** Small Measurement Time
+In the larger context of this qualifying work the most important characteristic
+of this autotuning experiment is the short time it takes to compile and run
+each application in the benchmark. Most applications, especially the ones with
+smaller input sizes, had a \textit{small measurement time}.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=.65\textwidth]{./img/quali_brazil/overview_gpus-eps-converted-to.pdf}
+    \caption{Autotuner representation and time scale of our experiments}
+    \label{fig:overview-gpus}
+\end{figure}
+#+end_export
+
+Figure~\ref{fig:overview-gpus} shows a representation of the autotuner
+implemented in this study, and illustrates the time scale of our experiments.
+The autotuner, in light blue, receives as input a Rodinia application, a target
+GPU, input data for the application in the order of Gigabytes and a search
+space composed of NVCC flags. The autotuner outputs a flag selection subject to
+its input application and GPU.
+
+Since in this study it was fast to compile and measure a program's performance,
+an autotuner iteration is shown in Figure~\ref{fig:overview-gpus} to last in
+the order of seconds. We could therefore test thousands of flag combinations
+per hour in a sequential autotuner, exploring enough of the search space to
+achieve the speedups reported.
+
+The tool we used to implement our autotuner was not able to run measurements in
+distributed environments. Therefore our autotuner could not deploy measurements
+of different configurations on identical GPUs on the same network. An autotuner
+with such capability would enable the exploration of more configurations in the
+same time.
+
+*** Background
+**** NVIDIA GPU Micro-Architecture
+NVIDIA  GPU  architectures have  multiple  asynchronous  and parallel  Streaming
+Multiprocessors (SMs)  which contain  Scalar Processors (SPs),  Special Function
+Units (SFUs) and  load/store units. Each group of 32  parallel threads scheduled
+by and  SM, or  \textit{warp}, is  able to read  from memory  concurrently.  The
+Tesla, Fermi, Kepler and Maxwell NVIDIA  architectures vary in a large number of
+features, such  as number of  cores, registers, SFUs, load/store  units, on-chip
+and cache  memory sizes,  processor clock  frequency, memory  bandwidth, unified
+memory spaces and dynamic kernel  launches.  Those differences are summarized in
+the Compute Capability (C.C.) of an NVIDIA GPU.
+
+The hierarchical  memory of an NVIDIA  GPU contains global and  shared portions.
+Global memory is  big, off-chip, has a  high latency and can be  accessed by all
+threads of the  kernel.  Shared memory is small, on-chip,  has a low-latency and
+can be  accessed only by threads  in a same SM.   Each SM has its  own shared L1
+cache, and new architectures have  coherent global L2 caches.  Optimizing thread
+accesses to different memory levels is essential to achieve good performance.
+
+**** Compute Unified Device Architecture (CUDA)
+The  CUDA programming  model and  platform enables  the use  of NVIDIA  GPUs for
+scientific  and general  purpose computation.   A single  \textit{master} thread
+runs in the CPU,  launching and managing computations on the  GPU.  Data for the
+computations has  to be transferred  from the main  memory to the  GPU's memory.
+Multiple computations  launched by the  master thread, or  \textit{kernels}, can
+run  asynchronously and  concurrently.  If the  threads from  a  same warp  must
+execute different  instructions the CUDA  compiler must generate code  to branch
+the  execution  correctly, making  the  program  lose  performance due  to  this
+\textit{warp divergence}.
+
+The  CUDA  language  extends  C  and  provides  a  multi-step  compiler,  called
+\textit{NVCC}, that translates  CUDA code to Parallel Thread  Execution code, or
+\textit{PTX}.  \textit{NVCC} uses the host's C++ compiler in several compilation
+steps, and also  to generate code to  be executed in the host.  The final binary
+generated  by \textit{NVCC}  contains  code  for the  GPU  and  the host.   When
+\textit{PTX} code  is loaded by  an application at  run-time, it is  compiled to
+binary code by  the host's device driver.   This binary code can  be executed in
+the  device's  processing cores,  and  is  architecture-specific.  The  targeted
+architecture can be specified using \textit{NVCC} parameters.
+
+**** GPU Performance Models and Autotuning
+The accuracy of a GPU performance model is subject to low level elements such as
+instruction  pipeline usage  and small  cache hierarchies.  A GPU's  performance
+approaches  its peak  when the  instruction pipeline  is saturated,  but becomes
+unpredictable             when            the             pipeline            is
+under-utilized~\cite{zhang2011quantitative,amaris2015simple}.   Considering  the
+effects  of  small cache  hierarchies~\cite{dao2015performance,picchi2015impact}
+and memory-access divergence~\cite{sampaio2013divergence,baghsorkhi2010adaptive}
+is also critical to a GPU performance model.
+
+Guo and Wang~\cite{guo2010auto} introduce a  framework for autotuning the number
+of threads  and the  sizes of  blocks and warps  used by  the CUDA  compiler for
+sparse  matrix   and  vector  multiplication  GPU   applications.   Li  \emph{et
+al.}~\cite{li2009note}  discuss  the  performance of  autotuning  techniques  in
+highly-tuned  GPU  General Matrix  to  Matrix  Multiplication (GEMMs)  routines,
+highlighting  the   difficulty  in  developing   optimized  code  for   new  GPU
+architectures.   Grauer-Gray  \emph{et  al.}~\cite{grauer2012auto}  autotune  an
+optimization  space  of  GPU  kernels  focusing  on  tiling,  loop  permutation,
+unrolling,        and         parallelization.         Chaparala        \emph{et
+al.}~\cite{chaparala2015autotuning}    autotune     GPU-accelerated    Quadratic
+Assignment         Problem          solvers.          Sedaghati         \emph{et
+al.}~\cite{sedaghati2015automatic} build  a decision model for  the selection of
+sparse matrix representations in GPUs.
+
+*** Autotuner and Search Space
+This section discusses our autotuner implementation and the search space of NVCC
+compiler parameters.
+
+**** Autotuner
+The autotuner  we implemented used  the \textit{multi-armed bandit  with sliding
+window, area  under the  curve credit  assignment} meta-technique,  simply named
+\textit{AUC      Bandit}.      AUC      Bandit      is     OpenTuner's      core
+meta-technique~\cite{ansel2014opentuner}, and its  ensemble of search techniques
+is composed by implementations of the Nelder-Mead algorithm and three variations
+of genetic algorithms.  Figure~\ref{fig:gpu-stack} shows a simplified version of
+the steps necessary to generate the object code that will be measured later.
+
+The  code   for  our  autotuner   and  all   the  experiments  and   results  is
+available\footnote{Hosted                       at                       GitHub:
+\url{https://github.com/phrb/gpu-autotuning}  [Accessed  on 10  February  2015]}
+under the GNU General Public License.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=.4\textwidth]{./img/quali_brazil/gpu-stack-eps-converted-to.pdf}
+    \caption{Simplified view of NVCC compilation}
+    \label{fig:gpu-stack}
+\end{figure}
+#+end_export
+
+**** Search Space
+Table~\ref{tab:flags} details  the subset  of the CUDA  configuration parameters
+used         in          the         experiments~\footnote{Adapted         from:
+\url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc}   [Accessed  on   10
+February  2015]}.   The  parameters  target  different  compilation  steps:  the
+\emph{PTX} optimizing  assembler; the \emph{NVLINK} linker;  and the \emph{NVCC}
+compiler.  We compared the performance of programs generated by tuned parameters
+with the  standard compiler optimizations,  namely \texttt{--opt-level=0,1,2,3}.
+Different \texttt{--opt-level}s  could also be  selected during tuning.   We did
+not use  compiler options  that target  the host linker  or the  library manager
+since they do not  affect performance.  The size of the  search space defined by
+all possible combinations of the flags  in Table~\ref{tab:flags} is in the order
+of $10^{6}$ making hand-optimization or exhaustive searches very time consuming.
+
+#+begin_export latex
+\begin{table}[htpb]
+    \centering
+    \tiny
+        \begin{tabular}{lp{0.6\textwidth}}
+        \toprule
+        \textbf{Flag}&\textbf{Description} \\\midrule
+            \addlinespace{}
+        \texttt{no-align-double} & Specifies that \texttt{malign-double} should not be passed as a compiler argument on 32-bit platforms. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{use\_fast\_math} & Uses the fast math library, implies \texttt{ftz=true}, \texttt{prec-div=false}, \texttt{prec-sqrt=false} and \texttt{fmad=true}. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{gpu-architecture} & Specifies the NVIDIA virtual GPU architecture for which the CUDA input files must be compiled. \textbf{Step}: NVCC \textbf{Values}: \texttt{sm\_20}, \texttt{sm\_21}, \texttt{sm\_30}, \texttt{sm\_32}, \texttt{sm\_35}, \texttt{sm\_50}, \texttt{sm\_52} \\
+            \addlinespace{}
+        \texttt{relocatable-device-code} & Enables the generation of relocatable device code. If disabled, executable device code is generated. Relocatable device code must be linked before it can be executed. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{ftz} & Controls single-precision denormals support. \texttt{ftz=true} flushes denormal values to zero and \texttt{ftz=false} preserves denormal values. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{prec-div} & Controls single-precision floating-point division and reciprocals. \texttt{prec-div=true} enables the IEEE round-to-nearest mode and \texttt{prec-div=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{prec-sqrt} & Controls single-precision floating-point squre root. \texttt{prec-sqrt=true} enables the IEEE round-to-nearest mode and \texttt{prec-sqrt=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
+            \addlinespace{}
+        \texttt{def-load-cache} & Default cache modifier on global/generic load. \textbf{Step}: PTX \textbf{Values}: \texttt{ca}, \texttt{cg}, \texttt{cv}, \texttt{cs} \\
+            \addlinespace{}
+        \texttt{opt-level} & Specifies high-level optimizations. \textbf{Step}: PTX \textbf{Values}: \texttt{0 - 3} \\
+            \addlinespace{}
+        \texttt{fmad} & Enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations (FMAD, FFMA, or DFMA). \textbf{Step}: PTX \\
+            \addlinespace{}
+        \texttt{allow-expensive-optimizations} & Enables the compiler to perform expensive optimizations using maximum available resources (memory and compile-time). If unspecified, default behavior is to enable this feature for optimization level $\geqslant$O2. \textbf{Step}: PTX \\
+            \addlinespace{}
+        \texttt{maxrregcount} & Specifies the maximum number of registers that GPU functions can use. \textbf{Step}: PTX \textbf{Values}: \texttt{16 - 64} \\
+            \addlinespace{}
+        \texttt{preserve-relocs} & Makes the \texttt{PTX} assembler generate relocatable references for variables and preserve relocations generated for them in the linked executable. \textbf{Step}: NVLINK \\
+            \bottomrule
+        \end{tabular}
+    \caption{Description of flags in the search space}
+    \label{tab:flags}
+\end{table}
+#+end_export
+
+*** Experiments
+This section  presents the GPU  testbed, the algorithm benchmark,  the autotuner
+implementation and its search space.
+
+**** GPU Testbed
+To be  able to  show that  different GPUs require  different options  to improve
+performance, and that it is possible  to achieve speedups in different hardware,
+we  wanted  to  tune  our benchmark  for  different  NVIDIA  microarchitectures.
+Table~\ref{tab:GPUs} summarizes the hardware characteristics of the three GPUs.
+
+#+begin_export latex
+\begin{table}[thpb]
+    \centering
+    \footnotesize
+    \begin{tabular}{llllllll}
+        \toprule
+        \textbf{Model}&\textbf{C.C.}&\textbf{Global Memory}&\textbf{Bus}&\textbf{Bandwidth}&\textbf{L2}&\textbf{Cores/SM}&\textbf{Clock} \\ \midrule
+        Tesla-K40&3.5&12 GB&384-bit&276.5 GB/s&1.5 MB&2880/15&745 Mhz \\
+        GTX-750&5.0&1 GB&128-bit&86.4 GB/s&2 MB&512/4&1110 Mhz \\
+        GTX-980&5.2&4 GB&256-bit&224.3 GB/s&2 MB&2048/16&1216 Mhz \\ \bottomrule
+    \end{tabular}
+    \caption{Hardware specifications of the GPUs in the testbed}
+    \label{tab:GPUs}
+\end{table}
+#+end_export
+
+**** Algorithm Benchmark
+We composed a  benchmark with 17 heterogeneous GPU  applications.  The benchmark
+contains 4 optimization strategies  for \emph{matrix multiplication} (counted as
+a  single  application),   1  vector  addition  problem,  1   solution  for  the
+\emph{maximum  sub-array problem}~\cite{ferreira2014parallel},  2 \emph{sorting}
+algorithms    and     12    applications    from    the     Rodinia    Benchmark
+Suite~\cite{che2009rodinia}.
+
+#+begin_export latex
+\begin{table}[htpb]
+    \centering
+    \footnotesize
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Application} & \textbf{Berkeley Dwarf\cite{asanovic2009view}} & \textbf{Domain} \\\midrule
+            B+Tree (BPT) & Graph Traversal& Search \\
+            Back Propagation (BCK) & Unstructured Grid & Pattern Recognition \\
+            Breadth-First Search (BFS) & Graph Traversal & Graph Algorithms \\
+            Gaussian Elimination (GAU) & Dense Linear Algebra & Linear Algebra \\
+            Heart Wall (HWL) & Structured Grid & Medical Imaging \\
+            Hot Spot (HOT) & Structured Grid & Physics Simulation \\
+            K-Means (KMN) & Dense Linear Algebra & Data Mining \\
+            LavaMD (LMD) & N-Body & Molecular Dynamics \\
+            LU Decomposition (LUD) & Dense Linear Algebra & Linear Algebra \\
+            Myocyte (MYO) & Structured Grid & Biological Simulation \\
+            Needleman-Wunsch (NDL) & Dynamic Programming & Bioinformatics \\
+            Path Finder (PTF) & Dynamic Programming & Grid Traversal \\\bottomrule
+        \end{tabular}
+    \caption{Rodinia applications used in the experiments}
+    \label{tab:Rodinia}
+\end{table}
+#+end_export
+
+Table~\ref{tab:Rodinia}  shows   the  Rodinia  applications  contained   in  our
+benchmark and their correspondent three-letter  code.  The other applications in
+the benchmark were CUDA implementations of the following:
+
+#+begin_export latex
+\begin{itemize}
+    \item Matrix multiplications using:
+        \begin{itemize}
+             \item Global memory with non-coalesced accesses (MMU)
+             \item Global memory with coalesced accesses (MMG)
+             \item Shared memory with non-coalesced accesses to global memory
+                 (MSU)
+             \item Shared memory with coalesced accesses to global memory (MMS)
+        \end{itemize}
+    \item Simple vector addition algorithm (VAD)
+    \item Solution~\cite{alves2004bsp,ferreira2014parallel} for the Maximum
+        Sub-Array Problem (MSA)
+    \item Quicksort (QKS) and Bitonicsort (BTN)~\footnote{Obtained from:
+        \url{http://digitalcommons.providence.edu/student\_scholarship/7/}
+        [Accessed on 10 February 2015]}
+\end{itemize}
+#+end_export
+
+
+*** Results
+This  section  presents  the  speedups   achieved  for  all  algorithms  in  the
+application benchmark,  highlights the most significant  speedups, and discusses
+the performance and accuracy of the autotuner.
+
+**** Performance Improvements
+All  boxplots   presented  in  this   section  were  made  using   the  standard
+implementations available for  the R language.  The black band  inside the boxes
+represents the median of the measurements. The lower and upper bounds of the box
+represent, respectively, the first and third quartiles of the data. The whiskers
+represent the third  and first quartile plus and minus  the \emph{inner quartile
+range} times 1.5. Finally, the circles represent the outliers.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/heartwall-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Heart Wall problem (HWL)}
+        \label{fig:K40hwl}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/gaussian-0-GTX-980-Box-eps-converted-to.pdf}
+        \caption{Boxplots for the GTX 980 GPU, comparing autotuned results and high-level compiler optimizations for the Gaussian Elimination problem (GAU)}
+        \label{fig:980gau}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+Figures~\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
+\ref{fig:K40myo}  compare the  distributions  of 10  perfomance measurements  of
+binaries  compiled with  high-level  compiler optimizations  and with  autotuned
+compiler    options.   The    results   for    the   high-level    optimizations
+\texttt{--opt-level=0,1,2,3} were denoted  by \emph{-O0}, \emph{-O1}, \emph{-O2}
+and \emph{-O3}.   The results for  the autotuned configurations were  denoted by
+the keyword \emph{Tuned}.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Path Finder problem (PTF)}
+        \label{fig:K40ptf}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/myocyte-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Myocyte problem (MYO)}
+        \label{fig:K40myo}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+Figure~\ref{fig:K40hwl} shows  that the  autotuned solution  for the  Heart Wall
+problem (HWL) in the  Tesla K40 achieved over 2x speedup  in comparison with the
+high-level CUDA  optimizations.  Figure~\ref{fig:980gau} shows, in  the GTX 980,
+almost   2.5x   speedup   for    the   Gaussian   Elimination   problem   (GAU).
+Figure~\ref{fig:K40ptf} show 10\% speedup of the autotuned solution for the Path
+Finder problem (PTF)  in the Tesla K40.  Figure~\ref{fig:K40myo}  shows over 5\%
+speedup  of the  autotuned solution,  also  in the  Tesla K40,  for the  Myocyte
+problem (MYO).
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.15]{./img/quali_brazil/MatrixSummary-eps-converted-to.pdf}
+        \caption{Summary of the speedups achieved versus \emph{-O2} in the matrix multiplication optimizations}
+        \label{fig:matrixsummary}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.15]{./img/quali_brazil/Summary-eps-converted-to.pdf}
+        \caption{Summary of the speedups achieved versus \emph{-O2} in the other independent applications}
+        \label{fig:summary}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+Figures~\ref{fig:matrixsummary}, \ref{fig:summary}, \ref{fig:rodiniasummary} and
+\ref{fig:rodiniasummarysmall} present  summaries of  the results.  The autotuner
+did not find  solutions that improved upon the high-level  optimizations for the
+problems BTN and MSU  in any of the GPUs of the testbed,  but it found solutions
+that achieved speedups for at least one GPU for the other problems.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.15]{./img/quali_brazil/RodiniaSummary-eps-converted-to.pdf}
+        \caption{Summary of the biggest speedups achieved versus \emph{-O2} in the Rodinia applications}
+        \label{fig:rodiniasummary}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.15]{./img/quali_brazil/RodiniaSummary_small-eps-converted-to.pdf}
+        \caption{Summary of the smaller speedups achieved versus \emph{-O2} in the Rodinia applications}
+        \label{fig:rodiniasummarysmall}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+We do not know precisely which hardware characteristics impacted performance the
+most.  Although more experiments are needed to confirm the following hypothesis,
+we believe that the Maxwell GPUs, the GTX 980 and GTX 750, had differing results
+from  the Tesla  K40 because  they  are consumer  grade GPUs,  producing not  so
+precise  results  and with  different  default  optimizations. The  similarities
+between the compute capabilities of the GTX GPUs could also explain the observed
+differences from  the K40. Finally, the  overall greater computing power  of the
+GTX 980 could explain its differing results  from the GTX 750, since the GTX 980
+has  a greater  number of  Cores, SMs/Cores,  Bandwidth, Bus,  Clock and  Global
+Memory.
+
+**** Autotuner Performance
+This   section  presents   an   assessment  of   the  autotuner's   performance.
+Figures~\ref{fig:K40hwBest},   \ref{fig:980gauBest},  \ref{fig:K40ptfBest}   and
+\ref{fig:K40myoBest} present the  performance of the best solution  found by the
+autotuner  versus the  time these  solutions were  found, in  seconds since  the
+beginning of the tuning process. The Figures show the evolution of the autotuned
+solution for the  best results in our experiments, the  Heart Wall problem (HWL)
+and the Gaussian Elimination  problem (GAU) in the GTX 980,  and the Path Finder
+problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/heartwall-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
+        \label{fig:K40hwBest}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/gaussian-0-GTX-980-Best-eps-converted-to.pdf}
+        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
+        \label{fig:980gauBest}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+The points in each  graph represent the performance, in the  y-axis, of the best
+configuration found at  the corresponding tuning time, shown in  the x-axis. The
+leftmost  point in  each graph  represents  the performance  of a  configuration
+chosen  at  random  by  the  autotuner. Each  subsequent  point  represents  the
+performance of the best configuration found so far.
+
+Note  that the  autotuner is  able to  quickly improve  upon the  initial random
+configuration, but the rate of improvement decays over tuning time. The duration
+of all tuning runs was two hours,  or 7200 seconds.  The rightmost point in each
+graph represents  the performance of  the last improving configuration  found by
+the autotuner.  After the tuning time  of this configuration, the  autotuner did
+not find any improving configuration until the end of its tuning run.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \caption{Best solutions found by the autotuner over time for the Path Finder problem (PTF) in the Tesla K40}
+        \label{fig:K40ptfBest}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[scale=.22]{./img/quali_brazil/myocyte-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \caption{Best solutions found by the autotuner over time for the Myocyte problem (MYO) in the Tesla K40}
+        \label{fig:K40myoBest}
+    \end{minipage}
+\end{figure}
+#+end_export
+
+The  autotuner  used  the  mean  of  10  performance  measurements  of  a  given
+configuration  as the  fitness value,  reducing fluctuations  and improving  the
+measurement's accuracy. This  is reflected in the proximity  of the measurements
+reported by  the autotuner during tuning,  shown in figures~\ref{fig:K40hwBest},
+\ref{fig:980gauBest}, \ref{fig:K40ptfBest} and \ref{fig:K40myoBest} and the mean
+values of  10 measurements  of the  final solution,  shown in  the corresponding
+figures~\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
+\ref{fig:K40myo}.
+
+**** Parameter Selection
+
+#+begin_export latex
+\begin{table}[htpb]
+    \centering
+    \footnotesize
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Flag} & \textbf{Cluster 0 (17\%)} & \textbf{Cluster 1 (83\%)} \\\midrule
+        \texttt{no-align-double}               & on     & on     \\
+        \texttt{use\_fast\_math}               & on     & on     \\
+        \texttt{preserve-relocs}               & off    & off    \\
+        \texttt{relocatable-device-code}       & true   & false  \\
+        \texttt{ftz}                           & true   & true   \\
+        \texttt{prec-div}                      & true   & false  \\
+        \texttt{prec-sqrt}                     & true   & true   \\
+        \texttt{fmad}                          & false  & false  \\
+        \texttt{allow-expensive-optimizations} & false  & true   \\
+        \texttt{gpu-architecture}              & sm\_20 & sm\_50 \\
+        \texttt{def-load-cache}                & cv     & ca     \\
+        \texttt{opt-level}                     & 1      & 3      \\
+        \texttt{maxrregcount}                  & 42     & 44.6   \\\bottomrule
+        \end{tabular}
+    \caption{Parameter clusters for all Rodinia problems in the GTX 750}
+    \label{tab:750RodiniaClusters}
+\end{table}
+#+end_export
+
+We attempted to associate compilation  parameters to applications and GPUs using
+WEKA's~\cite{holmes1994weka} clustering  algorithms. Although we could  not find
+significant   relations   for   most   applications   we   detected   that   the
+\texttt{ftz=true} in  MMS and the Compute  Capabilities 3.0, 5.0 and  5.2 in GAU
+caused  the   speedups  observed  in   the  GTX  980  for   these  applications.
+Table~\ref{tab:750RodiniaClusters} shows clusters obtained with the K-means WEKA
+algorithm  for  autotuned  parameter  sets  for the  Rodinia  Benchmark  in  the
+GTX 750.  Unlike most clusters found  for all GPUs and  problems, these clusters
+did  not  contain an  equal  number  of  instances.  The difficulty  of  finding
+associations between compiler optimizations, applications and GPUs justifies the
+autotuning of compiler parameters in the general case.
+
+*** Summary
+This  study  showed that  it  is  possible to  improve  the  performance of  GPU
+applications applying empirical and automatic tuning techniques. Our results and
+clustering  attempts   emphasize  the   importance  of   automatic  optimization
+techniques by showing that different compilation  options have to be selected in
+order  to achieve  performance improvements  in different  GPUs and  that it  is
+difficult to associate compiler optimization parameters, applications and GPUs.
+
+An interesting direction for future  studies is including application parameters
+and  options for  the GCC  compiler, which  also composes  the CUDA  compilation
+chain.
 ** Application 2: GPU Laplacian Kernel
+We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
+implemented  using BOAST\nbsp{}\cite{videau2017boast}  and targeting  the /Nvidia  K40c/
+GPU. The objective was to minimize the /time to compute each pixel/ by finding the
+best    level     combination    for    the    factors     listed    in    Table
+[[tab:gpu_laplacian_factors]]. Considering only factors and  levels, the size of the
+search space  is $1.9\times10^5$, but  removing points that  fail at runtime  yields a
+search space of size  $2.3\times10^4$. The complete search space took  154 hours to be
+evaluated  on /Debian  Jessie/, using  an /Intel  Xeon E5-2630v2/  CPU, \texttt{gcc}
+version \texttt{4.8.3} and /Nvidia/ driver version \texttt{340.32}.
+
+We applied domain knowledge to construct the following initial performance model:
+#+BEGIN_EXPORT latex
+\vspace{-2pt}
+\\\begin{minipage}{\linewidth}\scriptsize
+\begin{align}
+\label{eq:gpu_laplacian_performance_model}
+\texttt{time\_per\_pixel} \sim & \scriptsize\; \texttt{y\_component\_number} + \frac{1}{\texttt{y\_component\_number}} \; + \nonumber \\
+& \scriptsize\; \texttt{load\_overlap} + \texttt{temporary\_size} \; + \nonumber \\
+& \scriptsize\; \texttt{vector\_length} + \texttt{lws\_y} + \frac{1}{\texttt{lws\_y}} \; + \\
+& \scriptsize\; \texttt{elements\_number} + \texttt{threads\_number}  \; + \nonumber \\
+& \scriptsize\; \frac{1}{\texttt{elements\_number}} + \frac{1}{\texttt{threads\_number}}\text{.} \nonumber
+\end{align}
+\vspace{2pt}
+\end{minipage}
+#+END_EXPORT
+This performance model was used by the Iterative Linear Model (LM) algorithm and
+by our D-Optimal Design approach (DLMT). LM is almost identical to our approach,
+described  Section\nbsp{}[[Autotuning  with  Design  of   Experiments]],  but  it  uses  a
+fixed-size random  sample of  the search space  instead of  generating D-Optimal
+designs.  We  compared  the  performance  of our  approach  with  the  following
+algorithms: uniform Random Sampling (RS); Latin Hypercube Sampling (LHS); Greedy
+Search (GS); Greedy Search with Restart  (GSR); and Genetic Algorithm (GA). Each
+algorithm performed /at most/ 125 measurements over 1000 repetitions, without user
+intervention.
+
+#+ATTR_LATEX: :booktabs t :align llp{0.37\columnwidth} :font \scriptsize :float t :placement [t]
+#+NAME: tab:gpu_laplacian_factors
+#+CAPTION: Parameters of the Laplacian Kernel
+|-------------------------------+-------------------------------+--------------------------------|
+| Factor                        | Levels                        | Short Description              |
+|-------------------------------+-------------------------------+--------------------------------|
+| \texttt{vector\_length}       | $2^0,\dots,2^4$               | Size of support arrays         |
+| \texttt{load\_overlap}        | \textit{true}, \textit{false} | Load overlaps in vectorization |
+| \texttt{temporary\_size}      | $2,4$                         | Byte size of temporary data    |
+| \texttt{elements\_number}     | $1,\dots,24$                  | Size of equal data splits      |
+| \texttt{y\_component\_number} | $1,\dots,6$                   | Loop tile size                 |
+| \texttt{threads\_number}      | $2^5,\dots,2^{10}$            | Size of thread groups          |
+| \texttt{lws\_y}               | $2^0,\dots,2^{10}$            | Block size in $y$ dimension    |
+|-------------------------------+-------------------------------+--------------------------------|
+
+Since  we measured  the entire  valid search  space, we  could use  the /slowdown/
+relative   to   the   /global   minimum/   to   compare   algorithm   performance.
+Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget}  shows the  mean, minimum  and maximum
+slowdowns in comparison to the global minimum, for each algorithm. It also shows
+the     mean    and     maximum     budget    used     by    each     algorithm.
+Figure\nbsp{}[[fig:gpu_laplacian_comparison_histogram]] presents histograms with the count
+of the slowdowns found by each of the 1000 repetitions. Arrows point the maximum
+slowdown found by  each algorithm. Note that GS's maximum  slowdown was left out
+of range to help the comparison between the other algorithms.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(xtable)
+
+df_all_methods <- read.csv("./dopt_anova_experiments/data/complete_1000.csv", strip.white = T, header = T)
+df_all_methods$method <- factor(df_all_methods$method, levels = c("RS","LHS","GS","GSR","GA","LM", "LMB", "LMBT", "RQ", "DOPT", "DLM", "DLMT"))
+df_all_methods <- subset(df_all_methods, method %in% c("RS", "LHS", "GS", "GSR", "GA", "LM", "DLMT"))
+
+summaries <- data.frame(RS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "RS", ]$slowdown)))[ , 1],
+                              mean(df_all_methods[df_all_methods$method == "RS",]$point_number),
+                              max(df_all_methods[df_all_methods$method == "RS",]$point_number)),
+                        LHS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "LHS", ]$slowdown)))[ , 1],
+                                mean(df_all_methods[df_all_methods$method == "LHS",]$point_number),
+                                max(df_all_methods[df_all_methods$method == "LHS",]$point_number)),
+                        GS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GS", ]$slowdown)))[ , 1],
+                              mean(df_all_methods[df_all_methods$method == "GS",]$point_number),
+                              max(df_all_methods[df_all_methods$method == "GS",]$point_number)),
+                        GSR = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GSR", ]$slowdown)))[ , 1],
+                                mean(df_all_methods[df_all_methods$method == "GSR",]$point_number),
+                                max(df_all_methods[df_all_methods$method == "GSR",]$point_number)),
+                        GA = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GA", ]$slowdown)))[ , 1],
+                              mean(df_all_methods[df_all_methods$method == "GA",]$point_number),
+                              max(df_all_methods[df_all_methods$method == "GA",]$point_number)),
+                        LM = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "LM", ]$slowdown)))[ , 1],
+                              mean(df_all_methods[df_all_methods$method == "LM",]$point_number),
+                              max(df_all_methods[df_all_methods$method == "LM",]$point_number)),
+                        DLMT = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "DLMT", ]$slowdown)))[ , 1],
+                                    mean(df_all_methods[df_all_methods$method == "DLMT",]$point_number),
+                                    max(df_all_methods[df_all_methods$method == "DLMT",]$point_number)))
+
+rownames(summaries) <- c(rownames(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "RS", ]$slowdown)))), "Mean Budget", "Max. Budget")
+summaries <- t(summaries)
+summaries <- summaries[ , c("Mean", "Min.", "Max.", "Mean Budget", "Max. Budget")]
+
+cap <- "Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions"
+x <- xtable(summaries, caption = cap, digits = 2, label = "tab:gpu_laplacian_compare_budget")
+align(x) <- xalign(x)
+display(x) <- display(x)
+print(x,
+      size = "\\footnotesize",
+      booktabs = TRUE,
+      add.to.row = list(pos = as.list(c(6)), command = c("\\rowcolor{red!25}")),
+      math.style.exponents = TRUE,
+      table.placement = "b",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+begin_export latex
+% latex table generated in R 4.0.3 by xtable 1.8-4 package
+% Thu Jan 14 14:05:23 2021
+\begin{table}[b]
+\centering
+\caption{Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions}
+\label{tab:gpu_laplacian_compare_budget}
+\begingroup\footnotesize
+\begin{tabular}{lrrrrr}
+  \toprule
+ & Mean & Min. & Max. & Mean Budget & Max. Budget \\
+  \midrule
+RS & 1.10 & 1.00 & 1.39 & 120.00 & 120.00 \\
+  LHS & 1.17 & 1.00 & 1.52 & 98.92 & 125.00 \\
+  GS & 6.46 & 1.00 & 124.76 & 22.17 & 106.00 \\
+  GSR & 1.23 & 1.00 & 3.16 & 120.00 & 120.00 \\
+  GA & 1.12 & 1.00 & 1.65 & 120.00 & 120.00 \\
+  LM & 1.02 & 1.01 & 3.77 & 119.00 & 119.00 \\
+   \rowcolor{red!25}DLMT & 1.01 & 1.01 & 1.01 & 54.84 & 56.00 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+end_export
+
+All algorithms performed relatively well in  this kernel, with only GS not being
+able to find slowdowns smaller than 4$\times$ in some runs. As expected, other search
+algorithms had results similar to RS. LM was able to find slowdowns close to the
+global minimum on most runs, but some runs could not find slowdowns smaller than
+$4\times$. Our approach  reached a slowdown of  1% from the global minimum  /in all/ of
+the 1000 runs while using /at most/ fewer than half of the allotted budget.
+
+We  implemented a  simple  approach for  the prediction  step  in this  problem,
+choosing the best value of our fitted  models on the complete set of valid level
+combinations. This  was possible for  this problem since all  valid combinations
+were known. For problems were the search  space is too large to be generated, we
+would have  to either  adapt this  step and run  the prediction  on a  sample or
+minimize   the  model   using  the   differentiation  strategies   mentioned  in
+Section\nbsp{}[[Screening & Plackett-Burman Designs]].
+
+#+NAME: fig:gpu_laplacian_comparison_histogram
+#+CAPTION: Distribution of slowdowns in relation to the global minimum for 7 optimization methods on the Laplacian Kernel, using a budget of 125 points over 1000 repetitions \vspace{-.5cm}
+#+ATTR_LATEX: :float t :placement [t]\vspace{-.5cm} :width .9\columnwidth
+[[./dopt_anova_experiments/img/comparison_histogram.pdf]]
+
+This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
+performance model is approximately known and  the complete valid search space is
+small enough to be  used for prediction. The global minimum  also appears to not
+be isolated in a  region of points with bad performance,  since our approach was
+able to exploit space geometry. We  will now present a performance evaluation of
+our approach in a larger and more comprehensive benchmark.
 ** Application 3: High-Level Synthesis for FPGAs
+FPGAs  are  reprogrammable circuits  that  enable  writing specialized  hardware
+specifications   for  a   variety   of  applications   using   the  same   chip.
+High-Performance Computing tasks that require low power and latency increasingly
+switch to FPGAs  from GPUs. Hardware specifications are  written using low-level
+languages such as Verilog and VHDL, making a challenge for software engineers to
+leverage FPGA capabilities.  This became increasingly relevant by the adaptation
+of                      FPGAs                      for                      data
+centers~\cite{caulfield2016cloud}\footnote{\url{https://cloud.baidu.com/product/fpga.html}
+[Accessed             in             28/07/2017],             \\             and
+\url{https://aws.amazon.com/ec2/instance-types/f1/} [Accessed in 28/07/2017]}, a
+field dominated by software engineers.
+
+Essential support for software engineers can be provided by High-Level Synthesis
+(HLS), the  process of  generating hardware  descriptions from  high-level code.
+HLS lowers the complexity of hardware design  from the point of view of software
+engineering  and has  become  increasingly viable  as part  of  the FPGA  design
+methodology,  with support  from  vendor HLS  tools~\cite{singh2011implementing,
+feist2012vivado} for C/C++ and OpenCL. The benefits of higher-level abstractions
+come  with the  cost of  decreased  application performance,  making FPGAs  less
+viable as  accelerators.  Thus, optimizing  HLS still requires  domain expertise
+and exhaustive or manual exploration of design spaces and configurations.
+
+High-Level Synthesis  is an  \NP{}-Complete problem~\cite{canis2015legup}  and a
+common   strategy    for   its   solution   involves    the   divide-and-conquer
+approach~\cite{coussy2009introduction}.   The  most  important  sub-problems  to
+solve are \textit{scheduling},  where operations are assigned  to specific clock
+cycles, and \textit{binding}, where operations are assigned to specific hardware
+functional    units,     which    can    be    shared     between    operations.
+LegUp~\cite{canis2013legup} is an open-source HLS tool implemented as a compiler
+pass  for the  LLVM Compiler  Infrastructure~\cite{chris2004llvm}.  It  receives
+code in  LLVM's intermediate representation  as input  and produces as  output a
+hardware description in Verilog.  LegUp  exposes configuration parameters of its
+HLS process, set with a configuration file.
+
+This section  presents an autotuner  for LegUp HLS parameters  implemented using
+the OpenTuner  framework.  The  autotuner targeted  8 hardware  metrics obtained
+from
+Quartus~\footnote{\url{https://www.altera.com/products/design-software/fpga-design/quartus-prime/overview.html}
+[Accessed  in  18/07/2017]},  for  applications of  the  CHStone  HLS  benchmark
+suite~\cite{hara2008chstone}  in the  Intel StratixV  FPGA.  The  program to  be
+configured  here is  LegUp and  the search  space is  composed of  approximately
+$10^{126}$ possible combinations  of HLS parameters.  Such a  large search space
+is unfeasible to search exhaustively or by hand.
+
+One  of the  obstacles we  faced was  making accurate  predictions for  hardware
+metrics from a set  of HLS parameters. We decided to run  our autotuner with the
+metrics reported  by the lengthier  process of hardware synthesis  instead.  Our
+autotuner's  virtualized   implementation  enables  deployment   in  distributed
+environments.  We  present data showing  that our autotuner found  optimized HLS
+parameters  for   CHStone  applications  that  decreased   the  \textit{Weighted
+Normalized Sum} (\textbf{WNS}) of hardware metrics by up to $21.5\%$ on average,
+and $10\%$ on average.
+*** Large Measurement Time
+The defining  characteristic of  this autotuning  experiment is  the potentially
+large  time it  takes to  synthesize  hardware from  specifications in  hardware
+description  languages,  which takes  from  minutes  to  hours. The  process  of
+generating  those  specifications from  high-level  C  code  is much  faster  in
+comparison,  taking only  seconds.  In  contrast to  the  previous section,  the
+applications used in this autotuning  experiment had a \textit{large measurement
+time}. Section~\ref{sec:FPGAautotuner}  describes in more detail  the High-Level
+Synthesis process.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=.65\textwidth]{./img/quali_brazil/overview_fpgas_small-eps-converted-to.pdf}
+    \caption{Autotuner representation and time scale of our experiments}
+    \label{fig:overview-fpgas-small}
+\end{figure}
+#+end_export
+
+Figure~\ref{fig:overview-fpgas-small}  shows a  representation of  our autotuner
+for this experiment, and illustrates its time scale.  The autotuner, represented
+by the light blue  box, receives as input a CHStone  application, a target FPGA,
+input data  for the  application in the  order of Kilobytes  and a  search space
+composed of LegUp's  HLS parameters. The autotuner outputs  an HLS configuration
+for each application and FPGA.
+
+#+begin_export latex
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=.65\textwidth]{./img/quali_brazil/overview_fpgas_big-eps-converted-to.pdf}
+  \caption{Autotuner representation and time scale of more complex FPGA
+    applications}
+  \label{fig:overview-fpgas-big}
+\end{figure}
+#+end_export
+
+The applications from CHStone, presented further in Table~\ref{tab:chstone}, are
+very simple benchmark applications, and  generating hardware for them takes time
+in the order of minutes. Generating  hardware for more complex FPGA applications
+can   take   several    hours.   Figure~\ref{fig:overview-fpgas-big}   shows   a
+representation  and  time scale  for  an  autotuner  that targets  complex  FPGA
+applications.  Each   iteration  now  takes   several  hours,  and   limits  the
+configurations that can be tested per hour.
+
+We  worked  around  this  limitation   in  this  experiment  by  implementing  a
+virtualized   autotuner  using   Docker  containers,   which  enabled   parallel
+measurements of different configurations. The lack of support in OpenTuner for a
+distributed execution  of measurements also  limited this experiment,  since our
+already virtualized approach could explore more search space in the same time if
+it was deployed in more connected machines.
+
+Applications  with large  measurement time  still  present a  challenge for  our
+current  autotuning approach,  even with  a  tool that  can achieve  distributed
+execution of measurements, because the quality  of the solutions still depend on
+the velocity of  exploration of the search space.  To  mitigate this problem and
+enable the autotuning of applications with large measurement times, which can be
+thought of as\textit{expensive-to-evaluate functions}, we are going to study the
+development of suitable experimental designs. We  will work in this direction in
+collaboration and  supervision of  professors Arnaud  Legrand, Brice  Videau and
+Jean-Marc Vincent from the University of Grenoble Alpes.
+
+*** Background
+In this section we discuss background  work related to HLS tools, and autotuning
+for FPGAs.
+
+**** Tools for HLS
+Research tools  for High-Level Synthesis have  been developed as well  as vendor
+tools   \cite{singh2011implementing,    feist2012vivado}.   Villareal   \emph{et
+al.}~\cite{villarreal2010designing}  implemented  extensions  to  the  Riverside
+Optimizing Compiler for Configurable Circuits  (ROCCC), which also uses the LLVM
+compiler  infrastructure,  to add  support  for  generating  VHDL from  C  code.
+Implemented within  GCC, GAUT~\cite{coussy2010gaut}  is an open-source  HLS tool
+for   generating   VHDL   from   C/C++   code.   Other   HLS   tools   such   as
+Mitrion~\cite{kindratenko2007mitrion},     Impulse~\cite{antola2007novel}    and
+Handel~\cite{loo2002handel} also generate hardware descriptions from C code.  We
+refer the reader to the survey from Nane \emph{et al.}~\cite{nane2016survey} for
+a comprehensive analysis of recent approaches to HLS.
+
+**** Autotuning for FPGAs
+Recent  works  study   autotuning  approaches  for  FPGA   compilation.   Xu  et
+al.~\cite{xu2017parallel} used  distributed OpenTuner instances to  optimize the
+compilation  flow  from  hardware   description  to  bitstream.   They  optimize
+configuration     parameters      from     the      Verilog-to-Routing     (VTR)
+toolflow~\cite{luu2014vtr}  and  target  frequency, wall-clock  time  and  logic
+utilization.  Huang et al.~\cite{huang2015effect} study  the effect of LLVM pass
+ordering and application in LegUp's HLS process, demonstrating the complexity of
+the  search  space and  the  difficulty  of  its exhaustive  exploration.   They
+exhaustively  explore a  subset of  LLVM  passes and  target logic  utilization,
+execution  cycles,   frequency,  and   wall-clock  time.    Mametjanov  \emph{et
+al.}~\cite{mametjanov2015autotuning}  propose a  machine-learning-based approach
+to  tune design  parameters for  performance  and power  consumption.  Nabi  and
+Vanderbauwhede~\cite{nabi2016fast} present a model  for performance and resource
+utilization for designs based on an intermediate representation.
+
+*** Autotuner \& Search Space
+This section  describes our autotuner  implementation, the LegUp  HLS parameters
+selected for tuning,  and the autotuning metrics used to  measure the quality of
+HLS configurations.
+
+**** Autotuner
+We  implemented our  autotuner  with OpenTuner~\cite{ansel2014opentuner},  using
+ensembles   of   search  techniques   to   find   an  optimized   selection   of
+LegUp~\cite{canis2015legup} HLS parameters, according  to our cost function, for
+11 of the CHStone~\cite{hara2008chstone} applications.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./img/quali_brazil/fpga-stack-eps-converted-to.pdf}
+    \caption{High-Level Synthesis compilation process. The autotuner search space at the HLS stage is highlighted in blue}
+    \label{fig:fpga-stack}
+\end{figure}
+#+end_export
+
+Figure \ref{fig:fpga-stack} shows  the steps to generate  a hardware description
+from  C code.  It  also shows  the  Quartus steps  to  generate bitstreams  from
+hardware  descriptions and  to  obtain  the hardware  metrics  we targeted.  Our
+autotuner used LegUp's HLS parameters as  the search space, but it completed the
+hardware generation  process to obtain  metrics from Quartus, as  represented by
+blue highlights in Figure \ref{fig:fpga-stack}.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{./img/quali_brazil/fpga_docker_tuner-eps-converted-to.pdf}
+    \caption{Autotuner Setup}
+    \label{fig:autotuner}
+\end{figure}
+#+end_export
+
+Figure \ref{fig:autotuner} shows our setup using Docker containers running LegUp
+and  Quartus.  This  virtualized  setup enabled  the  portable  installation  of
+dependencies and  can be  used to run  experiments in  distributed environments.
+The arrows coming from the autotuner to the containers represent the flow of new
+configurations generated  by search techniques,  and the arrows coming  from the
+containers to  the autotuner  represent the  flow of measurements  for a  set of
+parameters. For CHStone applications the measurement process takes approximately
+$10$ minutes to  complete, and the majority  of this time is  spent in Quartus's
+synthesis, mapping and place \& route.
+
+**** High-Level Synthesis Parameters
+We selected  an extensive  set of LegUp  High-Level Synthesis  parameters, shown
+partially in  Table \ref{tab:params}. Each  parameter in  the first two  rows of
+Table  \ref{tab:params}   has  an  $8$,   $16$,  $32$  and  $64$   bit  variant.
+\textit{Operation Latency} parameters define the number of clock cycles required
+to complete a  given operation when compiled  with LegUp.  \textit{Zero-latency}
+operations  can  be  performed  in   a  single  clock  cycle.   \textit{Resource
+Constraint}  parameters define  the number  of times  a given  operation can  be
+performed in  a clock  cycle.  \textit{Boolean  or Multi-Valued}  parameters are
+used   to    set   various    advanced   configurations.   For    example,   the
+\textbf{\texttt{\small{enable\_pattern\_sharing}}}  parameter  can   be  set  to
+enable resource sharing for patterns of computational operators, as is described
+by  Hadjis  \emph{et  al.}~\cite{hadjis2012impact}.   For a  complete  list  and
+description   of   each   parameter,    please   refer   to   LegUp's   official
+documentation~\footnote{\url{http://legup.eecg.utoronto.ca/docs/4.0}   [Accessed
+in 18/07/2017]}.
+
+#+begin_export latex
+\begin{table}[htpb]
+\centering
+\begin{tabular}{@{}p{0.10\columnwidth}p{0.84\columnwidth}@{}}
+\toprule
+Type & \multicolumn{1}{c}{Parameters} \\ \midrule
+\parbox[t]{0.10\columnwidth}{\scriptsize{Operation \\ Latency}} & \scriptsize{\texttt{\textbf{altfp\_}[divide, truncate, fptosi, add, subtract, multiply, extend, sitofp], \textbf{unsigned\_}[multiply, divide, add, modulus], \textbf{signed\_}[modulus, divide, multiply, add, \textbf{comp\_}[o, u]], [local\_mem, mem]\textbf{\_dual\_port}, \textbf{reg}}} \\
+%\addlinespace{}
+\parbox[t]{0.10\columnwidth}{\scriptsize{Resource Constraint}} & \scriptsize{\texttt{\textbf{signed\_}[divide, multiply, modulus, add], \textbf{altfp\_}[multiply, add, subtract, divide], \textbf{unsigned\_}[modulus, multiply, add, divide], [shared\_mem, mem]\textbf{\_dual\_port}}} \\
+%\addlinespace{}
+\parbox[t]{0.10\columnwidth}{\scriptsize{Boolean~or Multi-value}} & \scriptsize{\texttt{\textbf{pattern\_share\_}[add, shift, sub, bitops], \textbf{sdc\_}[multipump, no\_chaining, priority], \textbf{pipeline\_}[resource\_sharing, all], \textbf{ps\_}[min\_size, min\_width, max\_size, bit\_diff\_threshold], \textbf{mb\_}[minimize\_hw, max\_back\_passes], \textbf{no\_roms}, \textbf{multiplier\_no\_chain}, \textbf{dont\_chain\_get\_elem\_ptr}, \textbf{clock\_period}, \textbf{no\_loop\_pipelining}, \textbf{incremental\_sdc}, \textbf{disable\_reg\_sharing}, \textbf{set\_combine\_basicblock}, \textbf{enable\_pattern\_sharing}, \textbf{multipumping}, \textbf{dual\_port\_binding}, \textbf{modulo\_scheduler}, \textbf{explicit\_lpm\_mults}}} \\ \bottomrule
+%%\addlinespace{}
+\end{tabular}
+\caption{Subset of All Autotuned LegUP HLS Parameters}
+\label{tab:params}
+\end{table}
+#+end_export
+
+**** Autotuning Metrics
+To  obtain values  for  hardware metrics  we needed  to  perform the  synthesis,
+mapping and  place \&  route steps.  We used Quartus  to do  so, and  selected 8
+hardware metrics  reported by Quartus to  compose our cost or  fitness function.
+From  the  fitter summary  we  obtained  6 metrics.  \textit{Logic  Utilization}
+(\textit{LUT}) measures the number of logic elements and is composed of Adaptive
+Look-Up  Table  (ALUTs),  memory  ALUTs,  logic  registers  or  dedicated  logic
+registers.   The  \textit{Registers}   (\textit{Regs.}),  \textit{Virtual  Pins}
+(\textit{Pins}),  \textit{Block  Memory   Bits}  (\textit{Blocks}),  \textit{RAM
+Blocks} (\textit{BRAM})  and \textit{DSP Blocks} (\textit{DSP})  metrics measure
+the usage of the resources indicated by their names.
+
+From  the timing  analysis  we obtained  the  \textit{Cycles} and  \textit{FMax}
+metrics,  used  to compute  the  \textit{Wall-Clock  Time} metric.  This  metric
+composed  the cost  function,  but \textit{Cycles}  and  \textit{FMax} were  not
+individually  used. We  chose to  do that  because all  of our  hardware metrics
+needed   to    be   minimized   except   for    \textit{FMax},   and   computing
+\textit{Wall-Clock    Time}    instead    solved    that    restriction.     The
+\textit{Wall-Clock  Time} $wct$  is  computed by  $wct =  \text{\textit{Cycles}}
+\times  (\alpha   /  \text{\textit{FMax}})$,  where  $\alpha   =  10^6$  because
+\textit{FMax} is reported in MHz.
+
+Equation  \ref{eq:wnsm} describes  the  cost  or fitness  function  used by  our
+autotuner to evaluate  the sets of HLS parameters generated  during tuning.  The
+function $f(M, W)$ computes a \textit{Weighted Normalized Sum} (\textbf{WNS}) of
+the  measured metrics  $m_i \in  M$, where  $M$ was  described previously.   The
+weights   $w_i  \in   W$  correspond   to  one   of  the   scenarios  in   Table
+\ref{tab:scenarios}. A value is computed for each metric $m_i$ in relation to an
+initial  value  $m_{i}^{0}$ measured  for  each  metric.   For  a given  set  of
+measurements  $M_t$, a  value of  $f(M_t,  W) =  1.0$  means that  there was  no
+improvement relative to the starting HLS  set. The objective of the autotuner is
+to minimize $f(M, W)$.
+
+#+begin_export latex
+\begin{align} \label{eq:wnsm}
+    \mathlarger{f(M, W)} = \frac{\mathlarger{\mathlarger{\mathlarger{\sum}}}\limits_{\substack{m_i \in M \\ w_i \in W}}{w_i\left(\dfrac{m_i}{m_{i}^{0}}\right)}}{\mathlarger{\mathlarger{\mathlarger{\sum}}}\limits_{w_i \in W}{w_i}}
+\end{align}
+#+end_export
+
+*** Experiments
+This section describes the optimization scenarios, the CHStone applications, and
+the experimental settings.
+
+**** Optimization Scenarios
+Table \ref{tab:scenarios}  shows the  assigned weights  in our  $4$ optimization
+scenarios.  The   \textit{Area}-targeting  scenario   assigns  low   weights  to
+wall-clock time  metrics. The  \textit{Performance \& Latency}  scenario assigns
+high weights  to wall-clock  time metrics  and also to  the number  of registers
+used.  The \textit{Performance} scenario assigns low weights to area metrics and
+cycles, assigning a high weight only to frequency. The balanced scenario assigns
+the same weight to every metric. The weights assigned to the metrics that do not
+appear on Table \ref{tab:scenarios} are always $1$. The weights are integers and
+powers of~$2$.
+
+#+begin_export latex
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        Metric & \textit{Area} & \textit{Perf. \& Lat} & \textit{Performance} & \textit{Balanced} \\ \midrule
+        \textit{LUT} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\
+        \textit{Registers} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{E3DBB3} Medium & \cellcolor[HTML]{E3DBB3} Medium \\
+        \textit{BRAMs} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\
+        \textit{DSPs} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\
+        \textit{FMax} & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{E3DBB3} Medium \\
+        \textit{Cycles} & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\ \bottomrule
+    \end{tabular}
+    \caption{Weights for Optimization Scenarios \\ (\textit{High} $= 8$, \textit{Medium} $= 4$, \textit{Low} $= 2$)}
+    \label{tab:scenarios}
+    %\addlinespace
+\end{table}
+#+end_export
+
+We compared results when starting from a \textit{default} configuration with
+the results when starting at a \textit{random} set of parameters. The default
+configuration for the StratixV was provided by LegUp and the comparison was
+performed in the \textit{Balanced} optimization scenario.
+
+**** Applications
+To test and validate our autotuner we  used 11 applications from the CHStone HLS
+benchmark suite~\cite{hara2008chstone}. CHStone  applications are implemented in
+the C language and contain inputs  and previously computed outputs, allowing for
+correctness checks to be performed for all applications.
+
+#+begin_export latex
+\begin{table}[htpb]
+\centering
+\begin{tabular}{@{}p{0.13\columnwidth}p{0.63\columnwidth}@{}}
+\toprule
+ Application & Short Description \\ \midrule
+ blowfish & Symmetric-key block cypher \\
+ aes & Advanced Encryption Algorithm (AES) \\
+ adpcm & Adaptive Differential Pulse Code Modulation dec. and enc. \\
+ sha & Secure Hash Algorithm (SHA) \\
+ motion & Motion vector decoding from MPEG-2 \\
+ mips & Simplified MIPS processor \\
+ gsm & Predictive coding analysis of systems for mobile comms. \\
+ dfsin & Sine function for double-precision floating-point numbers \\
+ dfmul & Double-precision floating-point multiplication \\
+ dfdiv & Double-precision floating-point division \\
+ dfadd & Double-precision floating-point addition \\ \bottomrule
+%% \addlinespace{}
+\end{tabular}
+\caption{Autotuned CHStone Applications}
+\label{tab:chstone}
+\end{table}
+#+end_export
+
+Table  \ref{tab:chstone}  provides  short   descriptions  of  the  $11$  CHStone
+applications we  used. We  were not  able to  compile the  \textit{jpeg} CHStone
+application,  so did  not use  it.  All  experiments targeted  the \textit{Intel
+StratixV 5SGXEA7N2F45C2} FPGA.
+
+**** Experiments
+We  performed  $10$  tuning  runs  of  $1.5h$  for  each  application.   Section
+\ref{sec:FPGAresults}  presents   the  mean   relative  improvements   for  each
+application and  individual metric. The code  needed to run the  experiments and
+generate the  figures, as well  as the implementation  of the autotuner  and all
+data       we      generated,       is       open       and      hosted       at
+GitHub~\footnote{\url{https://github.com/phrb/legup-tuner}      [Accessed     in
+18/07/2017]}.
+
+The   experimental    settings   included   Docker   for    virtualization   and
+reproducibility,  LegUp  $v4.0$, Quartus  Prime  Standard  Edition $v16.0$,  and
+CHStone. All experiments  were performed on a machine with  two Intel(R) Xeon(R)
+CPU E5-2699 v3 with  18 x86\_64 cores each, and 503GB  of RAM.  The instructions
+and the  code to reproduce  the software  experimental environment are  open and
+hosted     at    GitHub~\footnote{\url{https://github.com/phrb/legup-dockerfile}
+[Accessed in 18/07/2017]}.
+
+*** Results
+This section  presents summaries  of the  results from  $10$ autotuning  runs of
+$1.5h$ in the  scenarios from Table \ref{tab:scenarios}.   Results are presented
+in \textit{heatmaps}  where each row has  one of the 11  CHStone applications in
+Table \ref{tab:chstone}  and each column has  one of the 8  hardware metrics and
+their \textit{Weighted  Normalized Sum}  (\textbf{WNS}) as described  in Section
+\ref{sec:metrics}.
+
+Cells on heatmaps show the ratio of tuned to initial values of a hardware metric
+in a CHStone application, averaged over 10 autotuning runs. The objective of the
+autotuner  is to  minimize all  hardware metrics  except for  \textit{FMax}.  To
+create a  consistent presentation of  our data in  the heatmaps we  inverted the
+ratios  for \textit{FMax}  so that  cell values  less than  $1.0$ always  mean a
+better metric value.  Heatmaps are also colored so that darker blues mean better
+values and darker reds mean worse values in relation to the starting point.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{./img/quali_brazil/heatmap_comp_stratixV-eps-converted-to.pdf}
+    \caption{Comparison of the absolute values for Random and Default starting points in the Balanced scenario}
+    \label{fig:comp}
+\end{figure}
+#+end_export
+
+Figure \ref{fig:comp} compares  the ratios of absolute values  for each hardware
+metric for \textit{Default} and \textit{Random} starts, in the \textit{Balanced}
+scenario.   Cell values  less than  $1.0$ mean  that the  \textit{Default} start
+achieved  smaller absolute  values that  the \textit{Random}  start.  Values  of
+``--''  mean  that the  \textit{Default}  start  could not  find  a  set of  HLS
+parameters  that  produced a  valid  output  during  any  of the  $1.5h$  tuning
+runs. The \textit{Default} start found better values for most metrics.
+
+The \textit{Random}  start found  better values for  \textit{DSP}, \textit{Pins}
+and \textit{FMax}  for some  applications. For example,  it found  values $49\%$
+smaller, $6\%$  smaller and  $53\%$ larger  for \textit{DSP},  \textit{Pins} and
+\textit{FMax},   respectively,   for   the   \textit{dfsin}   application.   The
+\textit{Default} start found better values for \textit{Regs} and \textit{Cycles}
+for  all  applications.  For  example,   it  found  values  $53\%$  smaller  for
+\textit{Regs} and \textit{Cycles} for the \textit{dfmul} application, and $56\%$
+and $55\%$ smaller for \textit{Regs}  and \textit{Cycles}, respectively, for the
+\textit{mips} application.
+
+We  believe that  the \textit{Random}  start found  worst values  in most  cases
+because of  the size of  the search space. It  is important that  autotuners use
+default  starting  points  specific  to  a given  application  and  board.   The
+remaining  results in  this  Section used  the  \textit{Default} starting  point
+provided by LegUp.
+
+Figure \ref{fig:balanced} shows the  results for the \textit{Balanced} scenario.
+These results are the baseline for  evaluating the autotuner in other scenarios,
+since  all  metrics had  the  same  weight.   The  optimization target  was  the
+\textit{Weighted Normalized Sum} (\textbf{WNS}) of hardware metrics, but we were
+also  interested in  the  changes in  other metrics  as  their relative  weights
+changed.  In  the   \textit{Balanced}  scenario  we  expected   to  see  smaller
+improvements of \textbf{WNS}  due to the competition  of concurrent improvements
+on every metric.
+
+The autotuner found values of \textbf{WNS} $16\%$ smaller for \textit{adpcm} and
+\textit{dfdiv},   and  $15\%$   smaller   for  \textit{dfmul}.    Even  on   the
+\textit{Balanced} scenario  it is  possible to see  that some  metrics decreased
+while others decreased  consistently over the 10 tuning  runs. \textit{FMax} and
+\textit{DSP} had  the larger  improvements for  most applications,  for example,
+$51\%$ greater  \textit{FMax} in \textit{adpcm} and  $69\%$ smaller \textit{DSP}
+in  \textit{dfmul}.  \textit{Cycles},  \textit{Regs} and  \textit{Pins} had  the
+worst  results  in   this  scenario,  with  $34\%$   larger  \textit{Cycles}  in
+\textit{dfdiv}, $15\%$ larger \textit{Regs}  in \textit{dfdiv} and $17\%$ larger
+\textit{Pins} in  \textit{gsm}.  Other  metrics had  smaller improvements  or no
+improvements at all in most applications.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{./img/quali_brazil/heatmap_default_stratixV-eps-converted-to.pdf}
+        \caption{Relative improvement for all metrics in the \textit{Balanced}
+        scenario}
+        \label{fig:balanced}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{./img/quali_brazil/heatmap_default_stratixV_area-eps-converted-to.pdf}
+        \caption{Relative improvement for all metrics in the \textit{Area}
+        scenario}
+        \label{fig:area}
+    \end{minipage}%
+\end{figure}
+#+end_export
+
+Figure  \ref{fig:area} shows  the results  for the  \textit{Area} scenario.   We
+believe that the greater coherence of optimization objectives is responsible for
+the  greater  improvements  of  \textbf{WNS} in  the  following  scenarios.  The
+autotuner found values of \textbf{WNS} $23\%$ smaller for \textit{dfdiv}, $18\%$
+smaller for  \textit{dfmul}, and smaller  values overall in comparison  with the
+\textit{Balanced}  scenario.  Regarding  individual   metrics,  the  values  for
+\textit{FMax}  were   worse  overall,  with  $14\%$   smaller  \textit{FMax}  in
+\textit{gsm} and  $62\%$ greater \textit{Cycles},  for example. As  expected for
+this  scenario, metrics  related to  area had  better improvements  than in  the
+\textit{Balanced}  scenario, with  $73\%$  and $72\%$  smaller \textit{DSP}  for
+\textit{dfmul} and  \textit{dfdiv} respectively, $33\%$  smaller \textit{Blocks}
+and \textit{BRAM} in \textit{dfdiv} and smaller values overall for \textit{Regs}
+and \textit{LUTs}.
+
+Figure \ref{fig:perf}  shows the results for  the \textit{Performance} scenario.
+The autotuner  found values of  \textbf{WNS} $23\%$ smaller  for \textit{dfmul},
+$19\%$  smaller for  \textit{dfdiv},  and  smaller values  overall  than in  the
+\textit{Balanced}  scenario.    \textit{FMax}  was   the  only  metric   with  a
+\textit{High} weight  in this scenario,  so most metrics had  improvements close
+overall to  the \textit{Balanced} scenario.   The values for  \textit{FMax} were
+best  overall,  with better  improvements  in  most applications.  For  example,
+$41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  \textit{FMax} in  \textit{dfdiv},
+\textit{dfmul}, \textit{dfsin} and \textit{aes} respectively.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{./img/quali_brazil/heatmap_default_stratixV_perf-eps-converted-to.pdf}
+        \caption{Relative improvement for all metrics in the
+        \textit{Performance} scenario}
+        \label{fig:perf}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\columnwidth]{./img/quali_brazil/heatmap_default_stratixV_perflat-eps-converted-to.pdf}
+        \caption{Relative improvement for all metrics in the
+        \textit{Performance \& Latency} scenario}
+        \label{fig:perflat}
+    \end{minipage}
+\end{figure}
+#+end_export
+
+Figure  \ref{fig:perflat}  shows  the  results for  the  \textit{Performance  \&
+Latency} scenario.   The autotuner found  values of \textbf{WNS}  $24\%$ smaller
+for  \textit{adpcm},  $18\%$  smaller  for \textit{dfdiv},  and  smaller  values
+overall than  in the \textit{Balanced} scenario.  \textit{Regs}, \textit{Cycles}
+and  \textit{FMax}  had  higher  weights  in  this  scenario,  and  also  better
+improvements overall.  For  example, $16\%$ and $15\%$  smaller \textit{Regs} in
+\textit{dfdiv}  and   \textit{sha}  respectively,  $23\%$  and   $11\%$  smaller
+\textit{Cycles}  in  \textit{sha}  and  \textit{aes}  respectively,  and  $53\%$
+greater \textit{FMax}  in \textit{adpcm}.  Although \textit{FMax} had  the worst
+improvements   in    relation   to    the   \textit{Balanced}    scenario,   the
+\textit{Wall-Clock  Time}  was   still  decreased  by  the   smaller  values  of
+\textit{Cycles}.
+
+Figure \ref{fig:wns-comp} summarizes the average improvements on \textbf{WNS} in
+the  4 scenarios  over 10  runs. Only  the \textit{Weighted  Normalized Sum}  of
+metrics directly  guided optimization. With  the exception of  \textit{dfadd} in
+the  \textit{Balanced} scenario,  the autotuner  decreased \textbf{WNS}  for all
+applications  in all  scenarios  by $10\%$  on  average, and  up  to $24\%$  for
+\textit{adpcm} in the \textit{Performance \&  Latency} scenario. The figure also
+shows the average decreases for each scenario.
+
+#+begin_export latex
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{./img/quali_brazil/heatmap_wns_comparison-eps-converted-to.pdf}
+    \caption{Relative improvement for \textbf{WNS} in all scenarios}
+    \label{fig:wns-comp}
+\end{figure}
+#+end_export
+
+*** Summary
+The  results of  this experiment  show  that it  is  always valuable  to have  a
+sensible starting position  for an autotuner. This becomes more  relevant as the
+size  of the  search space  and the  number of  targeted metrics  increase.  The
+flexibility  of  our  virtualized  approach  is evidenced  by  the  results  for
+different optimization  scenarios.  Improvements in \textbf{WNS}  increased when
+higher weights were  assigned to metrics that express a  coherent objective such
+as area, performance and latency.  The  improvements of metrics related to those
+objectives also increased.
+
+Future work in this direction will study the impact of different starting points
+on the  final tuned values in  each optimization scenario, for  example we could
+start tuning for \textit{Performance} at the best autotuned \textit{Area} value.
+We expected  that starting positions  tailored for each target  application will
+enable the  autotuner to find better  \textbf{WNS} values faster.  We  will also
+apply this autotuning methodology to HLS  tools that enable a fast prediction of
+metric values. These tools will enable  the exploration of the trade-off between
+prediction accuracy and the time to measure an HLS configuration.
 ** Application 4: CPU Kernels from the SPAPT Benchmark
+*** Source-to-Source Transformation
+Our approach can be applied to any autotuning domain that expresses optimization
+as  a  search  problem,  although  the performance  evaluations  we  present  in
+Section\nbsp{}[[Performance   Evaluation]]   were   obtained  in   the   domain   of
+source-to-source  transformation. Several  frameworks, compilers  and autotuners
+provide    tools     to    generate    and     optimize    architecture-specific
+code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
+We            used             BOAST\nbsp{}\cite{videau2017boast}            and
+Orio\nbsp{}\cite{hartono2009annotation}     to      perform     source-to-source
+transformations targeting parallelization on  CPUs and GPUs, vectorization, loop
+transformations  such as  tiling  and  unrolling, and  data  structure size  and
+copying.
+*** Performance Evaluation
+The    SPAPT\nbsp{}\cite{balaprakash2012spapt}    benchmark    suite    provides
+parametrized  CPU kernels  from different  HPC  domains.  The  kernels shown  in
+Table\nbsp{}[[tab:spapt_apps]]  are  implemented  using   the  code  annotation  and
+transformation   tools   provided  by   Orio\nbsp{}\cite{hartono2009annotation}.
+Search space  sizes are  larger than  in the  Laplacian Kernel  example.  Kernel
+factors are either integers in an  interval, such as loop unrolling and register
+tiling amounts, or binary flags that control parallelization and vectorization.
+
+#+NAME: fig:iteration_best_comparison
+#+CAPTION: Cost of best points found on each run, and the iteration where
+#+CAPTION: they were found. RS and DLMT found no speedups with similar budgets
+#+CAPTION: for kernels marked with ``[0]'' and /blue/ headers, and similar speedups with
+#+CAPTION: similar budgets for kernels marked with ``[=]'' and /orange/ headers. DLMT found similar
+#+CAPTION: speedups using smaller budgets for kernels marked with ``[+]'' /green/ headers.
+#+CAPTION: Ellipses delimit an estimate of where 95% of the underlying distribution lies
+#+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
+[[./ccgrid19/img/iteration_best_comparison.pdf]]
+
+#+NAME: fig:split_histograms
+#+CAPTION: Histograms of explored search spaces, showing the real count of measured configurations.
+#+CAPTION: Kernels are grouped in the same way as in Figure\nbsp{}[[fig:iteration_best_comparison]].
+#+CAPTION: DLMT spent fewer measurements than RS in configurations with smaller speedups or with slowdowns,
+#+CAPTION: even for kernels in the orange group. DLMT also spent more time exploring configurations with
+#+CAPTION: larger speedups
+#+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
+[[./ccgrid19/img/split_histograms.pdf]]
+
+We used the Random Sampling (RS) implementation available in Orio and integrated
+an implementation  of our approach  (DLMT) to the  system. We omitted  the other
+Orio      algorithms      because       other      studies      using      SPAPT
+kernels\nbsp{}\cite{balaprakash2011can,balaprakash2012experimental}  showed that
+their performance is similar to RS regarding budget usage. The global minima are
+not known  for any of  the problems,  and search spaces  are too large  to allow
+complete measurements.  Therefore, we used  the performance of  each application
+compiled with  \texttt{gcc}'s \texttt{-O3}, with  no code transformations,  as a
+/baseline/ for computing  the /speedups/ achieved by each strategy.  We performed 10
+autotuning repetitions for each  kernel using RS and DLMT, using  a budget of /at
+most/ 400  measurements. DLMT  was allowed  to perform only  4 of  the iterations
+shown in Figure\nbsp{}[[fig:doe_anova_strategy]].   Experiments were performed using
+Grid5000\nbsp{}\cite{balouek2013adding}, on  /Debian Jessie/, using an  /Intel Xeon
+E5-2630v3/ CPU and \texttt{gcc} version \texttt{6.3.0}.
+
+#+ATTR_LATEX: :booktabs t :align llll :font \scriptsize :float t :placement [t]
+#+NAME: tab:spapt_apps
+#+CAPTION: Kernels from the SPAPT benchmark used in this evaluation
+|---------------+---------------------------------+---------+----------------------|
+| Kernel        | Operation                       | Factors | Size                 |
+|---------------+---------------------------------+---------+----------------------|
+| =atax=        | Matrix transp. & vector mult.   |      18 | $2.6 \times 10^{16}$ |
+| =dgemv3=      | Scalar, vector & matrix mult.   |      49 | $3.8 \times 10^{36}$ |
+| =gemver=      | Vector mult. & matrix add.      |      24 | $2.6 \times 10^{22}$ |
+| =gesummv=     | Scalar, vector, & matrix mult.  |      11 | $5.3 \times 10^{9}$  |
+| =hessian=     | Hessian computation             |       9 | $3.7 \times 10^{7}$  |
+| =mm=          | Matrix multiplication           |      13 | $1.2 \times 10^{12}$ |
+| =mvt=         | Matrix vector product & transp. |      12 | $1.1 \times 10^{9}$  |
+| =tensor=      | Tensor matrix mult.             |      20 | $1.2 \times 10^{19}$ |
+| =trmm=        | Triangular matrix operations    |      25 | $3.7 \times 10^{23}$ |
+| =bicg=        | Subkernel of BiCGStab           |      13 | $3.2 \times 10^{11}$ |
+| =lu=          | LU decomposition                |      14 | $9.6 \times 10^{12}$ |
+| =adi=         | Matrix sub., mult., & div.      |      20 | $6.0 \times 10^{15}$ |
+| =jacobi=      | 1-D Jacobi computation          |      11 | $5.3 \times 10^{9}$  |
+| =seidel=      | Matrix factorization            |      15 | $1.3 \times 10^{14}$ |
+| =stencil3d=   | 3-D stencil computation         |      29 | $9.7 \times 10^{27}$ |
+| =correlation= | Correlation computation         |      21 | $4.5 \times 10^{17}$ |
+|---------------+---------------------------------+---------+----------------------|
+
+The time to measure  each kernel varied from a few seconds to  up to 20 minutes.
+In  testing, some  transformations  caused  the compiler  to  enter an  internal
+optimization process that did  not stop for over 12 hours. We  did not study why
+these cases  delayed for  so long,  and implemented an  execution timeout  of 20
+minutes, considering cases  that took longer than that to  compile to be runtime
+failures.
+
+Similar to the previous example, we  automated factor elimination based on ANOVA
+tests so  that a comprehensive  evaluation could be  performed. We also  did not
+tailor initial performance models, which were  the same for all kernels. Initial
+models had a linear term for each factor with two or more levels, plus quadratic
+and  cubic terms  for factors  with sufficient  levels. Although  automation and
+identical initial models might have limited the improvements at each step of our
+application, our results  show that it still succeeded in  decreasing the budget
+needed to find significant speedups for some kernels.
+
+Figure\nbsp{}[[fig:iteration_best_comparison]]  presents the  /speedup/ found  by each
+run of RS  and DLMT, plotted against the algorithm  /iteration/ where that speedup
+was found. We  divided the kernels into  3 groups according to  the results. The
+group where  no algorithm found  any speedups contains  3 kernels and  is marked
+with ``[0]''  and /blue/ headers.  The  group where both algorithms  found similar
+speedups, in similar  iterations, contains 6 kernels and is  marked with ``[=]''
+and  /orange/  headers. The  group  where  DLMT  found  similar speedups  using  a
+significantly  smaller budget  than RS  contains 8  kernels and  is marked  with
+``[+]'' and  /green/ headers.  Ellipses  delimit an estimate  of where 95%  of the
+underlying distribution lies, and a dashed line marks the \texttt{-03} baseline.
+In comparison to RS, our approach  significantly decreased the average number of
+iterations needed to find speedups for the 8 kernels in the green group.
+
+Figure\nbsp{}[[fig:split_histograms]] shows  the search space  exploration performed
+by    RS    and     DLMT.    It    uses    the    same     color    groups    as
+Figure\nbsp{}[[fig:iteration_best_comparison]],  and shows  the distribution  of the
+speedups that were  found during all repetitions of  the experiments.  Histogram
+areas corresponding to  DLMT are usually smaller because it  always stopped at 4
+iterations, while  RS always  performed 400  measurements. This  is particularly
+visible  in  =lu=,  =mvt=,  and  =jacobi=.  We  also  observe  that  the  quantity  of
+configurations with high  speedups found by DLMT is higher,  even for kernels on
+the orange group.  This is noticeable  in =gemver=, =bicgkernel=, =mm= and =tensor=, and
+means that  DLMT spent less  of the  budget exploring configurations  with small
+speedups or slowdowns, in comparison with RS.
+
+Analyzing  the significant  performance parameters  identified by  our automated
+approach for  every kernel, we  were able to identify  interesting relationships
+between parameters and performance. In  =bicgkernel=, for example, DLTM identified
+a  linear relationship  for  OpenMP and  scalar  replacement optimizations,  and
+quadratic   relationships  between   register   and  cache   tiling,  and   loop
+unrolling. This  is an example of  the transparency in the  optimization process
+that can be achieved with a DoE approach.
+
+Our approach used a generic initial performance model for all kernels, but since
+it iteratively eliminates  factors and model terms based on  ANOVA tests, it was
+still able to  exploit global search space structures for  kernels in the orange
+and green groups. Even in this automated setting, the results with SPAPT kernels
+illustrate the ability our approach has to reduce the budget needed to find good
+speedups by efficiently exploring search spaces.
+
+*** Identifying most significant factors
+*** Using Gaussian Process Regression
 ** Application 5: Bit Quantization for Neural Networks
 * Conclusion
 #+begin_export latex

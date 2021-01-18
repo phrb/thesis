@@ -7,3 +7,9 @@
 [submodule "ccgrid19"]
 	path = ccgrid19
 	url = git@github.com:phrb/ccgrid19.git
+[submodule "journal"]
+	path = journal
+	url = git@github.com:phrb/journal.git
+[submodule "dlmt_spapt_experiments"]
+	path = dlmt_spapt_experiments
+	url = git@github.com:phrb/dlmt_spapt_experiments.git

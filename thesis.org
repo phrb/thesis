@@ -789,11 +789,21 @@ git submodule add --depth=1 git@github.com:phrb/bibliography.git
 git submodule add --depth=1 git@github.com:phrb/dopt_anova_experiments.git
 #+end_SRC
 
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule add --depth=1 git@github.com:phrb/dlmt_spapt_experiments.git
+#+end_SRC
+
+#+RESULTS:
+
 *** CCGRID2019 Paper
 #+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
 git submodule add --depth=1 git@github.com:phrb/ccgrid19.git
 #+end_SRC
 
+*** PhD Journal
+#+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
+git submodule add --depth=1 git@github.com:phrb/journal.git
+#+end_SRC
 ** Initializing Sub-modules
 #+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
 git submodule init
@@ -11325,10 +11335,10 @@ NVIDIA corporation.
 The objective  of this case  study was  to measure the  performance improvements
 that  a domain-agnostic  autotuning  strategy would  achieve  for CUDA  compiler
 parameters. We implemented an autotuner for  the CUDA compiler using the use the
-OpenTuner  framework~\cite{ansel2014opentuner} and  used  it to  search for  the
+OpenTuner  framework\nbsp{}\cite{ansel2014opentuner} and  used  it to  search for  the
 compilation parameters  that optimize  the performance  of 17  heterogeneous GPU
 applications,    12    of    which    are    from    the    Rodinia    Benchmark
-Suite~\cite{che2009rodinia}.    We  used   3  different   NVIDIA  GPUs   in  the
+Suite\nbsp{}\cite{che2009rodinia}.    We  used   3  different   NVIDIA  GPUs   in  the
 experiments,  the Tesla  K40,  the GTX  980  and  the GTX  750.  We worked  with
 Hewlett-Packard Enterprise on this project.
 
@@ -11357,7 +11367,7 @@ smaller input sizes, had a \textit{small measurement time}.
 \end{figure}
 #+end_export
 
-Figure~\ref{fig:overview-gpus} shows a representation of the autotuner
+Figure\nbsp{}\ref{fig:overview-gpus} shows a representation of the autotuner
 implemented in this study, and illustrates the time scale of our experiments.
 The autotuner, in light blue, receives as input a Rodinia application, a target
 GPU, input data for the application in the order of Gigabytes and a search
@@ -11365,7 +11375,7 @@ space composed of NVCC flags. The autotuner outputs a flag selection subject to
 its input application and GPU.
 
 Since in this study it was fast to compile and measure a program's performance,
-an autotuner iteration is shown in Figure~\ref{fig:overview-gpus} to last in
+an autotuner iteration is shown in Figure\nbsp{}\ref{fig:overview-gpus} to last in
 the order of seconds. We could therefore test thousands of flag combinations
 per hour in a sequential autotuner, exploring enough of the search space to
 achieve the speedups reported.
@@ -11421,23 +11431,23 @@ The accuracy of a GPU performance model is subject to low level elements such as
 instruction  pipeline usage  and small  cache hierarchies.  A GPU's  performance
 approaches  its peak  when the  instruction pipeline  is saturated,  but becomes
 unpredictable             when            the             pipeline            is
-under-utilized~\cite{zhang2011quantitative,amaris2015simple}.   Considering  the
-effects  of  small cache  hierarchies~\cite{dao2015performance,picchi2015impact}
-and memory-access divergence~\cite{sampaio2013divergence,baghsorkhi2010adaptive}
+under-utilized\nbsp{}\cite{zhang2011quantitative,amaris2015simple}.   Considering  the
+effects  of  small cache  hierarchies\nbsp{}\cite{dao2015performance,picchi2015impact}
+and memory-access divergence\nbsp{}\cite{sampaio2013divergence,baghsorkhi2010adaptive}
 is also critical to a GPU performance model.
 
-Guo and Wang~\cite{guo2010auto} introduce a  framework for autotuning the number
+Guo and Wang\nbsp{}\cite{guo2010auto} introduce a  framework for autotuning the number
 of threads  and the  sizes of  blocks and warps  used by  the CUDA  compiler for
 sparse  matrix   and  vector  multiplication  GPU   applications.   Li  \emph{et
-al.}~\cite{li2009note}  discuss  the  performance of  autotuning  techniques  in
+al.}\nbsp{}\cite{li2009note}  discuss  the  performance of  autotuning  techniques  in
 highly-tuned  GPU  General Matrix  to  Matrix  Multiplication (GEMMs)  routines,
 highlighting  the   difficulty  in  developing   optimized  code  for   new  GPU
-architectures.   Grauer-Gray  \emph{et  al.}~\cite{grauer2012auto}  autotune  an
+architectures.   Grauer-Gray  \emph{et  al.}\nbsp{}\cite{grauer2012auto}  autotune  an
 optimization  space  of  GPU  kernels  focusing  on  tiling,  loop  permutation,
 unrolling,        and         parallelization.         Chaparala        \emph{et
-al.}~\cite{chaparala2015autotuning}    autotune     GPU-accelerated    Quadratic
+al.}\nbsp{}\cite{chaparala2015autotuning}    autotune     GPU-accelerated    Quadratic
 Assignment         Problem          solvers.          Sedaghati         \emph{et
-al.}~\cite{sedaghati2015automatic} build  a decision model for  the selection of
+al.}\nbsp{}\cite{sedaghati2015automatic} build  a decision model for  the selection of
 sparse matrix representations in GPUs.
 
 *** Autotuner and Search Space
@@ -11448,15 +11458,14 @@ compiler parameters.
 The autotuner  we implemented used  the \textit{multi-armed bandit  with sliding
 window, area  under the  curve credit  assignment} meta-technique,  simply named
 \textit{AUC      Bandit}.      AUC      Bandit      is     OpenTuner's      core
-meta-technique~\cite{ansel2014opentuner}, and its  ensemble of search techniques
+meta-technique\nbsp{}\cite{ansel2014opentuner}, and its  ensemble of search techniques
 is composed by implementations of the Nelder-Mead algorithm and three variations
-of genetic algorithms.  Figure~\ref{fig:gpu-stack} shows a simplified version of
+of genetic algorithms.  Figure\nbsp{}\ref{fig:gpu-stack} shows a simplified version of
 the steps necessary to generate the object code that will be measured later.
 
 The  code   for  our  autotuner   and  all   the  experiments  and   results  is
-available\footnote{Hosted                       at                       GitHub:
-\url{https://github.com/phrb/gpu-autotuning}  [Accessed  on 10  February  2015]}
-under the GNU General Public License.
+available\nbsp{}\cite{bruel2017autotuningURL}  under  the   GNU  General  Public
+License.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -11468,18 +11477,17 @@ under the GNU General Public License.
 #+end_export
 
 **** Search Space
-Table~\ref{tab:flags} details  the subset  of the CUDA  configuration parameters
-used         in          the         experiments~\footnote{Adapted         from:
-\url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc}   [Accessed  on   10
-February  2015]}.   The  parameters  target  different  compilation  steps:  the
-\emph{PTX} optimizing  assembler; the \emph{NVLINK} linker;  and the \emph{NVCC}
-compiler.  We compared the performance of programs generated by tuned parameters
-with the  standard compiler optimizations,  namely \texttt{--opt-level=0,1,2,3}.
-Different \texttt{--opt-level}s  could also be  selected during tuning.   We did
-not use  compiler options  that target  the host linker  or the  library manager
-since they do not  affect performance.  The size of the  search space defined by
-all possible combinations of the flags  in Table~\ref{tab:flags} is in the order
-of $10^{6}$ making hand-optimization or exhaustive searches very time consuming.
+Table\nbsp{}\ref{tab:flags}  details  the  subset   of  the  CUDA  configuration
+parameters   used   in  the   experiments\nbsp{}\cite{cuda2020driverURL}.    The
+parameters  target  different  compilation   steps:  the  \emph{PTX}  optimizing
+assembler; the \emph{NVLINK} linker; and  the \emph{NVCC} compiler.  We compared
+the  performance of  programs generated  by tuned  parameters with  the standard
+compiler   optimizations,    namely   \texttt{--opt-level=0,1,2,3}.    Different
+\texttt{--opt-level}s  could also  be selected  during tuning.   We did  not use
+compiler options that  target the host linker or the  library manager since they
+do not affect performance.  The size of the search space defined by all possible
+combinations  of the  flags in  Table\nbsp{}\ref{tab:flags} is  in the  order of
+$10^{6}$ making hand-optimization or exhaustive searches very time consuming.
 
 #+begin_export latex
 \begin{table}[htpb]
@@ -11529,7 +11537,7 @@ implementation and its search space.
 To be  able to  show that  different GPUs require  different options  to improve
 performance, and that it is possible  to achieve speedups in different hardware,
 we  wanted  to  tune  our benchmark  for  different  NVIDIA  microarchitectures.
-Table~\ref{tab:GPUs} summarizes the hardware characteristics of the three GPUs.
+Table\nbsp{}\ref{tab:GPUs} summarizes the hardware characteristics of the three GPUs.
 
 #+begin_export latex
 \begin{table}[thpb]
@@ -11551,9 +11559,9 @@ Table~\ref{tab:GPUs} summarizes the hardware characteristics of the three GPUs.
 We composed a  benchmark with 17 heterogeneous GPU  applications.  The benchmark
 contains 4 optimization strategies  for \emph{matrix multiplication} (counted as
 a  single  application),   1  vector  addition  problem,  1   solution  for  the
-\emph{maximum  sub-array problem}~\cite{ferreira2014parallel},  2 \emph{sorting}
+\emph{maximum  sub-array problem}\nbsp{}\cite{ferreira2014parallel},  2 \emph{sorting}
 algorithms    and     12    applications    from    the     Rodinia    Benchmark
-Suite~\cite{che2009rodinia}.
+Suite\nbsp{}\cite{che2009rodinia}.
 
 #+begin_export latex
 \begin{table}[htpb]
@@ -11580,7 +11588,7 @@ Suite~\cite{che2009rodinia}.
 \end{table}
 #+end_export
 
-Table~\ref{tab:Rodinia}  shows   the  Rodinia  applications  contained   in  our
+Table\nbsp{}\ref{tab:Rodinia}  shows   the  Rodinia  applications  contained   in  our
 benchmark and their correspondent three-letter  code.  The other applications in
 the benchmark were CUDA implementations of the following:
 
@@ -11597,9 +11605,7 @@ the benchmark were CUDA implementations of the following:
     \item Simple vector addition algorithm (VAD)
     \item Solution~\cite{alves2004bsp,ferreira2014parallel} for the Maximum
         Sub-Array Problem (MSA)
-    \item Quicksort (QKS) and Bitonicsort (BTN)~\footnote{Obtained from:
-        \url{http://digitalcommons.providence.edu/student\_scholarship/7/}
-        [Accessed on 10 February 2015]}
+    \item Quicksort (QKS) and Bitonicsort (BTN)
 \end{itemize}
 #+end_export
 
@@ -11636,7 +11642,7 @@ range} times 1.5. Finally, the circles represent the outliers.
 \end{figure}
 #+end_export
 
-Figures~\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
+Figures\nbsp{}\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
 \ref{fig:K40myo}  compare the  distributions  of 10  perfomance measurements  of
 binaries  compiled with  high-level  compiler optimizations  and with  autotuned
 compiler    options.   The    results   for    the   high-level    optimizations
@@ -11663,12 +11669,12 @@ the keyword \emph{Tuned}.
 \end{figure}
 #+end_export
 
-Figure~\ref{fig:K40hwl} shows  that the  autotuned solution  for the  Heart Wall
+Figure\nbsp{}\ref{fig:K40hwl} shows  that the  autotuned solution  for the  Heart Wall
 problem (HWL) in the  Tesla K40 achieved over 2x speedup  in comparison with the
-high-level CUDA  optimizations.  Figure~\ref{fig:980gau} shows, in  the GTX 980,
+high-level CUDA  optimizations.  Figure\nbsp{}\ref{fig:980gau} shows, in  the GTX 980,
 almost   2.5x   speedup   for    the   Gaussian   Elimination   problem   (GAU).
-Figure~\ref{fig:K40ptf} show 10\% speedup of the autotuned solution for the Path
-Finder problem (PTF)  in the Tesla K40.  Figure~\ref{fig:K40myo}  shows over 5\%
+Figure\nbsp{}\ref{fig:K40ptf} show 10\% speedup of the autotuned solution for the Path
+Finder problem (PTF)  in the Tesla K40.  Figure\nbsp{}\ref{fig:K40myo}  shows over 5\%
 speedup  of the  autotuned solution,  also  in the  Tesla K40,  for the  Myocyte
 problem (MYO).
 
@@ -11691,7 +11697,7 @@ problem (MYO).
 \end{figure}
 #+end_export
 
-Figures~\ref{fig:matrixsummary}, \ref{fig:summary}, \ref{fig:rodiniasummary} and
+Figures\nbsp{}\ref{fig:matrixsummary}, \ref{fig:summary}, \ref{fig:rodiniasummary} and
 \ref{fig:rodiniasummarysmall} present  summaries of  the results.  The autotuner
 did not find  solutions that improved upon the high-level  optimizations for the
 problems BTN and MSU  in any of the GPUs of the testbed,  but it found solutions
@@ -11729,7 +11735,7 @@ Memory.
 
 **** Autotuner Performance
 This   section  presents   an   assessment  of   the  autotuner's   performance.
-Figures~\ref{fig:K40hwBest},   \ref{fig:980gauBest},  \ref{fig:K40ptfBest}   and
+Figures\nbsp{}\ref{fig:K40hwBest},   \ref{fig:980gauBest},  \ref{fig:K40ptfBest}   and
 \ref{fig:K40myoBest} present the  performance of the best solution  found by the
 autotuner  versus the  time these  solutions were  found, in  seconds since  the
 beginning of the tuning process. The Figures show the evolution of the autotuned
@@ -11791,10 +11797,10 @@ not find any improving configuration until the end of its tuning run.
 The  autotuner  used  the  mean  of  10  performance  measurements  of  a  given
 configuration  as the  fitness value,  reducing fluctuations  and improving  the
 measurement's accuracy. This  is reflected in the proximity  of the measurements
-reported by  the autotuner during tuning,  shown in figures~\ref{fig:K40hwBest},
+reported by  the autotuner during tuning,  shown in figures\nbsp{}\ref{fig:K40hwBest},
 \ref{fig:980gauBest}, \ref{fig:K40ptfBest} and \ref{fig:K40myoBest} and the mean
 values of  10 measurements  of the  final solution,  shown in  the corresponding
-figures~\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
+figures\nbsp{}\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
 \ref{fig:K40myo}.
 
 **** Parameter Selection
@@ -11826,11 +11832,11 @@ figures~\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
 #+end_export
 
 We attempted to associate compilation  parameters to applications and GPUs using
-WEKA's~\cite{holmes1994weka} clustering  algorithms. Although we could  not find
+WEKA's\nbsp{}\cite{holmes1994weka} clustering  algorithms. Although we could  not find
 significant   relations   for   most   applications   we   detected   that   the
 \texttt{ftz=true} in  MMS and the Compute  Capabilities 3.0, 5.0 and  5.2 in GAU
 caused  the   speedups  observed  in   the  GTX  980  for   these  applications.
-Table~\ref{tab:750RodiniaClusters} shows clusters obtained with the K-means WEKA
+Table\nbsp{}\ref{tab:750RodiniaClusters} shows clusters obtained with the K-means WEKA
 algorithm  for  autotuned  parameter  sets  for the  Rodinia  Benchmark  in  the
 GTX 750.  Unlike most clusters found  for all GPUs and  problems, these clusters
 did  not  contain an  equal  number  of  instances.  The difficulty  of  finding
@@ -12015,41 +12021,38 @@ High-Performance Computing tasks that require low power and latency increasingly
 switch to FPGAs  from GPUs. Hardware specifications are  written using low-level
 languages such as Verilog and VHDL, making a challenge for software engineers to
 leverage FPGA capabilities.  This became increasingly relevant by the adaptation
-of                      FPGAs                      for                      data
-centers~\cite{caulfield2016cloud}\footnote{\url{https://cloud.baidu.com/product/fpga.html}
-[Accessed             in             28/07/2017],             \\             and
-\url{https://aws.amazon.com/ec2/instance-types/f1/} [Accessed in 28/07/2017]}, a
-field dominated by software engineers.
+of FPGAs for data  centers\nbsp{}\cite{caulfield2016cloud}, a field dominated by
+software engineers.
 
 Essential support for software engineers can be provided by High-Level Synthesis
 (HLS), the  process of  generating hardware  descriptions from  high-level code.
 HLS lowers the complexity of hardware design  from the point of view of software
 engineering  and has  become  increasingly viable  as part  of  the FPGA  design
-methodology,  with support  from  vendor HLS  tools~\cite{singh2011implementing,
-feist2012vivado} for C/C++ and OpenCL. The benefits of higher-level abstractions
-come  with the  cost of  decreased  application performance,  making FPGAs  less
-viable as  accelerators.  Thus, optimizing  HLS still requires  domain expertise
-and exhaustive or manual exploration of design spaces and configurations.
+methodology,         with         support        from         vendor         HLS
+tools\nbsp{}\cite{singh2011implementing,feist2012vivado}    for     C/C++    and
+OpenCL.  The  benefits  of  higher-level  abstractions come  with  the  cost  of
+decreased  application performance,  making FPGAs  less viable  as accelerators.
+Thus, optimizing  HLS still requires  domain expertise and exhaustive  or manual
+exploration of design spaces and configurations.
 
-High-Level Synthesis  is an  \NP{}-Complete problem~\cite{canis2015legup}  and a
-common   strategy    for   its   solution   involves    the   divide-and-conquer
-approach~\cite{coussy2009introduction}.   The  most  important  sub-problems  to
-solve are \textit{scheduling},  where operations are assigned  to specific clock
-cycles, and \textit{binding}, where operations are assigned to specific hardware
-functional    units,     which    can    be    shared     between    operations.
-LegUp~\cite{canis2013legup} is an open-source HLS tool implemented as a compiler
-pass  for the  LLVM Compiler  Infrastructure~\cite{chris2004llvm}.  It  receives
-code in  LLVM's intermediate representation  as input  and produces as  output a
-hardware description in Verilog.  LegUp  exposes configuration parameters of its
-HLS process, set with a configuration file.
+High-Level        Synthesis        is        an        \(\mathcal{NP}\)-complete
+problem\nbsp{}\cite{canis2015legup}  and  a  common strategy  for  its  solution
+involves  the  divide-and-conquer  approach\nbsp{}\cite{coussy2009introduction}.
+The  most  important  sub-problems   to  solve  are  \textit{scheduling},  where
+operations are  assigned to specific  clock cycles, and  \textit{binding}, where
+operations  are assigned  to specific  hardware functional  units, which  can be
+shared between operations.   LegUp\nbsp{}\cite{canis2013legup} is an open-source
+HLS   tool   implemented   as   a   compiler  pass   for   the   LLVM   Compiler
+Infrastructure\nbsp{}\cite{chris2004llvm}.    It   receives   code   in   LLVM's
+intermediate  representation  as  input  and   produces  as  output  a  hardware
+description  in Verilog.   LegUp  exposes configuration  parameters  of its  HLS
+process, set with a configuration file.
 
 This section  presents an autotuner  for LegUp HLS parameters  implemented using
 the OpenTuner  framework.  The  autotuner targeted  8 hardware  metrics obtained
-from
-Quartus~\footnote{\url{https://www.altera.com/products/design-software/fpga-design/quartus-prime/overview.html}
-[Accessed  in  18/07/2017]},  for  applications of  the  CHStone  HLS  benchmark
-suite~\cite{hara2008chstone}  in the  Intel StratixV  FPGA.  The  program to  be
-configured  here is  LegUp and  the search  space is  composed of  approximately
+from   Altera  Quartus,   for  applications   of  the   CHStone  HLS   benchmark
+suite\nbsp{}\cite{hara2008chstone} in  the Intel StratixV FPGA.   The program to
+be configured  here is LegUp and  the search space is  composed of approximately
 $10^{126}$ possible combinations  of HLS parameters.  Such a  large search space
 is unfeasible to search exhaustively or by hand.
 
@@ -12066,10 +12069,10 @@ The defining  characteristic of  this autotuning  experiment is  the potentially
 large  time it  takes to  synthesize  hardware from  specifications in  hardware
 description  languages,  which takes  from  minutes  to  hours. The  process  of
 generating  those  specifications from  high-level  C  code  is much  faster  in
-comparison,  taking only  seconds.  In  contrast to  the  previous section,  the
+comparison,  taking only  seconds.  In  contrast  to the  previous section,  the
 applications used in this autotuning  experiment had a \textit{large measurement
-time}. Section~\ref{sec:FPGAautotuner}  describes in more detail  the High-Level
-Synthesis process.
+time}. Section\nbsp{}[[HLS Autotuner and Search Space]] describes in more detail the
+High-Level Synthesis process.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -12080,12 +12083,12 @@ Synthesis process.
 \end{figure}
 #+end_export
 
-Figure~\ref{fig:overview-fpgas-small}  shows a  representation of  our autotuner
-for this experiment, and illustrates its time scale.  The autotuner, represented
-by the light blue  box, receives as input a CHStone  application, a target FPGA,
-input data  for the  application in the  order of Kilobytes  and a  search space
-composed of LegUp's  HLS parameters. The autotuner outputs  an HLS configuration
-for each application and FPGA.
+Figure\nbsp{}\ref{fig:overview-fpgas-small}  shows   a  representation   of  our
+autotuner for this  experiment, and illustrates its time  scale.  The autotuner,
+represented by  the light blue box,  receives as input a  CHStone application, a
+target FPGA,  input data  for the application  in the order  of Kilobytes  and a
+search space  composed of LegUp's HLS  parameters. The autotuner outputs  an HLS
+configuration for each application and FPGA.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -12097,13 +12100,13 @@ for each application and FPGA.
 \end{figure}
 #+end_export
 
-The applications from CHStone, presented further in Table~\ref{tab:chstone}, are
-very simple benchmark applications, and  generating hardware for them takes time
-in the order of minutes. Generating  hardware for more complex FPGA applications
-can   take   several    hours.   Figure~\ref{fig:overview-fpgas-big}   shows   a
-representation  and  time scale  for  an  autotuner  that targets  complex  FPGA
-applications.  Each   iteration  now  takes   several  hours,  and   limits  the
-configurations that can be tested per hour.
+The      applications      from      CHStone,     presented      further      in
+Table\nbsp{}\ref{tab:chstone},  are  very  simple  benchmark  applications,  and
+generating hardware  for them  takes time  in the  order of  minutes. Generating
+hardware  for   more  complex   FPGA  applications   can  take   several  hours.
+Figure\nbsp{}\ref{fig:overview-fpgas-big} shows a  representation and time scale
+for an  autotuner that  targets complex FPGA  applications.  Each  iteration now
+takes several hours, and limits the configurations that can be tested per hour.
 
 We  worked  around  this  limitation   in  this  experiment  by  implementing  a
 virtualized   autotuner  using   Docker  containers,   which  enabled   parallel
@@ -12129,42 +12132,42 @@ for FPGAs.
 **** Tools for HLS
 Research tools  for High-Level Synthesis have  been developed as well  as vendor
 tools   \cite{singh2011implementing,    feist2012vivado}.   Villareal   \emph{et
-al.}~\cite{villarreal2010designing}  implemented  extensions  to  the  Riverside
+al.}\nbsp{}\cite{villarreal2010designing}  implemented  extensions  to  the  Riverside
 Optimizing Compiler for Configurable Circuits  (ROCCC), which also uses the LLVM
 compiler  infrastructure,  to add  support  for  generating  VHDL from  C  code.
-Implemented within  GCC, GAUT~\cite{coussy2010gaut}  is an open-source  HLS tool
+Implemented within  GCC, GAUT\nbsp{}\cite{coussy2010gaut}  is an open-source  HLS tool
 for   generating   VHDL   from   C/C++   code.   Other   HLS   tools   such   as
-Mitrion~\cite{kindratenko2007mitrion},     Impulse~\cite{antola2007novel}    and
-Handel~\cite{loo2002handel} also generate hardware descriptions from C code.  We
-refer the reader to the survey from Nane \emph{et al.}~\cite{nane2016survey} for
+Mitrion\nbsp{}\cite{kindratenko2007mitrion},     Impulse\nbsp{}\cite{antola2007novel}    and
+Handel\nbsp{}\cite{loo2002handel} also generate hardware descriptions from C code.  We
+refer the reader to the survey from Nane \emph{et al.}\nbsp{}\cite{nane2016survey} for
 a comprehensive analysis of recent approaches to HLS.
 
 **** Autotuning for FPGAs
 Recent  works  study   autotuning  approaches  for  FPGA   compilation.   Xu  et
-al.~\cite{xu2017parallel} used  distributed OpenTuner instances to  optimize the
+al.\nbsp{}\cite{xu2017parallel} used  distributed OpenTuner instances to  optimize the
 compilation  flow  from  hardware   description  to  bitstream.   They  optimize
 configuration     parameters      from     the      Verilog-to-Routing     (VTR)
-toolflow~\cite{luu2014vtr}  and  target  frequency, wall-clock  time  and  logic
-utilization.  Huang et al.~\cite{huang2015effect} study  the effect of LLVM pass
+toolflow\nbsp{}\cite{luu2014vtr}  and  target  frequency, wall-clock  time  and  logic
+utilization.  Huang /et al./\nbsp{}\cite{huang2015effect} study  the effect of LLVM pass
 ordering and application in LegUp's HLS process, demonstrating the complexity of
 the  search  space and  the  difficulty  of  its exhaustive  exploration.   They
 exhaustively  explore a  subset of  LLVM  passes and  target logic  utilization,
 execution  cycles,   frequency,  and   wall-clock  time.    Mametjanov  \emph{et
-al.}~\cite{mametjanov2015autotuning}  propose a  machine-learning-based approach
+al.}\nbsp{}\cite{mametjanov2015autotuning}  propose a  machine-learning-based approach
 to  tune design  parameters for  performance  and power  consumption.  Nabi  and
-Vanderbauwhede~\cite{nabi2016fast} present a model  for performance and resource
+Vanderbauwhede\nbsp{}\cite{nabi2016fast} present a model  for performance and resource
 utilization for designs based on an intermediate representation.
 
-*** Autotuner \& Search Space
+*** HLS Autotuner and Search Space
 This section  describes our autotuner  implementation, the LegUp  HLS parameters
 selected for tuning,  and the autotuning metrics used to  measure the quality of
 HLS configurations.
 
 **** Autotuner
-We  implemented our  autotuner  with OpenTuner~\cite{ansel2014opentuner},  using
+We  implemented our  autotuner  with OpenTuner\nbsp{}\cite{ansel2014opentuner},  using
 ensembles   of   search  techniques   to   find   an  optimized   selection   of
-LegUp~\cite{canis2015legup} HLS parameters, according  to our cost function, for
-11 of the CHStone~\cite{hara2008chstone} applications.
+LegUp\nbsp{}\cite{canis2015legup} HLS parameters, according  to our cost function, for
+11 of the CHStone\nbsp{}\cite{hara2008chstone} applications.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -12199,7 +12202,7 @@ configurations generated  by search techniques,  and the arrows coming  from the
 containers to  the autotuner  represent the  flow of measurements  for a  set of
 parameters. For CHStone applications the measurement process takes approximately
 $10$ minutes to  complete, and the majority  of this time is  spent in Quartus's
-synthesis, mapping and place \& route.
+synthesis, mapping and place and route.
 
 **** High-Level Synthesis Parameters
 We selected  an extensive  set of LegUp  High-Level Synthesis  parameters, shown
@@ -12210,13 +12213,12 @@ to complete a  given operation when compiled  with LegUp.  \textit{Zero-latency}
 operations  can  be  performed  in   a  single  clock  cycle.   \textit{Resource
 Constraint}  parameters define  the number  of times  a given  operation can  be
 performed in  a clock  cycle.  \textit{Boolean  or Multi-Valued}  parameters are
-used   to    set   various    advanced   configurations.   For    example,   the
+used   to    set   various   advanced   configurations.     For   example,   the
 \textbf{\texttt{\small{enable\_pattern\_sharing}}}  parameter  can   be  set  to
 enable resource sharing for patterns of computational operators, as is described
-by  Hadjis  \emph{et  al.}~\cite{hadjis2012impact}.   For a  complete  list  and
+by Hadjis \emph{et al.}\nbsp{}\cite{hadjis2012impact}.   For a complete list and
 description   of   each   parameter,    please   refer   to   LegUp's   official
-documentation~\footnote{\url{http://legup.eecg.utoronto.ca/docs/4.0}   [Accessed
-in 18/07/2017]}.
+documentation\nbsp{}\cite{legup2020docsURL}.
 
 #+begin_export latex
 \begin{table}[htpb]
@@ -12236,9 +12238,9 @@ Type & \multicolumn{1}{c}{Parameters} \\ \midrule
 \end{table}
 #+end_export
 
-**** Autotuning Metrics
+**** HLS Autotuning Metrics
 To  obtain values  for  hardware metrics  we needed  to  perform the  synthesis,
-mapping and  place \&  route steps.  We used Quartus  to do  so, and  selected 8
+mapping and  place and  route steps.  We used Quartus  to do  so, and  selected 8
 hardware metrics  reported by Quartus to  compose our cost or  fitness function.
 From  the  fitter summary  we  obtained  6 metrics.  \textit{Logic  Utilization}
 (\textit{LUT}) measures the number of logic elements and is composed of Adaptive
@@ -12282,20 +12284,20 @@ the experimental settings.
 **** Optimization Scenarios
 Table \ref{tab:scenarios}  shows the  assigned weights  in our  $4$ optimization
 scenarios.  The   \textit{Area}-targeting  scenario   assigns  low   weights  to
-wall-clock time  metrics. The  \textit{Performance \& Latency}  scenario assigns
+wall-clock time  metrics. The  \textit{Performance and Latency}  scenario assigns
 high weights  to wall-clock  time metrics  and also to  the number  of registers
 used.  The \textit{Performance} scenario assigns low weights to area metrics and
 cycles, assigning a high weight only to frequency. The balanced scenario assigns
 the same weight to every metric. The weights assigned to the metrics that do not
 appear on Table \ref{tab:scenarios} are always $1$. The weights are integers and
-powers of~$2$.
+powers of\nbsp{}$2$.
 
 #+begin_export latex
 \begin{table}[htpb]
     \centering
     \begin{tabular}{@{}lcccc@{}}
         \toprule
-        Metric & \textit{Area} & \textit{Perf. \& Lat} & \textit{Performance} & \textit{Balanced} \\ \midrule
+        Metric & \textit{Area} & \textit{Perf. and Lat} & \textit{Performance} & \textit{Balanced} \\ \midrule
         \textit{LUT} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\
         \textit{Registers} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{E3DBB3} Medium & \cellcolor[HTML]{E3DBB3} Medium \\
         \textit{BRAMs} & \cellcolor[HTML]{9B94B6} High & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{DD9583} Low & \cellcolor[HTML]{E3DBB3} Medium \\
@@ -12316,7 +12318,7 @@ performed in the \textit{Balanced} optimization scenario.
 
 **** Applications
 To test and validate our autotuner we  used 11 applications from the CHStone HLS
-benchmark suite~\cite{hara2008chstone}. CHStone  applications are implemented in
+benchmark suite\nbsp{}\cite{hara2008chstone}. CHStone  applications are implemented in
 the C language and contain inputs  and previously computed outputs, allowing for
 correctness checks to be performed for all applications.
 
@@ -12350,29 +12352,26 @@ application,  so did  not use  it.  All  experiments targeted  the \textit{Intel
 StratixV 5SGXEA7N2F45C2} FPGA.
 
 **** Experiments
-We  performed  $10$  tuning  runs  of  $1.5h$  for  each  application.   Section
-\ref{sec:FPGAresults}  presents   the  mean   relative  improvements   for  each
-application and  individual metric. The code  needed to run the  experiments and
-generate the  figures, as well  as the implementation  of the autotuner  and all
-data       we      generated,       is       open       and      hosted       at
-GitHub~\footnote{\url{https://github.com/phrb/legup-tuner}      [Accessed     in
-18/07/2017]}.
+We performed $10$ tuning runs of $1.5h$ for each application.  Section\nbsp{}[[HLS
+Results]]  presents  the  mean  relative improvements  for  each  application  and
+individual  metric. The  code needed  to run  the experiments  and generate  the
+figures,  as  well as  the  implementation  of the  autotuner  and  all data  we
+generated, is open and hosted at GitHub\nbsp{}\cite{bruel2017hlsURL}.
 
 The   experimental    settings   included   Docker   for    virtualization   and
 reproducibility,  LegUp  $v4.0$, Quartus  Prime  Standard  Edition $v16.0$,  and
-CHStone. All experiments  were performed on a machine with  two Intel(R) Xeon(R)
-CPU E5-2699 v3 with  18 x86\_64 cores each, and 503GB  of RAM.  The instructions
-and the  code to reproduce  the software  experimental environment are  open and
-hosted     at    GitHub~\footnote{\url{https://github.com/phrb/legup-dockerfile}
-[Accessed in 18/07/2017]}.
+CHStone. All  experiments were performed  on a machine  with two Intel  Xeon CPU
+E5-2699 v3 with  18 x86_64 cores each,  and 503GB of RAM.   The instructions and
+the code to reproduce the software  experimental environment are open and hosted
+at GitHub\nbsp{}\cite{bruel2017dockerfileURL}.
 
-*** Results
+*** HLS Results
 This section  presents summaries  of the  results from  $10$ autotuning  runs of
 $1.5h$ in the  scenarios from Table \ref{tab:scenarios}.   Results are presented
 in \textit{heatmaps}  where each row has  one of the 11  CHStone applications in
 Table \ref{tab:chstone}  and each column has  one of the 8  hardware metrics and
-their \textit{Weighted  Normalized Sum}  (\textbf{WNS}) as described  in Section
-\ref{sec:metrics}.
+their   \textit{Weighted  Normalized   Sum}  (\textbf{WNS})   as  described   in
+Section\nbsp{}[[HLS Autotuning Metrics]].
 
 Cells on heatmaps show the ratio of tuned to initial values of a hardware metric
 in a CHStone application, averaged over 10 autotuning runs. The objective of the
@@ -12495,13 +12494,13 @@ $41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  \textit{FMax} in  \textit{dfdiv},
         \centering
         \includegraphics[width=\columnwidth]{./img/quali_brazil/heatmap_default_stratixV_perflat-eps-converted-to.pdf}
         \caption{Relative improvement for all metrics in the
-        \textit{Performance \& Latency} scenario}
+        \textit{Performance and Latency} scenario}
         \label{fig:perflat}
     \end{minipage}
 \end{figure}
 #+end_export
 
-Figure  \ref{fig:perflat}  shows  the  results for  the  \textit{Performance  \&
+Figure  \ref{fig:perflat}  shows  the  results for  the  \textit{Performance  and
 Latency} scenario.   The autotuner found  values of \textbf{WNS}  $24\%$ smaller
 for  \textit{adpcm},  $18\%$  smaller  for \textit{dfdiv},  and  smaller  values
 overall than  in the \textit{Balanced} scenario.  \textit{Regs}, \textit{Cycles}
@@ -12519,7 +12518,7 @@ the  4 scenarios  over 10  runs. Only  the \textit{Weighted  Normalized Sum}  of
 metrics directly  guided optimization. With  the exception of  \textit{dfadd} in
 the  \textit{Balanced} scenario,  the autotuner  decreased \textbf{WNS}  for all
 applications  in all  scenarios  by $10\%$  on  average, and  up  to $24\%$  for
-\textit{adpcm} in the \textit{Performance \&  Latency} scenario. The figure also
+\textit{adpcm} in the \textit{Performance and  Latency} scenario. The figure also
 shows the average decreases for each scenario.
 
 #+begin_export latex
@@ -12686,7 +12685,202 @@ illustrate the ability our approach has to reduce the budget needed to find good
 speedups by efficiently exploring search spaces.
 
 *** Identifying most significant factors
+The objective  of this  report is  to analyze  data from  our CCGRID  paper, and
+perform new experiments  as needed, in order to better  understand the statiscal
+analysis and the performance achieved by  our DoE-based approach.  We would like
+to understand how a user could  interfere and guide search space restriction and
+exploration, by intervening at each ANOVA step, for example.
+
+We are also interested in exploring new design construction metrics, in order to
+understand which  factors are best estimated  at each step and  possibly discard
+designs not capable of estimating parameters of interest.
+
+We chose to  start with the =bicg= SPAPT  kernel. It was one of  the kernels where
+our approach  achieved similar-performing  solutions using less  experiments, in
+comparison with a uniform random sampling  approach, across 10 repetitions of an
+experiment with a fixed  budget of 400 experiments and a  limit of 4 iterations,
+or steps, of our approach.
+
+The  following sections  describe  our ongoing  exploration  of the  performance
+modeling and optimization of the =bicg= kernel.
+
+**** Removing Cubic Terms
+Figure\nbsp{}[[fig:best-found-no-cubic]]  shows   the  iterations  where   the  best
+configuration of each of the 10 runs was found, for uniform sampling and for our
+approach.
+
+The results are  the same as the ones  presented in the paper, but  the data are
+not the same.  The data for the figures  in this report were obtained with a new
+set of  10 repetitions the same  experiment, but using a  performance model with
+only linear  and quadratic terms, removing  the cubic terms used  in the paper's
+experiments.
+
+#+CAPTION: Iteration where best was found
+#+LABEL: fig:best-found-no-cubic
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/iterations_no_cubic.pdf]]
+
+The  results are  similar to  the  ones in  the  paper, but  our approach  found
+slightly better  configurations slightly  faster. Random  sampling also  found a
+much better configuration much faster than before in one experiment.
+
+Figure\nbsp{}[[fig:eliminated-terms-no-cubic]] shows the /count of  model terms/ that were eliminated
+at each color-coded DLMT step.  As before, we see that =OMP= and =SCR= were the most
+eliminated factors, especially on the first step.
+
+#+CAPTION: Eliminated terms
+#+LABEL: fig:eliminated-terms-no-cubic
+#+ATTR_LATEX: :width 0.65\textwidth :placement [b]
+#+RESULTS:
+[[file:./journal/img/eliminated_terms_no_cubic.pdf]]
+
+Figure\nbsp{}[[fig:explored-space-no-cubic]] shows the  factors that were identified
+as significant  by ANOVA, with  significance threshold  of $0.01$, at  each DLMT
+step.  Identifying a factor removes  the corresponding parameter from the model,
+regardless of the  model term that was identified.  Figures  are grouped by each
+of the 10 experiments.  Figure headers  identify each run, and correspond to the
+names of the Grid5000 machines where experiments were run.
+
+It is interesting that only  /parasilo-19/, /parasilo-20/, and /parasilo-9/ eliminated
+any  factor other  than =OMP=  and =SCR=  on  the first  step where  any factor  was
+eliminated, and also that those runs fixed the factor =RT_I= to the same value.
+
+We can  also see  that =OMP=  seems to be  the parameter  behind the  most extreme
+changes in the execution time of  tested configurations. This is specially clear
+at  /parasilo-13/   and  /parasilo-10/,  where  the   explored  configurations  have
+relatively high execution time until after step 3, where =OMP= is fixed.
+
+A very slight worsening of execution times, an increase, that is, can be seen at
+the fourth step at /parasilo-11/, after =RT_I= was fixed. The minimum execution time
+seems to be higher than in the third step.
+
+#+CAPTION: Execution time of Searched Space, step-by-step, by experiment
+#+LABEL: fig:explored-space-no-cubic
+#+ATTR_LATEX: :width 0.7\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/explored_space_no_cubic.pdf]]
+
+#+CAPTION: Fitting \texttt{lm} linear and quadratic models to separate factors for the RS runs
+#+LABEL: fig:models-no-cubic
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/models_no_cubic.pdf]]
+
+#+CAPTION: Fitting \texttt{lm} linear and quadratic models to separate factors for the RS runs, with \texttt{OMP} fixed to \texttt{true}
+#+LABEL: fig:models-fixed-omp-no-cubic
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/models_fixed_omp_no_cubic.pdf]]
+
+Figure\nbsp{}[[fig:predictions-no-cubic]] compares the performance /predicted by the
+fitted model/, represented by the green line, with the performance of /the best
+point found at each design/, represented by the blue line. The red line marks the
+best point found so far.
+
+#+CAPTION: Performance of best points, step-by-step, by experiment
+#+LABEL: fig:predictions-no-cubic
+#+ATTR_LATEX: :width 0.99\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/predictions_no_cubic.pdf]]
+
+It  is only  at the  fourth step  of /parasilo-17/  that the  point with  the best
+predicted performance  was better  than the  best point on  the design  for that
+step, while also being better than the best point found so far. Although we seem
+to be  effectively restricting the search  space with our exploration,  which is
+evidenced  by the  improvement that  occurs as  steps progress  and by  the best
+points being found inside designs, the  models fit using experiment data are not
+able to improve the current best on the majority of cases.
+
+**** Reusing Data in ANOVA and Linear Regression
+Significant  changes were  performed  on the  initial  DLMT implementation.   We
+decided  that there  was no  good reason  to not  reuse the  data obtained  from
+evaluating designs  at each step,  and the various  samples of the  search space
+taken  at different  points. Now,  all  evaluated experiments  compose a  single
+growing design used  by =aov= to identify  the best factors, and  all samples from
+the  search  space compose  a  single  data set  used  by  =optFederov= to  select
+experiments. The data  set is pruned in  both =aov= and =lm=  analyses, to guarantee
+only experiments  with the  correct levels  of fixed factors  are used.  This is
+crucial for both  analyses, since having different fixed values  of factors that
+are not in the model would imply that we would have inexplicable variance in the
+data set.
+
+Using all experimental data on =aov= is  interesting because it is always worth it
+to  consider additional  information on  the  factors that  are currently  being
+studied.  On  one hand, it  might not allow  for enough ``flexibility''  when we
+consider regression only on a  small restricted subspace, because points outside
+the  subspace  would impact  regression,  and  we  would  be interested  in  the
+significance of the factor inside the subspace at the moment. On the other hand,
+using all data available makes sense because we are also interested in exploring
+any  global structures  of  the  search space,  and  keeping  points from  other
+subspaces would increase the chance of ``catching'' the significance of a factor
+globally.
+
+Using all sampled space, across all steps,  as a candidate for =optFederov= has no
+downsides, provided we prune the search space to account for current constraints
+on factor levels fixed on previous steps.  We increase the size of the available
+set of configurations  that can compose a  new design each time we  sample a new
+subspace. This  would hopefully improve  the quality  of designs produced  as we
+progress.
+
+#+CAPTION: Iteration where best was found
+#+LABEL: fig:best-found-reuse
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/iterations_reuse.pdf]]
+
+#+CAPTION: Eliminated terms
+#+LABEL: fig:eliminated-terms-reuse
+#+ATTR_LATEX: :width 0.7\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/eliminated_terms_reuse.pdf]]
+
+#+CAPTION: Execution time of Searched Space, step-by-step, by experiment
+#+LABEL: fig:explored-space-reuse
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/explored_space_reuse.pdf]]
+
+#+CAPTION: Fitting \texttt{lm} linear and cubic models to separate factors for the RS runs
+#+LABEL: fig:models-reuse
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/models_reuse.pdf]]
+
+#+CAPTION: Fitting \texttt{lm} linear and cubic models to separate factors for the RS runs, with \texttt{OMP} fixed to \texttt{true}
+#+LABEL: fig:models-fixed-omp-reuse
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/models_fixed_omp_reuse.pdf]]
+
+#+CAPTION: Performance of best points, step-by-step, by experiment
+#+LABEL: fig:predictions-reuse
+#+ATTR_LATEX: :width 0.7\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/predictions_reuse.pdf]]
+
+**** Experiments with Quantile Regression
+***** Fixing Binary Factors
+**** Executing More Optimization Steps
+
 *** Using Gaussian Process Regression
+#+CAPTION: Execution time of points measured by GPR along iterations, with pareto border in red
+#+LABEL: fig:bicgkernel-gp-pareto
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/bicgkernel_gaussian_pareto.pdf]]
+
+#+CAPTION: Execution time of points measured by RS along iterations
+#+LABEL: fig:bicgkernel-rs-pareto
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/bicgkernel_rs_pareto.pdf]]
+
+#+CAPTION: Results with a starting sample of size 15, steps add the 13 best predictions
+#+LABEL: fig:gp-rs-comparison
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./journal/img/gp_rs_comparison.pdf]]
 ** Application 5: Bit Quantization for Neural Networks
 * Conclusion
 #+begin_export latex

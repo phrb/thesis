@@ -554,6 +554,16 @@ N.~Sedaghati, T.~Mu, L.-N. Pouchet, S.~Parthasarathy, and P.~Sadayappan,
   Supercomputing}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, 2015, pp.
   99--108.
 
+\bibitem{bruel2017autotuningURL}
+``{GitHub Repository for Autotuning CUDA Compiler Parameters for Heterogeneous
+  Applications using the OpenTuner Framework},''
+  \url{https://github.com/phrb/gpu-autotuning}, accessed: 18 January 2020.
+
+\bibitem{cuda2020driverURL}
+``{CUDA Compiler Driver},''
+  \url{https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/}, accessed: 18
+  January 2020.
+
 \bibitem{ferreira2014parallel}
 C.~S. Ferreira, R.~Y. Camargo, and S.~W. Song, ``A parallel maximum subarray
   algorithm on gpus,'' in \emph{Computer Architecture and High Performance
@@ -584,6 +594,13 @@ A.~M. Caulfield, E.~S. Chung, A.~Putnam, H.~Angepat, J.~Fowers, M.~Haselman,
   Annual IEEE/ACM International Symposium on}.\hskip 1em plus 0.5em minus
   0.4em\relax IEEE, 2016, pp. 1--13.
 
+\bibitem{singh2011implementing}
+D.~Singh, ``Implementing fpga design with the opencl standard,'' \emph{Altera
+  whitepaper}, 2011.
+
+\bibitem{feist2012vivado}
+T.~Feist, ``Vivado design suite,'' \emph{White Paper}, vol.~5, 2012.
+
 \bibitem{canis2015legup}
 A.~C. Canis, ``Legup: Open-source high-level synthesis research framework,''
   Ph.D. dissertation, University of Toronto, 2015.
@@ -610,13 +627,6 @@ Y.~Hara, H.~Tomiyama, S.~Honda, H.~Takada, and K.~Ishii, ``Chstone: A benchmark
   program suite for practical c-based high-level synthesis,'' in \emph{Circuits
   and Systems, 2008. ISCAS 2008. IEEE International Symposium on}.\hskip 1em
   plus 0.5em minus 0.4em\relax IEEE, 2008, pp. 1192--1195.
-
-\bibitem{singh2011implementing}
-D.~Singh, ``Implementing fpga design with the opencl standard,'' \emph{Altera
-  whitepaper}, 2011.
-
-\bibitem{feist2012vivado}
-T.~Feist, ``Vivado design suite,'' \emph{White Paper}, vol.~5, 2012.
 
 \bibitem{villarreal2010designing}
 J.~Villarreal, A.~Park, W.~Najjar, and R.~Halstead, ``Designing modular
@@ -679,6 +689,21 @@ S.~Hadjis, A.~Canis, J.~H. Anderson, J.~Choi, K.~Nam, S.~Brown, and
   high-level synthesis,'' in \emph{Proceedings of the ACM/SIGDA international
   symposium on Field Programmable Gate Arrays}.\hskip 1em plus 0.5em minus
   0.4em\relax ACM, 2012, pp. 111--114.
+
+\bibitem{legup2020docsURL}
+``{LegUp Documentation, gone closed source},''
+  \url{https://www.legupcomputing.com/main/resource}, accessed: 18 January
+  2020.
+
+\bibitem{bruel2017hlsURL}
+``{GitHub Repository for Autotuning High-Level Synthesis for FPGAs using
+  OpenTuner and LegUp},'' \url{https://github.com/phrb/legup-tuner}, accessed:
+  18 January 2020.
+
+\bibitem{bruel2017dockerfileURL}
+``{GitHub Repository for the dockerfile used in Autotuning High-Level Synthesis
+  for FPGAs using OpenTuner and LegUp},''
+  \url{https://github.com/phrb/legup-dockerfile}, accessed: 18 January 2020.
 
 \bibitem{yi2007poet}
 Q.~Yi, K.~Seymour, H.~You, R.~Vuduc, and D.~Quinlan, ``{POET}: Parameterized

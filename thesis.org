@@ -11530,10 +11530,10 @@ searches unwieldy.
 This section  presents the GPU  testbed, the algorithm benchmark,  the autotuner
 implementation and its search space.
 
-**** Target GPU Micro-Architectures
+**** Target GPU Architectures
 To be  able to  show that  different GPUs require  different options  to improve
 performance, and that it is possible  to achieve speedups in different hardware,
-we  wanted  to tune  our  benchmark  for different  NVIDIA  micro-architectures.
+we  wanted   to  tune   our  benchmark   for  different   NVIDIA  architectures.
 Table\nbsp{}\ref{tab:GPUs} summarizes the hardware  characteristics of the three
 GPUs.
 
@@ -11541,7 +11541,7 @@ GPUs.
 \begin{table}[t]
   \centering
   \footnotesize
-  \caption{Hardware specifications of the target GPU micro-architectures}
+  \caption{Hardware specifications of the target GPU architectures}
   \begin{tabular}{llllllll}
     \toprule
     \textbf{Model}&\textbf{C.C.}&\textbf{Global Memory}&\textbf{Bus}&\textbf{Bandwidth}&\textbf{L2}&\textbf{Cores/SM}&\textbf{Clock} \\ \midrule
@@ -11564,7 +11564,7 @@ applications from the Rodinia Benchmark Suite\nbsp{}\cite{che2009rodinia}.
 \begin{table}[b]
   \centering
   \footnotesize
-  \caption{Rodinia applications used in the experiments}
+  \caption{Rodinia~\cite{che2009rodinia} applications used in the experiments}
   \begin{tabular}{lll}
     \toprule
     \textbf{Application} & \textbf{Berkeley Dwarf\cite{asanovic2009view}} & \textbf{Domain} \\\midrule
@@ -11838,31 +11838,116 @@ clusters  did not  contain  an equal  number of  instances.   The difficulty  of
 finding  associations  between  compiler optimizations,  applications  and  GPUs
 justifies the autotuning of compiler parameters in the general case.
 
-**** Assessing Parameter Significance with Screening
+*** Assessing Parameter Significance with Screening
+We conducted a later study, which has not  yet been published at the time of the
+writing of this  thesis, in which we designed and  ran screening experiments for
+the    CUDA    compiler.     We    added    the    parameters    described    in
+Table\nbsp{}\ref{tab:new-flags}    to    the    search    space    defined    in
+Table\nbsp{}\ref{tab:flags}.   We no  longer had  access  to the  GPUs from  the
+testbed  described  in the  previous  section,  and  we  targeted the  two  GPUs
+described in Table\nbsp{}\ref{tab:screening-GPUs}.
+
+#+begin_export latex
+\begin{table}[t]
+  \centering
+  \scriptsize
+  \caption{Flags added to the search space from Table~\ref{tab:flags}}
+  \begin{tabular}{lp{0.6\textwidth}}
+    \toprule
+    \textbf{Flag}&\textbf{Description} \\\midrule
+    \addlinespace{}
+    \texttt{force-store-cache} & Force specified cache modifier on global/generic store. \textbf{Step}: PTX \textbf{Values}: \texttt{cs}, \texttt{cg} \\
+    \addlinespace{}
+    \texttt{force-load-cache} & Replaces \texttt{def-load-cache}, force specified cache modifier on global/generic load. \textbf{Step}: PTX \textbf{Values}: \texttt{cs}, \texttt{cg} \\
+    \addlinespace{}
+    \texttt{optimize} & Specificy optimization level for host code. \textbf{Step}: NVCC \textbf{Values}: \texttt{2}, \texttt{3} \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:new-flags}
+\end{table}
+#+end_export
+
+For this experiment we picked /Heart  Wall/ (HWL), /Gaussian Elimination/ (GAU), and
+/Needleman-Wunsch/  (NDL), the  three Rodinia\nbsp{}\cite{che2009rodinia}  kernels
+for   which   we    found   the   largest   speedups   in    the   last   study.
+Table\nbsp{}\ref{tab:Rodinia} gives more details  on each kernel. We constructed
+a Plackett-Burman design  for the 15 parameters in the  search space, defining a
+minimum and  maximum value  for each parameter.   For categorical  parameters we
+fixed two arbitrary levels, for the  optimization level parameters we picked the
+equivalents of /-O2/ and /-O3/ for both  host and device code, and for the parameter
+that controls  the number of available  registers, we picked the  largest number
+and the midpoint.
+
+#+begin_export latex
+\begin{table}[t]
+  \centering
+  \footnotesize
+  \caption{Hardware specifications of the GPU architectures
+    targeted in the screening experiments}
+  \begin{tabular}{llllllll}
+    \toprule
+    \textbf{Model} & \textbf{C.C.} & \textbf{Global Memory} & \textbf{Bus} & \textbf{Bandwidth} & \textbf{L2} & \textbf{Cores} & \textbf{Clock} \\ \midrule
+    Quadro M1200  & 5.0 & 4 GB & 128-bit & 80.19 GB/s & 2 MB & 640 & 1148 Mhz \\
+    Titan X & 5.2 & 12 GB & 384-bit & 336.5 GB/s & 3 MB & 3072 & 1075 Mhz \\ \bottomrule
+  \end{tabular}
+  \label{tab:screening-GPUs}
+\end{table}
+#+end_export
+
+A  Plackett-Burman design  for 15  parameters  contains 20  experiments, and  we
+performed 20  repetitions of  each parameter  assignment for  each of  the three
+kernels. Figures\nbsp{}[[fig:effects-titanx]]  and [[fig:effects-quadro]] show  the mean
+and 95% confidence intervals  for the coefficients of a linear  model fit to the
+measurements, and represent the main effect estimates for each factor.
+
+#+begin_export latex
+\begin{figure}[t]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/speedups_screening_titanx.pdf}
+        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
+        \label{fig:speedup-titanx}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/speedups_screening_quadrom1200.pdf}
+        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
+        \label{fig:speedup-quadro}
+    \end{minipage}%
+\end{figure}
+#+end_export
 
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+NAME: fig:effects-titanx
 #+CAPTION: Test
 [[file:img/gpu-screening/main_effects_titanx.pdf]]
 
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
-#+CAPTION: Test
-[[file:img/gpu-screening/executiontimes_screening_titanx.pdf]]
-
-#+ATTR_LATEX: :width 0.4\textwidth :placement [t]
-#+CAPTION: Test
-[[file:img/gpu-screening/speedups_screening_titanx.pdf]]
-
-#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+NAME: fig:effects-quadro
 #+CAPTION: Test
 [[file:img/gpu-screening/main_effects_quadrom1200.pdf]]
 
-#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
-#+CAPTION: Test
-[[file:img/gpu-screening/executiontimes_screening_quadrom1200.pdf]]
+#+begin_export latex
+\begin{figure}[t]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_titanx.pdf}
+        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
+        \label{fig:timing-titanx}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_quadrom1200.pdf}
+        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
+        \label{fig:timing-quadro}
+    \end{minipage}%
+\end{figure}
+#+end_export
 
-#+ATTR_LATEX: :width 0.4\textwidth :placement [t]
-#+CAPTION: Test
-[[file:img/gpu-screening/speedups_screening_quadrom1200.pdf]]
 
 *** Summary
 This  study  showed that  it  is  possible to  improve  the  performance of  GPU

@@ -13,3 +13,6 @@
 [submodule "dlmt_spapt_experiments"]
 	path = dlmt_spapt_experiments
 	url = git@github.com:phrb/dlmt_spapt_experiments.git
+[submodule "autotuning_screening_experiment"]
+	path = autotuning_screening_experiment
+	url = git@github.com:phrb/autotuning_screening_experiment.git

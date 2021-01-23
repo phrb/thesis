@@ -11207,7 +11207,7 @@ iteration.
 #+CAPTION: Overview of the DoE approach to autotuning proposed in this paper
 #+ATTR_LATEX: :width .95\columnwidth :placement [b]\vspace{-.5cm}
 #+ATTR_ORG: :width 400 :placement [b]
-[[./ccgrid19/img/doe_anova_strategy.pdf]]
+[[./img/ccgrid19/doe_anova_strategy.pdf]]
 
 Step 1 of our approach is to define target factors and which of their levels are
 worth exploring.  Then, the  user must  select an  initial performance  model in
@@ -11839,6 +11839,31 @@ finding  associations  between  compiler optimizations,  applications  and  GPUs
 justifies the autotuning of compiler parameters in the general case.
 
 **** Assessing Parameter Significance with Screening
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/main_effects_titanx.pdf]]
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/executiontimes_screening_titanx.pdf]]
+
+#+ATTR_LATEX: :width 0.4\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/speedups_screening_titanx.pdf]]
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/main_effects_quadrom1200.pdf]]
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/executiontimes_screening_quadrom1200.pdf]]
+
+#+ATTR_LATEX: :width 0.4\textwidth :placement [t]
+#+CAPTION: Test
+[[file:img/gpu-screening/speedups_screening_quadrom1200.pdf]]
+
 *** Summary
 This  study  showed that  it  is  possible to  improve  the  performance of  GPU
 applications applying empirical and automatic tuning techniques. Our results and
@@ -11852,14 +11877,14 @@ and  options for  the GCC  compiler, which  also composes  the CUDA  compilation
 chain.
 ** Application 2: GPU Laplacian Kernel
 We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
-implemented  using BOAST\nbsp{}\cite{videau2017boast}  and targeting  the /Nvidia  K40c/
-GPU. The objective was to minimize the /time to compute each pixel/ by finding the
-best    level     combination    for    the    factors     listed    in    Table
+implemented  using BOAST\nbsp{}\cite{videau2017boast}  and targeting  the /Nvidia
+K40c/  GPU. The  objective was  to minimize  the /time  to compute  each pixel/  by
+finding  the   best  level   combination  for  the   factors  listed   in  Table
 [[tab:gpu_laplacian_factors]]. Considering only factors and  levels, the size of the
-search space  is $1.9\times10^5$, but  removing points that  fail at runtime  yields a
-search space of size  $2.3\times10^4$. The complete search space took  154 hours to be
-evaluated  on /Debian  Jessie/, using  an /Intel  Xeon E5-2630v2/  CPU, \texttt{gcc}
-version \texttt{4.8.3} and /Nvidia/ driver version \texttt{340.32}.
+search space is $1.9\times10^5$, but removing points that fail at runtime yields
+a search space of size $2.3\times10^4$. The complete search space took 154 hours
+to  be  evaluated  on  /Debian  Jessie/,   using  an  /Intel  Xeon  E5-2630v2/  CPU,
+\texttt{gcc} version \texttt{4.8.3} and /Nvidia/ driver version \texttt{340.32}.
 
 We applied domain knowledge to construct the following initial performance model:
 #+BEGIN_EXPORT latex
@@ -12574,7 +12599,7 @@ tiling amounts, or binary flags that control parallelization and vectorization.
 #+CAPTION: speedups using smaller budgets for kernels marked with ``[+]'' /green/ headers.
 #+CAPTION: Ellipses delimit an estimate of where 95% of the underlying distribution lies
 #+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
-[[./ccgrid19/img/iteration_best_comparison.pdf]]
+[[./img/ccgrid19/iteration_best_comparison.pdf]]
 
 #+NAME: fig:split_histograms
 #+CAPTION: Histograms of explored search spaces, showing the real count of measured configurations.
@@ -12583,7 +12608,7 @@ tiling amounts, or binary flags that control parallelization and vectorization.
 #+CAPTION: even for kernels in the orange group. DLMT also spent more time exploring configurations with
 #+CAPTION: larger speedups
 #+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
-[[./ccgrid19/img/split_histograms.pdf]]
+[[./img/ccgrid19/split_histograms.pdf]]
 
 We used the Random Sampling (RS) implementation available in Orio and integrated
 an implementation  of our approach  (DLMT) to the  system. We omitted  the other
@@ -12715,7 +12740,7 @@ experiments.
 #+LABEL: fig:best-found-no-cubic
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/iterations_no_cubic.pdf]]
+[[file:./img/journal/iterations_no_cubic.pdf]]
 
 The  results are  similar to  the  ones in  the  paper, but  our approach  found
 slightly better  configurations slightly  faster. Random  sampling also  found a
@@ -12729,7 +12754,7 @@ eliminated factors, especially on the first step.
 #+LABEL: fig:eliminated-terms-no-cubic
 #+ATTR_LATEX: :width 0.65\textwidth :placement [b]
 #+RESULTS:
-[[file:./journal/img/eliminated_terms_no_cubic.pdf]]
+[[file:./img/journal/eliminated_terms_no_cubic.pdf]]
 
 Figure\nbsp{}[[fig:explored-space-no-cubic]] shows the  factors that were identified
 as significant  by ANOVA, with  significance threshold  of $0.01$, at  each DLMT
@@ -12755,19 +12780,19 @@ seems to be higher than in the third step.
 #+LABEL: fig:explored-space-no-cubic
 #+ATTR_LATEX: :width 0.7\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/explored_space_no_cubic.pdf]]
+[[file:./img/journal/explored_space_no_cubic.pdf]]
 
 #+CAPTION: Fitting \texttt{lm} linear and quadratic models to separate factors for the RS runs
 #+LABEL: fig:models-no-cubic
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/models_no_cubic.pdf]]
+[[file:./img/journal/models_no_cubic.pdf]]
 
 #+CAPTION: Fitting \texttt{lm} linear and quadratic models to separate factors for the RS runs, with \texttt{OMP} fixed to \texttt{true}
 #+LABEL: fig:models-fixed-omp-no-cubic
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/models_fixed_omp_no_cubic.pdf]]
+[[file:./img/journal/models_fixed_omp_no_cubic.pdf]]
 
 Figure\nbsp{}[[fig:predictions-no-cubic]] compares the performance /predicted by the
 fitted model/, represented by the green line, with the performance of /the best
@@ -12778,7 +12803,7 @@ best point found so far.
 #+LABEL: fig:predictions-no-cubic
 #+ATTR_LATEX: :width 0.99\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/predictions_no_cubic.pdf]]
+[[file:./img/journal/predictions_no_cubic.pdf]]
 
 It  is only  at the  fourth step  of /parasilo-17/  that the  point with  the best
 predicted performance  was better  than the  best point on  the design  for that
@@ -12823,37 +12848,37 @@ progress.
 #+LABEL: fig:best-found-reuse
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/iterations_reuse.pdf]]
+[[file:./img/journal/iterations_reuse.pdf]]
 
 #+CAPTION: Eliminated terms
 #+LABEL: fig:eliminated-terms-reuse
 #+ATTR_LATEX: :width 0.7\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/eliminated_terms_reuse.pdf]]
+[[file:./img/journal/eliminated_terms_reuse.pdf]]
 
 #+CAPTION: Execution time of Searched Space, step-by-step, by experiment
 #+LABEL: fig:explored-space-reuse
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/explored_space_reuse.pdf]]
+[[file:./img/journal/explored_space_reuse.pdf]]
 
 #+CAPTION: Fitting \texttt{lm} linear and cubic models to separate factors for the RS runs
 #+LABEL: fig:models-reuse
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/models_reuse.pdf]]
+[[file:./img/journal/models_reuse.pdf]]
 
 #+CAPTION: Fitting \texttt{lm} linear and cubic models to separate factors for the RS runs, with \texttt{OMP} fixed to \texttt{true}
 #+LABEL: fig:models-fixed-omp-reuse
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/models_fixed_omp_reuse.pdf]]
+[[file:./img/journal/models_fixed_omp_reuse.pdf]]
 
 #+CAPTION: Performance of best points, step-by-step, by experiment
 #+LABEL: fig:predictions-reuse
 #+ATTR_LATEX: :width 0.7\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/predictions_reuse.pdf]]
+[[file:./img/journal/predictions_reuse.pdf]]
 
 **** Experiments with Quantile Regression
 ***** Fixing Binary Factors
@@ -12864,19 +12889,19 @@ progress.
 #+LABEL: fig:bicgkernel-gp-pareto
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/bicgkernel_gaussian_pareto.pdf]]
+[[file:./img/journal/bicgkernel_gaussian_pareto.pdf]]
 
 #+CAPTION: Execution time of points measured by RS along iterations
 #+LABEL: fig:bicgkernel-rs-pareto
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/bicgkernel_rs_pareto.pdf]]
+[[file:./img/journal/bicgkernel_rs_pareto.pdf]]
 
 #+CAPTION: Results with a starting sample of size 15, steps add the 13 best predictions
 #+LABEL: fig:gp-rs-comparison
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
-[[file:./journal/img/gp_rs_comparison.pdf]]
+[[file:./img/journal/gp_rs_comparison.pdf]]
 ** Application 5: Bit Quantization for Neural Networks
 * Conclusion
 #+begin_export latex

@@ -10487,7 +10487,7 @@ present /D-Optimal/ designs, the technique used in this paper.
 #+NAME: fig:sampling_comparison
 #+CAPTION: Exploration of the search space, using a fixed budget of 50 points. The red ``$+$'' represents the best point found by each strategy, and ``$\times$''s denote neighborhood exploration
 #+ATTR_LATEX: :width .95\columnwidth :placement [b]
-[[./img/ccgrid-2019/sampling_comparison.pdf]]
+[[./img/ccgrid19/sampling_comparison.pdf]]
 
 Figure\nbsp{}[[fig:sampling_comparison]] shows the contour of a search space defined
 by a function of the form $z =  x^2 + y^2 + \varepsilon$, where $\varepsilon$ is
@@ -10685,7 +10685,7 @@ they are fairly smaller than the values of factors that had no significance, and
 we keep this factor.
 
 #+HEADER: :results graphics output :session *R* :exports none :eval no-export
-#+HEADER: :file ./img/ccgrid-2019/main_effects.pdf
+#+HEADER: :file ./img/ccgrid19/main_effects.pdf
 #+HEADER: :width 12 :height 4
 #+BEGIN_SRC R
 library(extrafont)
@@ -10704,7 +10704,7 @@ MEPlot(regression, main = NULL, pch = 19,
 #+END_SRC
 
 #+RESULTS:
-[[file:./img/ccgrid-2019/main_effects.pdf]]
+[[file:./img/ccgrid19/main_effects.pdf]]
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
@@ -11325,78 +11325,70 @@ branching questions underlying each method.
 *** Versioning for Code, Text, and Data
 ** Application 1: CUDA Compiler
 A Graphics Processing Unit (GPU) is a parallel computing coprocessor specialized
-in  accelerating  vector operations  such  as  graphics rendering.  The  General
-Purpose computing on Graphics Processing Unit methodology, or GPGPU, consists in
-providing accessible programming  interfaces for languages such as  C and Python
-that  enable the  use  of GPUs  in different  parallel  computing domains.   The
-Compute Unified Device Architecture (CUDA) is a GPGPU platform introduced by the
-NVIDIA corporation.
+in accelerating vector  operations such as graphics  rendering.  General Purpose
+computing  on GPUs  (GPGPU)  depends on  accessible  programming interfaces  for
+languages such as C and Python that enable the use of GPUs in different parallel
+computing domains.   The Compute Unified  Device Architecture (CUDA) is  a GPGPU
+toolchain introduced by the NVIDIA corporation.
 
-The objective  of this case  study was  to measure the  performance improvements
-that  a domain-agnostic  autotuning  strategy would  achieve  for CUDA  compiler
-parameters. We implemented an autotuner for  the CUDA compiler using the use the
-OpenTuner  framework\nbsp{}\cite{ansel2014opentuner} and  used  it to  search for  the
-compilation parameters  that optimize  the performance  of 17  heterogeneous GPU
+In this  application we measured  the performance improvements obtained  with an
+ensemble  of  stochastic  methods  for  function  minimization  applied  to  the
+parameters  of  the  CUDA  compiler.   We implemented  an  autotuner  using  the
+OpenTuner framework\nbsp{}\cite{ansel2014opentuner}  and used  it to  search for
+the compilation parameters that optimize the performance of 17 heterogeneous GPU
 applications,    12    of    which    are    from    the    Rodinia    Benchmark
-Suite\nbsp{}\cite{che2009rodinia}.    We  used   3  different   NVIDIA  GPUs   in  the
-experiments,  the Tesla  K40,  the GTX  980  and  the GTX  750.  We worked  with
-Hewlett-Packard Enterprise on this project.
+Suite\nbsp{}\cite{che2009rodinia}.   We  used 3  different  NVIDIA  GPUs in  the
+experiments, the  Tesla K40,  the GTX 980,  and the GTX  750.  We  published the
+results of  this study, which we  summarize in this chapter,  at the /Concurrency
+and           Computation:           Practice           and           Experience/
+journal\nbsp{}\cite{bruel2017autotuning}.
 
-The  optimization achieved  by  autotuning often  beat  the compiler  high-level
-optimization options, such as  \texttt{-O1}, \texttt{-O2} and \texttt{-O3}.  The
-autotuner  found compilation  options  that  achieved over  2x  speedup for  the
-\textit{Gaussian Elimination}  problem from the Rodinia  Benchmark Suite, almost
-2x speedup for \emph{Heart Wall} problem, also from Rodinia, and over 4x speedup
-for  one  of  the  matrix  multiplication optimizations  in  our  benchmark,  in
-comparison with  the high-level compiler  optimizations.  We also show  that the
+The optimizations we found often  beat compiler high-level optimization options,
+such as  the \texttt{-O2}  flag.  The autotuner  found compilation  options that
+produced  speedups,   in  relation   to  =-O2=,   of  around   2  times   for  the
+\textit{Gaussian Elimination} problem from the  Rodinia Benchmark Suite, 2 times
+for \emph{Heart  Wall} problem, also  from Rodinia, and 4  times for one  of the
+matrix  multiplication   algorithms  we  implemented.   We   observed  that  the
 compilation parameters that  optimize an algorithm for a  given GPU architecture
-will not always achieve the same performance in different hardware.
-
-*** Small Measurement Time
-In the larger context of this qualifying work the most important characteristic
-of this autotuning experiment is the short time it takes to compile and run
-each application in the benchmark. Most applications, especially the ones with
-smaller input sizes, had a \textit{small measurement time}.
+will not always achieve the same  performance in different hardware, which was a
+reasonable expectation.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
-    \includegraphics[width=.65\textwidth]{./img/quali_brazil/overview_gpus-eps-converted-to.pdf}
+    \includegraphics[width=.62\textwidth]{./img/quali_brazil/overview_gpus-eps-converted-to.pdf}
     \caption{Autotuner representation and time scale of our experiments}
     \label{fig:overview-gpus}
 \end{figure}
 #+end_export
 
-Figure\nbsp{}\ref{fig:overview-gpus} shows a representation of the autotuner
-implemented in this study, and illustrates the time scale of our experiments.
-The autotuner, in light blue, receives as input a Rodinia application, a target
-GPU, input data for the application in the order of Gigabytes and a search
-space composed of NVCC flags. The autotuner outputs a flag selection subject to
-its input application and GPU.
+Figure\nbsp{}\ref{fig:overview-gpus}  shows a  representation  of the  autotuner
+implemented in  this study, and illustrates  the time scale of  our experiments.
+The autotuner, in light blue, receives as input a GPU application, a target GPU,
+input data for the application, and a search space composed of NVCC flags. After
+running an ensemble  of stochastic search methods, the autotuner  outputs a flag
+selection.  The compilation of the applications  we targeted in this study takes
+few seconds, so it was possible to  test thousands of flag combinations per hour
+using a sequential autotuner.
 
-Since in this study it was fast to compile and measure a program's performance,
-an autotuner iteration is shown in Figure\nbsp{}\ref{fig:overview-gpus} to last in
-the order of seconds. We could therefore test thousands of flag combinations
-per hour in a sequential autotuner, exploring enough of the search space to
-achieve the speedups reported.
-
-The tool we used to implement our autotuner was not able to run measurements in
-distributed environments. Therefore our autotuner could not deploy measurements
-of different configurations on identical GPUs on the same network. An autotuner
-with such capability would enable the exploration of more configurations in the
-same time.
+This study was done in 2015, the first year of this thesis. Since at the time we
+did not have experience with the methods for statistical modeling which we later
+studied, and  since the measurement  time for each application  was sufficiently
+small, we did not deal with the  problem of building a performance model for the
+CUDA  compiler  in  this  application,  and  attempted  to  find  good  compiler
+configurations using stochastic methods for function minimization.
 
 *** Background
 **** NVIDIA GPU Micro-Architecture
 NVIDIA  GPU  architectures have  multiple  asynchronous  and parallel  Streaming
 Multiprocessors (SMs)  which contain  Scalar Processors (SPs),  Special Function
 Units (SFUs) and  load/store units. Each group of 32  parallel threads scheduled
-by and  SM, or  \textit{warp}, is  able to read  from memory  concurrently.  The
-Tesla, Fermi, Kepler and Maxwell NVIDIA  architectures vary in a large number of
-features, such  as number of  cores, registers, SFUs, load/store  units, on-chip
-and cache  memory sizes,  processor clock  frequency, memory  bandwidth, unified
-memory spaces and dynamic kernel  launches.  Those differences are summarized in
-the Compute Capability (C.C.) of an NVIDIA GPU.
+by and SM,  or \textit{warp}, is able to read  from memory concurrently.  NVIDIA
+architectures  vary in  a large  number of  features, such  as number  of cores,
+registers, SFUs,  load/store units,  on-chip and  cache memory  sizes, processor
+clock  frequency, memory  bandwidth, unified  memory spaces  and dynamic  kernel
+launches.  Those differences are summarized  in the Compute Capability (C.C.) of
+an NVIDIA GPU.
 
 The hierarchical  memory of an NVIDIA  GPU contains global and  shared portions.
 Global memory is  big, off-chip, has a  high latency and can be  accessed by all
@@ -11407,68 +11399,73 @@ accesses to different memory levels is essential to achieve good performance.
 
 **** Compute Unified Device Architecture (CUDA)
 The  CUDA programming  model and  platform enables  the use  of NVIDIA  GPUs for
-scientific  and general  purpose computation.   A single  \textit{master} thread
-runs in the CPU,  launching and managing computations on the  GPU.  Data for the
-computations has  to be transferred  from the main  memory to the  GPU's memory.
-Multiple computations  launched by the  master thread, or  \textit{kernels}, can
-run  asynchronously and  concurrently.  If the  threads from  a  same warp  must
-execute different  instructions the CUDA  compiler must generate code  to branch
-the  execution  correctly, making  the  program  lose  performance due  to  this
-\textit{warp divergence}.
+scientific and  general purpose computation.  A  single /main/ thread runs  in the
+CPU, launching and managing computations on  the GPU.  Data for the computations
+has  to be  transferred from  the  main memory  to the  GPU's memory.   Multiple
+computations launched by the main thread, or /kernels/, can run asynchronously and
+concurrently.   If  the  threads  from   a  same  warp  must  execute  different
+instructions  the CUDA  compiler  must  generate code  to  branch the  execution
+correctly, making the program lose performance due to this /warp divergence/.
 
-The  CUDA  language  extends  C  and  provides  a  multi-step  compiler,  called
-\textit{NVCC}, that translates  CUDA code to Parallel Thread  Execution code, or
-\textit{PTX}.  \textit{NVCC} uses the host's C++ compiler in several compilation
-steps, and also  to generate code to  be executed in the host.  The final binary
-generated  by \textit{NVCC}  contains  code  for the  GPU  and  the host.   When
-\textit{PTX} code  is loaded by  an application at  run-time, it is  compiled to
-binary code by  the host's device driver.   This binary code can  be executed in
-the  device's  processing cores,  and  is  architecture-specific.  The  targeted
-architecture can be specified using \textit{NVCC} parameters.
+The CUDA  language extends C  and provides  a multi-step compiler,  called /NVCC/,
+that   translates  CUDA   code  to   Parallel  Thread   Execution  code   (PTX).
+\textit{NVCC} uses  the host's  C++ compiler in  several compilation  steps, and
+also to generate code to be executed in the host.  The final binary generated by
+\textit{NVCC} contains code for  the GPU and the host.  When  PTX code is loaded
+by an application at runtime, it is compiled to binary code by the host's device
+driver.  This binary code can be  executed in the device's processing cores, and
+is  architecture-specific.   The  target  architecture can  be  specified  using
+\textit{NVCC} parameters.
 
 **** GPU Performance Models and Autotuning
 The accuracy of a GPU performance model is subject to low level elements such as
-instruction  pipeline usage  and small  cache hierarchies.  A GPU's  performance
+instruction pipeline  usage and  small cache  hierarchies.  A  GPU's performance
 approaches  its peak  when the  instruction pipeline  is saturated,  but becomes
 unpredictable             when            the             pipeline            is
-under-utilized\nbsp{}\cite{zhang2011quantitative,amaris2015simple}.   Considering  the
-effects  of  small cache  hierarchies\nbsp{}\cite{dao2015performance,picchi2015impact}
-and memory-access divergence\nbsp{}\cite{sampaio2013divergence,baghsorkhi2010adaptive}
-is also critical to a GPU performance model.
+under-utilized\nbsp{}\cite{zhang2011quantitative,amaris2015simple}.  Considering
+the               effects              of               small              cache
+hierarchies\nbsp{}\cite{dao2015performance,picchi2015impact}  and  memory-access
+divergence\nbsp{}\cite{sampaio2013divergence,baghsorkhi2010adaptive}   is   also
+critical to a GPU performance model.
 
-Guo and Wang\nbsp{}\cite{guo2010auto} introduce a  framework for autotuning the number
-of threads  and the  sizes of  blocks and warps  used by  the CUDA  compiler for
-sparse  matrix   and  vector  multiplication  GPU   applications.   Li  \emph{et
-al.}\nbsp{}\cite{li2009note}  discuss  the  performance of  autotuning  techniques  in
+Guo and  Wang\nbsp{}\cite{guo2010auto} introduce a framework  for autotuning the
+number of threads  and the sizes of  blocks and warps used by  the CUDA compiler
+for  sparse matrix  and  vector multiplication  GPU  applications.  Li  \emph{et
+al.}\nbsp{}\cite{li2009note} discuss the performance of autotuning techniques in
 highly-tuned  GPU  General Matrix  to  Matrix  Multiplication (GEMMs)  routines,
 highlighting  the   difficulty  in  developing   optimized  code  for   new  GPU
-architectures.   Grauer-Gray  \emph{et  al.}\nbsp{}\cite{grauer2012auto}  autotune  an
-optimization  space  of  GPU  kernels  focusing  on  tiling,  loop  permutation,
+architectures.   Grauer-Gray \emph{et  al.}\nbsp{}\cite{grauer2012auto} autotune
+an  optimization space  of GPU  kernels  focusing on  tiling, loop  permutation,
 unrolling,        and         parallelization.         Chaparala        \emph{et
-al.}\nbsp{}\cite{chaparala2015autotuning}    autotune     GPU-accelerated    Quadratic
+al.}\nbsp{}\cite{chaparala2015autotuning}  autotune   GPU-accelerated  Quadratic
 Assignment         Problem          solvers.          Sedaghati         \emph{et
-al.}\nbsp{}\cite{sedaghati2015automatic} build  a decision model for  the selection of
-sparse matrix representations in GPUs.
+al.}\nbsp{}\cite{sedaghati2015automatic}   build  a   decision  model   for  the
+selection of sparse matrix representations in GPUs.
 
 *** Autotuner and Search Space
 This section discusses our autotuner implementation and the search space of NVCC
 compiler parameters.
 
-**** Autotuner
-The autotuner  we implemented used  the \textit{multi-armed bandit  with sliding
-window, area  under the  curve credit  assignment} meta-technique,  simply named
-\textit{AUC      Bandit}.      AUC      Bandit      is     OpenTuner's      core
-meta-technique\nbsp{}\cite{ansel2014opentuner}, and its  ensemble of search techniques
-is composed by implementations of the Nelder-Mead algorithm and three variations
-of genetic algorithms.  Figure\nbsp{}\ref{fig:gpu-stack} shows a simplified version of
-the steps necessary to generate the object code that will be measured later.
-
-The  code   for  our  autotuner   and  all   the  experiments  and   results  is
+**** An Autotuner for CUDA Parameters using OpenTuner
+The      autotuner      was       implemented      using      the      OpenTuner
+framework\nbsp{}\cite{ansel2014opentuner},   and  used   a  multi-armed   bandit
+algorithm that aims  to maximize the successes across the  autotuning process. A
+success is  defined as finding  a program  configuration that improves  upon the
+best  performance found  so  far.   The stochastic  method  which  finds such  a
+configuration  gets its  score  increased  for that  tuning  session.  A  bandit
+algorithm, called MABAUC in paper, for  Multi-Armed Bandit Area Under the Curve,
+considers a  sliding window covering a  given number of measurements  to compute
+the scores of methods in an ensemble, and to decide which method, or ``arm'', to
+play next.  The  ensemble of methods we used was  composed by implementations of
+the  Nelder-Mead   algorithm  and   three  variations  of   genetic  algorithms.
+Figure\nbsp{}\ref{fig:gpu-stack}  shows  a  simplified   version  of  the  steps
+necessary to generate the object code that will be measured later.  The code for
+our     autotuner    and     all    the     experiments    and     results    is
 available\nbsp{}\cite{bruel2017autotuningURL}  under  the   GNU  General  Public
 License.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \includegraphics[width=.4\textwidth]{./img/quali_brazil/gpu-stack-eps-converted-to.pdf}
     \caption{Simplified view of NVCC compilation}
@@ -11476,56 +11473,56 @@ License.
 \end{figure}
 #+end_export
 
-**** Search Space
-Table\nbsp{}\ref{tab:flags}  details  the  subset   of  the  CUDA  configuration
-parameters   used   in  the   experiments\nbsp{}\cite{cuda2020driverURL}.    The
-parameters  target  different  compilation   steps:  the  \emph{PTX}  optimizing
-assembler; the \emph{NVLINK} linker; and  the \emph{NVCC} compiler.  We compared
-the  performance of  programs generated  by tuned  parameters with  the standard
-compiler   optimizations,    namely   \texttt{--opt-level=0,1,2,3}.    Different
-\texttt{--opt-level}s  could also  be selected  during tuning.   We did  not use
-compiler options that  target the host linker or the  library manager since they
-do not affect performance.  The size of the search space defined by all possible
-combinations  of the  flags in  Table\nbsp{}\ref{tab:flags} is  in the  order of
-$10^{6}$ making hand-optimization or exhaustive searches very time consuming.
+**** Search Space for CUDA Parameters
+Table\nbsp{}\ref{tab:flags}  presents   a  subset  of  the   CUDA  configuration
+parameters\nbsp{}\cite{cuda2020driverURL}  used in  this study.   Parameters can
+target different compilation steps,  namely the \emph{PTX} optimizing assembler,
+the  \emph{NVLINK}  linker,  and  the \emph{NVCC}  compiler.   We  compared  the
+performance of programs generated by tuned parameters with the standard compiler
+optimizations  \texttt{--opt-level=0,1,2,3}.    Different  \texttt{--opt-level}s
+could also  be selected  during tuning.   We did not  use compiler  options that
+target  the  host  linker or  the  library  manager  since  they do  not  affect
+performance.  The size of the search  space defined by all possible combinations
+of flags  is in the  order of  $10^{6}$, making hand-optimization  or exhaustive
+searches unwieldy.
 
 #+begin_export latex
-\begin{table}[htpb]
-    \centering
-    \tiny
-        \begin{tabular}{lp{0.6\textwidth}}
-        \toprule
-        \textbf{Flag}&\textbf{Description} \\\midrule
-            \addlinespace{}
-        \texttt{no-align-double} & Specifies that \texttt{malign-double} should not be passed as a compiler argument on 32-bit platforms. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{use\_fast\_math} & Uses the fast math library, implies \texttt{ftz=true}, \texttt{prec-div=false}, \texttt{prec-sqrt=false} and \texttt{fmad=true}. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{gpu-architecture} & Specifies the NVIDIA virtual GPU architecture for which the CUDA input files must be compiled. \textbf{Step}: NVCC \textbf{Values}: \texttt{sm\_20}, \texttt{sm\_21}, \texttt{sm\_30}, \texttt{sm\_32}, \texttt{sm\_35}, \texttt{sm\_50}, \texttt{sm\_52} \\
-            \addlinespace{}
-        \texttt{relocatable-device-code} & Enables the generation of relocatable device code. If disabled, executable device code is generated. Relocatable device code must be linked before it can be executed. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{ftz} & Controls single-precision denormals support. \texttt{ftz=true} flushes denormal values to zero and \texttt{ftz=false} preserves denormal values. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{prec-div} & Controls single-precision floating-point division and reciprocals. \texttt{prec-div=true} enables the IEEE round-to-nearest mode and \texttt{prec-div=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{prec-sqrt} & Controls single-precision floating-point squre root. \texttt{prec-sqrt=true} enables the IEEE round-to-nearest mode and \texttt{prec-sqrt=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
-            \addlinespace{}
-        \texttt{def-load-cache} & Default cache modifier on global/generic load. \textbf{Step}: PTX \textbf{Values}: \texttt{ca}, \texttt{cg}, \texttt{cv}, \texttt{cs} \\
-            \addlinespace{}
-        \texttt{opt-level} & Specifies high-level optimizations. \textbf{Step}: PTX \textbf{Values}: \texttt{0 - 3} \\
-            \addlinespace{}
-        \texttt{fmad} & Enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations (FMAD, FFMA, or DFMA). \textbf{Step}: PTX \\
-            \addlinespace{}
-        \texttt{allow-expensive-optimizations} & Enables the compiler to perform expensive optimizations using maximum available resources (memory and compile-time). If unspecified, default behavior is to enable this feature for optimization level $\geqslant$O2. \textbf{Step}: PTX \\
-            \addlinespace{}
-        \texttt{maxrregcount} & Specifies the maximum number of registers that GPU functions can use. \textbf{Step}: PTX \textbf{Values}: \texttt{16 - 64} \\
-            \addlinespace{}
-        \texttt{preserve-relocs} & Makes the \texttt{PTX} assembler generate relocatable references for variables and preserve relocations generated for them in the linked executable. \textbf{Step}: NVLINK \\
-            \bottomrule
-        \end{tabular}
-    \caption{Description of flags in the search space}
-    \label{tab:flags}
+\begin{table}[t]
+  \centering
+  \scriptsize
+  \caption{Description of flags in the search space}
+  \begin{tabular}{lp{0.6\textwidth}}
+    \toprule
+    \textbf{Flag}&\textbf{Description} \\\midrule
+    \addlinespace{}
+    \texttt{no-align-double} & Specifies that \texttt{malign-double} should not be passed as a compiler argument on 32-bit platforms. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{use\_fast\_math} & Uses the fast math library, implies \texttt{ftz=true}, \texttt{prec-div=false}, \texttt{prec-sqrt=false} and \texttt{fmad=true}. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{gpu-architecture} & Specifies the NVIDIA virtual GPU architecture for which the CUDA input files must be compiled. \textbf{Step}: NVCC \textbf{Values}: \texttt{sm\_20}, \texttt{sm\_21}, \texttt{sm\_30}, \texttt{sm\_32}, \texttt{sm\_35}, \texttt{sm\_50}, \texttt{sm\_52} \\
+    \addlinespace{}
+    \texttt{relocatable-device-code} & Enables the generation of relocatable device code. If disabled, executable device code is generated. Relocatable device code must be linked before it can be executed. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{ftz} & Controls single-precision denormals support. \texttt{ftz=true} flushes denormal values to zero and \texttt{ftz=false} preserves denormal values. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{prec-div} & Controls single-precision floating-point division and reciprocals. \texttt{prec-div=true} enables the IEEE round-to-nearest mode and \texttt{prec-div=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{prec-sqrt} & Controls single-precision floating-point squre root. \texttt{prec-sqrt=true} enables the IEEE round-to-nearest mode and \texttt{prec-sqrt=false} enables the fast approximation mode. \textbf{Step}: NVCC \\
+    \addlinespace{}
+    \texttt{def-load-cache} & Default cache modifier on global/generic load. \textbf{Step}: PTX \textbf{Values}: \texttt{ca}, \texttt{cg}, \texttt{cv}, \texttt{cs} \\
+    \addlinespace{}
+    \texttt{opt-level} & Specifies high-level optimizations. \textbf{Step}: PTX \textbf{Values}: \texttt{0 - 3} \\
+    \addlinespace{}
+    \texttt{fmad} & Enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations (FMAD, FFMA, or DFMA). \textbf{Step}: PTX \\
+    \addlinespace{}
+    \texttt{allow-expensive-optimizations} & Enables the compiler to perform expensive optimizations using maximum available resources (memory and compile-time). If unspecified, default behavior is to enable this feature for optimization level $\geqslant$O2. \textbf{Step}: PTX \\
+    \addlinespace{}
+    \texttt{maxrregcount} & Specifies the maximum number of registers that GPU functions can use. \textbf{Step}: PTX \textbf{Values}: \texttt{16 - 64} \\
+    \addlinespace{}
+    \texttt{preserve-relocs} & Makes the \texttt{PTX} assembler generate relocatable references for variables and preserve relocations generated for them in the linked executable. \textbf{Step}: NVLINK \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:flags}
 \end{table}
 #+end_export
 
@@ -11533,64 +11530,65 @@ $10^{6}$ making hand-optimization or exhaustive searches very time consuming.
 This section  presents the GPU  testbed, the algorithm benchmark,  the autotuner
 implementation and its search space.
 
-**** GPU Testbed
+**** Target GPU Micro-Architectures
 To be  able to  show that  different GPUs require  different options  to improve
 performance, and that it is possible  to achieve speedups in different hardware,
-we  wanted  to  tune  our benchmark  for  different  NVIDIA  microarchitectures.
-Table\nbsp{}\ref{tab:GPUs} summarizes the hardware characteristics of the three GPUs.
+we  wanted  to tune  our  benchmark  for different  NVIDIA  micro-architectures.
+Table\nbsp{}\ref{tab:GPUs} summarizes the hardware  characteristics of the three
+GPUs.
 
 #+begin_export latex
-\begin{table}[thpb]
-    \centering
-    \footnotesize
-    \begin{tabular}{llllllll}
-        \toprule
-        \textbf{Model}&\textbf{C.C.}&\textbf{Global Memory}&\textbf{Bus}&\textbf{Bandwidth}&\textbf{L2}&\textbf{Cores/SM}&\textbf{Clock} \\ \midrule
-        Tesla-K40&3.5&12 GB&384-bit&276.5 GB/s&1.5 MB&2880/15&745 Mhz \\
-        GTX-750&5.0&1 GB&128-bit&86.4 GB/s&2 MB&512/4&1110 Mhz \\
-        GTX-980&5.2&4 GB&256-bit&224.3 GB/s&2 MB&2048/16&1216 Mhz \\ \bottomrule
-    \end{tabular}
-    \caption{Hardware specifications of the GPUs in the testbed}
-    \label{tab:GPUs}
+\begin{table}[t]
+  \centering
+  \footnotesize
+  \caption{Hardware specifications of the target GPU micro-architectures}
+  \begin{tabular}{llllllll}
+    \toprule
+    \textbf{Model}&\textbf{C.C.}&\textbf{Global Memory}&\textbf{Bus}&\textbf{Bandwidth}&\textbf{L2}&\textbf{Cores/SM}&\textbf{Clock} \\ \midrule
+    Tesla-K40&3.5&12 GB&384-bit&276.5 GB/s&1.5 MB&2880/15&745 Mhz \\
+    GTX-750&5.0&1 GB&128-bit&86.4 GB/s&2 MB&512/4&1110 Mhz \\
+    GTX-980&5.2&4 GB&256-bit&224.3 GB/s&2 MB&2048/16&1216 Mhz \\ \bottomrule
+  \end{tabular}
+  \label{tab:GPUs}
 \end{table}
 #+end_export
 
-**** Algorithm Benchmark
+**** Benchmark of CUDA Algorithms
 We composed a  benchmark with 17 heterogeneous GPU  applications.  The benchmark
-contains 4 optimization strategies  for \emph{matrix multiplication} (counted as
-a  single  application),   1  vector  addition  problem,  1   solution  for  the
-\emph{maximum  sub-array problem}\nbsp{}\cite{ferreira2014parallel},  2 \emph{sorting}
+contains 4 optimization strategies for \emph{matrix multiplication} counted as a
+single application, 1 vector addition  problem, 1 solution for the \emph{maximum
+sub-array    problem}\nbsp{}\cite{ferreira2014parallel},     2    \emph{sorting}
 algorithms    and     12    applications    from    the     Rodinia    Benchmark
 Suite\nbsp{}\cite{che2009rodinia}.
 
 #+begin_export latex
-\begin{table}[htpb]
-    \centering
-    \footnotesize
-        \begin{tabular}{lll}
-            \toprule
-            \textbf{Application} & \textbf{Berkeley Dwarf\cite{asanovic2009view}} & \textbf{Domain} \\\midrule
-            B+Tree (BPT) & Graph Traversal& Search \\
-            Back Propagation (BCK) & Unstructured Grid & Pattern Recognition \\
-            Breadth-First Search (BFS) & Graph Traversal & Graph Algorithms \\
-            Gaussian Elimination (GAU) & Dense Linear Algebra & Linear Algebra \\
-            Heart Wall (HWL) & Structured Grid & Medical Imaging \\
-            Hot Spot (HOT) & Structured Grid & Physics Simulation \\
-            K-Means (KMN) & Dense Linear Algebra & Data Mining \\
-            LavaMD (LMD) & N-Body & Molecular Dynamics \\
-            LU Decomposition (LUD) & Dense Linear Algebra & Linear Algebra \\
-            Myocyte (MYO) & Structured Grid & Biological Simulation \\
-            Needleman-Wunsch (NDL) & Dynamic Programming & Bioinformatics \\
-            Path Finder (PTF) & Dynamic Programming & Grid Traversal \\\bottomrule
-        \end{tabular}
-    \caption{Rodinia applications used in the experiments}
-    \label{tab:Rodinia}
+\begin{table}[b]
+  \centering
+  \footnotesize
+  \caption{Rodinia applications used in the experiments}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Application} & \textbf{Berkeley Dwarf\cite{asanovic2009view}} & \textbf{Domain} \\\midrule
+    B+Tree (BPT) & Graph Traversal& Search \\
+    Back Propagation (BCK) & Unstructured Grid & Pattern Recognition \\
+    Breadth-First Search (BFS) & Graph Traversal & Graph Algorithms \\
+    Gaussian Elimination (GAU) & Dense Linear Algebra & Linear Algebra \\
+    Heart Wall (HWL) & Structured Grid & Medical Imaging \\
+    Hot Spot (HOT) & Structured Grid & Physics Simulation \\
+    K-Means (KMN) & Dense Linear Algebra & Data Mining \\
+    LavaMD (LMD) & N-Body & Molecular Dynamics \\
+    LU Decomposition (LUD) & Dense Linear Algebra & Linear Algebra \\
+    Myocyte (MYO) & Structured Grid & Biological Simulation \\
+    Needleman-Wunsch (NDL) & Dynamic Programming & Bioinformatics \\
+    Path Finder (PTF) & Dynamic Programming & Grid Traversal \\\bottomrule
+  \end{tabular}
+  \label{tab:Rodinia}
 \end{table}
 #+end_export
 
-Table\nbsp{}\ref{tab:Rodinia}  shows   the  Rodinia  applications  contained   in  our
-benchmark and their correspondent three-letter  code.  The other applications in
-the benchmark were CUDA implementations of the following:
+Table\nbsp{}\ref{tab:Rodinia} shows  the Rodinia  applications contained  in our
+benchmark and  the corresponding three-letter  code.  The other  applications in
+the benchmark were the following CUDA implementations:
 
 #+begin_export latex
 \begin{itemize}
@@ -11603,12 +11601,11 @@ the benchmark were CUDA implementations of the following:
              \item Shared memory with coalesced accesses to global memory (MMS)
         \end{itemize}
     \item Simple vector addition algorithm (VAD)
-    \item Solution~\cite{alves2004bsp,ferreira2014parallel} for the Maximum
-        Sub-Array Problem (MSA)
+    \item Solution for the Maximum
+        Sub-Array Problem (MSA)~\cite{alves2004bsp,ferreira2014parallel}
     \item Quicksort (QKS) and Bitonicsort (BTN)
 \end{itemize}
 #+end_export
-
 
 *** Results
 This  section  presents  the  speedups   achieved  for  all  algorithms  in  the
@@ -11621,10 +11618,10 @@ implementations available for  the R language.  The black band  inside the boxes
 represents the median of the measurements. The lower and upper bounds of the box
 represent, respectively, the first and third quartiles of the data. The whiskers
 represent the third  and first quartile plus and minus  the \emph{inner quartile
-range} times 1.5. Finally, the circles represent the outliers.
+range} times 1.5. Finally, circles represent outliers.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11642,16 +11639,16 @@ range} times 1.5. Finally, the circles represent the outliers.
 \end{figure}
 #+end_export
 
-Figures\nbsp{}\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
-\ref{fig:K40myo}  compare the  distributions  of 10  perfomance measurements  of
-binaries  compiled with  high-level  compiler optimizations  and with  autotuned
-compiler    options.   The    results   for    the   high-level    optimizations
-\texttt{--opt-level=0,1,2,3} were denoted  by \emph{-O0}, \emph{-O1}, \emph{-O2}
-and \emph{-O3}.   The results for  the autotuned configurations were  denoted by
-the keyword \emph{Tuned}.
+Figures\nbsp{}\ref{fig:K40hwl},    \ref{fig:980gau},    \ref{fig:K40ptf},    and
+\ref{fig:K40myo}  compare the  distributions of  10 performance  measurements of
+binaries   compiled   with   high-level    compiler   optimizations   and   with
+autotuner-selected   compiler  options.    The   results   for  the   high-level
+optimizations   \texttt{--opt-level=0,1,2,3}   are    denoted   by   \emph{-O0},
+\emph{-O1},  \emph{-O2}   and  \emph{-O3}.    The  results  for   the  autotuned
+configurations are denoted by the keyword \emph{Tuned}.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11669,17 +11666,17 @@ the keyword \emph{Tuned}.
 \end{figure}
 #+end_export
 
-Figure\nbsp{}\ref{fig:K40hwl} shows  that the  autotuned solution  for the  Heart Wall
-problem (HWL) in the  Tesla K40 achieved over 2x speedup  in comparison with the
-high-level CUDA  optimizations.  Figure\nbsp{}\ref{fig:980gau} shows, in  the GTX 980,
-almost   2.5x   speedup   for    the   Gaussian   Elimination   problem   (GAU).
-Figure\nbsp{}\ref{fig:K40ptf} show 10\% speedup of the autotuned solution for the Path
-Finder problem (PTF)  in the Tesla K40.  Figure\nbsp{}\ref{fig:K40myo}  shows over 5\%
-speedup  of the  autotuned solution,  also  in the  Tesla K40,  for the  Myocyte
-problem (MYO).
+Figure\nbsp{}\ref{fig:K40hwl} shows  that the  autotuned solution for  the Heart
+Wall problem (HWL) in the Tesla K40  achieved over 2 times speedup in comparison
+with the high-level CUDA optimizations.  Figure\nbsp{}\ref{fig:980gau} shows, in
+the  GTX 980,  almost 2.5  times speedup  for the  Gaussian Elimination  problem
+(GAU).   Figure\nbsp{}\ref{fig:K40ptf} show  a  10% speedup  from the  autotuned
+solution   for   the   Path   Finder   problem   (PTF)   in   the   Tesla   K40.
+Figure\nbsp{}\ref{fig:K40myo} shows over 5%  speedup for the autotuned solution,
+also in the Tesla K40, for the Myocyte problem (MYO).
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11697,14 +11694,15 @@ problem (MYO).
 \end{figure}
 #+end_export
 
-Figures\nbsp{}\ref{fig:matrixsummary}, \ref{fig:summary}, \ref{fig:rodiniasummary} and
-\ref{fig:rodiniasummarysmall} present  summaries of  the results.  The autotuner
-did not find  solutions that improved upon the high-level  optimizations for the
-problems BTN and MSU  in any of the GPUs of the testbed,  but it found solutions
-that achieved speedups for at least one GPU for the other problems.
+Figures\nbsp{}\ref{fig:matrixsummary},                        \ref{fig:summary},
+\ref{fig:rodiniasummary},   and   \ref{fig:rodiniasummarysmall}  summarize   the
+results.  The autotuner did not find solutions that improved upon the high-level
+optimizations for the  problems BTN and MSU  in any of the GPUs  of the testbed,
+but it found solutions that achieved speedups for at least one GPU for the other
+problems.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11722,29 +11720,28 @@ that achieved speedups for at least one GPU for the other problems.
 \end{figure}
 #+end_export
 
-We do not know precisely which hardware characteristics impacted performance the
-most.  Although more experiments are needed to confirm the following hypothesis,
-we believe that the Maxwell GPUs, the GTX 980 and GTX 750, had differing results
-from  the Tesla  K40 because  they  are consumer  grade GPUs,  producing not  so
-precise  results  and with  different  default  optimizations. The  similarities
-between the compute capabilities of the GTX GPUs could also explain the observed
-differences from  the K40. Finally, the  overall greater computing power  of the
-GTX 980 could explain its differing results  from the GTX 750, since the GTX 980
-has  a greater  number of  Cores, SMs/Cores,  Bandwidth, Bus,  Clock and  Global
+We  were  not able  to  determine  the  hardware characteristics  that  impacted
+performance.  We  believe that the  Maxwell GPUs, the GTX  980 and GTX  750, had
+differing  results from  the Tesla  K40 because  they are  consumer grade  GPUs,
+producing less  precise results  and with  different default  optimizations. The
+similarities between the compute capabilities of the GTX GPUs could also explain
+the observed  differences from the K40.  The overall greater computing  power of
+the GTX 980 could explain its differing  results from the GTX 750, since the GTX
+980 has a  greater number of Cores, SMs/Cores, Bandwidth,  Bus, Clock and Global
 Memory.
 
-**** Autotuner Performance
+**** CUDA Compiler Autotuner Performance
 This   section  presents   an   assessment  of   the  autotuner's   performance.
-Figures\nbsp{}\ref{fig:K40hwBest},   \ref{fig:980gauBest},  \ref{fig:K40ptfBest}   and
-\ref{fig:K40myoBest} present the  performance of the best solution  found by the
-autotuner  versus the  time these  solutions were  found, in  seconds since  the
-beginning of the tuning process. The Figures show the evolution of the autotuned
-solution for the  best results in our experiments, the  Heart Wall problem (HWL)
-and the Gaussian Elimination  problem (GAU) in the GTX 980,  and the Path Finder
-problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
+Figures\nbsp{}\ref{fig:K40hwBest},  \ref{fig:980gauBest},  \ref{fig:K40ptfBest},
+and \ref{fig:K40myoBest} present  the performance of the best  solution found by
+the autotuner against the time these  solutions were found, in seconds since the
+beginning  of the  tuning  process.  The figures  show  the  progression of  the
+autotuned  solution for  the best  results in  our experiments,  the Heart  Wall
+problem (HWL) and the Gaussian Elimination problem (GAU) in the GTX 980, and the
+Path Finder problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11762,21 +11759,21 @@ problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
 \end{figure}
 #+end_export
 
-The points in each  graph represent the performance, in the  y-axis, of the best
+Points  in each  graph represent  the performance,  in the  y-axis, of  the best
 configuration found at  the corresponding tuning time, shown in  the x-axis. The
 leftmost  point in  each graph  represents  the performance  of a  configuration
 chosen  at  random  by  the  autotuner. Each  subsequent  point  represents  the
-performance of the best configuration found so far.
+performance of the best configuration found across optimization.
 
 Note  that the  autotuner is  able to  quickly improve  upon the  initial random
 configuration, but the rate of improvement decays over tuning time. The duration
 of all tuning runs was two hours,  or 7200 seconds.  The rightmost point in each
 graph represents  the performance of  the last improving configuration  found by
-the autotuner.  After the tuning time  of this configuration, the  autotuner did
+the autotuner.  After  the tuning time of this configuration,  the autotuner did
 not find any improving configuration until the end of its tuning run.
 
 #+begin_export latex
-\begin{figure}[htpb]
+\begin{figure}[t]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
@@ -11794,19 +11791,19 @@ not find any improving configuration until the end of its tuning run.
 \end{figure}
 #+end_export
 
-The  autotuner  used  the  mean  of  10  performance  measurements  of  a  given
-configuration  as the  fitness value,  reducing fluctuations  and improving  the
-measurement's accuracy. This  is reflected in the proximity  of the measurements
-reported by  the autotuner during tuning,  shown in figures\nbsp{}\ref{fig:K40hwBest},
-\ref{fig:980gauBest}, \ref{fig:K40ptfBest} and \ref{fig:K40myoBest} and the mean
-values of  10 measurements  of the  final solution,  shown in  the corresponding
-figures\nbsp{}\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}      and
-\ref{fig:K40myo}.
+The autotuner  considered the mean of  10 measurements of each  configuration as
+the value  of the  objective function,  which helps  to reduce  fluctuations and
+improves  measurement   accuracy.   This  resulted  in   stable  final  solution
+performance, which can  be observed by noting that the  measurements reported by
+the  autotuner   during  tuning,  shown   in  Figures\nbsp{}\ref{fig:K40hwBest},
+\ref{fig:980gauBest},  \ref{fig:K40ptfBest}, and  \ref{fig:K40myoBest} are  very
+close to the mean values of 10  measurements of the final solution, shown in the
+corresponding Figures\nbsp{}\ref{fig:K40hwl}, \ref{fig:980gau}, \ref{fig:K40ptf}
+and \ref{fig:K40myo}.
 
 **** Parameter Selection
-
 #+begin_export latex
-\begin{table}[htpb]
+\begin{table}[t]
     \centering
     \footnotesize
     \begin{tabular}{lll}
@@ -11832,16 +11829,16 @@ figures\nbsp{}\ref{fig:K40hwl},      \ref{fig:980gau},       \ref{fig:K40ptf}   
 #+end_export
 
 We attempted to associate compilation  parameters to applications and GPUs using
-WEKA's\nbsp{}\cite{holmes1994weka} clustering  algorithms. Although we could  not find
-significant   relations   for   most   applications   we   detected   that   the
+WEKA's\nbsp{}\cite{holmes1994weka} clustering algorithms.  Although we could not
+find  significant  relations   for  most  applications  we   detected  that  the
 \texttt{ftz=true} in  MMS and the Compute  Capabilities 3.0, 5.0 and  5.2 in GAU
 caused  the   speedups  observed  in   the  GTX  980  for   these  applications.
-Table\nbsp{}\ref{tab:750RodiniaClusters} shows clusters obtained with the K-means WEKA
-algorithm  for  autotuned  parameter  sets  for the  Rodinia  Benchmark  in  the
-GTX 750.  Unlike most clusters found  for all GPUs and  problems, these clusters
-did  not  contain an  equal  number  of  instances.  The difficulty  of  finding
-associations between compiler optimizations, applications and GPUs justifies the
-autotuning of compiler parameters in the general case.
+Table\nbsp{}\ref{tab:750RodiniaClusters}  shows   clusters  obtained   with  the
+K-means WEKA algorithm for autotuned parameter sets for the Rodinia Benchmark in
+the  GTX 750.   Unlike most  clusters  found for  all GPUs  and problems,  these
+clusters  did not  contain  an equal  number of  instances.   The difficulty  of
+finding  associations  between  compiler optimizations,  applications  and  GPUs
+justifies the autotuning of compiler parameters in the general case.
 
 *** Summary
 This  study  showed that  it  is  possible to  improve  the  performance of  GPU
@@ -12006,7 +12003,7 @@ Section\nbsp{}[[Screening & Plackett-Burman Designs]].
 #+NAME: fig:gpu_laplacian_comparison_histogram
 #+CAPTION: Distribution of slowdowns in relation to the global minimum for 7 optimization methods on the Laplacian Kernel, using a budget of 125 points over 1000 repetitions \vspace{-.5cm}
 #+ATTR_LATEX: :float t :placement [t]\vspace{-.5cm} :width .9\columnwidth
-[[./dopt_anova_experiments/img/comparison_histogram.pdf]]
+[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
 
 This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
 performance model is approximately known and  the complete valid search space is
@@ -12552,15 +12549,15 @@ prediction accuracy and the time to measure an HLS configuration.
 *** Source-to-Source Transformation
 Our approach can be applied to any autotuning domain that expresses optimization
 as  a  search  problem,  although  the performance  evaluations  we  present  in
-Section\nbsp{}[[Performance   Evaluation]]   were   obtained  in   the   domain   of
-source-to-source  transformation. Several  frameworks, compilers  and autotuners
-provide    tools     to    generate    and     optimize    architecture-specific
+Section\nbsp{}[[Performance Evaluation]]  were obtained in the  domain of source-to-source
+transformation. Several  frameworks, compilers  and autotuners provide  tools to
+generate             and              optimize             architecture-specific
 code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
-We            used             BOAST\nbsp{}\cite{videau2017boast}            and
-Orio\nbsp{}\cite{hartono2009annotation}     to      perform     source-to-source
-transformations targeting parallelization on  CPUs and GPUs, vectorization, loop
-transformations  such as  tiling  and  unrolling, and  data  structure size  and
-copying.
+We  used BOAST\nbsp{}\cite{videau2017boast}  and Orio\nbsp{}\cite{hartono2009annotation}  to
+perform source-to-source  transformations targeting parallelization on  CPUs and
+GPUs, vectorization, loop transformations such as tiling and unrolling, and data
+structure size and copying.
+
 *** Performance Evaluation
 The    SPAPT\nbsp{}\cite{balaprakash2012spapt}    benchmark    suite    provides
 parametrized  CPU kernels  from different  HPC  domains.  The  kernels shown  in

@@ -11624,14 +11624,14 @@ times 1.5. Finally, circles represent outliers.
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/heartwall-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/heartwall-0-Tesla-K40-Box-eps-converted-to.pdf}
         \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Heart Wall problem (HWL)}
         \label{fig:K40hwl}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/gaussian-0-GTX-980-Box-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/gaussian-0-GTX-980-Box-eps-converted-to.pdf}
         \caption{Boxplots for the GTX 980 GPU, comparing autotuned results and high-level compiler optimizations for the Gaussian Elimination problem (GAU)}
         \label{fig:980gau}
     \end{minipage}%
@@ -11646,18 +11646,18 @@ optimizations =--opt-level=0=, =1=, =2=, =3= are denoted  by /-O0/, /-O1/, /-O2/
 results for the autotuned configurations are denoted by the keyword /Tuned/.
 
 #+begin_export latex
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Box-eps-converted-to.pdf}
         \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Path Finder problem (PTF)}
         \label{fig:K40ptf}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/myocyte-0-Tesla-K40-Box-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/myocyte-0-Tesla-K40-Box-eps-converted-to.pdf}
         \caption{Boxplots for the Tesla K40, comparing autotuned results and high-level compiler optimizations for the Myocyte problem (MYO)}
         \label{fig:K40myo}
     \end{minipage}%
@@ -11678,14 +11678,14 @@ also in the Tesla K40, for the Myocyte problem (MYO).
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.15]{./img/quali_brazil/MatrixSummary-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/MatrixSummary-eps-converted-to.pdf}
         \caption{Summary of the speedups achieved versus \emph{-O2} in the matrix multiplication optimizations}
         \label{fig:matrixsummary}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.15]{./img/quali_brazil/Summary-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/Summary-eps-converted-to.pdf}
         \caption{Summary of the speedups achieved versus \emph{-O2} in the other independent applications}
         \label{fig:summary}
     \end{minipage}%
@@ -11700,18 +11700,18 @@ but it found solutions that achieved speedups for at least one GPU for the other
 problems.
 
 #+begin_export latex
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.15]{./img/quali_brazil/RodiniaSummary-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/RodiniaSummary-eps-converted-to.pdf}
         \caption{Summary of the biggest speedups achieved versus \emph{-O2} in the Rodinia applications}
         \label{fig:rodiniasummary}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.15]{./img/quali_brazil/RodiniaSummary_small-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/RodiniaSummary_small-eps-converted-to.pdf}
         \caption{Summary of the smaller speedups achieved versus \emph{-O2} in the Rodinia applications}
         \label{fig:rodiniasummarysmall}
     \end{minipage}%
@@ -11743,14 +11743,14 @@ Path Finder problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/heartwall-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/heartwall-0-Tesla-K40-Best-eps-converted-to.pdf}
         \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
         \label{fig:K40hwBest}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/gaussian-0-GTX-980-Best-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/gaussian-0-GTX-980-Best-eps-converted-to.pdf}
         \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
         \label{fig:980gauBest}
     \end{minipage}%
@@ -11771,18 +11771,18 @@ the autotuner.  After  the tuning time of this configuration,  the autotuner did
 not find any improving configuration until the end of its tuning run.
 
 #+begin_export latex
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/Pathfinder-0-Tesla-K40-Best-eps-converted-to.pdf}
         \caption{Best solutions found by the autotuner over time for the Path Finder problem (PTF) in the Tesla K40}
         \label{fig:K40ptfBest}
     \end{minipage}%
     \hfill
     \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=.22]{./img/quali_brazil/myocyte-0-Tesla-K40-Best-eps-converted-to.pdf}
+        \includegraphics[width=\textwidth]{./img/quali_brazil/myocyte-0-Tesla-K40-Best-eps-converted-to.pdf}
         \caption{Best solutions found by the autotuner over time for the Myocyte problem (MYO) in the Tesla K40}
         \label{fig:K40myoBest}
     \end{minipage}
@@ -11804,7 +11804,7 @@ and \ref{fig:K40myo}.
 \begin{table}[t]
     \centering
     \footnotesize
-    \begin{tabular}{lll}
+    \begin{tabular}{lrr}
         \toprule
         \textbf{Flag} & \textbf{Cluster 0 (17\%)} & \textbf{Cluster 1 (83\%)} \\\midrule
         \texttt{no-align-double}               & on     & on     \\
@@ -11879,7 +11879,7 @@ that controls  the number of available  registers, we picked the  largest number
 and the midpoint.
 
 #+begin_export latex
-\begin{table}[t]
+\begin{table}[h]
   \centering
   \footnotesize
   \caption{Hardware specifications of the GPU architectures
@@ -11894,11 +11894,65 @@ and the midpoint.
 \end{table}
 #+end_export
 
-A  Plackett-Burman design  for 15  parameters  contains 20  experiments, and  we
-performed 20  repetitions of  each parameter  assignment for  each of  the three
-kernels. Figures\nbsp{}[[fig:effects-titanx]]  and [[fig:effects-quadro]] show  the mean
-and 95% confidence intervals  for the coefficients of a linear  model fit to the
-measurements, and represent the main effect estimates for each factor.
+The Plackett-Burman design  for 15 2-level factors contains  20 experiments, and
+we performed 20  repetitions of each parameter assignment for  each of the three
+kernels.  Figures\nbsp{}[[fig:effects-titanx]] and  [[fig:effects-quadro]] show the mean
+and 95% confidence intervals for the coefficients of a linear model that was fit
+to the  measurements, and represent the  main effect estimates for  each factor.
+
+#+latex: \clearpage
+
+#+ATTR_LATEX: :width 0.95\textwidth :placement [t]
+#+NAME: fig:effects-titanx
+#+CAPTION: Main effects estimates and 95% confidence intervals for the
+#+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,
+#+CAPTION: for target kernels measured on the Titan X GPU
+[[file:img/gpu-screening/main_effects_titanx.pdf]]
+
+#+ATTR_LATEX: :width 0.95\textwidth :placement [h]
+#+NAME: fig:effects-quadro
+#+CAPTION: Main effects estimates and 95% confidence intervals for the
+#+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,
+#+CAPTION: for target kernels measured on the Quadro GPU
+[[file:img/gpu-screening/main_effects_quadrom1200.pdf]]
+
+#+latex: \clearpage
+
+Note  that  because  the  Plackett-Burman   design  matrix  is  orthogonal,  the
+confidence intervals for  the effect mean estimates all have  the same size. The
+effects we  can detect from  these experiments are small,  except in in  the HWL
+kernel  where two  factors  present  large effects,  with  a  few other  factors
+presenting significant but smaller effects.  We built new models for each kernel
+by selecting the  factors whose mean estimates are negative  and have confidence
+intervals that do not cross zero.
+
+We then generated a large set of  points in the CUDA parameters search space and
+picked the points for which these  smaller models predict the smallest execution
+time. Figures\nbsp{}\ref{fig:timing-titanx} and \ref{fig:timing-quadro} show the
+performance of the  points picked by the models and  the baseline configuration,
+consisting  of  using only  the  PTX-stage  third level  compiler  optimization,
+equivalent to /-O3/.  There was no  difference between the second and third levels
+of general compiler  optimization in these experiments, so we  picked /-O3/ as the
+baseline.
+
+#+begin_export latex
+\begin{figure}[t]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_titanx.pdf}
+        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
+        \label{fig:timing-titanx}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_quadrom1200.pdf}
+        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
+        \label{fig:timing-quadro}
+    \end{minipage}%
+\end{figure}
+#+end_export
 
 #+begin_export latex
 \begin{figure}[t]
@@ -11919,34 +11973,6 @@ measurements, and represent the main effect estimates for each factor.
 \end{figure}
 #+end_export
 
-#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
-#+NAME: fig:effects-titanx
-#+CAPTION: Test
-[[file:img/gpu-screening/main_effects_titanx.pdf]]
-
-#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
-#+NAME: fig:effects-quadro
-#+CAPTION: Test
-[[file:img/gpu-screening/main_effects_quadrom1200.pdf]]
-
-#+begin_export latex
-\begin{figure}[t]
-    \centering
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_titanx.pdf}
-        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
-        \label{fig:timing-titanx}
-    \end{minipage}%
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_quadrom1200.pdf}
-        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
-        \label{fig:timing-quadro}
-    \end{minipage}%
-\end{figure}
-#+end_export
 
 
 *** Summary

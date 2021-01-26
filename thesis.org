@@ -11896,96 +11896,75 @@ and the midpoint.
 
 The Plackett-Burman design  for 15 2-level factors contains  20 experiments, and
 we performed 20  repetitions of each parameter assignment for  each of the three
-kernels.  Figures\nbsp{}[[fig:effects-titanx]] and  [[fig:effects-quadro]] show the mean
-and 95% confidence intervals for the coefficients of a linear model that was fit
-to the  measurements, and represent the  main effect estimates for  each factor.
+kernels.  The  top and  bottom panels  of Figure\nbsp{}[[fig:effects-gpu-screening]]
+show  for  each  target  GPU  the  mean and  95%  confidence  interval  for  the
+coefficients  of  a  linear  model  fit to  the  screening  measurements,  which
+represent the main effect estimates for each factor.
+
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+NAME: fig:effects-gpu-screening
+#+CAPTION: Main effects estimates and 95% confidence intervals for the
+#+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,
+#+CAPTION: for target kernels measured on the Titan X and Quadro M1200 GPUs
+[[file:img/gpu-screening/effects_gpu_screening.pdf]]
 
 #+latex: \clearpage
 
-#+ATTR_LATEX: :width 0.95\textwidth :placement [t]
-#+NAME: fig:effects-titanx
-#+CAPTION: Main effects estimates and 95% confidence intervals for the
-#+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,
-#+CAPTION: for target kernels measured on the Titan X GPU
-[[file:img/gpu-screening/main_effects_titanx.pdf]]
+Note that because the Plackett-Burman design matrix is orthogonal the confidence
+intervals for the effect  mean estimates all have the same  size. The effects we
+can detect from these experiments are small,  except in the HWL kernel where two
+factors present large effects.  The linear models we built for each kernel using
+screening  results do  not account  for interactions  between factors,  and thus
+their predictions favor turning on the factors whose mean estimates are negative
+and  have  confidence intervals  that  do  not  cross  zero.
 
-#+ATTR_LATEX: :width 0.95\textwidth :placement [h]
-#+NAME: fig:effects-quadro
-#+CAPTION: Main effects estimates and 95% confidence intervals for the
-#+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,
-#+CAPTION: for target kernels measured on the Quadro GPU
-[[file:img/gpu-screening/main_effects_quadrom1200.pdf]]
+We generated  a large  set of  points in  the CUDA  parameters search  space and
+picked the  points for  which the  models predict  the smallest  execution time.
+Figure\nbsp{}[[fig:timing-gpu-screening]]  shows  the  performances  of  the  points
+picked by the  models and the baseline for comparison,  for each Rodinia kernel.
+The baseline  for comparison consisted  of using only the  PTX-stage =opt-level=3=
+high-level  compiler  optimization.   There  was no  significant  difference  in
+performance between second and third levels of =opt-level= in these experiments.
 
-#+latex: \clearpage
+The left panel  shows results for the Titan X GPU,  where we found small
+speedups for the  GAU and NDL kernels,  but small slowdowns for  HWL.  The right
+panel  shows results  for the  Quadro M1200  GPU, where  we found  statistically
+significant but small speedups for GAU and  NDL, and 8 times speedup for the HWL
+kernel.    The   speedups   obtained   using  screening   are   highlighted   in
+Figure\nbsp{}[[fig:speedup-gpu-screening]].
 
-Note  that  because  the  Plackett-Burman   design  matrix  is  orthogonal,  the
-confidence intervals for  the effect mean estimates all have  the same size. The
-effects we  can detect from  these experiments are small,  except in in  the HWL
-kernel  where two  factors  present  large effects,  with  a  few other  factors
-presenting significant but smaller effects.  We built new models for each kernel
-by selecting the  factors whose mean estimates are negative  and have confidence
-intervals that do not cross zero.
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+NAME: fig:timing-gpu-screening
+#+CAPTION: Execution  time  of  baseline  and  model-predicted  NVCC  flag
+#+CAPTION: configurations for three  Rodinia kernels on the Titan  X and
+#+CAPTION: Quadro M1200 GPUs. Circles mark each  of the 20  measurements
+#+CAPTION: of each flag  configuration, filled dots  and whiskers
+#+CAPTION: mark the  mean  and 95%  confidence intervals
+[[file:img/gpu-screening/timing_gpu_screening.pdf]]
 
-We then generated a large set of  points in the CUDA parameters search space and
-picked the points for which these  smaller models predict the smallest execution
-time. Figures\nbsp{}\ref{fig:timing-titanx} and \ref{fig:timing-quadro} show the
-performance of the  points picked by the models and  the baseline configuration,
-consisting  of  using only  the  PTX-stage  third level  compiler  optimization,
-equivalent to /-O3/.  There was no  difference between the second and third levels
-of general compiler  optimization in these experiments, so we  picked /-O3/ as the
-baseline.
-
-#+begin_export latex
-\begin{figure}[t]
-    \centering
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_titanx.pdf}
-        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
-        \label{fig:timing-titanx}
-    \end{minipage}%
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/executiontimes_screening_quadrom1200.pdf}
-        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
-        \label{fig:timing-quadro}
-    \end{minipage}%
-\end{figure}
-#+end_export
-
-#+begin_export latex
-\begin{figure}[t]
-    \centering
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/speedups_screening_titanx.pdf}
-        \caption{Best solutions found by the autotuner over time for the Heart Wall problem (HWL) in the Tesla K40}
-        \label{fig:speedup-titanx}
-    \end{minipage}%
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{./img/gpu-screening/speedups_screening_quadrom1200.pdf}
-        \caption{Best solutions found by the autotuner over time for the Gaussian Elimination problem (GAU) in the GTX 980}
-        \label{fig:speedup-quadro}
-    \end{minipage}%
-\end{figure}
-#+end_export
-
-
+#+ATTR_LATEX: :width \textwidth :placement [t]
+#+NAME: fig:speedup-gpu-screening
+#+CAPTION: Mean speedups found using the predictions of the screening model,
+#+CAPTION: for three Rodinia
+#+CAPTION: kernels on the Titan X and Quadro M1200 GPUs.
+#+CAPTION: The horizontal dashed lines mark the PTX-stage \texttt{opt-level=3}
+#+CAPTION: comparison baseline
+[[file:img/gpu-screening/speedup_gpu_screening.pdf]]
 
 *** Summary
-This  study  showed that  it  is  possible to  improve  the  performance of  GPU
-applications applying empirical and automatic tuning techniques. Our results and
-clustering  attempts   emphasize  the   importance  of   automatic  optimization
-techniques by showing that different compilation  options have to be selected in
-order  to achieve  performance improvements  in different  GPUs and  that it  is
-difficult to associate compiler optimization parameters, applications and GPUs.
+This study provides  evidence that it is possible to  improve the performance of
+GPU  kernels  with  by  selecting  CUDA  compiler  parameters  and  flags.   The
+inconclusive  clustering  attempts for  the  data  obtained from  heuristic  and
+stochastic  explorations  of  the  search spaces  emphasize  the  importance  of
+well-designed  experiment.   Later  experiments with  screening  reproduced  the
+expressive  speedups   found  for   some  kernels   in  different   GPUs,  while
+simultaneously  allowing  the  identification   of  the  flags  responsible  for
+performance improvements. Future work in  this direction will explore the impact
+of adding host  compiler optimizations and kernel-specific  parameters.  In this
+larger search  space it would  be more interesting  to employ the  more flexible
+Optimal Design methods we discuss in Chapters\nbsp{}[[Application 2: GPU Laplacian
+Kernel]] and [[Application 4: CPU Kernels from the SPAPT Benchmark]].
 
-An interesting direction for future  studies is including application parameters
-and  options for  the GCC  compiler, which  also composes  the CUDA  compilation
-chain.
 ** Application 2: GPU Laplacian Kernel
 We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
 implemented  using BOAST\nbsp{}\cite{videau2017boast}  and targeting  the /Nvidia
@@ -12147,14 +12126,16 @@ be isolated in a  region of points with bad performance,  since our approach was
 able to exploit space geometry. We  will now present a performance evaluation of
 our approach in a larger and more comprehensive benchmark.
 ** Application 3: High-Level Synthesis for FPGAs
-FPGAs  are  reprogrammable circuits  that  enable  writing specialized  hardware
-specifications   for  a   variety   of  applications   using   the  same   chip.
-High-Performance Computing tasks that require low power and latency increasingly
-switch to FPGAs  from GPUs. Hardware specifications are  written using low-level
-languages such as Verilog and VHDL, making a challenge for software engineers to
-leverage FPGA capabilities.  This became increasingly relevant by the adaptation
-of FPGAs for data  centers\nbsp{}\cite{caulfield2016cloud}, a field dominated by
-software engineers.
+A Field-Programmable Gate Array (FPGA)  is a reprogrammable circuit that enables
+writing specialized hardware specifications for  a variety of applications using
+the  same chip.   High-Performance Computing  tasks that  require low  power and
+latency increasingly  switch to  FPGAs from  GPUs.  Hardware  specifications are
+written  using  low-level languages  such  as  Verilog  and  VHDL, making  it  a
+challenge  for software  engineers  to leverage  FPGA capabilities.   Developing
+strategies to  decrease the effort  required to  program FPGAs is  becoming more
+relevant    with    the    overspread    adaptation   of    FPGAs    for    data
+centers\nbsp{}\cite{caulfield2016cloud,yu2019data,tarafdar2017enabling,shu2019direct,zhang2017feniks,tarafdar2018galapagos},
+with directed vendor support\nbsp{}\cite{intel2020fpgaURL,xilinx2020fpgaURL}.
 
 Essential support for software engineers can be provided by High-Level Synthesis
 (HLS), the  process of  generating hardware  descriptions from  high-level code.
@@ -12170,11 +12151,11 @@ exploration of design spaces and configurations.
 High-Level        Synthesis        is        an        \(\mathcal{NP}\)-complete
 problem\nbsp{}\cite{canis2015legup}  and  a  common strategy  for  its  solution
 involves  the  divide-and-conquer  approach\nbsp{}\cite{coussy2009introduction}.
-The  most  important  sub-problems   to  solve  are  \textit{scheduling},  where
-operations are  assigned to specific  clock cycles, and  \textit{binding}, where
-operations  are assigned  to specific  hardware functional  units, which  can be
-shared between operations.   LegUp\nbsp{}\cite{canis2013legup} is an open-source
-HLS   tool   implemented   as   a   compiler  pass   for   the   LLVM   Compiler
+The most  important sub-problems to  solve are /scheduling/, where  operations are
+assigned to  specific clock cycles,  and /binding/, where  operations are
+assigned  to specific  hardware functional  units, which  can be  shared between
+operations.   LegUp\nbsp{}\cite{canis2013legup}  is   an  open-source  HLS  tool
+implemented     as    a     compiler    pass     for    the     LLVM    Compiler
 Infrastructure\nbsp{}\cite{chris2004llvm}.    It   receives   code   in   LLVM's
 intermediate  representation  as  input  and   produces  as  output  a  hardware
 description  in Verilog.   LegUp  exposes configuration  parameters  of its  HLS
@@ -12252,7 +12233,7 @@ current  autotuning approach,  even with  a  tool that  can achieve  distributed
 execution of measurements, because the quality  of the solutions still depend on
 the velocity of  exploration of the search space.  To  mitigate this problem and
 enable the autotuning of applications with large measurement times, which can be
-thought of as\textit{expensive-to-evaluate functions}, we are going to study the
+thought of as/expensive-to-evaluate functions/, we are going to study the
 development of suitable experimental designs. We  will work in this direction in
 collaboration and  supervision of  professors Arnaud  Legrand, Brice  Videau and
 Jean-Marc Vincent from the University of Grenoble Alpes.
@@ -12340,11 +12321,11 @@ synthesis, mapping and place and route.
 We selected  an extensive  set of LegUp  High-Level Synthesis  parameters, shown
 partially in  Table \ref{tab:params}. Each  parameter in  the first two  rows of
 Table  \ref{tab:params}   has  an  $8$,   $16$,  $32$  and  $64$   bit  variant.
-\textit{Operation Latency} parameters define the number of clock cycles required
-to complete a  given operation when compiled  with LegUp.  \textit{Zero-latency}
+/Operation Latency/ parameters define the number of clock cycles required
+to complete a  given operation when compiled  with LegUp.  /Zero-latency/
 operations  can  be  performed  in   a  single  clock  cycle.   \textit{Resource
 Constraint}  parameters define  the number  of times  a given  operation can  be
-performed in  a clock  cycle.  \textit{Boolean  or Multi-Valued}  parameters are
+performed in  a clock  cycle.  /Boolean  or Multi-Valued/  parameters are
 used   to    set   various   advanced   configurations.     For   example,   the
 \textbf{\texttt{\small{enable\_pattern\_sharing}}}  parameter  can   be  set  to
 enable resource sharing for patterns of computational operators, as is described
@@ -12374,27 +12355,27 @@ Type & \multicolumn{1}{c}{Parameters} \\ \midrule
 To  obtain values  for  hardware metrics  we needed  to  perform the  synthesis,
 mapping and  place and  route steps.  We used Quartus  to do  so, and  selected 8
 hardware metrics  reported by Quartus to  compose our cost or  fitness function.
-From  the  fitter summary  we  obtained  6 metrics.  \textit{Logic  Utilization}
-(\textit{LUT}) measures the number of logic elements and is composed of Adaptive
+From  the  fitter summary  we  obtained  6 metrics.  /Logic  Utilization/
+(/LUT/) measures the number of logic elements and is composed of Adaptive
 Look-Up  Table  (ALUTs),  memory  ALUTs,  logic  registers  or  dedicated  logic
-registers.   The  \textit{Registers}   (\textit{Regs.}),  \textit{Virtual  Pins}
-(\textit{Pins}),  \textit{Block  Memory   Bits}  (\textit{Blocks}),  \textit{RAM
-Blocks} (\textit{BRAM})  and \textit{DSP Blocks} (\textit{DSP})  metrics measure
+registers.   The  /Registers/   (/Regs./),  /Virtual  Pins/
+(/Pins/),  /Block  Memory   Bits/  (/Blocks/),  \textit{RAM
+Blocks} (/BRAM/)  and /DSP Blocks/ (/DSP/)  metrics measure
 the usage of the resources indicated by their names.
 
-From  the timing  analysis  we obtained  the  \textit{Cycles} and  \textit{FMax}
-metrics,  used  to compute  the  \textit{Wall-Clock  Time} metric.  This  metric
-composed  the cost  function,  but \textit{Cycles}  and  \textit{FMax} were  not
+From  the timing  analysis  we obtained  the  /Cycles/ and  /FMax/
+metrics,  used  to compute  the  /Wall-Clock  Time/ metric.  This  metric
+composed  the cost  function,  but /Cycles/  and  /FMax/ were  not
 individually  used. We  chose to  do that  because all  of our  hardware metrics
-needed   to    be   minimized   except   for    \textit{FMax},   and   computing
-\textit{Wall-Clock    Time}    instead    solved    that    restriction.     The
-\textit{Wall-Clock  Time} $wct$  is  computed by  $wct =  \text{\textit{Cycles}}
+needed   to    be   minimized   except   for    /FMax/,   and   computing
+/Wall-Clock    Time/    instead    solved    that    restriction.     The
+/Wall-Clock  Time/ $wct$  is  computed by  $wct =  \text{\textit{Cycles}}
 \times  (\alpha   /  \text{\textit{FMax}})$,  where  $\alpha   =  10^6$  because
 \textit{FMax} is reported in MHz.
 
 Equation  \ref{eq:wnsm} describes  the  cost  or fitness  function  used by  our
 autotuner to evaluate  the sets of HLS parameters generated  during tuning.  The
-function $f(M, W)$ computes a \textit{Weighted Normalized Sum} (\textbf{WNS}) of
+function $f(M, W)$ computes a /Weighted Normalized Sum/ (\textbf{WNS}) of
 the  measured metrics  $m_i \in  M$, where  $M$ was  described previously.   The
 weights   $w_i  \in   W$  correspond   to  one   of  the   scenarios  in   Table
 \ref{tab:scenarios}. A value is computed for each metric $m_i$ in relation to an
@@ -12415,10 +12396,10 @@ the experimental settings.
 
 **** Optimization Scenarios
 Table \ref{tab:scenarios}  shows the  assigned weights  in our  $4$ optimization
-scenarios.  The   \textit{Area}-targeting  scenario   assigns  low   weights  to
-wall-clock time  metrics. The  \textit{Performance and Latency}  scenario assigns
+scenarios.  The   /Area/-targeting  scenario   assigns  low   weights  to
+wall-clock time  metrics. The  /Performance and Latency/  scenario assigns
 high weights  to wall-clock  time metrics  and also to  the number  of registers
-used.  The \textit{Performance} scenario assigns low weights to area metrics and
+used.  The /Performance/ scenario assigns low weights to area metrics and
 cycles, assigning a high weight only to frequency. The balanced scenario assigns
 the same weight to every metric. The weights assigned to the metrics that do not
 appear on Table \ref{tab:scenarios} are always $1$. The weights are integers and
@@ -12443,10 +12424,10 @@ powers of\nbsp{}$2$.
 \end{table}
 #+end_export
 
-We compared results when starting from a \textit{default} configuration with
-the results when starting at a \textit{random} set of parameters. The default
+We compared results when starting from a /default/ configuration with
+the results when starting at a /random/ set of parameters. The default
 configuration for the StratixV was provided by LegUp and the comparison was
-performed in the \textit{Balanced} optimization scenario.
+performed in the /Balanced/ optimization scenario.
 
 **** Applications
 To test and validate our autotuner we  used 11 applications from the CHStone HLS
@@ -12479,7 +12460,7 @@ correctness checks to be performed for all applications.
 #+end_export
 
 Table  \ref{tab:chstone}  provides  short   descriptions  of  the  $11$  CHStone
-applications we  used. We  were not  able to  compile the  \textit{jpeg} CHStone
+applications we  used. We  were not  able to  compile the  /jpeg/ CHStone
 application,  so did  not use  it.  All  experiments targeted  the \textit{Intel
 StratixV 5SGXEA7N2F45C2} FPGA.
 
@@ -12500,16 +12481,16 @@ at GitHub\nbsp{}\cite{bruel2017dockerfileURL}.
 *** HLS Results
 This section  presents summaries  of the  results from  $10$ autotuning  runs of
 $1.5h$ in the  scenarios from Table \ref{tab:scenarios}.   Results are presented
-in \textit{heatmaps}  where each row has  one of the 11  CHStone applications in
+in /heatmaps/  where each row has  one of the 11  CHStone applications in
 Table \ref{tab:chstone}  and each column has  one of the 8  hardware metrics and
-their   \textit{Weighted  Normalized   Sum}  (\textbf{WNS})   as  described   in
+their   /Weighted  Normalized   Sum/  (\textbf{WNS})   as  described   in
 Section\nbsp{}[[HLS Autotuning Metrics]].
 
 Cells on heatmaps show the ratio of tuned to initial values of a hardware metric
 in a CHStone application, averaged over 10 autotuning runs. The objective of the
-autotuner  is to  minimize all  hardware metrics  except for  \textit{FMax}.  To
+autotuner  is to  minimize all  hardware metrics  except for  /FMax/.  To
 create a  consistent presentation of  our data in  the heatmaps we  inverted the
-ratios  for \textit{FMax}  so that  cell values  less than  $1.0$ always  mean a
+ratios  for /FMax/  so that  cell values  less than  $1.0$ always  mean a
 better metric value.  Heatmaps are also colored so that darker blues mean better
 values and darker reds mean worse values in relation to the starting point.
 
@@ -12523,48 +12504,48 @@ values and darker reds mean worse values in relation to the starting point.
 #+end_export
 
 Figure \ref{fig:comp} compares  the ratios of absolute values  for each hardware
-metric for \textit{Default} and \textit{Random} starts, in the \textit{Balanced}
-scenario.   Cell values  less than  $1.0$ mean  that the  \textit{Default} start
-achieved  smaller absolute  values that  the \textit{Random}  start.  Values  of
-``--''  mean  that the  \textit{Default}  start  could not  find  a  set of  HLS
+metric for /Default/ and /Random/ starts, in the /Balanced/
+scenario.   Cell values  less than  $1.0$ mean  that the  /Default/ start
+achieved  smaller absolute  values that  the /Random/  start.  Values  of
+``--''  mean  that the  /Default/  start  could not  find  a  set of  HLS
 parameters  that  produced a  valid  output  during  any  of the  $1.5h$  tuning
-runs. The \textit{Default} start found better values for most metrics.
+runs. The /Default/ start found better values for most metrics.
 
-The \textit{Random}  start found  better values for  \textit{DSP}, \textit{Pins}
-and \textit{FMax}  for some  applications. For example,  it found  values $49\%$
-smaller, $6\%$  smaller and  $53\%$ larger  for \textit{DSP},  \textit{Pins} and
-\textit{FMax},   respectively,   for   the   \textit{dfsin}   application.   The
-\textit{Default} start found better values for \textit{Regs} and \textit{Cycles}
+The /Random/  start found  better values for  /DSP/, /Pins/
+and /FMax/  for some  applications. For example,  it found  values $49\%$
+smaller, $6\%$  smaller and  $53\%$ larger  for /DSP/,  /Pins/ and
+/FMax/,   respectively,   for   the   /dfsin/   application.   The
+/Default/ start found better values for /Regs/ and /Cycles/
 for  all  applications.  For  example,   it  found  values  $53\%$  smaller  for
-\textit{Regs} and \textit{Cycles} for the \textit{dfmul} application, and $56\%$
-and $55\%$ smaller for \textit{Regs}  and \textit{Cycles}, respectively, for the
-\textit{mips} application.
+/Regs/ and /Cycles/ for the /dfmul/ application, and $56\%$
+and $55\%$ smaller for /Regs/  and /Cycles/, respectively, for the
+/mips/ application.
 
-We  believe that  the \textit{Random}  start found  worst values  in most  cases
+We  believe that  the /Random/  start found  worst values  in most  cases
 because of  the size of  the search space. It  is important that  autotuners use
 default  starting  points  specific  to  a given  application  and  board.   The
-remaining  results in  this  Section used  the  \textit{Default} starting  point
+remaining  results in  this  Section used  the  /Default/ starting  point
 provided by LegUp.
 
-Figure \ref{fig:balanced} shows the  results for the \textit{Balanced} scenario.
+Figure \ref{fig:balanced} shows the  results for the /Balanced/ scenario.
 These results are the baseline for  evaluating the autotuner in other scenarios,
 since  all  metrics had  the  same  weight.   The  optimization target  was  the
-\textit{Weighted Normalized Sum} (\textbf{WNS}) of hardware metrics, but we were
+/Weighted Normalized Sum/ (\textbf{WNS}) of hardware metrics, but we were
 also  interested in  the  changes in  other metrics  as  their relative  weights
-changed.  In  the   \textit{Balanced}  scenario  we  expected   to  see  smaller
+changed.  In  the   /Balanced/  scenario  we  expected   to  see  smaller
 improvements of \textbf{WNS}  due to the competition  of concurrent improvements
 on every metric.
 
-The autotuner found values of \textbf{WNS} $16\%$ smaller for \textit{adpcm} and
-\textit{dfdiv},   and  $15\%$   smaller   for  \textit{dfmul}.    Even  on   the
-\textit{Balanced} scenario  it is  possible to see  that some  metrics decreased
-while others decreased  consistently over the 10 tuning  runs. \textit{FMax} and
-\textit{DSP} had  the larger  improvements for  most applications,  for example,
-$51\%$ greater  \textit{FMax} in \textit{adpcm} and  $69\%$ smaller \textit{DSP}
-in  \textit{dfmul}.  \textit{Cycles},  \textit{Regs} and  \textit{Pins} had  the
-worst  results  in   this  scenario,  with  $34\%$   larger  \textit{Cycles}  in
-\textit{dfdiv}, $15\%$ larger \textit{Regs}  in \textit{dfdiv} and $17\%$ larger
-\textit{Pins} in  \textit{gsm}.  Other  metrics had  smaller improvements  or no
+The autotuner found values of \textbf{WNS} $16\%$ smaller for /adpcm/ and
+/dfdiv/,   and  $15\%$   smaller   for  /dfmul/.    Even  on   the
+/Balanced/ scenario  it is  possible to see  that some  metrics decreased
+while others decreased  consistently over the 10 tuning  runs. /FMax/ and
+/DSP/ had  the larger  improvements for  most applications,  for example,
+$51\%$ greater  /FMax/ in /adpcm/ and  $69\%$ smaller /DSP/
+in  /dfmul/.  /Cycles/,  /Regs/ and  /Pins/ had  the
+worst  results  in   this  scenario,  with  $34\%$   larger  /Cycles/  in
+/dfdiv/, $15\%$ larger /Regs/  in /dfdiv/ and $17\%$ larger
+/Pins/ in  /gsm/.  Other  metrics had  smaller improvements  or no
 improvements at all in most applications.
 
 #+begin_export latex
@@ -12587,29 +12568,29 @@ improvements at all in most applications.
 \end{figure}
 #+end_export
 
-Figure  \ref{fig:area} shows  the results  for the  \textit{Area} scenario.   We
+Figure  \ref{fig:area} shows  the results  for the  /Area/ scenario.   We
 believe that the greater coherence of optimization objectives is responsible for
 the  greater  improvements  of  \textbf{WNS} in  the  following  scenarios.  The
-autotuner found values of \textbf{WNS} $23\%$ smaller for \textit{dfdiv}, $18\%$
-smaller for  \textit{dfmul}, and smaller  values overall in comparison  with the
-\textit{Balanced}  scenario.  Regarding  individual   metrics,  the  values  for
-\textit{FMax}  were   worse  overall,  with  $14\%$   smaller  \textit{FMax}  in
-\textit{gsm} and  $62\%$ greater \textit{Cycles},  for example. As  expected for
+autotuner found values of \textbf{WNS} $23\%$ smaller for /dfdiv/, $18\%$
+smaller for  /dfmul/, and smaller  values overall in comparison  with the
+/Balanced/  scenario.  Regarding  individual   metrics,  the  values  for
+/FMax/  were   worse  overall,  with  $14\%$   smaller  /FMax/  in
+/gsm/ and  $62\%$ greater /Cycles/,  for example. As  expected for
 this  scenario, metrics  related to  area had  better improvements  than in  the
-\textit{Balanced}  scenario, with  $73\%$  and $72\%$  smaller \textit{DSP}  for
-\textit{dfmul} and  \textit{dfdiv} respectively, $33\%$  smaller \textit{Blocks}
-and \textit{BRAM} in \textit{dfdiv} and smaller values overall for \textit{Regs}
-and \textit{LUTs}.
+/Balanced/  scenario, with  $73\%$  and $72\%$  smaller /DSP/  for
+/dfmul/ and  /dfdiv/ respectively, $33\%$  smaller /Blocks/
+and /BRAM/ in /dfdiv/ and smaller values overall for /Regs/
+and /LUTs/.
 
-Figure \ref{fig:perf}  shows the results for  the \textit{Performance} scenario.
-The autotuner  found values of  \textbf{WNS} $23\%$ smaller  for \textit{dfmul},
-$19\%$  smaller for  \textit{dfdiv},  and  smaller values  overall  than in  the
-\textit{Balanced}  scenario.    \textit{FMax}  was   the  only  metric   with  a
-\textit{High} weight  in this scenario,  so most metrics had  improvements close
-overall to  the \textit{Balanced} scenario.   The values for  \textit{FMax} were
+Figure \ref{fig:perf}  shows the results for  the /Performance/ scenario.
+The autotuner  found values of  \textbf{WNS} $23\%$ smaller  for /dfmul/,
+$19\%$  smaller for  /dfdiv/,  and  smaller values  overall  than in  the
+/Balanced/  scenario.    /FMax/  was   the  only  metric   with  a
+/High/ weight  in this scenario,  so most metrics had  improvements close
+overall to  the /Balanced/ scenario.   The values for  /FMax/ were
 best  overall,  with better  improvements  in  most applications.  For  example,
-$41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  \textit{FMax} in  \textit{dfdiv},
-\textit{dfmul}, \textit{dfsin} and \textit{aes} respectively.
+$41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  /FMax/ in  /dfdiv/,
+/dfmul/, /dfsin/ and /aes/ respectively.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -12634,23 +12615,23 @@ $41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  \textit{FMax} in  \textit{dfdiv},
 
 Figure  \ref{fig:perflat}  shows  the  results for  the  \textit{Performance  and
 Latency} scenario.   The autotuner found  values of \textbf{WNS}  $24\%$ smaller
-for  \textit{adpcm},  $18\%$  smaller  for \textit{dfdiv},  and  smaller  values
-overall than  in the \textit{Balanced} scenario.  \textit{Regs}, \textit{Cycles}
-and  \textit{FMax}  had  higher  weights  in  this  scenario,  and  also  better
-improvements overall.  For  example, $16\%$ and $15\%$  smaller \textit{Regs} in
-\textit{dfdiv}  and   \textit{sha}  respectively,  $23\%$  and   $11\%$  smaller
-\textit{Cycles}  in  \textit{sha}  and  \textit{aes}  respectively,  and  $53\%$
-greater \textit{FMax}  in \textit{adpcm}.  Although \textit{FMax} had  the worst
-improvements   in    relation   to    the   \textit{Balanced}    scenario,   the
-\textit{Wall-Clock  Time}  was   still  decreased  by  the   smaller  values  of
-\textit{Cycles}.
+for  /adpcm/,  $18\%$  smaller  for /dfdiv/,  and  smaller  values
+overall than  in the /Balanced/ scenario.  /Regs/, /Cycles/
+and  /FMax/  had  higher  weights  in  this  scenario,  and  also  better
+improvements overall.  For  example, $16\%$ and $15\%$  smaller /Regs/ in
+/dfdiv/  and   /sha/  respectively,  $23\%$  and   $11\%$  smaller
+/Cycles/  in  /sha/  and  /aes/  respectively,  and  $53\%$
+greater /FMax/  in /adpcm/.  Although /FMax/ had  the worst
+improvements   in    relation   to    the   /Balanced/    scenario,   the
+/Wall-Clock  Time/  was   still  decreased  by  the   smaller  values  of
+/Cycles/.
 
 Figure \ref{fig:wns-comp} summarizes the average improvements on \textbf{WNS} in
-the  4 scenarios  over 10  runs. Only  the \textit{Weighted  Normalized Sum}  of
-metrics directly  guided optimization. With  the exception of  \textit{dfadd} in
-the  \textit{Balanced} scenario,  the autotuner  decreased \textbf{WNS}  for all
+the  4 scenarios  over 10  runs. Only  the /Weighted  Normalized Sum/  of
+metrics directly  guided optimization. With  the exception of  /dfadd/ in
+the  /Balanced/ scenario,  the autotuner  decreased \textbf{WNS}  for all
 applications  in all  scenarios  by $10\%$  on  average, and  up  to $24\%$  for
-\textit{adpcm} in the \textit{Performance and  Latency} scenario. The figure also
+/adpcm/ in the /Performance and  Latency/ scenario. The figure also
 shows the average decreases for each scenario.
 
 #+begin_export latex
@@ -12674,7 +12655,7 @@ objectives also increased.
 
 Future work in this direction will study the impact of different starting points
 on the  final tuned values in  each optimization scenario, for  example we could
-start tuning for \textit{Performance} at the best autotuned \textit{Area} value.
+start tuning for /Performance/ at the best autotuned /Area/ value.
 We expected  that starting positions  tailored for each target  application will
 enable the  autotuner to find better  \textbf{WNS} values faster.  We  will also
 apply this autotuning methodology to HLS  tools that enable a fast prediction of

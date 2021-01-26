@@ -594,6 +594,47 @@ A.~M. Caulfield, E.~S. Chung, A.~Putnam, H.~Angepat, J.~Fowers, M.~Haselman,
   Annual IEEE/ACM International Symposium on}.\hskip 1em plus 0.5em minus
   0.4em\relax IEEE, 2016, pp. 1--13.
 
+\bibitem{yu2019data}
+X.~Yu, Y.~Wang, J.~Miao, E.~Wu, H.~Zhang, Y.~Meng, B.~Zhang, B.~Min, D.~Chen,
+  and J.~Gao, ``A data-center fpga acceleration platform for convolutional
+  neural networks,'' in \emph{2019 29th International Conference on Field
+  Programmable Logic and Applications (FPL)}.\hskip 1em plus 0.5em minus
+  0.4em\relax IEEE, 2019, pp. 151--158.
+
+\bibitem{tarafdar2017enabling}
+N.~Tarafdar, T.~Lin, E.~Fukuda, H.~Bannazadeh, A.~Leon-Garcia, and P.~Chow,
+  ``Enabling flexible network fpga clusters in a heterogeneous cloud data
+  center,'' in \emph{Proceedings of the 2017 ACM/SIGDA International Symposium
+  on Field-Programmable Gate Arrays}, 2017, pp. 237--246.
+
+\bibitem{shu2019direct}
+R.~Shu, P.~Cheng, G.~Chen, Z.~Guo, L.~Qu, Y.~Xiong, D.~Chiou, and
+  T.~Moscibroda, ``Direct universal access: Making data center resources
+  available to $\{$FPGA$\}$,'' in \emph{16th $\{$USENIX$\}$ Symposium on
+  Networked Systems Design and Implementation ($\{$NSDI$\}$ 19)}, 2019, pp.
+  127--140.
+
+\bibitem{zhang2017feniks}
+J.~Zhang, Y.~Xiong, N.~Xu, R.~Shu, B.~Li, P.~Cheng, G.~Chen, and T.~Moscibroda,
+  ``The feniks fpga operating system for cloud computing,'' in
+  \emph{Proceedings of the 8th Asia-Pacific Workshop on Systems}, 2017, pp.
+  1--7.
+
+\bibitem{tarafdar2018galapagos}
+N.~Tarafdar, N.~Eskandari, V.~Sharma, C.~Lo, and P.~Chow, ``Galapagos: A full
+  stack approach to fpga integration in the cloud,'' \emph{IEEE Micro},
+  vol.~38, no.~6, pp. 18--24, 2018.
+
+\bibitem{intel2020fpgaURL}
+``{Unleash Your Data Center for Intel Xeon CPU with FPGAs}, howpublished =
+  {\url{https://www.intel.com/content/www/us/en/data-center/products/programmable/overview.html}},
+  note = {Accessed: 25 January 2020}.''
+
+\bibitem{xilinx2020fpgaURL}
+``{Adaptable Acceleration for the Modern Data Center}, howpublished =
+  {\url{https://www.xilinx.com/applications/data-center.html}}, note =
+  {Accessed: 25 January 2020}.''
+
 \bibitem{singh2011implementing}
 D.~Singh, ``Implementing fpga design with the opencl standard,'' \emph{Altera
   whitepaper}, 2011.

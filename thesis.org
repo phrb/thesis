@@ -12152,31 +12152,30 @@ High-Level        Synthesis        is        an        \(\mathcal{NP}\)-complete
 problem\nbsp{}\cite{canis2015legup}  and  a  common strategy  for  its  solution
 involves  the  divide-and-conquer  approach\nbsp{}\cite{coussy2009introduction}.
 The most  important sub-problems to  solve are /scheduling/, where  operations are
-assigned to  specific clock cycles,  and /binding/, where  operations are
-assigned  to specific  hardware functional  units, which  can be  shared between
-operations.   LegUp\nbsp{}\cite{canis2013legup}  is   an  open-source  HLS  tool
-implemented     as    a     compiler    pass     for    the     LLVM    Compiler
-Infrastructure\nbsp{}\cite{chris2004llvm}.    It   receives   code   in   LLVM's
-intermediate  representation  as  input  and   produces  as  output  a  hardware
-description  in Verilog.   LegUp  exposes configuration  parameters  of its  HLS
-process, set with a configuration file.
+assigned to specific clock cycles, and /binding/, where operations are assigned to
+specific  hardware functional  units, which  can be  shared between  operations.
+LegUp\nbsp{}\cite{canis2013legup} is  an open-source  HLS tool implemented  as a
+compiler pass  for the LLVM  Compiler Infrastructure\nbsp{}\cite{chris2004llvm}.
+It receives code in LLVM's intermediate  representation as input and produces as
+output  a   hardware  description  in  Verilog.    LegUp  exposes  configuration
+parameters of its HLS process, set with a configuration file.
 
 This section  presents an autotuner  for LegUp HLS parameters  implemented using
 the OpenTuner  framework.  The  autotuner targeted  8 hardware  metrics obtained
 from   Altera  Quartus,   for  applications   of  the   CHStone  HLS   benchmark
 suite\nbsp{}\cite{hara2008chstone} in  the Intel StratixV FPGA.   The program to
-be configured  here is LegUp and  the search space is  composed of approximately
-$10^{126}$ possible combinations  of HLS parameters.  Such a  large search space
-is unfeasible to search exhaustively or by hand.
+be  configured in  this study  is LegUp,  and the  search space  is composed  of
+approximately $10^{126}$ possible combinations of  HLS parameters.  Such a large
+search space is unfeasible to search exhaustively or by hand.
 
 One  of the  obstacles we  faced was  making accurate  predictions for  hardware
 metrics from a set  of HLS parameters. We decided to run  our autotuner with the
 metrics reported  by the lengthier  process of hardware synthesis  instead.  Our
 autotuner's  virtualized   implementation  enables  deployment   in  distributed
 environments.  We  present data showing  that our autotuner found  optimized HLS
-parameters  for   CHStone  applications  that  decreased   the  \textit{Weighted
-Normalized Sum} (\textbf{WNS}) of hardware metrics by up to $21.5\%$ on average,
-and $10\%$ on average.
+parameters for CHStone  applications that decreased the  /Weighted Normalized Sum/
+(/WNS/}) of hardware metrics by up to 21.5%.
+
 *** Large Measurement Time
 The defining  characteristic of  this autotuning  experiment is  the potentially
 large  time it  takes to  synthesize  hardware from  specifications in  hardware
@@ -12320,17 +12319,16 @@ synthesis, mapping and place and route.
 **** High-Level Synthesis Parameters
 We selected  an extensive  set of LegUp  High-Level Synthesis  parameters, shown
 partially in  Table \ref{tab:params}. Each  parameter in  the first two  rows of
-Table  \ref{tab:params}   has  an  $8$,   $16$,  $32$  and  $64$   bit  variant.
-/Operation Latency/ parameters define the number of clock cycles required
-to complete a  given operation when compiled  with LegUp.  /Zero-latency/
-operations  can  be  performed  in   a  single  clock  cycle.   \textit{Resource
-Constraint}  parameters define  the number  of times  a given  operation can  be
-performed in  a clock  cycle.  /Boolean  or Multi-Valued/  parameters are
-used   to    set   various   advanced   configurations.     For   example,   the
-\textbf{\texttt{\small{enable\_pattern\_sharing}}}  parameter  can   be  set  to
-enable resource sharing for patterns of computational operators, as is described
-by  Hadjis  /et  al./\nbsp{}\cite{hadjis2012impact}.   For  a  complete  list  and
-description   of   each   parameter,    please   refer   to   LegUp's   official
+Table \ref{tab:params} has  an $8$, $16$, $32$ and $64$  bit variant.  /Operation
+Latency/ parameters  define the  number of  clock cycles  required to  complete a
+given  operation  when compiled  with  LegUp.   /Zero-latency/ operations  can  be
+performed in  a single clock  cycle.  /Resource Constraint/ parameters  define the
+number of times a given operation can be performed in a clock cycle.  /Boolean or
+Multi-Valued/ parameters  are used to  set various advanced  configurations.  For
+example, the \textbf{\texttt{\small{enable\_pattern\_sharing}}} parameter can be
+set to  enable resource sharing for  patterns of computational operators,  as is
+described by  Hadjis /et al./\nbsp{}\cite{hadjis2012impact}.  For  a complete list
+and  description   of  each   parameter,  please   refer  to   LegUp's  official
 documentation\nbsp{}\cite{legup2020docsURL}.
 
 #+begin_export latex
@@ -12353,36 +12351,33 @@ Type & \multicolumn{1}{c}{Parameters} \\ \midrule
 
 **** HLS Autotuning Metrics
 To  obtain values  for  hardware metrics  we needed  to  perform the  synthesis,
-mapping and  place and  route steps.  We used Quartus  to do  so, and  selected 8
+mapping and  place and route steps.   We used Quartus  to do so, and  selected 8
 hardware metrics  reported by Quartus to  compose our cost or  fitness function.
-From  the  fitter summary  we  obtained  6 metrics.  /Logic  Utilization/
-(/LUT/) measures the number of logic elements and is composed of Adaptive
-Look-Up  Table  (ALUTs),  memory  ALUTs,  logic  registers  or  dedicated  logic
-registers.   The  /Registers/   (/Regs./),  /Virtual  Pins/
-(/Pins/),  /Block  Memory   Bits/  (/Blocks/),  \textit{RAM
-Blocks} (/BRAM/)  and /DSP Blocks/ (/DSP/)  metrics measure
-the usage of the resources indicated by their names.
+From the fitter summary we obtained 6 metrics.  /Logic Utilization/ (/LUT/) measures
+the number of logic elements and  is composed of Adaptive Look-Up Table (ALUTs),
+memory  ALUTs, logic  registers  or dedicated  logic  registers.  The  /Registers/
+(/Regs./), /Virtual  Pins/ (/Pins/), /Block  Memory Bits/ (/Blocks/),  \textit{RAM Blocks}
+(/BRAM/) and /DSP Blocks/ (/DSP/) metrics measure the usage of the resources indicated
+by their names.
 
-From  the timing  analysis  we obtained  the  /Cycles/ and  /FMax/
-metrics,  used  to compute  the  /Wall-Clock  Time/ metric.  This  metric
-composed  the cost  function,  but /Cycles/  and  /FMax/ were  not
-individually  used. We  chose to  do that  because all  of our  hardware metrics
-needed   to    be   minimized   except   for    /FMax/,   and   computing
-/Wall-Clock    Time/    instead    solved    that    restriction.     The
-/Wall-Clock  Time/ $wct$  is  computed by  $wct =  \text{\textit{Cycles}}
-\times  (\alpha   /  \text{\textit{FMax}})$,  where  $\alpha   =  10^6$  because
-\textit{FMax} is reported in MHz.
+From  the timing  analysis we  obtained  the /Cycles/  and /FMax/  metrics, used  to
+compute the /Wall-Clock Time/ metric.  This metric composed the cost function, but
+/Cycles/ and /FMax/ were  not individually used. We chose to do  that because all of
+our  hardware metrics  needed to  be minimized  except for  /FMax/, and  computing
+/Wall-Clock Time/ instead  solved that restriction.  The /Wall-Clock  Time/ $wct$ is
+computed    by    $wct    =     \text{\textit{Cycles}}    \times    (\alpha    /
+\text{\textit{FMax}})$, where $\alpha =  10^6$ because \textit{FMax} is reported
+in MHz.
 
 Equation  \ref{eq:wnsm} describes  the  cost  or fitness  function  used by  our
 autotuner to evaluate  the sets of HLS parameters generated  during tuning.  The
-function $f(M, W)$ computes a /Weighted Normalized Sum/ (\textbf{WNS}) of
-the  measured metrics  $m_i \in  M$, where  $M$ was  described previously.   The
-weights   $w_i  \in   W$  correspond   to  one   of  the   scenarios  in   Table
-\ref{tab:scenarios}. A value is computed for each metric $m_i$ in relation to an
-initial  value  $m_{i}^{0}$ measured  for  each  metric.   For  a given  set  of
-measurements  $M_t$, a  value of  $f(M_t,  W) =  1.0$  means that  there was  no
-improvement relative to the starting HLS  set. The objective of the autotuner is
-to minimize $f(M, W)$.
+function $f(M,  W)$ computes  a /Weighted  Normalized Sum/  (/WNS/) of  the measured
+metrics $m_i \in  M$, where $M$ was described previously.   The weights $w_i \in
+W$ correspond to  one of the scenarios in Table  \ref{tab:scenarios}. A value is
+computed  for each  metric $m_i$  in relation  to an  initial value  $m_{i}^{0}$
+measured for  each metric.  For  a given set of  measurements $M_t$, a  value of
+$f(M_t, W) = 1.0$  means that there was no improvement  relative to the starting
+HLS set. The objective of the autotuner is to minimize $f(M, W)$.
 
 #+begin_export latex
 \begin{align} \label{eq:wnsm}
@@ -12483,7 +12478,7 @@ This section  presents summaries  of the  results from  $10$ autotuning  runs of
 $1.5h$ in the  scenarios from Table \ref{tab:scenarios}.   Results are presented
 in /heatmaps/  where each row has  one of the 11  CHStone applications in
 Table \ref{tab:chstone}  and each column has  one of the 8  hardware metrics and
-their   /Weighted  Normalized   Sum/  (\textbf{WNS})   as  described   in
+their   /Weighted  Normalized   Sum/  (/WNS/)   as  described   in
 Section\nbsp{}[[HLS Autotuning Metrics]].
 
 Cells on heatmaps show the ratio of tuned to initial values of a hardware metric
@@ -12530,13 +12525,13 @@ provided by LegUp.
 Figure \ref{fig:balanced} shows the  results for the /Balanced/ scenario.
 These results are the baseline for  evaluating the autotuner in other scenarios,
 since  all  metrics had  the  same  weight.   The  optimization target  was  the
-/Weighted Normalized Sum/ (\textbf{WNS}) of hardware metrics, but we were
+/Weighted Normalized Sum/ (/WNS/) of hardware metrics, but we were
 also  interested in  the  changes in  other metrics  as  their relative  weights
 changed.  In  the   /Balanced/  scenario  we  expected   to  see  smaller
-improvements of \textbf{WNS}  due to the competition  of concurrent improvements
+improvements of /WNS/  due to the competition  of concurrent improvements
 on every metric.
 
-The autotuner found values of \textbf{WNS} $16\%$ smaller for /adpcm/ and
+The autotuner found values of /WNS/ $16\%$ smaller for /adpcm/ and
 /dfdiv/,   and  $15\%$   smaller   for  /dfmul/.    Even  on   the
 /Balanced/ scenario  it is  possible to see  that some  metrics decreased
 while others decreased  consistently over the 10 tuning  runs. /FMax/ and
@@ -12570,8 +12565,8 @@ improvements at all in most applications.
 
 Figure  \ref{fig:area} shows  the results  for the  /Area/ scenario.   We
 believe that the greater coherence of optimization objectives is responsible for
-the  greater  improvements  of  \textbf{WNS} in  the  following  scenarios.  The
-autotuner found values of \textbf{WNS} $23\%$ smaller for /dfdiv/, $18\%$
+the  greater  improvements  of  /WNS/ in  the  following  scenarios.  The
+autotuner found values of /WNS/ $23\%$ smaller for /dfdiv/, $18\%$
 smaller for  /dfmul/, and smaller  values overall in comparison  with the
 /Balanced/  scenario.  Regarding  individual   metrics,  the  values  for
 /FMax/  were   worse  overall,  with  $14\%$   smaller  /FMax/  in
@@ -12583,7 +12578,7 @@ and /BRAM/ in /dfdiv/ and smaller values overall for /Regs/
 and /LUTs/.
 
 Figure \ref{fig:perf}  shows the results for  the /Performance/ scenario.
-The autotuner  found values of  \textbf{WNS} $23\%$ smaller  for /dfmul/,
+The autotuner  found values of  /WNS/ $23\%$ smaller  for /dfmul/,
 $19\%$  smaller for  /dfdiv/,  and  smaller values  overall  than in  the
 /Balanced/  scenario.    /FMax/  was   the  only  metric   with  a
 /High/ weight  in this scenario,  so most metrics had  improvements close
@@ -12614,7 +12609,7 @@ $41\%$,  $30\%$,  $44\%$ and  $37\%$  greater  /FMax/ in  /dfdiv/,
 #+end_export
 
 Figure  \ref{fig:perflat}  shows  the  results for  the  \textit{Performance  and
-Latency} scenario.   The autotuner found  values of \textbf{WNS}  $24\%$ smaller
+Latency} scenario.   The autotuner found  values of /WNS/  $24\%$ smaller
 for  /adpcm/,  $18\%$  smaller  for /dfdiv/,  and  smaller  values
 overall than  in the /Balanced/ scenario.  /Regs/, /Cycles/
 and  /FMax/  had  higher  weights  in  this  scenario,  and  also  better
@@ -12626,10 +12621,10 @@ improvements   in    relation   to    the   /Balanced/    scenario,   the
 /Wall-Clock  Time/  was   still  decreased  by  the   smaller  values  of
 /Cycles/.
 
-Figure \ref{fig:wns-comp} summarizes the average improvements on \textbf{WNS} in
+Figure \ref{fig:wns-comp} summarizes the average improvements on /WNS/ in
 the  4 scenarios  over 10  runs. Only  the /Weighted  Normalized Sum/  of
 metrics directly  guided optimization. With  the exception of  /dfadd/ in
-the  /Balanced/ scenario,  the autotuner  decreased \textbf{WNS}  for all
+the  /Balanced/ scenario,  the autotuner  decreased /WNS/  for all
 applications  in all  scenarios  by $10\%$  on  average, and  up  to $24\%$  for
 /adpcm/ in the /Performance and  Latency/ scenario. The figure also
 shows the average decreases for each scenario.
@@ -12648,19 +12643,19 @@ The  results of  this experiment  show  that it  is  always valuable  to have  a
 sensible starting position  for an autotuner. This becomes more  relevant as the
 size  of the  search space  and the  number of  targeted metrics  increase.  The
 flexibility  of  our  virtualized  approach  is evidenced  by  the  results  for
-different optimization  scenarios.  Improvements in \textbf{WNS}  increased when
-higher weights were  assigned to metrics that express a  coherent objective such
-as area, performance and latency.  The  improvements of metrics related to those
+different  optimization scenarios.   Improvements in  /WNS/ increased  when higher
+weights were assigned to metrics that express a coherent objective such as area,
+performance  and  latency.   The  improvements   of  metrics  related  to  those
 objectives also increased.
 
 Future work in this direction will study the impact of different starting points
 on the  final tuned values in  each optimization scenario, for  example we could
-start tuning for /Performance/ at the best autotuned /Area/ value.
-We expected  that starting positions  tailored for each target  application will
-enable the  autotuner to find better  \textbf{WNS} values faster.  We  will also
-apply this autotuning methodology to HLS  tools that enable a fast prediction of
-metric values. These tools will enable  the exploration of the trade-off between
-prediction accuracy and the time to measure an HLS configuration.
+start tuning for /Performance/ at the best autotuned /Area/ value.  We expected that
+starting  positions  tailored  for  each  target  application  will  enable  the
+autotuner to find better /WNS/ values  faster.  We will also apply this autotuning
+methodology to HLS  tools that enable a fast prediction  of metric values. These
+tools will enable  the exploration of the trade-off  between prediction accuracy
+and the time to measure an HLS configuration.
 ** Application 4: CPU Kernels from the SPAPT Benchmark
 *** Source-to-Source Transformation
 Our approach can be applied to any autotuning domain that expresses optimization

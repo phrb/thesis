@@ -11357,7 +11357,7 @@ reasonable expectation.
 \begin{figure}[t]
     \centering
     \includegraphics[width=.62\textwidth]{./img/quali_brazil/overview_gpus-eps-converted-to.pdf}
-    \caption{Autotuner representation and time scale of our experiments}
+    \caption{Autotuner representation and time scale of the experiments}
     \label{fig:overview-gpus}
 \end{figure}
 #+end_export
@@ -11371,14 +11371,22 @@ selection.  The compilation of the applications  we targeted in this study takes
 few seconds, so it was possible to  test thousands of flag combinations per hour
 using a sequential autotuner.
 
-This study was done in 2015, the first year of this thesis. Since at the time we
-did not have experience with the methods for statistical modeling which we later
-studied, and  since the measurement  time for each application  was sufficiently
-small, we did not deal with the  problem of building a performance model for the
-CUDA  compiler  in  this  application,  and  attempted  to  find  good  compiler
-configurations using stochastic methods for function minimization.
+The rest of this chapter  is organized as follows. Section\nbsp{}[[General-Purpose
+Computing  on NVIDIA  GPUs]]  discusses NVIDIA  GPU  architecture and  programming
+toolchain, and  presents related  work on GPU  performance tuning  and modeling.
+Section\nbsp{}[[Autotuner  and Search  Space for  the NVCC  Compiler]] presents  the
+search   space   of   CUDA   parameters   and   discusses   the   autotuner   we
+implemented. Section\nbsp{}[[Target GPUs and Kernels]] presents GPUs and the kernels
+whose   compilation  we   attempted   to  optimize.    Section\nbsp{}[[Performance
+Improvements  and  Parameter  Clustering  Attempt]]  presents  and  discusses  the
+performance improvements  achieved by  the autotuner,  and attempts  to identify
+significant   flags   using   clustering.    Section\nbsp{}[[Assessing   Parameter
+Significance  with Screening]]  was  written  at a  later  moment, after  studying
+Experimental  Design  methods,  and  revisits  this  problem  with  a  screening
+experiment.   Finally,    Section\nbsp{}\ref{sec:gpu-summary}   summarizes   the
+discussion and presents perspectives for future work.
 
-*** Background
+*** General-Purpose Computing on NVIDIA GPUs
 **** NVIDIA GPU Micro-Architecture
 NVIDIA  GPU  architectures have  multiple  asynchronous  and parallel  Streaming
 Multiprocessors (SMs)  which contain  Scalar Processors (SPs),  Special Function
@@ -11430,19 +11438,19 @@ critical to a GPU performance model.
 
 Guo and  Wang\nbsp{}\cite{guo2010auto} introduce a framework  for autotuning the
 number of threads  and the sizes of  blocks and warps used by  the CUDA compiler
-for  sparse matrix  and  vector multiplication  GPU  applications.  Li  \emph{et
-al.}\nbsp{}\cite{li2009note} discuss the performance of autotuning techniques in
+for  sparse   matrix  and  vector   multiplication  GPU  applications.    Li  /et
+al./\nbsp{}\cite{li2009note} discuss the performance  of autotuning techniques in
 highly-tuned  GPU  General Matrix  to  Matrix  Multiplication (GEMMs)  routines,
 highlighting  the   difficulty  in  developing   optimized  code  for   new  GPU
-architectures.   Grauer-Gray /et  al./\nbsp{}\cite{grauer2012auto} autotune
-an  optimization space  of GPU  kernels  focusing on  tiling, loop  permutation,
-unrolling,        and         parallelization.         Chaparala        \emph{et
-al.}\nbsp{}\cite{chaparala2015autotuning}  autotune   GPU-accelerated  Quadratic
-Assignment         Problem          solvers.          Sedaghati         \emph{et
-al.}\nbsp{}\cite{sedaghati2015automatic}   build  a   decision  model   for  the
+architectures.   Grauer-Gray  /et   al./\nbsp{}\cite{grauer2012auto}  autotune  an
+optimization  space  of  GPU  kernels  focusing  on  tiling,  loop  permutation,
+unrolling,          and          parallelization.          Chaparala          /et
+al./\nbsp{}\cite{chaparala2015autotuning}   autotune  GPU-accelerated   Quadratic
+Assignment           Problem          solvers.            Sedaghati          /et
+al./\nbsp{}\cite{sedaghati2015automatic}   build  a   decision  model   for  the
 selection of sparse matrix representations in GPUs.
 
-*** Autotuner and Search Space
+*** Autotuner and Search Space for the NVCC Compiler
 This section discusses our autotuner implementation and the search space of NVCC
 compiler parameters.
 
@@ -11453,14 +11461,14 @@ algorithm that aims  to maximize the successes across the  autotuning process. A
 success is  defined as finding  a program  configuration that improves  upon the
 best  performance found  so  far.   The stochastic  method  which  finds such  a
 configuration  gets its  score  increased  for that  tuning  session.  A  bandit
-algorithm, called MABAUC in paper, for  Multi-Armed Bandit Area Under the Curve,
-considers a  sliding window covering a  given number of measurements  to compute
-the scores of methods in an ensemble, and to decide which method, or ``arm'', to
-play next.  The  ensemble of methods we used was  composed by implementations of
-the  Nelder-Mead   algorithm  and   three  variations  of   genetic  algorithms.
-Figure\nbsp{}\ref{fig:gpu-stack}  shows  a  simplified   version  of  the  steps
-necessary to generate the object code that will be measured later.  The code for
-our     autotuner    and     all    the     experiments    and     results    is
+algorithm, called  /MABAUC/ in the  paper, for  Multi-Armed Bandit Area  Under the
+Curve, considers  a sliding window  covering a  given number of  measurements to
+compute the  scores of methods  in an ensemble, and  to decide which  method, or
+``arm'',  to  play next.   The  ensemble  of methods  we  used  was composed  by
+implementations of  the Nelder-Mead  algorithm and  three variations  of genetic
+algorithms.  Figure\nbsp{}\ref{fig:gpu-stack} shows a  simplified version of the
+steps necessary  to generate the object  code that will be  measured later.  The
+code   for   our   autotuner   and   all  the   experiments   and   results   is
 available\nbsp{}\cite{bruel2017autotuningURL}  under  the   GNU  General  Public
 License.
 
@@ -11526,7 +11534,7 @@ searches unwieldy.
 \end{table}
 #+end_export
 
-*** Experiments
+*** Target GPUs and Kernels
 This section  presents the GPU  testbed, the algorithm benchmark,  the autotuner
 implementation and its search space.
 
@@ -11606,7 +11614,7 @@ the benchmark were the following CUDA implementations:
 \end{itemize}
 #+end_export
 
-*** Results
+*** Performance Improvements and Parameter Clustering Attempt
 This  section  presents  the  speedups   achieved  for  all  algorithms  in  the
 application benchmark,  highlights the most significant  speedups, and discusses
 the performance and accuracy of the autotuner.
@@ -11839,13 +11847,23 @@ finding  associations  between  compiler optimizations,  applications  and  GPUs
 justifies the autotuning of compiler parameters in the general case.
 
 *** Assessing Parameter Significance with Screening
-We conducted a later study, which has not  yet been published at the time of the
-writing of this  thesis, in which we designed and  ran screening experiments for
-the    CUDA    compiler.     We    added    the    parameters    described    in
-Table\nbsp{}\ref{tab:new-flags}    to    the    search    space    defined    in
-Table\nbsp{}\ref{tab:flags}.   We no  longer had  access  to the  GPUs from  the
-testbed  described  in the  previous  section,  and  we  targeted the  two  GPUs
-described in Table\nbsp{}\ref{tab:screening-GPUs}.
+This study was done in 2015, the first  year of this thesis.  Since at that time
+we did  not have experience with  the methods for statistical  modeling which we
+later  studied,  and  since  the  measurement  time  for  each  application  was
+sufficiently small, we  did not deal with the problem  of building a performance
+model for  the CUDA compiler  in this  application, and originally  attempted to
+find  good  compiler  configurations   using  stochastic  methods  for  function
+minimization.  Since  then, we  performed a new  experiment using  screening and
+targeting the same problem, in an  attempt to identify the flags responsible for
+any improvements  we observe.  In this  section, before closing the  chapter, we
+will present and discuss this new screening experiment.
+
+The data in this  section has not yet been published at the  time of the writing
+of this thesis. We designed and ran screening experiments for the CUDA compiler,
+adding the parameters described in Table\nbsp{}\ref{tab:new-flags} to the search
+space defined  in Table\nbsp{}\ref{tab:flags}.  We  no longer had access  to the
+GPUs from the testbed described in the previous section, and we targeted the two
+GPUs described in Table\nbsp{}\ref{tab:screening-GPUs}.
 
 #+begin_export latex
 \begin{table}[t]
@@ -11952,6 +11970,9 @@ Figure\nbsp{}[[fig:speedup-gpu-screening]].
 [[file:img/gpu-screening/speedup_gpu_screening.pdf]]
 
 *** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:gpu-summary
+:END:
 This study provides  evidence that it is possible to  improve the performance of
 GPU  kernels  with  by  selecting  CUDA  compiler  parameters  and  flags.   The
 inconclusive  clustering  attempts for  the  data  obtained from  heuristic  and
@@ -12127,25 +12148,25 @@ able to exploit space geometry. We  will now present a performance evaluation of
 our approach in a larger and more comprehensive benchmark.
 ** Application 3: High-Level Synthesis for FPGAs
 A Field-Programmable Gate Array (FPGA)  is a reprogrammable circuit that enables
-writing specialized hardware specifications for  a variety of applications using
-the  same chip.   High-Performance Computing  tasks that  require low  power and
-latency increasingly  switch to  FPGAs from  GPUs.  Hardware  specifications are
-written  using  low-level languages  such  as  Verilog  and  VHDL, making  it  a
-challenge  for software  engineers  to leverage  FPGA capabilities.   Developing
-strategies to  decrease the effort  required to  program FPGAs is  becoming more
-relevant    with    the    overspread    adaptation   of    FPGAs    for    data
+writing  specialized  hardware  specifications  for a  variety  of  applications
+without changing the underlying chip,  and High Performance Computing tasks that
+require low power and latency increasingly  switch to FPGAs from GPUs.  Hardware
+specifications are written  using low-level languages such as  Verilog and VHDL,
+creating  a challenge  for  software engineers  to  leverage FPGA  capabilities.
+Developing  strategies to  decrease  the  effort required  to  program FPGAs  is
+becoming  more  relevant  with  the  overspread adaptation  of  FPGAs  for  data
 centers\nbsp{}\cite{caulfield2016cloud,yu2019data,tarafdar2017enabling,shu2019direct,zhang2017feniks,tarafdar2018galapagos},
 with directed vendor support\nbsp{}\cite{intel2020fpgaURL,xilinx2020fpgaURL}.
 
 Essential support for software engineers can be provided by High-Level Synthesis
 (HLS), the  process of  generating hardware  descriptions from  high-level code.
-HLS lowers the complexity of hardware design  from the point of view of software
-engineering  and has  become  increasingly viable  as part  of  the FPGA  design
-methodology,         with         support        from         vendor         HLS
-tools\nbsp{}\cite{singh2011implementing,feist2012vivado}    for     C/C++    and
-OpenCL.  The  benefits  of  higher-level  abstractions come  with  the  cost  of
-decreased  application performance,  making FPGAs  less viable  as accelerators.
-Thus, optimizing  HLS still requires  domain expertise and exhaustive  or manual
+HLS compilers lower the complexity of hardware  design from the point of view of
+software engineering  and has  become increasingly  viable as  part of  the FPGA
+design       workflow,       with       support      from       vendor       HLS
+tools\nbsp{}\cite{singh2011implementing,feist2012vivado}  for C/C++  and OpenCL.
+The  benefits of  higher-level  abstractions  come with  the  cost of  decreased
+application  performance,  making  FPGAs  less viable  as  accelerators.   Thus,
+optimizing  HLS  still  requires  domain  expertise  and  exhaustive  or  manual
 exploration of design spaces and configurations.
 
 High-Level        Synthesis        is        an        \(\mathcal{NP}\)-complete
@@ -12154,19 +12175,21 @@ involves  the  divide-and-conquer  approach\nbsp{}\cite{coussy2009introduction}.
 The most  important sub-problems to  solve are /scheduling/, where  operations are
 assigned to specific clock cycles, and /binding/, where operations are assigned to
 specific  hardware functional  units, which  can be  shared between  operations.
-LegUp\nbsp{}\cite{canis2013legup} is  an open-source  HLS tool implemented  as a
+LegUp\nbsp{}\cite{canis2013legup} was an initially open-source HLS tool that has
+since gone  paid and  closed-source\nbsp{}\cite{legup2020URL}, implemented  as a
 compiler pass  for the LLVM  Compiler Infrastructure\nbsp{}\cite{chris2004llvm}.
-It receives code in LLVM's intermediate  representation as input and produces as
-output  a   hardware  description  in  Verilog.    LegUp  exposes  configuration
-parameters of its HLS process, set with a configuration file.
+LegUp receives code in LLVM's  intermediate representation as input and produces
+as output a  hardware description in Verilog,  exposing configuration parameters
+of its HLS process, which are set with a configuration file.
 
-This section  presents an autotuner  for LegUp HLS parameters  implemented using
-the OpenTuner  framework.  The  autotuner targeted  8 hardware  metrics obtained
-from   Altera  Quartus,   for  applications   of  the   CHStone  HLS   benchmark
-suite\nbsp{}\cite{hara2008chstone} in  the Intel StratixV FPGA.   The program to
-be  configured in  this study  is LegUp,  and the  search space  is composed  of
-approximately $10^{126}$ possible combinations of  HLS parameters.  Such a large
-search space is unfeasible to search exhaustively or by hand.
+This  chapter  presents  our  implementation  of  an  autotuner  for  LegUp  HLS
+parameters,  also  using the  OpenTuner  framework.   The autotuner  targeted  8
+hardware metrics obtained  from Altera Quartus, for applications  of the CHStone
+HLS  benchmark suite\nbsp{}\cite{hara2008chstone}  targeting the  Intel StratixV
+FPGA.  The program whose configurations are  explored in this study is the LegUp
+HLS  compiler, and  the search  space  is composed  of approximately  $10^{126}$
+possible combinations  of HLS parameters.   It is  unfeasible to explore  such a
+large search space exhaustively.
 
 One  of the  obstacles we  faced was  making accurate  predictions for  hardware
 metrics from a set  of HLS parameters. We decided to run  our autotuner with the
@@ -12176,31 +12199,27 @@ environments.  We  present data showing  that our autotuner found  optimized HLS
 parameters for CHStone  applications that decreased the  /Weighted Normalized Sum/
 (/WNS/}) of hardware metrics by up to 21.5%.
 
-*** Large Measurement Time
-The defining  characteristic of  this autotuning  experiment is  the potentially
-large  time it  takes to  synthesize  hardware from  specifications in  hardware
-description  languages,  which takes  from  minutes  to  hours. The  process  of
+It  takes a  considerable time  to  synthesize hardware  from specifications  in
+hardware description  languages, ranging from  minutes to hours. The  process of
 generating  those  specifications from  high-level  C  code  is much  faster  in
-comparison,  taking only  seconds.  In  contrast  to the  previous section,  the
-applications used in this autotuning  experiment had a \textit{large measurement
-time}. Section\nbsp{}[[HLS Autotuner and Search Space]] describes in more detail the
-High-Level Synthesis process.
+comparison, taking  only seconds.  Section\nbsp{}[[HLS Autotuner  and Search Space]]
+describes in more detail the High-Level Synthesis process.
 
 #+begin_export latex
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=.65\textwidth]{./img/quali_brazil/overview_fpgas_small-eps-converted-to.pdf}
-    \caption{Autotuner representation and time scale of our experiments}
+    \caption{Autotuner representation and time scale of the experiments}
     \label{fig:overview-fpgas-small}
 \end{figure}
 #+end_export
 
 Figure\nbsp{}\ref{fig:overview-fpgas-small}  shows   a  representation   of  our
-autotuner for this  experiment, and illustrates its time  scale.  The autotuner,
-represented by  the light blue box,  receives as input a  CHStone application, a
-target FPGA,  input data  for the application  in the order  of Kilobytes  and a
-search space  composed of LegUp's HLS  parameters. The autotuner outputs  an HLS
-configuration for each application and FPGA.
+autotuner for  this experiment,  and highlights the  time scales  involved.  The
+autotuner,  represented by  the  light blue  box, receives  as  input a  CHStone
+application,  a target  FPGA, input  data for  the application  in the  order of
+Kilobytes and a  search space composed of LegUp's HLS  parameters. The autotuner
+outputs an HLS configuration for each application and FPGA.
 
 #+begin_export latex
 \begin{figure}[htpb]
@@ -12212,30 +12231,27 @@ configuration for each application and FPGA.
 \end{figure}
 #+end_export
 
-The      applications      from      CHStone,     presented      further      in
-Table\nbsp{}\ref{tab:chstone},  are  very  simple  benchmark  applications,  and
-generating hardware  for them  takes time  in the  order of  minutes. Generating
-hardware  for   more  complex   FPGA  applications   can  take   several  hours.
-Figure\nbsp{}\ref{fig:overview-fpgas-big} shows a  representation and time scale
-for an  autotuner that  targets complex FPGA  applications.  Each  iteration now
-takes several hours, and limits the configurations that can be tested per hour.
+The applications from CHStone presented further in Table\nbsp{}\ref{tab:chstone}
+are very simple  benchmark applications, and generating hardware  for them takes
+time  in the  order  of  minutes.  Generating  hardware  for  more complex  FPGA
+applications can take  several hours.  Figure\nbsp{}\ref{fig:overview-fpgas-big}
+shows a representation and time scale for an autotuner that targets complex FPGA
+applications.   Each  iteration   now  takes  several  hours,   and  limits  the
+configurations that can be tested per hour.  We worked around this limitation in
+this experiment by implementing a virtualized autotuner using Docker containers,
+which enabled parallel measurements of different configurations.
 
-We  worked  around  this  limitation   in  this  experiment  by  implementing  a
-virtualized   autotuner  using   Docker  containers,   which  enabled   parallel
-measurements of different configurations. The lack of support in OpenTuner for a
-distributed execution  of measurements also  limited this experiment,  since our
-already virtualized approach could explore more search space in the same time if
-it was deployed in more connected machines.
-
-Applications  with large  measurement time  still  present a  challenge for  our
-current  autotuning approach,  even with  a  tool that  can achieve  distributed
-execution of measurements, because the quality  of the solutions still depend on
-the velocity of  exploration of the search space.  To  mitigate this problem and
-enable the autotuning of applications with large measurement times, which can be
-thought of as/expensive-to-evaluate functions/, we are going to study the
-development of suitable experimental designs. We  will work in this direction in
-collaboration and  supervision of  professors Arnaud  Legrand, Brice  Videau and
-Jean-Marc Vincent from the University of Grenoble Alpes.
+Applications with  large measurement  time still presented  a challenge  for the
+autotuning approach we used in this problem, even with distributed measurements,
+because the stochastic methods implemented  in OpenTuner reach better results if
+longer explorations  of the search  space is performed.  An  Experimental Design
+approach such as  the one we later  developed and applied to  other problems, as
+described in Chapter\nbsp{}[[Application 4: CPU  Kernels from the SPAPT Benchmark]],
+would  be ideal  for  this type  of  problem.  Since  our  HLS toolchain  became
+proprietary  software  and FPGA  programming  is  still  a very  closed  domain,
+requiring  paid licenses  and  still expensive  hardware, we  did  not have  the
+opportunity to revisit this study with  the Experimental Design methods we later
+studied.
 
 *** Background
 In this section we discuss background  work related to HLS tools, and autotuning

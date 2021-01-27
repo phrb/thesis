@@ -657,6 +657,10 @@ A.~Canis, J.~Choi, M.~Aldham, V.~Zhang, A.~Kammoona, T.~Czajkowski, S.~D.
   for fpga-based processor/accelerator systems,'' \emph{ACM Transactions on
   Embedded Computing Systems (TECS)}, vol.~13, no.~2, p.~24, 2013.
 
+\bibitem{legup2020URL}
+``{LegUp Computing, now closed-source, paid software},''
+  \url{https://www.legupcomputing.com/}, accessed: 26 January 2020.
+
 \bibitem{chris2004llvm}
 C.~Lattner and V.~Adve, ``{LLVM: A Compilation Framework for Lifelong Program
   Analysis \& Transformation},'' in \emph{{Proceedings of the 2004
@@ -732,7 +736,7 @@ S.~Hadjis, A.~Canis, J.~H. Anderson, J.~Choi, K.~Nam, S.~Brown, and
   0.4em\relax ACM, 2012, pp. 111--114.
 
 \bibitem{legup2020docsURL}
-``{LegUp Documentation, gone closed source},''
+``{LegUp Documentation, now closed-source, paid software},''
   \url{https://www.legupcomputing.com/main/resource}, accessed: 18 January
   2020.
 

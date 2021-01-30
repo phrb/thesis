@@ -44,9 +44,9 @@
 #+LATEX_HEADER: \geometry{
 #+LATEX_HEADER:   %top=32mm,
 #+LATEX_HEADER:   %bottom=28mm,
-#+LATEX_HEADER:   %left=24mm,
-#+LATEX_HEADER:   %right=34mm,
-#+LATEX_HEADER:   textwidth=150mm, % 210-24-34
+#+LATEX_HEADER:   left=24mm,
+#+LATEX_HEADER:   right=29mm,
+#+LATEX_HEADER:   textwidth=157mm, % 210-24-34
 #+LATEX_HEADER:   textheight=240mm, % 297-32-28
 #+LATEX_HEADER:   vmarginratio=8:7, % 32:28
 #+LATEX_HEADER:   hmarginratio=12:17, % 24:34
@@ -144,9 +144,9 @@
 
 #+LATEX_HEADER: \fancypagestyle{plain}{%
 #+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt}
-#+LATEX_HEADER: \fancyfoot[RE,LO]{\thepage}
-#+LATEX_HEADER: \fancyhead[RE]{\nouppercase{\truncate{\headwidth}{\rightmark}}}
-#+LATEX_HEADER: \fancyhead[LO]{\nouppercase{\truncate{\headwidth}{\leftmark}}}
+#+LATEX_HEADER: \fancyfoot[RO,LE]{\thepage}
+#+LATEX_HEADER: \fancyhead[RO]{\nouppercase{\truncate{\headwidth}{\rightmark}}}
+#+LATEX_HEADER: \fancyhead[LE]{\nouppercase{\truncate{\headwidth}{\leftmark}}}
 #+LATEX_HEADER: }
 
 #+LATEX_HEADER: \pagestyle{plain}
@@ -244,7 +244,7 @@ implementation and the justification of optimization heuristics.
         align = center,
         l sep+=1em
       },
-      [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+      [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
         draw,
         [{Constructs surrogate estimate $\hat{f}(\cdot, \theta(X))$?},
           draw,
@@ -396,7 +396,7 @@ implementation and the justification of optimization heuristics.
   \resizebox{\textwidth}{!}{%
     \begin{forest}
       linebreaks
-      [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\ $Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$}
+      [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\ $Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$}
         [{Does not construct\\estimate $Y = \hat{f}(\cdot, \theta{}(X))$}
           [{Reachable\\optima}
             [{Strong $corr(f(X),f(X^{\prime}))$,\\for close $X,X^{\prime}$}
@@ -476,7 +476,7 @@ implementation and the justification of optimization heuristics.
     \begin{scope}
       \tikzset{every tree node/.style = {align = center}}
       \tikzset{level 1+/.style={level distance = 40pt}}
-      \Tree [.\node(n0){Minimize $f: X \mapsto \mathbb{R}$ \\ $f(X) = f^{*}(X) + \varepsilon = m$};
+      \Tree [.\node(n0){Minimize $f: X \to \mathbb{R}$ \\ $f(X) = f^{*}(X) + \varepsilon = m$};
         [.{Does not construct \\ estimate $\hat{f}(X; \theta)$}
           [.{Reachability of \\ optima}
             [.{\textbf{Greedy} \\ \textbf{Search}} ]
@@ -609,7 +609,7 @@ proposal and application to the Microsoft Latin America PhD Award.
           align = center,
           l sep+=1em
         },
-        [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+        [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
           draw,
           [{Constructs surrogate estimate $\hat{f}(\cdot, \theta(X))$?},
             draw,
@@ -3404,7 +3404,7 @@ p1 + p2 + p3
     align = center,
     l sep+=1em
   },
-  [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+  [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
     draw,
     [{Constructs surrogate estimate $\hat{f}(\cdot, \theta(X))$?},
       draw,
@@ -3569,7 +3569,7 @@ p1 + p2 + p3
     align = center,
     l sep+=1.4em
   },
-  [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = [x_1,\dots,x_k]^{\top} \in \mathcal{X}) + \varepsilon$},
+  [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\$Y = f(X = [x_1,\dots,x_k]^{\top} \in \mathcal{X}) + \varepsilon$},
     draw,
     [{Is $f(X)$ known,\\or cheap to measure?},
       draw
@@ -3702,7 +3702,7 @@ p1 + p2 + p3
     if n children=0{tier=terminal}{},
     l sep+=1em
   },
-  [{Minimize $f: \mathcal{X} \mapsto \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
+  [{Minimize $f: \mathcal{X} \to \mathbb{R}$,\\$Y = f(X = (x_1,\dots,x_k) \in \mathcal{X}) + \varepsilon$},
     draw,
     [{Constructs surrogate\\estimate $\hat{f}(\cdot, \theta(X))$?},
       draw,
@@ -8086,16 +8086,16 @@ autotuning domain are relatively fast, and were in the order of a few seconds to
 a minute.  Since measurement costs are relatively small, search heuristics could
 find  good optimizations  using  as  many measurements  as  needed.  A  detailed
 description      of      this      work       is      available      in      our
-paper\nbsp\cite{bruel2017autotuning}   published   in    the   /Concurrency   and
+paper\nbsp\cite{bruel2017autotuning}   published   in   the   /Concurrency   and
 Computation: Practice and Experience/ journal.
 
-The  next  case  study  was  developed  in  collaboration  with  /Hewlett-Packard
-Enterprise/,  and  consisted of  applying  the  same heuristics-based  autotuning
+The  next  case  study  was developed  in  collaboration  with  /Hewlett-Packard
+Enterprise/,  and consisted  of  applying the  same heuristics-based  autotuning
 approach to the  configuration of parameters involved in the  generation of FPGA
 hardware specification  from source  code in  the C  language, a  process called
-/High-Level Synthesis/ (HLS).  The main difference from our work with GPU compiler
-parameters was the time to obtain  the hardware specification, which could be in
-the order of hours for a single kernel.
+/High-Level  Synthesis/ (HLS).   The  main  difference from  our  work with  GPU
+compiler parameters  was the  time to obtain  the hardware  specification, which
+could be in the order of hours for a single kernel.
 
 In this  more complex  scenario, we  achieved up  to $2\times$  improvements for
 different hardware metrics using  conventional search algorithms.  These results
@@ -8877,28 +8877,28 @@ context of autotuning, the chapter ends with a discussion of common search space
 properties.
 
 *** Notation
-We will  call /optimization/  the minimization  of a  real-valued function  with a
-single vector  input.  For  a function $f:  \mathcal{X} \mapsto  \mathbb{R}$, we
-wish to  find the input  vector $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\top}$ in
-the    /parameter   space/,    or   /search    space/   $\mathcal{X}$    for   which
+We will  call /optimization/ the minimization  of a real-valued function  with a
+single vector input.  For a function $f: \mathcal{X} \to \mathbb{R}$, we wish to
+find  the input  vector  $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\top}$ in  the
+/parameter    space/,    or    /search   space/    $\mathcal{X}$    for    which
 $f(\mathbf{x}^{\ast})$ is  the smallest, compared  to all other  $\mathbf{x} \in
 \mathcal{X}$.   The function  $f$  represents, in  the  autotuning context,  the
-/performance  metric/ we  wish to  optimize, such  as the  execution time  of some
+/performance metric/  we wish to  optimize, such as  the execution time  of some
 application,  and  the  parameter  space $\mathcal{X}$  represents  the  set  of
-possible /configurations/ we  can explore, such as compiler  flags.  Therefore, we
+possible /configurations/ we can explore, such as compiler flags.  Therefore, we
 define optimization in the autotuning  context as finding the configuration that
 minimizes the target  performance metric. For the sake of  simplicity, we assume
 we can use the opposite of the performance metrics that should be maximized.
 
 As an example of an autotuning  problem, consider optimizing the choice of flags
 for a compiler with $p  = \vert{}\mathbf{x}\vert{}$ flags, where a configuration
-$\mathbf{x}  =  [x_1 \;\dots\; x_p]^{\top}$ consists  of  a  vector of  $p$  /boolean/
-values,  denoting  whether  each  flag  $x_1, \dots, x_p$ is  turned  on  for  the
+$\mathbf{x} = [x_1 \;\dots\; x_p]^{\top}$ consists  of a vector of $p$ /boolean/
+values,  denoting whether  each flag  $x_1,  \dots, x_p$  is turned  on for  the
 compilation of a specific application.   To find the compiler configuration that
 generates the binary with the smallest execution  time, we conduct a set of $n =
-\vert{}\mathbf{X}\vert{}$  /experiments/,  chosen  according  to  some  criterion,
-generating   the  $n\times{}p$   /experimental   design   matrix/  $\mathbf{X}   =
-[\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top}$.    Each    experiment   consists   of
+\vert{}\mathbf{X}\vert{}$  /experiments/, chosen  according  to some  criterion,
+generating  the   $n\times{}p$  /experimental   design  matrix/   $\mathbf{X}  =
+[\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\top}$.   Each experiment  consists  of
 compiling the target application using the specified compiler configuration, and
 measuring the execution time of the resulting binary.
 
@@ -8908,7 +8908,7 @@ involves writing a shell command or a configuration file, running the configured
 compiler, checking for  compilation errors, measuring the execution  time of the
 resulting binary, and verifying the correctness of its output.
 
-In   practice,  we   may  never   be  able   to  observe   the  /true   value/  of
+In  practice,   we  may  never   be  able  to   observe  the  /true   value/  of
 $f(\mathbf{x})$. In fact,  empirical tests of this nature are  always subject to
 unknown or uncontrollable  effects, and to inherent  imprecision in measurement.
 In practice,  we settle for observing  $y = f(\mathbf{x}) +  \varepsilon$, where
@@ -8923,9 +8923,9 @@ such experimental design we would obtain the measurements
     \varepsilon_i, \; i =  1,\dots,2^{p}]^{\top}\text{.}
 \end{align}
 #+end_export
-The  measurement  $y_i$   is  an  /estimate/  of   $f(\mathbf{x}_i)$,  with  error
-$\varepsilon_i$.  If  the error is reasonably  small, an estimate of  the /global
-optimum/ $\mathbf{x}^{\ast}$ in this example  is the $\mathbf{x}_i$ that produces
+The  measurement  $y_i$  is  an  /estimate/  of  $f(\mathbf{x}_i)$,  with  error
+$\varepsilon_i$.  If the  error is reasonably small, an estimate  of the /global
+optimum/ $\mathbf{x}^{\ast}$ in this example is the $\mathbf{x}_i$ that produces
 the binary with  the smallest estimated execution time  $y^{\ast}$, the smallest
 $y_i \in \mathbf{y}$.
 
@@ -8944,13 +8944,13 @@ methods discussed  in Chapters\nbsp{}[[Learning:  Building Surrogates]],
 strategies to construct a /surrogate model/
 #+begin_export latex
 \begin{align}
-  \hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}\text{, with }
+  \hat{f}_{\theta}: \mathcal{X} \to \mathbb{R}\text{, with }
   \theta \in \Theta\text{,}
 \end{align}
 #+end_export
 where  $\theta$  is  a  parameter vector  usually  estimated  from  measurements
 $(\mathbf{X},\mathbf{y})$.   The  function   $\theta  :  \mathcal{X}^{n}  \times
-\mathbb{R}^{n} \mapsto \Theta$ represents the  /estimation process/, that uses the
+\mathbb{R}^{n} \to \Theta$ represents the  /estimation process/, that uses the
 /observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$   from  an  experimental  design
 $\mathbf{X} =  [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top}$.  The  /parameter vector/
 $\theta(\mathbf{X},\mathbf{y})$ in the /parameter space/  $\Theta$ will be used to
@@ -8994,19 +8994,19 @@ different optimization methods in the next chapters.
 | Symbol                                                                                                      | Concept                         | Example                                                              |
 |-------------------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
 | $\mathcal{X}$                                                                                               | Search space                    | All possible compiler flag assignments                               |
-| $\mathbf{x} = [x_1 \;\dots\; x_p]^{\top} \in \mathcal{X}$                                                       | Input variable                  | A specific flag assignment                                           |
-| $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top} \subseteq \mathcal{X}$                               | Experimental design             | A set of flag assignments                                            |
+| $\mathbf{x} = [x_1 \;\dots\; x_p]^{\top} \in \mathcal{X}$                                                   | Input variable                  | A specific flag assignment                                           |
+| $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top} \subseteq \mathcal{X}$                           | Experimental design             | A set of flag assignments                                            |
 | $p = \vert{}\mathbf{x}\vert{}$                                                                              | Search space dimension          | The number of flags to assign                                        |
 | $n = \vert{}\mathbf{X}\vert{}$                                                                              | Number of experiments           | Size of the set of flags to compile and measure                      |
-| $f: \mathcal{X} \mapsto \mathbb{R}$                                                                         | Function to minimize            | Performance metric, such as the execution time of a binary           |
+| $f: \mathcal{X} \to \mathbb{R}$                                                                             | Function to minimize            | Performance metric, such as the execution time of a binary           |
 | $y_i = f(\mathbf{x}_i) + \varepsilon_i$                                                                     | Observable quantity             | Execution time with flags $\mathbf{x}_i$, with error $\varepsilon_i$ |
-| $\mathbf{y} = [y_1 \;\dots\; y_n]^{\top} \in \mathbb{R}^{n}$                                                    | Observations                    | List of execution times for all flags                                |
+| $\mathbf{y} = [y_1 \;\dots\; y_n]^{\top} \in \mathbb{R}^{n}$                                                | Observations                    | List of execution times for all flags                                |
 | $\mathbf{x}^{\ast}: y^{\ast} = f(\mathbf{x}^{\ast}) \leq f(\mathbf{x}), \forall \mathbf{x} \in \mathcal{X}$ | Global optimum                  | Flag assignment with smallest execution time                         |
 | $\Theta$                                                                                                    | Parameter space                 | All possible values of the coefficients of a linear model            |
 | $\theta(\mathbf{X}, \mathbf{y}) \in  \Theta$                                                                | Parameter vector                | OLS estimate of the coefficients of a linear model                   |
 | $m = \vert{}\theta\vert{}$                                                                                  | Number of parameters            | Number of OLS coefficient estimates                                  |
-| $\hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}$                                                          | Surrogate for $f$               | A linear model fit used for /predictions/                              |
-| $\hat{y} = \hat{f}(\mathbf{x}, \theta(\mathbf{X, \mathbf{y}}))$                                             | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a specific flag assignment        |
+| $\hat{f}_{\theta}: \mathcal{X} \to \mathbb{R}$                                                              | Surrogate for $f$               | A linear model fit used for /predictions/                            |
+| $\hat{y} = \hat{f}_{\theta}(\mathbf{x})$                                                                    | Estimate of $f$ at $\mathbf{x}$ | A prediction of execution time for a flag assignment       |
 |-------------------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
 
 Before moving on to the descriptions of derivative-based and stochastic function
@@ -9166,7 +9166,7 @@ Booth's function to discuss how noise and uncertainty impact these methods.
 #+CAPTION: function's basin is near zero.
 [[file:img/booth_gradient.pdf]]
 
-The  gradient  $\nabla{}f(\mathbf{x})$ of  a  function  $f: \mathcal{X}  \mapsto
+The  gradient  $\nabla{}f(\mathbf{x})$ of  a  function  $f: \mathcal{X}  \to
 \mathbb{R}$ at point  $\mathbf{x} = [x_1 \;\dots\; x_n]^{\top}$ is  defined as
 #+begin_export latex
 \begin{align}
@@ -9676,7 +9676,7 @@ Gaussian  Process  Regression is  a  flexible  nonparametric method  capable  of
 modeling a  large class  of surrogates, for  which interpreting  significance is
 possible, but costly.
 
-The surrogate $\hat{f}_{\theta}: \mathcal{X}  \mapsto \mathbb{R}$ depends on the
+The surrogate $\hat{f}_{\theta}: \mathcal{X}  \to \mathbb{R}$ depends on the
 parameter  vector  $\theta(\mathbf{X},  \mathbf{y})$   in  the  parameter  space
 $\Theta$   constructed  using   the  pair   $(\mathbf{X},  \mathbf{y})$,   where
 $\mathbf{X}$ is a set of  experiments, and $\mathbf{y}$ the corresponding vector
@@ -9702,7 +9702,7 @@ $\theta$.
 
 *** Linear Regression
 We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
-\mapsto  \mathbb{R}$   using  a  fixed  experimental   design  $\mathbf{X}$  and
+\to  \mathbb{R}$   using  a  fixed  experimental   design  $\mathbf{X}$  and
 observations  $\mathbf{y}$. We make the hypothesis that $f$ is a linear model on
 $\theta$, with error $\varepsilon$, written
 #+begin_export latex
@@ -9817,7 +9817,7 @@ terms on each  factor $\mathbf{x}_{1,\dots,p}$, without an  intercept term. More
 generally, we  can have a  linear model surrogate  with $m\neq{}p$ terms.   In a
 straightforward expansion  of the linear  model, we  can obtain $m$  model terms
 from an  $n\times{}p$ design matrix $\mathbf{X}$  by using a basis  function set
-$\mathcal{H} = \{h_{0,\dots,m-1}:  \mathcal{X} \mapsto \mathbb{R}\}$, generating
+$\mathcal{H} = \{h_{0,\dots,m-1}:  \mathcal{X} \to \mathbb{R}\}$, generating
 the $n\times{}m$ model matrix
 #+begin_export latex
 \begin{align}
@@ -10057,7 +10057,7 @@ probability distribution over functions.
 
 *** Gaussian Process Regression
 Similarly to the  surrogate model we built using linear  models, in this section
-we will fit a surrogate  $\hat{f}_{\theta}: \mathcal{X} \mapsto \mathbb{R}$ to a
+we will fit a surrogate  $\hat{f}_{\theta}: \mathcal{X} \to \mathbb{R}$ to a
 fixed experimental  design $\mathbf{X}$  and observations $\mathbf{y}$.  We make
 the hypothesis that the observations $y_1, \dots, y_n$ are normally distributed.
 This is  a reasonable  hypothesis to  make, especially  after our  discussion on
@@ -10182,7 +10182,7 @@ of means and variances conditioned to observations.
 **** Fitting the Model: Posterior Distributions over Functions
 Before fitting our surrogate, we must compute the covariance matrix of the prior
 Gaussian   distribution   from   Equation\nbsp{}\ref{eq:gauss-prior}   using   a
-covariance function, or kernel, $K: \mathcal{X}^{2} \mapsto \mathbb{R}$. For any
+covariance function, or kernel, $K: \mathcal{X}^{2} \to \mathbb{R}$. For any
 pair  $(\mathbf{x},   \mathbf{x}^{\prime})  \in  \mathcal{X}^{2}$,   the  kernel
 determines how strong the  covariance between $\hat{f}_{\theta}(\mathbf{x})$ and
 $\hat{f}_{\theta}(\mathbf{x}^{\prime})$  should   be,  based  on   the  distance

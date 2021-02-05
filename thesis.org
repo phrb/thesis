@@ -42,12 +42,12 @@
 :latex_headers:
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
 #+LATEX_HEADER: \geometry{
-#+LATEX_HEADER:   %top=32mm,
-#+LATEX_HEADER:   %bottom=28mm,
+#+LATEX_HEADER:   top=32mm,
+#+LATEX_HEADER:   bottom=28mm,
 #+LATEX_HEADER:   left=24mm,
 #+LATEX_HEADER:   right=29mm,
 #+LATEX_HEADER:   textwidth=157mm, % 210-24-34
-#+LATEX_HEADER:   textheight=240mm, % 297-32-28
+#+LATEX_HEADER:   textheight=245mm, % 297-32-28
 #+LATEX_HEADER:   vmarginratio=8:7, % 32:28
 #+LATEX_HEADER:   hmarginratio=12:17, % 24:34
 #+LATEX_HEADER:   % Com geometry, esta medida não é tão relevante; basta garantir que ela
@@ -133,10 +133,6 @@
 #+LATEX_HEADER: \setlength{\parskip}{0.5em}
 #+LATEX_HEADER: \usepackage[pagestyles,raggedright]{titlesec}
 #+LATEX_HEADER: \titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\Huge}
-
-# #+LATEX_HEADER: \newpagestyle{mystyle}
-# #+LATEX_HEADER: {\sethead[\thepage][][\chaptertitle]{}{}{\thepage}}
-# #+LATEX_HEADER: \pagestyle{mystyle}
 
 #+LATEX_HEADER: \usepackage[fit]{truncate}
 #+LATEX_HEADER: \usepackage{fancyhdr}
@@ -11543,12 +11539,44 @@ highlights  the most  significant speedups,  and discusses  the performance  and
 accuracy of the autotuner.
 
 **** Performance Improvements
-All  boxplots   presented  in  this   section  were  made  using   the  standard
-implementations available for  the R language.  The black band  inside the boxes
-represents the median of the measurements. The lower and upper bounds of the box
-represent, respectively, the first and third quartiles of the data. The whiskers
-represent the third  and first quartile plus and minus  the /inner quartile range/
-times 1.5. Finally, circles represent outliers.
+Figure\nbsp{}[[fig:rodinia-speedups]] compares  the means of 30  measurements of the
+tuned results for each kernel to  the high-level optimization /opt-level/ set to
+/2/.  We see that  that the autotuned solution for the  Heart Wall problem (HWL)
+in  the  /Tesla K40/  achieved  over  2 times  speedup  in  comparison with  the
+high-level  CUDA optimizations.   The  tuned kernel  for  the /GTX-980/  reached
+almost 2.5 times speedup for Gaussian  Elimination (GAU).  We also found smaller
+speedups for most kernels, such as a 10% speedup for Path Finder (PTF) in /Tesla
+K40/, and around 10% speedup for Myocyte (MYO) on /GTX-750/.
+
+Figure\nbsp{}[[fig:adhoc-speedups]]  summarizes  the  results  for  the  other  CUDA
+kernels  we implemented.   The autotuner  did  not improve  upon the  high-level
+optimizations for BTN,  VAD, and QKS in any  of the GPUs in the  testbed, but it
+found  solutions that  achieved speedups  for  at least  one GPU  for the  other
+kernels.
+
+We  were  not able  to  determine  the  hardware characteristics  that  impacted
+performance.  We believe that the Maxwell GPUs, the /GTX-980/ and /GTX-750/, had
+differing results  from the /Tesla  K40/ because  they are consumer  grade GPUs,
+producing  less   precise  results,   and  configured  with   different  default
+optimizations. The similarities between the compute capabilities of the GTX GPUs
+could also explain  the observed differences from the K40.   The overall greater
+computing power  of the /GTX-980/ could  explain its differing results  from the
+/GTX-750/,  since  the  GTX  980  has a  greater  number  of  Cores,  SMs/Cores,
+Bandwidth, Bus, Clock and Global Memory.
+
+#+ATTR_LATEX: :width 0.77\textwidth :placement [ht]
+#+NAME: fig:rodinia-speedups
+#+CAPTION: Mean speedup over 30 repetitions of the tuned solutions
+#+CAPTION: for Rodinia kernels versus the \textit{opt-level} $=2$ baseline
+[[file:img/rodinia_speedups.pdf]]
+
+#+ATTR_LATEX: :width 0.77\textwidth :placement [ht]
+#+NAME: fig:adhoc-speedups
+#+CAPTION: Mean speedup over 30 repetitions of the tuned solutions
+#+CAPTION: for kernels we implemented versus the \textit{opt-level} $=2$ baseline
+[[file:img/adhoc_speedups.pdf]]
+
+***** Old Figures                                              :noexport:
 
 #+begin_export latex
 \begin{figure}[t]
@@ -11569,14 +11597,6 @@ times 1.5. Finally, circles represent outliers.
 \end{figure}
 #+end_export
 
-Figures\nbsp{}\ref{fig:K40hwl},    \ref{fig:980gau},    \ref{fig:K40ptf},    and
-\ref{fig:K40myo}  compare the  distributions of  10 performance  measurements of
-binaries   compiled   with   high-level    compiler   optimizations   and   with
-autotuner-selected   compiler  options.    The   results   for  the   high-level
-optimizations /opt-level/ equal to /0/, /1/,  /2/, and /3/ are denoted by /-O0/,
-/-O1/,  /-O2/, and  /-O3/.  The  results  for the  autotuned configurations  are
-denoted by the keyword /Tuned/.
-
 #+begin_export latex
 \begin{figure}[h]
     \centering
@@ -11595,15 +11615,6 @@ denoted by the keyword /Tuned/.
     \end{minipage}%
 \end{figure}
 #+end_export
-
-Figure\nbsp{}\ref{fig:K40hwl} shows  that the  autotuned solution for  the Heart
-Wall problem (HWL) in the Tesla K40  achieved over 2 times speedup in comparison
-with the high-level CUDA optimizations.  Figure\nbsp{}\ref{fig:980gau} shows, in
-the  GTX 980,  almost 2.5  times speedup  for the  Gaussian Elimination  problem
-(GAU).   Figure\nbsp{}\ref{fig:K40ptf} show  a  10% speedup  from the  autotuned
-solution   for   the   Path   Finder   problem   (PTF)   in   the   Tesla   K40.
-Figure\nbsp{}\ref{fig:K40myo} shows over 5%  speedup for the autotuned solution,
-also in the Tesla K40, for the Myocyte problem (MYO).
 
 #+begin_export latex
 \begin{figure}[t]
@@ -11624,13 +11635,6 @@ also in the Tesla K40, for the Myocyte problem (MYO).
 \end{figure}
 #+end_export
 
-Figures\nbsp{}\ref{fig:matrixsummary},                        \ref{fig:summary},
-\ref{fig:rodiniasummary},   and   \ref{fig:rodiniasummarysmall}  summarize   the
-results.  The autotuner did not find solutions that improved upon the high-level
-optimizations for the  problems BTN and MSU  in any of the GPUs  of the testbed,
-but it found solutions that achieved speedups for at least one GPU for the other
-problems.
-
 #+begin_export latex
 \begin{figure}[h]
     \centering
@@ -11650,26 +11654,41 @@ problems.
 \end{figure}
 #+end_export
 
-We  were  not able  to  determine  the  hardware characteristics  that  impacted
-performance.  We  believe that the  Maxwell GPUs, the GTX  980 and GTX  750, had
-differing  results from  the Tesla  K40 because  they are  consumer grade  GPUs,
-producing less  precise results  and with  different default  optimizations. The
-similarities between the compute capabilities of the GTX GPUs could also explain
-the observed  differences from the K40.  The overall greater computing  power of
-the GTX 980 could explain its differing  results from the GTX 750, since the GTX
-980 has a  greater number of Cores, SMs/Cores, Bandwidth,  Bus, Clock and Global
-Memory.
-
 **** CUDA Compiler Autotuner Performance
 This   section  presents   an   assessment  of   the  autotuner's   performance.
-Figures\nbsp{}\ref{fig:K40hwBest},  \ref{fig:980gauBest},  \ref{fig:K40ptfBest},
-and \ref{fig:K40myoBest} present  the performance of the best  solution found by
-the autotuner against the time these  solutions were found, in seconds since the
-beginning  of the  tuning  process.  The figures  show  the  progression of  the
-autotuned  solution for  the best  results in  our experiments,  the Heart  Wall
-problem (HWL) and the Gaussian Elimination problem (GAU) in the GTX 980, and the
-Path Finder problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
+Figures\nbsp{}[[fig:rodinia-tuning-progress]] and  [[fig:adhoc-tuning-progress]] present
+the speedup of the best solution found across tuning time.  Points in each graph
+represent the  performance, in  the \textit{y}-axis,  of the  best configuration
+found  at the  corresponding tuning  time,  shown in  the \textit{x}-axis.   The
+leftmost  point in  each graph  represents  the performance  of a  configuration
+chosen  at  random by  the  autotuner.   Each  subsequent point  represents  the
+performance of the best configuration  found across optimization.  Note that the
+autotuner is able to quickly improve  upon the initial random configuration, but
+the rate of improvement also decays quickly. The duration of all tuning runs was
+two hours,  or 7200 seconds.  The  rightmost point in each  graph represents the
+performance of the last improving configuration found by the autotuner.
 
+#+latex: \clearpage
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [t]
+#+NAME: fig:rodinia-tuning-progress
+#+CAPTION: Mean speedup over 30 repetitions of the tuned solutions
+#+CAPTION: for Rodinia kernels versus the \textit{opt-level} $=2$ baseline,
+#+CAPTION: across two hours of tuning. Notice the difference in the \textit{y}-axis
+#+CAPTION: scales for each panel
+[[file:img/rodinia_tuning_progress.pdf]]
+
+#+ATTR_LATEX: :width 0.9\textwidth :placement [b]
+#+NAME: fig:adhoc-tuning-progress
+#+CAPTION: Mean speedup over 30 repetitions of the tuned solutions
+#+CAPTION: for the kernels we implemented versus the \textit{opt-level} $=2$ baseline,
+#+CAPTION: across two hours of tuning. Notice the difference in the \textit{y}-axis
+#+CAPTION: scales for each panel
+[[file:img/adhoc_tuning_progress.pdf]]
+
+#+latex: \clearpage
+
+***** Old Figures                                              :noexport:
 #+begin_export latex
 \begin{figure}[t]
     \centering
@@ -11688,19 +11707,6 @@ Path Finder problem (PTF) and the Myocyte problem (MYO) in the Tesla K40.
     \end{minipage}%
 \end{figure}
 #+end_export
-
-Points  in each  graph represent  the performance,  in the  y-axis, of  the best
-configuration found at  the corresponding tuning time, shown in  the x-axis. The
-leftmost  point in  each graph  represents  the performance  of a  configuration
-chosen  at  random  by  the  autotuner. Each  subsequent  point  represents  the
-performance of the best configuration found across optimization.
-
-Note  that the  autotuner is  able to  quickly improve  upon the  initial random
-configuration, but the rate of improvement decays over tuning time. The duration
-of all tuning runs was two hours,  or 7200 seconds.  The rightmost point in each
-graph represents  the performance of  the last improving configuration  found by
-the autotuner.  After  the tuning time of this configuration,  the autotuner did
-not find any improving configuration until the end of its tuning run.
 
 #+begin_export latex
 \begin{figure}[h]
@@ -11721,17 +11727,7 @@ not find any improving configuration until the end of its tuning run.
 \end{figure}
 #+end_export
 
-The autotuner  considered the mean of  10 measurements of each  configuration as
-the value  of the  objective function,  which helps  to reduce  fluctuations and
-improves  measurement   accuracy.   This  resulted  in   stable  final  solution
-performance, which can  be observed by noting that the  measurements reported by
-the  autotuner   during  tuning,  shown   in  Figures\nbsp{}\ref{fig:K40hwBest},
-\ref{fig:980gauBest},  \ref{fig:K40ptfBest}, and  \ref{fig:K40myoBest} are  very
-close to the mean values of 10  measurements of the final solution, shown in the
-corresponding Figures\nbsp{}\ref{fig:K40hwl}, \ref{fig:980gau}, \ref{fig:K40ptf}
-and \ref{fig:K40myo}.
-
-**** Clustering Parameters found in Stochastic Experiments
+**** Clustering Parameters found by Stochastic Experiments
 #+begin_export latex
 \begin{table}[t]
     \centering

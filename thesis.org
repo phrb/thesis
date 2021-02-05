@@ -10543,16 +10543,37 @@ the initial stages of studying a  problem. While interactions are not considered
 at this stage, identifying main effects  early enables focusing on a smaller set
 of factors on subsequent experiments.  A specially efficient design construction
 technique   for    screening   designs    was   presented   by    Plackett   and
-Burman\nbsp{}\cite{plackett1946design}  in 1946,  and is  available in  the =FrF2=
-package\nbsp{}\cite{gromping2014frf2}            of             the            =R=
+Burman\nbsp{}\cite{plackett1946design} in  1946, and is available  in the =FrF2=
+package\nbsp{}\cite{gromping2014frf2}            of           the            =R=
 language\nbsp{}\cite{team2018rlanguage}.
 
 Despite  having  strong  restrictions  on   the  number  of  factors  supported,
 Plackett-Burman designs enable the identification of main effects of $n$ factors
 with $n  + 1$  experiments. Factors  may have  many levels,  but Plackett-Burman
 designs  can  only  be  constructed  for  2-level  factors.   Therefore,  before
-constructing a Plackett-Burman  design we must identify /high/ and  /low/ levels for
-each factor.
+constructing a Plackett-Burman  design we must identify /high/  and /low/ levels
+for each factor.
+
+#+begin_export latex
+\begin{table}[b]
+    \centering
+    \scriptsize
+    \caption{A Plackett-Burman design for 7 2-level factors, where low and high levels are represented by $-1$ and $1$, respectively}
+    \label{tab:screening}
+    \begin{tabular}{@{}cccccccc@{}}
+        \toprule
+        Run & A & B & C & D & E & F & G \\ \midrule
+        1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 \\
+        2 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 \\
+        3 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 \\
+        4 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 \\
+        5 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 \\
+        6 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 \\
+        7 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 \\
+        8 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1  \\ \bottomrule
+    \end{tabular}
+\end{table}
+#+end_export
 
 Assuming a linear  relationship between factors and the  response is fundamental
 for  running ANOVA  tests using  a Plackett-Burman  design. Consider  the linear
@@ -12608,7 +12629,67 @@ autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
-In  this  chapter   we  discuss  in  detail  our   iterative,  transparent,  and
+*** Choosing an Experimental Design Method for Autotuning
+Our application of the ED methodology  requires support for factors of different
+types and  numbers of levels, such  as binary flags, integer  and floating point
+numerical values and  enumerations of categorical values.  We  also need designs
+that minimize the number of experiments needed for identifying the most relevant
+factors of a  problem, since at this  moment we are not interested  in a precise
+analytical   model.   The   design  construction   techniques  that   fit  these
+requirements  are limited.  The first  ED  approach we  studied was  /screening/
+which, despite being extremely parsimonious, does not have enough flexibility to
+explore the search spaces which we wished to study.
+
+Despite  being   parsimonious,  screening  designs  are   extremely  restrictive
+Algorithms for constructing Optimal Designs can adapt to our requirements, being
+able  to mix  factors  of different  types and  optimizing  a starting  designs.
+Before settling  on D-Optimal designs, which  we use in this  study, we explored
+other    design    construction    techniques     such    as    extensions    to
+Plackett-Burman\nbsp{}\cite{plackett1946design} designs  that use  random factor
+levels,    the     /contractive    replacement/    technique     presented    by
+Addelman-Kempthorne\nbsp{}\cite{addelman1961some},  and the  /direct generation/
+algorithm  by  Grömping   and  Fontana\nbsp{}\cite{ulrike2018algorithm}.   These
+techniques have strong requirements on design size and level mixing, so we opted
+for a more  flexible technique that would enable exploring  a more comprehensive
+class of autotuning problems.
+
+The modified screening method provides a  strategy to use factors with more than
+two  levels by,  instead of  encoding fixed  high and  low levels,  sampling two
+levels uniformly, each time the factor  is included in a Plackett-Burman design.
+This approach  has the advantage  of a small design  size with good  main effect
+estimation capability, but  it is still not capable  of estimating interactions.
+
+The  /contractive replacement/  method starts  with a  large 2-level  design and
+generates mixed-level designs by re-encoding and replacing pairs of columns with
+a  new column  for a  multi-level  factor.  The  contractive replacement  method
+presented by Addelman-Kempthorne\nbsp{}\cite{addelman1961some}  is a strategy of
+this kind.   In addition to  small design  size and good  estimation capability,
+their method maintains the orthogonality of starting designs, although it places
+strong  requirements  on initial  designs,  such  that only  orthogonal  2-level
+matrices can be contracted with their method.
+
+The    /direct    generation/    algorithm   introduced    by    Grömping    and
+Fontana\nbsp\cite{ulrike2018algorithm}   enables   the  direct   generation   of
+multi-level     designs    that     minimize     the    /Generalized     Minimum
+Aberration/\nbsp{}\cite{deng1999generalized}  optimality  criterion  by  solving
+mixed  integer  problems.   We  did  not  pursue  this  method  because  of  the
+limitations it  imposes on the  size and  the shape of  the designs that  can be
+generated, and also because it relied on proprietary MIP solvers that we did not
+have access to.
+
+Weighting flexibility,  effectiveness, parsimony, and the  cost and availability
+of algorithmic  construction, we  picked /D-Optimal  Designs/ among  the methods
+that  fulfilled the  requirements for  application to  autotuning problems.   In
+particular,            we             used            the            KL-exchange
+algorithm\nbsp{}\cite{atkinson1989construction},     which    enables     mixing
+categorical and  numerical factors  in the same  design, while  biasing sampling
+according  to the  performance  model  we wish  to  explore.   This enables  the
+exploitation of global  search space structures, if we use  the right model.  We
+can  safely optimize  for  the  /D/ optimality  criterion  among other  criteria
+without loosing quality of designs\nbsp{}\cite{kiefer1974general}.
+
+*** A Transparent and Parsimonious Approach to Autotuning using Optimal Design
+In  this  section   we  discuss  in  detail  our   iterative,  transparent,  and
 parsimonious      Experimental      Design     approach      to      autotuning.
 Figure\nbsp{}[[fig:doe_anova_strategy]] presents  an overview.  In step  1 we define
 the factors and levels  that compose the search space of  the target problem, in
@@ -12616,7 +12697,7 @@ step 2  we select an  initial performance  model, and in  step 3 we  generate an
 experimental design. We run the experiments in step 4 and then, as we discuss in
 the  next  section, we  identify  significant  factors  with  an ANOVA  test  in
 step 5. This  enables selecting and fitting  a new performance model  in steps 6
-and  7.  The new  model  is  used  in step  8  for  predicting levels  for  each
+and  7.  The  new  model  is used  in  step 8  for  predicting  levels for  each
 significant factor.  We then go back to  step 3, generating a new design for the
 new problem subspace with the remaining factors.  Informed decisions made by the
 user at each step guide the outcome of each iteration.
@@ -12636,26 +12717,9 @@ unrolling amounts  are also common. Deciding  which levels to include  for these
 kinds of factors requires more careful  analysis. For example, if we suspect the
 performance model has  a quadratic term for a certain  factor, the design should
 include at least  three factor levels. The ordering between  the levels of other
-compiler parameters,  such as \texttt{-O(0,1,2,3)}, is  not obviously translated
-to a  number.  Factors like these  are named /categorical/, and  must be treated
+compiler parameters,  such as  /-O(0,1,2,3)/, is not  obviously translated  to a
+number.   Factors  like these  are  named  /categorical/,  and must  be  treated
 differently when constructing designs in step 3 and analyzing results in step 5.
-
-We decided to use D-Optimal designs because their construction techniques enable
-mixing categorical  and numerical  factors in the  same screening  design, while
-biasing sampling according to the  performance model. This enables the autotuner
-to  exploit global  search space  structures if  we use  the right  model.  When
-constructing a  D-Optimal design in  step 3 the  user can require  that specific
-points in the search space are included,  or that others are not. Algorithms for
-constructing D-Optimal designs are capable  of adapting to these requirements by
-optimizing a starting design. Before  settling on D-Optimal designs, we explored
-other      design       construction      techniques      such       as      the
-Plackett-Burman\nbsp{}\cite{plackett1946design} screening  designs shown  in the
-next     section,     the     /contractive     replacement/     technique     of
-Addelman-Kempthorne\nbsp{}\cite{addelman1961some}  and  the /direct  generation/
-algorithm  by   Grömping  and   Fontana\nbsp{}\cite{ulrike2018algorithm}.  These
-techniques have strong requirements on design size and level mixing, so we opted
-for a more  flexible technique that would enable exploring  a more comprehensive
-class of autotuning problems.
 
 After the design  is constructed in step  3, we run each  selected experiment in
 step 4. This step can run in parallel since experiments are independent. Not all

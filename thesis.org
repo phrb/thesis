@@ -8148,6 +8148,10 @@ and Experimental  Design for a  Laplacian GPU  Kernel]], and on  larger autotuni
 problem  on  the  quantization  of   /Deep  Neural  Network/  (DNN)  layers,  in
 Chapter\nbsp{}[[Gaussian Process Regression for Neural Network Bit Quantization]].
 
+#+begin_export latex
+\todo[inline]{Describe thesis structure}
+#+end_export
+
 *** Text Structure                                               :noexport:
 The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
 Reproducible Science]] describes the efforts made over the duration of the work on
@@ -8174,14 +8178,15 @@ reaching the theoretical peak hardware  performance for a given program requires
 not only expert  knowledge of specific hardware architectures,  but also mastery
 of programming models and languages for parallel and distributed computing.
 
-If we state performance optimization problems as /search/ or /learning/ problems, by
-converting implementation  and configuration  choices to /parameters/  which might
-affect  performance, we  can draw  from and  adapt proven  methods from  search,
-mathematical optimization, and statistical  learning. The effectiveness of these
-adapted methods on performance optimization  problems varies greatly, and hinges
-on practical  and mathematical properties  of the problem and  the corresponding
-/search space/. The  application of such methods to the  automation of performance
-tuning for specific hardware, under a set of /constraints/, is named /autotuning/.
+If  we  state  performance  optimization  problems  as  /search/  or  /learning/
+problems, by converting implementation and configuration choices to /parameters/
+which might affect  performance, we can draw from and  adapt proven methods from
+search, mathematical  optimization, and statistical learning.  The effectiveness
+of these  adapted methods on  performance optimization problems  varies greatly,
+and  hinges on  practical and  mathematical properties  of the  problem and  the
+corresponding /search space/. The application  of such methods to the automation
+of performance  tuning for specific hardware,  under a set of  /constraints/, is
+named /autotuning/.
 
 Improving performance  also relies on gathering  application-specific knowledge,
 which entails extensive  experimental costs since, with the  exception of linear
@@ -8189,14 +8194,14 @@ algebra  routines,  theoretical  peak  performance is  not  always  a  reachable
 comparison  baseline.   When  adapting  methods  for  autotuning  we  must  face
 challenges emerging from practical properties,  such as restricted time and cost
 budgets,  constraints  on  feasible  parameter  values,  and  the  need  to  mix
-/categorical/, /continuous/, and /discrete/ parameters.   To achieve useful results we
-must also  choose methods  that make hypotheses  compatible with  problem search
-spaces,  such  as  the  existence  of /discoverable/,  or  at  least  /exploitable/,
-relationships between parameters and performance.  Choosing an autotuning method
-requires balancing  the exploration of a  problem, that is, seeking  to discover
-and  explain   relationships  between   parameters  and  performance,   and  the
-exploitation of known or discovered relationships, seeking only to find the best
-possible performance.
+/categorical/,  /continuous/,  and  /discrete/ parameters.   To  achieve  useful
+results we must also choose methods that make hypotheses compatible with problem
+search  spaces,   such  as  the   existence  of  /discoverable/,  or   at  least
+/exploitable/, relationships  between parameters  and performance.   Choosing an
+autotuning  method requires  balancing the  exploration of  a problem,  that is,
+seeking   to  discover   and  explain   relationships  between   parameters  and
+performance, and the exploitation of  known or discovered relationships, seeking
+only to find the best possible performance.
 
 Search  algorithms  based  on  machine  learning heuristics  are  not  the  best
 candidates for  autotuning domains  where measurements  are lengthy  and costly,
@@ -8204,7 +8209,7 @@ such as compiling industrial-level FPGA  programs, because these algorithms rely
 on the  availability of a  large number of  measurements. They also  assume good
 optimizations  are  reachable from  a  starting  position, and  that  tendencies
 observed locally in the search space are exploitable.  These assumptions are not
-usually true in  common autotuning domains, as  shown in the work  of Seymour /et
+usually true in common  autotuning domains, as shown in the  work of Seymour /et
 al./\nbsp\cite{seymour2008comparison}.
 
 Autotuning search spaces also usually  have non-linear constraints and undefined
@@ -8214,25 +8219,25 @@ machine learning-based search  is that, usually, optimization  choices cannot be
 explained, and knowledge  gained during optimization is not  reusable.  The main
 contribution of this  thesis is to study  how to overcome the  reliance on these
 assumptions about search spaces, and the lack of explainable optimizations, from
-the point  of view  of a  /Design of Experiments/  (DoE), or  /Experimental Design/,
+the point of view of a  /Design of Experiments/ (DoE), or /Experimental Design/,
 methodology to autotuning.
 
 One of  the first detailed  descriptions and  mathematical treatment of  DoE was
-presented  by Ronald  Fisher\nbsp\cite{fisher1937design}  in his  1937 book  /The
-Design of Experiments/,  where he discussed principles  of experimentation, latin
+presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
+Design of Experiments/, where he  discussed principles of experimentation, latin
 square  sampling and  factorial  designs.  Later  books such  as  the ones  from
 Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
-/et   al./\nbsp\cite{box2005statistics}   present   comprehensive   and   detailed
-foundations.   Techniques  based on  DoE  are  /parsimonious/ because  they  allow
+/et   al./\nbsp\cite{box2005statistics}  present   comprehensive  and   detailed
+foundations.   Techniques based  on DoE  are /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
-relationships  between  parameters  and  metrics, and  are  /transparent/  because
+relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
 statistical tests.
 
-In DoE terminology, a  /design/ is a plan for executing  a series of measurements,
-or /experiments/, whose objective is to identify relationships between /factors/ and
-/responses/.  While factors and responses can refer to different concrete entities
-in  other  domains,  in  computer   experiments  factors  can  be  configuration
+In DoE terminology, a /design/ is a plan for executing a series of measurements,
+or /experiments/, whose objective is to identify relationships between /factors/
+and /responses/.   While factors and  responses can refer to  different concrete
+entities in other domains, in  computer experiments factors can be configuration
 parameters for algorithms  and compilers, for example, and responses  can be the
 execution time or memory consumption of a program.
 
@@ -8243,12 +8248,12 @@ construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
-the         DoE         methodology,        and         /Gaussian         Process
-Regression/\nbsp{}\cite{williams2006gaussian}.   This thesis  presents background
+the         DoE        methodology,         and        /Gaussian         Process
+Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
 and  a high-level  view  of  the theoretical  foundations  of  each method,  and
 detailed  discussions of  the challenges  involved in  specializing the  general
 definitions of search  heuristics and statistical learning  methods to different
-autotuning problems,  as well as what  can be /learned/ about  specific autotuning
+autotuning problems, as well as what  can be /learned/ about specific autotuning
 search spaces,  and how  that acquired  knowledge can  be leveraged  for further
 optimization.
 
@@ -8267,7 +8272,7 @@ were evident since  the first vacuum tube computers that  already spanned entire
 floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
 practical and  economical need to fit  more computing power into  real estate is
 one  force for  innovation in  hardware design  that spans  its history,  and is
-echoed in  modern supercomputers,  such as  the /Summit/  from /Oak  Ridge National
+echoed in modern  supercomputers, such as the /Summit/ from  /Oak Ridge National
 Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 
 #+NAME: fig:trends
@@ -8282,17 +8287,17 @@ Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 Figure\nbsp{}[[fig:trends]] highlights the unrelenting and so far successful pursuit
 of smaller transistor fabrication processes, and the resulting capability to fit
 more computing power on  a fixed chip area.  This trend  was already observed in
-integrated      circuits      by      Gordon      Moore      /et      al./      in
+integrated      circuits     by      Gordon      Moore      /et     al./      in
 1965\nbsp{}\cite{moore1965cramming},  who also  postulated its  continuity.  The
 performance improvements produced by the design efforts to make Moore's forecast
 a self-fulfilling  prophecy were  boosted until around  2005 by  the performance
 gained from increases in circuit frequency.
 
-Robert  Dennard  /et  al./ remarked  in  1974\nbsp{}\cite{dennard1974design}  that
+Robert  Dennard /et  al./ remarked  in 1974\nbsp{}\cite{dennard1974design}  that
 smaller  transistors, in  part  because they  generate  shorter circuit  delays,
 decrease  the energy  required to  power  a circuit  and enable  an increase  in
 operation  frequency without  breaking  power usage  constraints.  This  scaling
-effect,  named /Dennard's  scaling/,  is hindered  primarily  by leakage  current,
+effect, named  /Dennard's scaling/,  is hindered  primarily by  leakage current,
 caused    by     quantum    tunneling    effects    in     small    transistors.
 Figure\nbsp{}[[fig:trends]] shows  a marked  stagnation on frequency  increase after
 around 2005,  as transistors crossed  the 10^{2}nm fabrication process.   It was
@@ -8305,21 +8310,21 @@ logical cores around  2015 can be interpreted as preparation  for and mitigation
 of the  end of frequency  scaling, and ushered in  an age of  multicore scaling.
 Still, in order to meet power consumption constraints, up to half of a multicore
 processor could have to be powered down, at all times.  This phenomenon is named
-/Dark   Silicon/\nbsp{}\cite{esmaeilzadeh2011dark},   and   presents   significant
+/Dark   Silicon/\nbsp{}\cite{esmaeilzadeh2011dark},  and   presents  significant
 challenges        to        current         hardware        designers        and
 programmers\nbsp{}\cite{venkataramani2015approximate,cheng2015core,henkel2015new}.
 
-The   /Top500/\nbsp{}\cite{top5002020list}   list    gathers   information   about
+The   /Top500/\nbsp{}\cite{top5002020list}   list  gathers   information   about
 commercially  available supercomputers,  and ranks  them by  performance on  the
-/LINPACK/ benchmark\nbsp{}\cite{dongarra2003linpack}.  Figure\nbsp{}[[fig:rmax-rpeak]]
-shows  the peak  theoretical performance  $RPeak$, and  the maximum  performance
-achieved  on the  LINPACK benchmark  $RMax$, in  $Tflops/s$, for  the top-ranked
-supercomputers on TOP500.   Despite the smaller performance  gains from hardware
-design  that are  to  be  expected for  post-Dennard's  scaling processors,  the
-increase in computer  performance has sustained an  exponential climb, sustained
-mostly by software improvements.
+/LINPACK/                            benchmark\nbsp{}\cite{dongarra2003linpack}.
+Figure\nbsp{}[[fig:rmax-rpeak]] shows the peak  theoretical performance $RPeak$, and
+the maximum performance achieved on the LINPACK benchmark $RMax$, in $Tflops/s$,
+for the  top-ranked supercomputers on  TOP500.  Despite the  smaller performance
+gains from  hardware design that are  to be expected for  post-Dennard's scaling
+processors, the  increase in computer  performance has sustained  an exponential
+climb, sustained mostly by software improvements.
 
-Although  /hardware accelerators/  such as  GPUs and  FPGAs, have  also helped  to
+Although /hardware  accelerators/ such as  GPUs and  FPGAs, have also  helped to
 support exponential performance  increases, their use is not an  escape from the
 fundamental  scaling  constraints  imposed   by  current  semiconductor  design.
 Figure\nbsp{}[[fig:acc-cores]] shows the increase  in processor and accelerator core
@@ -8367,6 +8372,7 @@ introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
 Chapter\nbsp{}[[Optimization Methods for Autotuning]].
+
 *** Consequences for Code Optimization: Autotuning Loop Nest Optimization
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
@@ -8376,27 +8382,28 @@ motivated example, that we will use to introduce the autotuning problem.
 
 One way to improve the performance of such linear algebra programs is to exploit
 cache locality by  reordering and organizing loop iterations,  using source code
-transformation methods such as loop /tiling/, or /blocking/, and /unrolling/.  We will
-now  briefly describe  loop tiling  and unrolling  for a  simple linear  algebra
-problem. After,  we will  discuss an  autotuning search  space for  blocking and
-unrolling applied to  GEMM, and how these transformations  generate a relatively
-large and complex search space, which we can explore using autotuning methods.
+transformation methods  such as loop  /tiling/, or /blocking/,  and /unrolling/.
+We  will now  briefly describe  loop tiling  and unrolling  for a  simple linear
+algebra problem. After, we will discuss  an autotuning search space for blocking
+and  unrolling  applied  to  GEMM,  and how  these  transformations  generate  a
+relatively large and complex search space, which we can explore using autotuning
+methods.
 
-Figure\nbsp{}\ref{fig:transpose-c}  shows  three  versions  of  code  in  the  /C/
+Figure\nbsp{}\ref{fig:transpose-c}  shows  three versions  of  code  in the  /C/
 language that, given three square matrices $A$,  $B$, and $C$, computes $C = C +
 A +  B^{\top}$. The first  optimization we can make  is to preemptively  load to
-cache, or /prefetch/, as  many as possible of the elements we  know will be needed
+cache, or /prefetch/, as many as possible of the elements we know will be needed
 at       any       given       iteration,       as       is       shown       in
 Figure\nbsp{}\ref{fig:transpose-regular-access}. The shaded  elements on the top
 row of Figure\nbsp{}[[fig:blocking-unrolling]] represent  the elements that could be
 prefetched in iterations of Figure\nbsp{}\ref{fig:transpose-regular-access}.
 
-Since /C/ matrices are stored in /row-major order/, each access of an element of $B$
-forces loading the next row elements, even if we explicitly prefetch a column of
-$B$.  Since  we are accessing  $B$ in a  /column-major order/, the  prefetched row
-elements would not be used until we reached the corresponding column. Therefore,
-the next column elements will have  to be loaded at each iteration, considerably
-slowing down the computation.
+Since /C/ matrices are stored in /row-major order/, each access of an element of
+$B$  forces loading  the next  row elements,  even if  we explicitly  prefetch a
+column  of $B$.   Since we  are  accessing $B$  in a  /column-major order/,  the
+prefetched row  elements would not  be used  until we reached  the corresponding
+column.  Therefore, the  next column  elements will  have to  be loaded  at each
+iteration, considerably slowing down the computation.
 
 # #+NAME: fig:blocking-unrolling
 # #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -8498,17 +8505,17 @@ slowing down the computation.
 We  can  solve this  problem  by  reordering  memory  accesses to  request  only
 prefetched elements. It  suffices to adequately split loop  indices into blocks,
 as shown in Figure\nbsp{}\ref{fig:transpose-blocked-tiled}. Now, memory accesses
-are   be   performed    in   /tiles/,   as   shown   on   the    bottom   row   of
+are   be   performed   in   /tiles/,   as   shown   on   the   bottom   row   of
 Figure\nbsp{}[[fig:blocking-unrolling]].  If  blocks are  correctly sized to  fit in
 cache, we  can improve performance  by explicitly prefetching each  tile.  After
-blocking, we can  still improve performance by /unrolling/  loop iterations, which
+blocking, we can still improve performance by /unrolling/ loop iterations, which
 forces register  usage and helps  the compiler to  identify regions that  can be
-/vectorized/.   A  conceptual  implementation  of   loop  unrolling  is  shown  in
+/vectorized/.   A  conceptual  implementation  of loop  unrolling  is  shown  in
 Figure\nbsp{}\ref{fig:transpose-unrolling}.
 
 Looking at the  loop nest optimization problem from  the autotuning perspective,
-the two  /parameters/ that  emerge from  the implementations  are the  /block size/,
-which controls the  stride, and the /unrolling factor/, which  controls the number
+the two /parameters/ that emerge from  the implementations are the /block size/,
+which controls the stride, and the /unrolling factor/, which controls the number
 of unrolled  iterations.  Larger block sizes  are desirable, because we  want to
 avoid extra comparisons,  but blocks should be small enough  to ensure access to
 as few as possible out-of-cache elements.  Likewise, the unrolling factor should
@@ -8519,17 +8526,17 @@ The values  of block size  and unrolling  factor that optimize  performance will
 depend on the  cache hierarchy, register layout,  and vectorization capabilities
 of the  target processor, but  also on the memory  access pattern of  the target
 algorithm.   In  addition  to  finding   the  best  values  for  each  parameter
-independently, an  autotuner must  ideally aim to  account for  the /interactions/
+independently, an autotuner  must ideally aim to account  for the /interactions/
 between parameters, that is, for the fact that the best value for each parameter
 might also depend on the value chosen for the other.
 
-The    next    loop    optimization    example    comes    from    Seymour    /et
-al./\nbsp{}\cite{seymour2008comparison}, and considers 128 blocking and unrolling
-values, in the interval $[0,127]$, for  the GEMM algorithm.  The three panels of
-Figure\nbsp{}\ref{fig:gemm-c} show  conceptual implementations of  loop blocking
-and unrolling for GEMM in /C/.  A block size of zero results in the implementation
-from  Figure\nbsp{}\ref{fig:regular-access}, and  an  unrolling  factor of  zero
-performs a single iteration per condition check.
+The    next    loop    optimization    example   comes    from    Seymour    /et
+al./\nbsp{}\cite{seymour2008comparison},   and   considers  128   blocking   and
+unrolling values, in the interval $[0,127]$,  for the GEMM algorithm.  The three
+panels of Figure\nbsp{}\ref{fig:gemm-c} show  conceptual implementations of loop
+blocking and  unrolling for GEMM in  /C/.  A block  size of zero results  in the
+implementation  from  Figure\nbsp{}\ref{fig:regular-access},  and  an  unrolling
+factor of zero performs a single iteration per condition check.
 
 #+begin_export latex
 \begin{figure}[t]
@@ -8628,7 +8635,7 @@ It  is straightforward  to change  the block  size of  the implementations  from
 Figure\nbsp{}\ref{fig:gemm-c},  but the  unrolling factor  is not  exposed as  a
 parameter.  To test different unrolling values  we need to generate new versions
 of the  source code with  different numbers of  unrolled iterations.  We  can do
-that   with   code   generators    or   with   /source-to-source   transformation/
+that   with   code   generators  or   with   /source-to-source   transformation/
 tools\nbsp{}\cite{videau2017boast,hartono2009annotation,ansel2009petabricks}.
 It is  often necessary to  modify the  program we wish  to optimize in  order to
 provide a configuration  interface and expose its implicit  parameters.  Once we
@@ -8637,14 +8644,15 @@ the target search space by choosing the values to be explored.
 
 In this  example, the search  space is defined by  the $128^2 =  16384$ possible
 combinations  of  blocking  and  unrolling  values.   The  performance  of  each
-combination    in     the    search     space,    shown    in     /Mflops/s/    in
+combination    in    the    search     space,    shown    in    /Mflops/s/    in
 Figure\nbsp{}[[fig:search-space]],    was   measured    for   a    sequential   GEMM
 implementation,        using        square        matrices        of        size
 400\nbsp{}\cite{seymour2008comparison}. We can  represent this autotuning search
-space as a /3D landscape/, since we  have two configurable parameters and a single
-target  performance metric.   In  this setting,  the objective  is  to find  the
-/highest/ point, since the objective is to /maximize/ Mflops/s, although usually the
-performance metric is transformed so that the objective is its /minimization/.
+space  as a  /3D landscape/,  since we  have two  configurable parameters  and a
+single target performance metric.  In this setting, the objective is to find the
+/highest/ point, since the objective is to /maximize/ Mflops/s, although usually
+the  performance   metric  is   transformed  so  that   the  objective   is  its
+/minimization/.
 
 On a first look, there seems to  be no apparent global search space structure in
 the landscape on  Figure\nbsp{}[[fig:search-space]], but local features  jump to the
@@ -8653,7 +8661,7 @@ the ``ramp'' across all unrolling factors for low block sizes, and the series of
 jagged  ``plateaus'' across  the middle  regions, with  ridges for  identical or
 divisible block sizes  and unrolling factors.  A careful look  reveals also that
 there is  a curvature  along the  unrolling factor  axis.  Also  of note  is the
-abundance in  this landscape of  /local minima/,  that is, points  with relatively
+abundance in this  landscape of /local minima/, that is,  points with relatively
 good performance, surrounded  by points with worse  performance. By exhaustively
 evaluating  all  possibilities, the  original  study  determined that  the  best
 performance  on this  program  was achieved  with  a  block size  of  80 and  an
@@ -8666,7 +8674,7 @@ autotuning  domains  and methods  employed  in  current research,  presenting  a
 selection of  search spaces and  discussing the trends  that can be  observed on
 search space size, targeted HPC domains, and chosen optimization methods.
 
-*** Autotuning Approaches and Search Space
+*** Autotuning Approaches and Search Spaces
 Autotuning  methods have  been used  to improve  performance in  an increasingly
 large  variety of  domains,  from  the earlier  applications  to linear  algebra
 subprograms,  to the  now ubiquitous  construction and  configuration of  neural
@@ -8720,17 +8728,17 @@ improvements, it is likely that most  configuration parameters will have a small
 impact, that is,  that only a handful of parameters  are responsible for changes
 in performance.  Search  spaces are often much more restrictive  than the one we
 discussed in  Section\nbsp{}[[Consequences for Code Optimization:  Autotuning Loop
-Nest Optimization]].  Autotuning problem definitions usually come with /constraints/
-on parameter values  and limited /experimental budgets/, and  /runtime/ failures for
-some  configurations   are  often  unpredictable.   In   this  context,  finding
-configurations  that   improve  performance   and  determining  the   subset  of
-/significant parameters/ are considerable challenges.
+Nest   Optimization]].   Autotuning   problem   definitions   usually  come   with
+/constraints/  on  parameter  values  and limited  /experimental  budgets/,  and
+/runtime/ failures  for some  configurations are  often unpredictable.   In this
+context,  finding configurations  that improve  performance and  determining the
+subset of /significant parameters/ are considerable challenges.
 
 Search  heuristics, such  as methods  based on  genetic algorithms  and gradient
 descent, are  a natural way to  tackle these challenges because  they consist of
 procedures for exploiting existing  and unknown relationships between parameters
-and  performance  without making  or  requiring  /explicit hypotheses/  about  the
-problem.  Despite that,  most commonly used heuristics  make /implicit hypotheses/
+and  performance without  making or  requiring /explicit  hypotheses/ about  the
+problem.  Despite that, most commonly used heuristics make /implicit hypotheses/
 about search  spaces which are not  always verified, such as  assuming that good
 configurations are /reachable/ from a random starting point.
 
@@ -8828,11 +8836,12 @@ Chu, Y. \textit{et al.}~\cite{chu2020improving} & Search/MVWCP & SH & 2020\\
 Autotuning methods that make explicit  hypotheses about the target program, such
 as methods  based on Design of  Experiments, require some initial  knowledge, or
 willingness to make assumptions, about  underlying relationships, and are harder
-to adapt to constrained scenarios, but have the potential to produce /explainable/
-optimizations.   In  general, methods  based  on  Machine Learning  have  enough
-flexibility to  perform well in complex  search spaces and make  few assumptions
-about problems, but usually provide little, if  any, that can be used to explain
-optimization choices or derive relationships between parameters and performance.
+to  adapt  to   constrained  scenarios,  but  have  the   potential  to  produce
+/explainable/ optimizations.  In general, methods based on Machine Learning have
+enough  flexibility to  perform  well  in complex  search  spaces  and make  few
+assumptions about problems, but usually provide little, if any, that can be used
+to explain optimization  choices or derive relationships  between parameters and
+performance.
 
 Table\nbsp{}\ref{tab:search-methods} lists some autotuning systems, their target
 domains, and  the employed  method, ordered by  publication date.   Some systems
@@ -8850,9 +8859,15 @@ Machine Learning become more common on later work than systems using heuristics.
 
 Chapter\nbsp{}[[Methods   for  Function   Minimization]]   provides  more   detailed
 definitions and discussions of the applicability, effectiveness, and explanatory
-power of autotuning methods based on search heuristics and statistical learning.
-The remainder of  this chapter details the contributions of  this thesis and the
+power  of  stochastic  autotuning  methods  based  on  search  heuristics.   The
+remainder  of this  chapter details  the contributions  of this  thesis and  the
 structure of this document.
+
+#+begin_export latex
+\todo[inline]{Third Chapter, or  next Section: Proposal of this  thesis, list of
+  contributions}
+#+end_export
+
 * Optimization Methods for Autotuning
 ** Notation and Search Spaces
 The  following chapters  discuss the  optimization  methods that  we applied  to
@@ -10494,14 +10509,63 @@ reviewed and summarized by the authors\nbsp{}\cite{saltelli2010variance}.
 
 
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
+#+begin_export latex
+\todo[inline]{A couple of paragraphs to wrap the GPR section}
+#+end_export
 
 *** Summary
+#+begin_export latex
+\todo[inline]{A couple of paragraphs to Wrap up the Learning/Surrogates Chapter}
+#+end_export
+
+Sketch:
+
+- Two big classes of models.  Generality vs. interpretability. Yet everything we
+  mentioned assumes X  is given, sampled from observations. In  our contects, We
+  can  choose which  X to  test, either  to test  the model,  or to  improve its
+  quality, or to find a "good" value in our space $\mathcal{X}$.
+
 ** Design of Experiments
+#+begin_export latex
+\todo[inline]{Describe Full Factorial Designs}
+\todo[inline]{Complete this chapter}
+#+end_export
+
 In  this  section  we  first  present  the  assumptions  of  a  traditional  DoE
 methodology using an  example of /2-level screening designs/, an  efficient way to
 identify  main effects.  We  then  discuss techniques  for  the construction  of
 efficient designs  for factors with arbitrary  numbers and types of  levels, and
 present /D-Optimal/ designs, the technique used in this paper.
+
+*** Sketch for the Chapter
+**** 2-level factorial designs
+**** Screening
+Super efficient but very limited
+**** Optimal designs
+A "flexible" screening: allows to include non-linear terms,
+interactions, etc. if needed.
+
+Awesome but if a parameter was not included in the model or if the
+model is too simple (e.g. only comprised a linear term where a
+quadratic one would have been needed, or an important interaction was
+not included), we won't be able to detect it (lack of fit).
+**** Space-filling Designs
+Not very efficient for parameter estimate but good to evaluate the
+lack of fit.
+
+Also good for variance minimization in GP.
+**** Mini-conclusion
+- Designs to obtain good-quality parameter estimates
+  - Screening and D-opt for LM
+  - SFD for GP
+- Designs to test the model quality (lack of fit)
+  - SFD fo LM
+
+If model based, parameter significance and estimation can be used to
+reduce dimension and guide the optimization. With this DoE approach,
+we have a clear separation between the sampling phase and the
+interpretation phase. But what if no parameter really appears
+significant anymore?
 
 *** Search Space Exploration Strategies
 #+NAME: fig:sampling_comparison
@@ -11220,7 +11284,38 @@ Figure\nbsp{}[[fig:doe_anova_strategy]].  In  the  next   section  we  evaluate 
 performance of our DoE approach in two scenarios.
 
 ** Online Learning
+#+begin_export latex
+\todo[inline]{TODO}
+#+end_export
+*** Bandits: simple (discrete choice, optimize regret = \sum_t R_t), USB
+*** EI for GP (continuous choice, optimize EI = \max_t R_t)
+Also mention GP-UCB and contrast with EGO. There are also variants for
+Linear Model (LinUCB).
+*** Mini-conclusion
+These methods seamlessly mix exploration and exploitation but the
+overal objective function is generally the regret, which makes sense
+for a self-optimizing system (e.g. facebook) but not in an autotuning
+context (where EI is more meaningful).
 ** Summary
+#+begin_export latex
+\todo[inline]{Revisit semi-conclusions of each chapter,  wrap up this part, hook
+  to next part}
+#+end_export
+
+- use glassbox (DoE based) approach to perform the optimization,
+  always try to interpret the results
+- 2 big methods based on different exploration/exploitation strategy:
+  1. Evaluate parameter significance and reduce dimension (two phases,
+     iterative)
+  2. Expected Improvement (first a general exploration phase with a
+     SFD, then seamlessly mix exploration and exploitation)
+  Possibly combinations of both approaches could be used back and
+  forth depending on the specific information we learn on the use
+  case.
+- In this thesis, we evaluate these DoE-based approaches for several
+  autotuning use cases and try to compare them with approaches that
+  had beed previously proposed fot these use cases.
+
 The  effectiveness   of  stochastic  descent   methods  on  autotuning   can  be
 limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
 between other factors, by underlying hypotheses  about the search space, such as
@@ -11262,6 +11357,17 @@ branching questions underlying each method.
 *** Gaussian Process Regression
 * Applications
 ** Research Methodology: Efforts for Reproducible Science
+Sketch:
+
+- Tools and such
+- Explain difficulty of finding a needle in a haystack:
+  - how to know whether we found the optimal value ?
+  - how to know how far we are from the optimal value ?
+  - how to know whether there is anything to find ?
+  - how to know whether the geometry hypothesis we make are sound in
+    an unknown space ?
+  - ...
+
 *** Introduction
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
@@ -12629,6 +12735,30 @@ autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
+This  chapter presents  an application  of Optimal  Design and  Gaussian Process
+Regression to  the optimization of source-to-source  transformation kernels from
+the SPAPT\nbsp{}\cite{balaprakash2012spapt} benchmark suite.
+
+The  chapter is  organized as  follows.  Section\nbsp{}[[Choosing  an Experimental
+Design Method  for Autotuning]] discusses  our choice of using  D-Optimal designs,
+considering  its applicability  to  autotuning among  other Experimental  Design
+methods.  Section\nbsp{}[[A  Transparent and  Parsimonious Approach  to Autotuning
+using  Optimal  Design]] Presents  our  adaptation  of  a sequential  approach  to
+autotuning,  starting  with modeling  assumptions  about  the search  space  and
+iteratively refining  models based on ANOVA.   Section\nbsp{}[[The SPAPT Benchmark
+Suite]]  presents  the  CPU  kernels  to   which  we  applied  our  approach,  and
+Section\nbsp{}[[Performance  Improvements  using   Optimal  Design]]  discusses  the
+results.  The work presented  up to Section\nbsp{}[[Performance Improvements using
+Optimal Design]] was published at CCGrid\nbsp{}\cite{bruel2019autotuning} in 2019.
+The studies  we performed later  were not yet published  at the writing  of this
+thesis.  In Section\nbsp{}[[Identifying Significant Factors using ANOVA]] we explore
+the  optimization of  one of  the target  kernels and  identify the  factors and
+levels that  where responsible  for the  observed performance  improvements.  In
+Section\nbsp{}[[Performance  Improvements  using  Gaussian Process  Regression]]  we
+discuss the application of Gaussian Process Regression with Expected Improvement
+to  the same  kernel.  Finally,  Section\nbsp{}\ref{sec:dlmt-summary} summarizes
+the chapter and discusses future work.inally,
+
 *** Choosing an Experimental Design Method for Autotuning
 Our application of the ED methodology  requires support for factors of different
 types and  numbers of levels, such  as binary flags, integer  and floating point
@@ -12761,9 +12891,9 @@ the DoE methodology, screening designs and D-Optimal designs.
 
 Our approach can be applied to any autotuning domain that expresses optimization
 as  a  search  problem,  although  the performance  evaluations  we  present  in
-Section\nbsp{}[[Performance   Evaluation]]   were   obtained  in   the   domain   of
-source-to-source  transformation. Several  frameworks, compilers  and autotuners
-provide    tools     to    generate    and     optimize    architecture-specific
+Section\nbsp{}[[Performance Improvements using Optimal Design]] were obtained in the
+domain  of source-to-source  transformation. Several  frameworks, compilers  and
+autotuners  provide   tools  to  generate  and   optimize  architecture-specific
 code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
 We            used             BOAST\nbsp{}\cite{videau2017boast}            and
 Orio\nbsp{}\cite{hartono2009annotation}     to      perform     source-to-source
@@ -12771,33 +12901,15 @@ transformations targeting parallelization on  CPUs and GPUs, vectorization, loop
 transformations  such as  tiling  and  unrolling, and  data  structure size  and
 copying.
 
-*** Performance Evaluation
-The    SPAPT\nbsp{}\cite{balaprakash2012spapt}    benchmark    suite    provides
-parametrized  CPU kernels  from different  HPC  domains.  The  kernels shown  in
+*** The SPAPT Benchmark Suite
+The    /Search   Problems    in    Automatic    Performance   Tuning/    (SPAPT)
+\nbsp{}\cite{balaprakash2012spapt}  benchmark  suite provides  parametrized  CPU
+kernels    from    different    HPC    domains.    The    kernels    shown    in
 Table\nbsp{}[[tab:spapt_apps]]  are  implemented  using   the  code  annotation  and
 transformation   tools   provided  by   Orio\nbsp{}\cite{hartono2009annotation}.
 Search space  sizes are  larger than  in the  Laplacian Kernel  example.  Kernel
 factors are either integers in an  interval, such as loop unrolling and register
 tiling amounts, or binary flags that control parallelization and vectorization.
-
-#+NAME: fig:iteration_best_comparison
-#+CAPTION: Cost of best points found on each run, and the iteration where
-#+CAPTION: they were found. RS and DLMT found no speedups with similar budgets
-#+CAPTION: for kernels marked with ``[0]'' and /blue/ headers, and similar speedups with
-#+CAPTION: similar budgets for kernels marked with ``[=]'' and /orange/ headers. DLMT found similar
-#+CAPTION: speedups using smaller budgets for kernels marked with ``[+]'' /green/ headers.
-#+CAPTION: Ellipses delimit an estimate of where 95% of the underlying distribution lies
-#+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
-[[./img/ccgrid19/iteration_best_comparison.pdf]]
-
-#+NAME: fig:split_histograms
-#+CAPTION: Histograms of explored search spaces, showing the real count of measured configurations.
-#+CAPTION: Kernels are grouped in the same way as in Figure\nbsp{}[[fig:iteration_best_comparison]].
-#+CAPTION: DLMT spent fewer measurements than RS in configurations with smaller speedups or with slowdowns,
-#+CAPTION: even for kernels in the orange group. DLMT also spent more time exploring configurations with
-#+CAPTION: larger speedups
-#+ATTR_LATEX: :float multicolumn :placement [p] :width \textwidth
-[[./img/ccgrid19/split_histograms.pdf]]
 
 We used the Random Sampling (RS) implementation available in Orio and integrated
 an implementation  of our approach  (DLMT) to the  system. We omitted  the other
@@ -12805,14 +12917,7 @@ Orio      algorithms      because       other      studies      using      SPAPT
 kernels\nbsp{}\cite{balaprakash2011can,balaprakash2012experimental}  showed that
 their performance is similar to RS regarding budget usage. The global minima are
 not known  for any of  the problems,  and search spaces  are too large  to allow
-complete measurements.  Therefore,  we used the performance  of each application
-compiled  with  the  /gcc/  /-O3/  flag, with  no  code  transformations,  as  a
-/baseline/ for computing the /speedups/ achieved by each strategy.  We performed
-10 autotuning repetitions for  each kernel using RS and DLMT,  using a budget of
-/at most/ 400 measurements. DLMT was allowed to perform only 4 of the iterations
-shown in Figure\nbsp{}[[fig:doe_anova_strategy]].   Experiments were performed using
-Grid5000\nbsp{}\cite{balouek2013adding},  on /Debian  Jessie/,  using an  /Intel
-Xeon E5-2630v3/ CPU and /gcc/ version /6.3.0/.
+complete measurements.
 
 #+ATTR_LATEX: :booktabs t :align llll :font \scriptsize :float t :placement [t]
 #+NAME: tab:spapt_apps
@@ -12838,6 +12943,16 @@ Xeon E5-2630v3/ CPU and /gcc/ version /6.3.0/.
 | =correlation= | Correlation computation         |      21 | $4.5 \times 10^{17}$ |
 |---------------+---------------------------------+---------+----------------------|
 
+*** Performance Improvements using Optimal Design
+We used the performance of each SPAPT kernel compiled with the /gcc/ /-O3/ flag,
+with  no code  transformations, as  a  /baseline/ for  computing the  /speedups/
+achieved  by each  strategy.  We  performed 10  autotuning repetitions  for each
+kernel using RS and DLMT, using a budget of /at most/ 400 measurements. DLMT was
+allowed    to    perform    only    4     of    the    iterations    shown    in
+Figure\nbsp{}[[fig:doe_anova_strategy]].     Experiments   were    performed   using
+Grid5000\nbsp{}\cite{balouek2013adding},  on /Debian  Jessie/,  using an  /Intel
+Xeon E5-2630v3/ CPU and /gcc/ version /6.3.0/.
+
 The time to measure  each kernel varied from a few seconds to  up to 20 minutes.
 In  testing, some  transformations  caused  the compiler  to  enter an  internal
 optimization process that did  not stop for over 12 hours. We  did not study why
@@ -12845,14 +12960,14 @@ these cases  delayed for  so long,  and implemented an  execution timeout  of 20
 minutes, considering cases  that took longer than that to  compile to be runtime
 failures.
 
-Similar to the previous example, we  automated factor elimination based on ANOVA
-tests so  that a comprehensive  evaluation could be  performed. We also  did not
-tailor initial performance models, which were  the same for all kernels. Initial
-models had a linear term for each factor with two or more levels, plus quadratic
-and  cubic terms  for factors  with sufficient  levels. Although  automation and
-identical initial models might have limited the improvements at each step of our
-application, our results  show that it still succeeded in  decreasing the budget
-needed to find significant speedups for some kernels.
+We automated  factor elimination based  on ANOVA  tests so that  a comprehensive
+evaluation  could be  performed.  We  also did  not  tailor initial  performance
+models, which were  the same for all  kernels. Initial models had  a linear term
+for each  factor with  two or more  levels, plus quadratic  and cubic  terms for
+factors with sufficient levels. Although automation and identical initial models
+might have limited the improvements at each step of our application, our results
+show that it still succeeded in decreasing the budget needed to find significant
+speedups for some kernels.
 
 Figure\nbsp{}[[fig:iteration_best_comparison]] presents the  /speedup/ found by each
 run of RS and DLMT, plotted against the algorithm /iteration/ where that speedup
@@ -12866,6 +12981,25 @@ significantly  smaller budget  than RS  contains 8  kernels and  is marked  with
 underlying distribution  lies, and a dashed  line marks the /-03/  baseline.  In
 comparison to  RS, our  approach significantly decreased  the average  number of
 iterations needed to find speedups for the 8 kernels in the green group.
+
+#+NAME: fig:iteration_best_comparison
+#+CAPTION: Cost of best points found on each run, and the iteration where
+#+CAPTION: they were found. RS and DLMT found no speedups with similar budgets
+#+CAPTION: for kernels marked with ``[0]'' and /blue/ headers, and similar speedups with
+#+CAPTION: similar budgets for kernels marked with ``[=]'' and /orange/ headers. DLMT found similar
+#+CAPTION: speedups using smaller budgets for kernels marked with ``[+]'' /green/ headers.
+#+CAPTION: Ellipses delimit an estimate of where 95% of the underlying distribution lies
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/ccgrid19/iteration_best_comparison.pdf]]
+
+#+NAME: fig:split_histograms
+#+CAPTION: Histograms of explored search spaces, showing the real count of measured configurations.
+#+CAPTION: Kernels are grouped in the same way as in Figure\nbsp{}[[fig:iteration_best_comparison]].
+#+CAPTION: DLMT spent fewer measurements than RS in configurations with smaller speedups or with slowdowns,
+#+CAPTION: even for kernels in the orange group. DLMT also spent more time exploring configurations with
+#+CAPTION: larger speedups
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/ccgrid19/split_histograms.pdf]]
 
 Figure\nbsp{}[[fig:split_histograms]] shows  the search space  exploration performed
 by    RS    and    DLMT.     It     uses    the    same    color    groups    as
@@ -12894,7 +13028,7 @@ and green groups. Even in this automated setting, the results with SPAPT kernels
 illustrate the ability our approach has to reduce the budget needed to find good
 speedups by efficiently exploring search spaces.
 
-*** Identifying most significant factors
+*** Identifying Significant Factors using ANOVA
 The objective  of this  report is  to analyze  data from  our CCGRID  paper, and
 perform new experiments  as needed, in order to better  understand the statiscal
 analysis and the performance achieved by  our DoE-based approach.  We would like
@@ -13073,7 +13207,7 @@ produced as we progress.
 ***** Fixing Binary Factors
 **** Executing More Optimization Steps
 
-*** Using Gaussian Process Regression
+*** Performance Improvements using Gaussian Process Regression
 #+CAPTION: Execution time of points measured by GPR along iterations, with pareto border in red
 #+LABEL: fig:bicgkernel-gp-pareto
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
@@ -13091,6 +13225,11 @@ produced as we progress.
 #+ATTR_LATEX: :width 0.65\textwidth :placement [t]
 #+RESULTS:
 [[file:./img/journal/gp_rs_comparison.pdf]]
+*** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:dlmt-summary
+:END:
+
 ** Gaussian Process Regression for Neural Network Bit Quantization
 * Conclusion
 #+begin_export latex

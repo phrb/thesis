@@ -12748,16 +12748,17 @@ autotuning,  starting  with modeling  assumptions  about  the search  space  and
 iteratively refining  models based on ANOVA.   Section\nbsp{}[[The SPAPT Benchmark
 Suite]]  presents  the  CPU  kernels  to   which  we  applied  our  approach,  and
 Section\nbsp{}[[Performance  Improvements  using   Optimal  Design]]  discusses  the
-results.  The work presented  up to Section\nbsp{}[[Performance Improvements using
-Optimal Design]] was published at CCGrid\nbsp{}\cite{bruel2019autotuning} in 2019.
-The studies  we performed later  were not yet published  at the writing  of this
-thesis.  In Section\nbsp{}[[Identifying Significant Factors using ANOVA]] we explore
-the  optimization of  one of  the target  kernels and  identify the  factors and
-levels that  where responsible  for the  observed performance  improvements.  In
-Section\nbsp{}[[Performance  Improvements  using  Gaussian Process  Regression]]  we
-discuss the application of Gaussian Process Regression with Expected Improvement
-to  the same  kernel.  Finally,  Section\nbsp{}\ref{sec:dlmt-summary} summarizes
-the chapter and discusses future work.inally,
+results.   The work  presented  up  to Section\nbsp{}[[Performance  Improvements
+using Optimal Design]]  was published at CCGrid\nbsp{}\cite{bruel2019autotuning}
+in 2019.  The studies  we performed later were not yet  published at the writing
+of this thesis.  In Section\nbsp{}[[Identifying Significant Factors for the /bicg/
+Kernel]] we explore the optimization of one of the target kernels and identify the
+factors  and  levels  that  where   responsible  for  the  observed  performance
+improvements.  In Section\nbsp{}[[Performance  Improvements using Gaussian Process
+Regression]]  we  discuss the  application  of  Gaussian Process  Regression  with
+Expected      Improvement      to      the      same      kernel.       Finally,
+Section\nbsp{}\ref{sec:dlmt-summary} summarizes the chapter and discusses future
+work.
 
 *** Choosing an Experimental Design Method for Autotuning
 Our application of the ED methodology  requires support for factors of different
@@ -13028,25 +13029,22 @@ and green groups. Even in this automated setting, the results with SPAPT kernels
 illustrate the ability our approach has to reduce the budget needed to find good
 speedups by efficiently exploring search spaces.
 
-*** Identifying Significant Factors using ANOVA
-The objective  of this  report is  to analyze  data from  our CCGRID  paper, and
-perform new experiments  as needed, in order to better  understand the statiscal
-analysis and the performance achieved by  our DoE-based approach.  We would like
-to understand how a user could  interfere and guide search space restriction and
-exploration, by intervening at each ANOVA step, for example.
+*** Identifying Significant Factors for the /bicg/ Kernel
+The discussion on  the following sections was  not yet published at  the time of
+writing of this  thesis.  We continued to study the  application of Experimental
+Design methods to the optimization of SPAPT kernels, modifying the original DLMT
+algorithm  by removing  cubic terms  to simplify  the target  performance model,
+fixing binary parameters to look  for other significant effects, leveraging data
+collected in  previous designs, running  more optimization steps,  and assessing
+the performance  of quantile regression as  an alternative to the  linear model.
+In  this study  we  sought to  expose  and  analyze the  inner  workings of  our
+approach.
 
-We are also interested in exploring new design construction metrics, in order to
-understand which  factors are best estimated  at each step and  possibly discard
-designs not capable of estimating parameters of interest.
-
-We chose to start with the /bicg/ SPAPT  kernel. It was one of the kernels where
-our approach  achieved similar-performing  solutions using less  experiments, in
-comparison with a uniform random sampling  approach, across 10 repetitions of an
-experiment with a fixed  budget of 400 experiments and a  limit of 4 iterations,
-or steps, of our approach.
-
-The  following sections  describe  our ongoing  exploration  of the  performance
-modeling and optimization of the /bicg/ kernel.
+In a non-automated setting, it becomes  more clear how users could interfere and
+guide search  space restriction  and exploration, by  intervening at  each ANOVA
+step, for example.  We started with the /bicg/ SPAPT kernel because our approach
+achieved  equivalent solutions  using a  smaller budget  than a  random sampling
+approach.
 
 **** Removing Cubic Terms
 Figure\nbsp{}[[fig:best-found-no-cubic]]  shows   the  iterations  where   the  best
@@ -13058,6 +13056,12 @@ not the same.  The data for the figures  in this report were obtained with a new
 set of  10 repetitions the same  experiment, but using a  performance model with
 only linear  and quadratic terms, removing  the cubic terms used  in the paper's
 experiments.
+
+#+CAPTION: Iteration where best was found
+#+LABEL: fig:best-all
+#+ATTR_LATEX: :width 0.7\textwidth :placement [t]
+#+RESULTS:
+[[file:./img/journal/iterations_all.pdf]]
 
 #+CAPTION: Iteration where best was found
 #+LABEL: fig:best-found-no-cubic

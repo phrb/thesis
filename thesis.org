@@ -1057,6 +1057,7 @@ context (where EI is more meaningful).
 - On the interest of using a Screening design.
   - Once the significant parameters are, they can easily be
     fixed. Are there the same as the ones found by opentuner.
+- [ ] Separate new GPUs from older ones
 *** Use Case 2: Kernel GPU Steven
 - Introduction to this chapter
 - Base strategies (RS, GAs, Local Descent, ...)
@@ -1075,10 +1076,10 @@ context (where EI is more meaningful).
 - [X] Remove repeated figures
   - We can make all points with only the first set of figures
 
-- We can ID factors' significance
+- [X] We can ID factors' significance
   - OMP had the largest impact
 
-- We can show that fixing factors effectively decreases performance
+- [X] We can show that fixing factors effectively decreases performance
   - D-Optimal designs on restricted subspaces find the best points often
   - The model fits, not so much
 
@@ -12779,9 +12780,9 @@ in 2019.  The studies  we performed later were not yet  published at the writing
 of this thesis.  In Section\nbsp{}[[Identifying Significant Factors for the /bicg/
 Kernel]] we explore the optimization of one of the target kernels and identify the
 factors  and  levels  that  where   responsible  for  the  observed  performance
-improvements.  In Section\nbsp{}[[Performance  Improvements using Gaussian Process
-Regression]]  we  discuss the  application  of  Gaussian Process  Regression  with
-Expected      Improvement      to      the      same      kernel.       Finally,
+improvements.  In  Section\nbsp{}[[Autotuning SPAPT kernels with  Gaussian Process
+Regression  and Expected  Improvement]]  we discuss  the  application of  Gaussian
+Process  Regression with  Expected  Improvement to  the  same kernel.   Finally,
 Section\nbsp{}\ref{sec:dlmt-summary} summarizes the chapter and discusses future
 work.
 
@@ -13081,25 +13082,52 @@ lighter colors mark points found  with fewer iterations. Similarly, the /y/-axis
 on the bottom  panel shows the iterations  where points were found  for the same
 data, with lighter colors marking points with lower execution times.
 
-#+CAPTION: Iteration where best was found
+#+CAPTION: Summary of our DLMT results, compared to uniform Random Sampling (RS),
+#+CAPTION: showing the configurations with smallest speedups, found in 10 independent
+#+CAPTION: runs. The top panel compares execution time, with color-encoded iterations,
+#+CAPTION: and the bottom panel compares iterations where configurations were found,
+#+CAPTION: with color-encoded execution times.
 #+LABEL: fig:best-all
 #+ATTR_LATEX: :width 0.7\textwidth :placement [t]
 #+RESULTS:
 [[file:./img/journal/iterations_all.pdf]]
 
-The next sections  will discuss four incremental modifications  to the algorithm
-published at CCGRID,  which were performed to help  identify significant factors
-and attempt to  find better speedups. Although we did  not significantly improve
-the speedups found by our method, we were able to present a deeper look into the
-inner workings of this white-box autotuning approach.
+The next sections  discuss incremental modifications to  the algorithm published
+at CCGRID, which were performed to help identify significant factors and attempt
+to find better speedups. Although we  did not significantly improve the speedups
+found  by our  method, we  were able  to present  a deeper  look into  the inner
+workings of  this white-box autotuning  approach.  The next section  describe in
+detail the two incremental modifications below:
+
+\paragraph{Removing Cubic Terms} We  initially used third-degree polynomials for
+the performance models  of all kernels.  Cubic terms were  never eliminated when
+following significance  levels reported by  ANOVA, so  we decided to  drop cubic
+terms and  fit a quadratic polynomial,  which reduced the necessary  design size
+and produced equivalent results.
+
+\paragraph{Reusing Data}  In our  initial approach, we  performed ANOVA  in each
+iteration  using  only the  data  from  the  subspaces  to which  we  restricted
+exploration.  This can increase flexibility because  the models are free to vary
+outside the restricted regions, but this also wastes experimental data.  In this
+modification  we   reused  all   measurements  performed   during  optimization,
+leveraging all  measurements regardless of  their position in the  search space,
+which increases the benefits of multiple runs.
+
+The two other modifications shown in Figure\nbsp{}[[fig:best-all]] are:
+
+\paragraph{Quantile Regression} We  identified a substantial amount  of noise on
+the  performance measurements  of non-binary  parameters. Models  accounting for
+factor interactions could  help, since there is a good  chance that interactions
+are  responsible for  the  noise. In  this  study, we  decided  to try  Quantile
+Regression, which is a modification of Linear Regression where it is possible to
+weight points based on  the quantiles they belong to, allowing  the model to fit
+to a different quantile, opposition to fitting to the mean. We explored multiple
+quantiles, and Figure\nbsp{}[[fig:best-all]] shows results using the 5% quantile.
+
+\paragraph{Running  more Steps}  This is  less of  a modification,  and involved
+simply running the original approach for twice the number of steps.
 
 **** Removing Cubic Terms
-We initially  used third-degree  polynomials for the  performance models  of all
-kernels.  Cubic terms  were never eliminated when  following significance levels
-reported  by ANOVA,  so we  decided  to drop  cubic  terms and  fit a  quadratic
-polynomial,  which reduced  the necessary  design size  and produced  equivalent
-results.
-
 The  data  in the  figures  shown  next  were obtained  with  a  new set  of  10
 repetitions      of       the      /bicg/      kernel       experiment      from
 Figures\nbsp{}\ref{fig:iteration_best_comparison}                            and
@@ -13112,7 +13140,8 @@ model terms/ that were eliminated at  each color-coded DLMT step.  As before, we
 see that  /OMP/ and /SCR/  were the most  eliminated factors, especially  on the
 first step.
 
-#+CAPTION: Eliminated terms
+#+CAPTION: Count of the model terms eliminated in each of the 4 steps of 10
+#+CAPTION: independent runs, without  cubic terms
 #+LABEL: fig:eliminated-terms-no-cubic
 #+ATTR_LATEX: :width 0.6\textwidth :placement [t]
 #+RESULTS:
@@ -13136,13 +13165,16 @@ configurations have  relatively high  execution time until  after step  3, where
 can be  seen at the  fourth step at /parasilo-11/,  after /RT_I/ was  fixed. The
 minimum execution time seems to be higher than in the third step.
 
-#+CAPTION: Execution time of Searched Space, step-by-step, by experiment
+#+CAPTION: Measured execution time of all points in the designs constructed at
+#+CAPTION: each step, where panel headers mark the hostname of the machines
+#+CAPTION: used in each of the 10 separate experiments
 #+LABEL: fig:explored-space-no-cubic
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
 #+RESULTS:
 [[file:./img/journal/explored_space_no_cubic.pdf]]
 
-#+CAPTION: Fitting linear models and quadratic quantile regression
+#+CAPTION: Fitting linear models and quadratic quantile regression,
+#+CAPTION: with $\tau = 0.05$, $0.25$, and $0.5$,
 #+CAPTION: to separate factors for 10 uniform random sampling runs
 #+LABEL: fig:models-no-cubic
 #+ATTR_LATEX: :width 0.9\textwidth :placement [t]
@@ -13209,22 +13241,14 @@ that the  model is not capable  of describing the relationships  between factors
 and  response,  perhaps   because  of  the  presence   of  interactions  between
 parameters.
 
-**** Reusing Data in ANOVA and Linear Regression
-In our initial approach we performed ANOVA in each iteration using only the data
-from  the subspaces  to  which  we restricted  exploration.   This can  increase
-flexibility because the models are free  to vary outside the restricted regions,
-but this  also wastes  experimental data.   In this  modification we  reused all
-measurements   performed  during   optimization,  leveraging   all  measurements
-regardless of their  position in the search space, which  increases the benefits
-of multiple runs.
-
+**** Reusing Data from All Steps
 Significant  changes were  performed  on the  initial  DLMT implementation.   We
 decided  that there  was no  good reason  to not  reuse the  data obtained  from
 evaluating designs  at each step,  and the various  samples of the  search space
 taken  at different  points. Now,  all  evaluated experiments  compose a  single
 growing design used by /aov/ to identify  the best factors, and all samples from
 the  search space  compose a  single  data set  used by  /optFederov/ to  select
-experiments.  The  data set  is  pruned  in both  /aov/  and  /lm/ analyses,  to
+experiments.   The data  set  is pruned  in  both /aov/  and  /lm/ analyses,  to
 guarantee only  experiments with the correct  levels of fixed factors  are used.
 This  is crucial  for  both analyses,  since having  different  fixed values  of
 factors that are  not in the model  would imply that we  would have inexplicable
@@ -13279,36 +13303,87 @@ produced as we progress.
 #+RESULTS:
 [[file:./img/journal/predictions_reuse.pdf]]
 
-**** Experiments with Quantile Regression
-We identified a  substantial amount of noise on the  performance measurements of
-non-binary  parameters. Models  accounting for  factor interactions  could help,
-since there is a good chance that interactions are responsible for the noise. In
-this study,  we decided to try  Quantile Regression, which is  a modification of
-Linear Regression where  it is possible to weight points  based on the quantiles
-they belong to, allowing the model to fit to a different quantile, opposition to
-fitting to the mean.
-**** Executing More Optimization Steps
-This  is less  of  a  modification, and  involved  simply  running the  original
-approach for twice the number of steps.
 
-*** Performance Improvements using Gaussian Process Regression
+**** Summary: Tuning SPAPT Kernels with Optimal Design
+We could not significantly improve upon the speedups found by the uniform random
+sampling  strategy, although  we did  find good  speedups using  a significantly
+smaller budget.  This  happens mainly because the DLMT  approach quickly detects
+the large effect  of the /OMP/ binary parameter. Subsequent  parameters that are
+detected  as  significant  have  much   smaller  effects,  so  consequently  the
+performance does  not improve by  much.
+
+We  can conclude  that  the  SPAPT search  space  structures  defined by  kernel
+parameters exposed  and modified  by Orio  cannot be  fully exploited  by models
+based  on  second   or  third  degree  polynomials,  even   with  well  designed
+experiments.  We could  not determine whether kernel  configurations with better
+performance than the  ones we found exist in these  search spaces. Additionally,
+the strongly biased  models we used could be responsible  for not finding better
+configurations. We  attempted to  find better configurations  using a  much more
+flexible   approach,  based   on  Gaussian   Process  Regression   and  Expected
+Improvement, which  we discuss  next. We  also compared  the performance  of the
+/dgemv/ SPAPT kernel with the peak theoretical performance for the /Xeon 2630v3/
+processor, indicating that better kernel configurations might exist.
+
+*** Autotuning SPAPT kernels with Gaussian Process Regression and Expected Improvement
+We used  Gaussian Process  Regression with  an Expected  Improvement acquisition
+function, denoted  GPR, to try  and find /bicg/ kernel  configurations improving
+upon  those  found  by  the  uniform  Random  Sampling  (RS)  method.  We  found
+statistically but not practically significant improvements upon RS.
+
+#+CAPTION: Best points and iterations that found them, for Gaussian Process
+#+CAPTION: Regression with Expected Improvementacquisition function (GPR), and uniform
+#+CAPTION: Random Sampling (RS), with a budget of 400 measurements.
+#+LABEL: fig:gp-rs-comparison
+#+ATTR_LATEX: :width 0.65\textwidth :placement [h]
+#+RESULTS:
+[[file:./img/journal/gp_rs_comparison.pdf]]
+
+We     used      two     /R/      packages     to     construct      our     GPR
+algorithm\nbsp{}\cite{roustant2012dicekriging}.    We  used   the  /DiceKriging/
+package to fit  Gaussian Processes using /Matérn/ covariance  functions, and the
+/DiceOptim/ package  to compute  the Expected Improvement  metric at  each step.
+Figure\nbsp{}[[fig:gp-rs-comparison]] compares  the performance  of the  best points
+found by GPR  and RS, across 20  independent tuning runs. The  figure also shows
+the  iteration finding  the  best point  at  each run.   Dashed  lines mark  the
+estimate  of  the  mean  execution  time  of  the  best  points  across  the  20
+experiments, and the  gray bands show the 95% confidence  intervals for the mean
+estimate.
+
+The GPR  method found statistically  significant better configurations  than RS,
+but the practical difference is less  than $0.1$ seconds. Since Gaussian Process
+Regression is a much more flexible  method than our previous Experimental Design
+approach, not finding expressively better configurations hints that it might not
+be possible to improve this kernel much more, in comparison to RS.
+
+Figures\nbsp{}[[fig:bicgkernel-gp-pareto]]  and  [[fig:bicgkernel-rs-pareto]]  show  the
+progression of  all configurations evaluated during  each of the 20  runs of GPR
+and RS,  respectively.  We can  see that after an  initial Sobol sample  the GPR
+method  quickly finds  regions with  better  configurations. The  RS method,  as
+expected, continues to randomly explore the search space.
+
+#+latex: \clearpage
+
 #+CAPTION: Execution time of points measured by GPR along iterations, with pareto border in red
 #+LABEL: fig:bicgkernel-gp-pareto
-#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+ATTR_LATEX: :width 0.85\textwidth :placement [t]
 #+RESULTS:
 [[file:./img/journal/bicgkernel_gaussian_pareto.pdf]]
 
 #+CAPTION: Execution time of points measured by RS along iterations
 #+LABEL: fig:bicgkernel-rs-pareto
-#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+ATTR_LATEX: :width 0.85\textwidth :placement [b]
 #+RESULTS:
 [[file:./img/journal/bicgkernel_rs_pareto.pdf]]
 
-#+CAPTION: Results with a starting sample of size 15, steps add the 13 best predictions
-#+LABEL: fig:gp-rs-comparison
-#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
-#+RESULTS:
-[[file:./img/journal/gp_rs_comparison.pdf]]
+#+latex: \clearpage
+
+**** Peak Performance for the /DGEMV/ kernel
+
+#+begin_export latex
+\todo[inline]{- Roofline model for Xeon 2630v3 \\
+  - Add dgemv performance to it \\
+  - Add dgemv tuning (GPR compared to RS)}
+#+end_export
 *** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:dlmt-summary

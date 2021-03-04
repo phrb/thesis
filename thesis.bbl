@@ -539,12 +539,12 @@ N.~Sedaghati, T.~Mu, L.-N. Pouchet, S.~Parthasarathy, and P.~Sadayappan,
 \bibitem{bruel2017autotuningURL}
 ``{GitHub Repository for Autotuning CUDA Compiler Parameters for Heterogeneous
   Applications using the OpenTuner Framework},''
-  \url{https://github.com/phrb/gpu-autotuning}, accessed: 18 January 2020.
+  \url{https://github.com/phrb/gpu-autotuning}, accessed: 18 January 2021.
 
 \bibitem{cuda2020driverURL}
 ``{CUDA Compiler Driver},''
   \url{https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/}, accessed: 18
-  January 2020.
+  January 2021.
 
 \bibitem{ferreira2014parallel}
 C.~S. Ferreira, R.~Y. Camargo, and S.~W. Song, ``A parallel maximum subarray
@@ -637,7 +637,7 @@ A.~Canis, J.~Choi, M.~Aldham, V.~Zhang, A.~Kammoona, T.~Czajkowski, S.~D.
 
 \bibitem{legup2020URL}
 ``{LegUp Computing, now closed-source, paid software},''
-  \url{https://www.legupcomputing.com/}, accessed: 26 January 2020.
+  \url{https://www.legupcomputing.com/}, accessed: 26 January 2021.
 
 \bibitem{chris2004llvm}
 C.~Lattner and V.~Adve, ``{LLVM: A Compilation Framework for Lifelong Program
@@ -720,17 +720,17 @@ S.~Hadjis, A.~Canis, J.~H. Anderson, J.~Choi, K.~Nam, S.~Brown, and
 \bibitem{legup2020docsURL}
 ``{LegUp Documentation, now closed-source, paid software},''
   \url{https://www.legupcomputing.com/main/resource}, accessed: 18 January
-  2020.
+  2021.
 
 \bibitem{bruel2017hlsURL}
 ``{GitHub Repository for Autotuning High-Level Synthesis for FPGAs using
   OpenTuner and LegUp},'' \url{https://github.com/phrb/legup-tuner}, accessed:
-  18 January 2020.
+  18 January 2021.
 
 \bibitem{bruel2017dockerfileURL}
 ``{GitHub Repository for the dockerfile used in Autotuning High-Level Synthesis
   for FPGAs using OpenTuner and LegUp},''
-  \url{https://github.com/phrb/legup-dockerfile}, accessed: 18 January 2020.
+  \url{https://github.com/phrb/legup-dockerfile}, accessed: 18 January 2021.
 
 \bibitem{addelman1961some}
 S.~Addelman and O.~Kempthorne, ``Some main-effect plans and orthogonal arrays
@@ -779,5 +779,20 @@ D.~Balouek, A.~Carpen~Amarie, G.~Charrier, F.~Desprez, E.~Jeannot,
   Information Science, I.~I. Ivanov, M.~van Sinderen, F.~Leymann, and T.~Shan,
   Eds.\hskip 1em plus 0.5em minus 0.4em\relax Springer International
   Publishing, 2013, vol. 367, pp. 3--20.
+
+\bibitem{intel2021xeonAPP}
+``{APP Metrics for Intel Xeon Processors},''
+  \url{https://www.intel.com/content/dam/support/us/en/documents/processors/APP-for-Intel-Xeon-Processors.pdf},
+  accessed: 04 March 2021.
+
+\bibitem{intel2021xeon}
+``{Intel Xeon Processor E5-2630 v3},''
+  \url{https://ark.intel.com/content/www/us/en/ark/products/83356/intel-xeon-processor-e5-2630-v3-20m-cache-2-40-ghz.html},
+  accessed: 04 March 2021.
+
+\bibitem{williams2009roofline}
+S.~Williams, A.~Waterman, and D.~Patterson, ``Roofline: an insightful visual
+  performance model for multicore architectures,'' \emph{Communications of the
+  ACM}, vol.~52, no.~4, pp. 65--76, 2009.
 
 \end{thebibliography}

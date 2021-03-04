@@ -13330,8 +13330,8 @@ function, denoted  GPR, to try  and find /bicg/ kernel  configurations improving
 upon  those  found  by  the  uniform  Random  Sampling  (RS)  method.  We  found
 statistically but not practically significant improvements upon RS.
 
-#+CAPTION: Best points and iterations that found them, for Gaussian Process
-#+CAPTION: Regression with Expected Improvementacquisition function (GPR), and uniform
+#+CAPTION: Best /bicg/ configurations and iterations that found them, for Gaussian Process
+#+CAPTION: Regression with Expected Improvement acquisition function (GPR), and uniform
 #+CAPTION: Random Sampling (RS), with a budget of 400 measurements.
 #+LABEL: fig:gp-rs-comparison
 #+ATTR_LATEX: :width 0.65\textwidth :placement [h]
@@ -13378,12 +13378,43 @@ expected, continues to randomly explore the search space.
 #+latex: \clearpage
 
 **** Peak Performance for the /DGEMV/ kernel
+#+CAPTION: Best /dgemv3/ configurations and iterations that found them, for Gaussian Process
+#+CAPTION: Regression with Expected Improvement acquisition function (GPR), and uniform
+#+CAPTION: Random Sampling (RS), with a budget of 400 measurements.
+#+LABEL: fig:gp-rs-dgemv-comparison
+#+ATTR_LATEX: :width 0.65\textwidth :placement [t]
+#+RESULTS:
+[[file:./img/journal/gp_rs_dgemv_comparison.pdf]]
 
-#+begin_export latex
-\todo[inline]{- Roofline model for Xeon 2630v3 \\
-  - Add dgemv performance to it \\
-  - Add dgemv tuning (GPR compared to RS)}
-#+end_export
+
+We also performed GPR experiments with the /dgemv3/ SPAPT kernel which, since we
+can  compute its  theoretical  performance, allowed  determining  that the  best
+kernel configuration  we have  found is  still around 20  times slower  than the
+theoretical peak, despite being around two times faster than the /-O3/ flag.  We
+did not perform  a detailed analysis of  the SPAPT kernel, which  could find out
+whether more performance can be obtained from this kernel implementation.
+
+#+CAPTION: Theoretical Roofline model for the /Xeon E5-2630v3/
+#+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon}.
+#+CAPTION: Theoretical peak performance is shown for the memory-bound GEMV kernel.
+#+CAPTION: The best point we found during all experiments with the /dgemv3/ SPAPT kernel
+#+CAPTION: is shown to be 20 times slower than the theoretical peak.
+#+LABEL: fig:xeon-roofline-dgemv
+#+ATTR_LATEX: :width 0.65\textwidth :placement [h]
+#+RESULTS:
+[[file:./img/journal/theoretical_roofline_xeonE52630v3.pdf]]
+
+Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]]  shows  the best  kernel  configurations
+found  across 20  repetitions of  the GPR  and RS  methods. GPR  could not  find
+statistically or  practically significant  speedups in relation  to RS  for this
+kernel,  although  one   specific  GPR  run  found   an  outlier  configuration.
+Figure\nbsp{}[[fig:xeon-roofline-dgemv]]    shows     the    theoretical    Roofline
+model\nbsp{}\cite{williams2009roofline}  for  the   processor  targeted  by  our
+experiments, which was the same from our CCGRID paper. The figure also shows the
+theoretical peak performance of the /DGEM/  kernel, and the performance that was
+achieved by the  best configuration we found for the  /dgemv3/ SPAPT kernel, the
+red outlier in Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
+
 *** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:dlmt-summary

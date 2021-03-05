@@ -1092,6 +1092,7 @@ context (where EI is more meaningful).
 
 - For the DGEMV kernel:
   - Peak performance is still 20 times faster than the best point we found
+  - [ ] Describe Roofline computations, CPU specs?
 
 *** Use Case 4: FPGA
 - 100 of numerical parameters
@@ -12760,6 +12761,7 @@ autotuner  to  find  better  /WNS/  values faster.   We  will  also  apply  this
 autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
+
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
 This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from
@@ -12860,7 +12862,7 @@ new problem subspace with the remaining factors.  Informed decisions made by the
 user at each step guide the outcome of each iteration.
 
 #+NAME: fig:doe_anova_strategy
-#+CAPTION: Overview of the ED approach to autotuning proposed in this paper
+#+CAPTION: Overview of the ED approach to autotuning we implemented
 #+ATTR_LATEX: :width .6\columnwidth :placement [t]
 [[./img/ccgrid19/doe_anova_strategy.pdf]]
 
@@ -13386,7 +13388,6 @@ expected, continues to randomly explore the search space.
 #+RESULTS:
 [[file:./img/journal/gp_rs_dgemv_comparison.pdf]]
 
-
 We also performed GPR experiments with the /dgemv3/ SPAPT kernel which, since we
 can  compute its  theoretical  performance, allowed  determining  that the  best
 kernel configuration  we have  found is  still around 20  times slower  than the
@@ -13419,6 +13420,38 @@ red outlier in Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
 :PROPERTIES:
 :CUSTOM_ID: sec:dlmt-summary
 :END:
+
+We have implemented an Experimental Design approach to autotuning based on ANOVA
+and D-Optimal  Designs. We have applied  this approach to a  set of configurable
+kernels  from  the  SPAPT  benchmark  suite and,  although  our  approach  found
+significant  speedups in  relation  an  /-O3/ compiler  baseline,  we could  not
+significantly  improve upon  the results  found  by an  uniform Random  Sampling
+algorithm using  the same  exploratory budget. Other  experiments with  the same
+kernels         also         showed          than         uniform         random
+sampling\nbsp{}\cite{balaprakash2011can,balaprakash2012experimental}    performs
+well, especially when budgets are short.
+
+We could identify and eliminate significant  factors using our approach, but the
+largest  effect was  consistently that  of the  binary flags,  especially /OMP/,
+which  controlled parallelization.   We  could  consistently detect  significant
+albeit small effects for a few other numerical parameters.
+
+The  polynomial  models  coupled  with  optimal  design  construction  have  the
+potential  for low  prediction variance,  but tend  to have  strong biases.   We
+explored  a Gaussian  Process Regression  approach which  is much  more complex,
+implying in high variance, but has  small bias. We found small improvements upon
+Random  Sampling  with this  new  approach,  but it  is  still  unclear if  Orio
+configurations are  capable of  further improving  the kernel  configurations we
+already found. Analyzing the Roofline theoretical model for our target CPU hints
+that tweaks to the kernel implementation  might be needed to improve the current
+performance.
+
+A possible  future direction  for exploring the  potential of  this Experimental
+Design  approach could  involve developing  a  lower level  set of  configurable
+kernels, where performance measurements are always tied to a theoretical peak or
+to a known global optimum.   As we discussed in Chapter\nbsp{}[[Stochastic Methods
+and Experimental Design  for a Laplacian GPU Kernel]], knowing  the global optimum
+helps evaluating the performance of an autotuning approach.
 
 ** Gaussian Process Regression for Neural Network Bit Quantization
 * Conclusion

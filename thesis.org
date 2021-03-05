@@ -8159,8 +8159,8 @@ Further efforts in this direction were  dedicated to describe precisely what can
 be learned about  search spaces from the application of  the methodology, and to
 refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
 objectives of model  assessment and prediction. These  discussions are presented
-in Chapter\nbsp{}[[Stochastic Methods and Experimental Design for a
-Laplacian GPU Kernel]].
+in Chapter\nbsp{}[[Stochastic  Methods, Experimental Design, and  Gaussian Process
+Regression for a Laplacian GPU Kernel]].
 
 Because the  Design of Experiments  methodology requires the specification  of a
 class of initial performance models, the methodology can sometimes achieve worse
@@ -8170,10 +8170,11 @@ Design  and  Gaussian  Process  Regression  for CPU  Kernels]]  and  describe  t
 application  to autotuning  of  Gaussian Process  Regression,  an approach  that
 trades  some explanatory  power for  a much  larger and  more flexible  class of
 underlying models.   We also evaluate  the performance  of this approach  on the
-source-to-source  transformation problem  from Chapter\nbsp{}[[Stochastic  Methods
-and Experimental  Design for a  Laplacian GPU  Kernel]], and on  larger autotuning
-problem  on  the  quantization  of   /Deep  Neural  Network/  (DNN)  layers,  in
-Chapter\nbsp{}[[Gaussian Process Regression for Neural Network Bit Quantization]].
+source-to-source transformation  problem from  Chapter\nbsp{}[[Stochastic Methods,
+Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]],
+and on  larger autotuning problem on  the quantization of /Deep  Neural Network/
+(DNN) layers,  in Chapter\nbsp{}[[Gaussian  Process Regression for  Neural Network
+Bit Quantization]].
 
 #+begin_export latex
 \todo[inline]{Describe thesis structure}
@@ -12059,170 +12060,10 @@ simultaneously  allowing  the  identification   of  the  flags  responsible  for
 performance improvements. Future work in  this direction will explore the impact
 of adding host  compiler optimizations and kernel-specific  parameters.  In this
 larger search  space it would  be more interesting  to employ the  more flexible
-Optimal  Design  methods we  discuss  in  Chapters\nbsp{}[[Stochastic Methods  and
-Experimental  Design for  a Laplacian  GPU  Kernel]] and  [[Experimental Design  and
-Gaussian Process Regression for CPU Kernels]].
+Optimal  Design   methods  we  discuss  in   Chapters\nbsp{}[[Stochastic  Methods,
+Experimental Design, and Gaussian Process  Regression for a Laplacian GPU Kernel]]
+and [[Experimental Design and Gaussian Process Regression for CPU Kernels]].
 
-** Stochastic Methods and Experimental Design for a Laplacian GPU Kernel
-We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
-implemented using  BOAST\nbsp{}\cite{videau2017boast} and targeting  the /Nvidia
-K40c/ GPU.  The  objective was to minimize  the /time to compute  each pixel/ by
-finding  the   best  level   combination  for  the   factors  listed   in  Table
-[[tab:gpu_laplacian_factors]]. Considering only factors and  levels, the size of the
-search space is $1.9\times10^5$, but removing points that fail at runtime yields
-a search space of size $2.3\times10^4$. The complete search space took 154 hours
-to be evaluated  on /Debian Jessie/, using an /Intel  Xeon E5-2630v2/ CPU, /gcc/
-version /4.8.3/ and /Nvidia/ driver version /340.32/.
-
-We applied domain knowledge to construct the following initial performance model:
-#+BEGIN_EXPORT latex
-\vspace{-2pt}
-\\\begin{minipage}{\linewidth}\scriptsize
-\begin{align}
-\label{eq:gpu_laplacian_performance_model}
-\texttt{time\_per\_pixel} \sim & \scriptsize\; \texttt{y\_component\_number} + \frac{1}{\texttt{y\_component\_number}} \; + \nonumber \\
-& \scriptsize\; \texttt{load\_overlap} + \texttt{temporary\_size} \; + \nonumber \\
-& \scriptsize\; \texttt{vector\_length} + \texttt{lws\_y} + \frac{1}{\texttt{lws\_y}} \; + \\
-& \scriptsize\; \texttt{elements\_number} + \texttt{threads\_number}  \; + \nonumber \\
-& \scriptsize\; \frac{1}{\texttt{elements\_number}} + \frac{1}{\texttt{threads\_number}}\text{.} \nonumber
-\end{align}
-\vspace{2pt}
-\end{minipage}
-#+END_EXPORT
-This performance model was used by the Iterative Linear Model (LM) algorithm and
-by our D-Optimal Design approach (DLMT). LM is almost identical to our approach,
-described in  Chapter\nbsp{}[[Experimental Design and Gaussian  Process Regression
-for CPU  Kernels]], but  it uses a  fixed-size random sample  of the  search space
-instead of  generating D-Optimal  designs.  We compared  the performance  of our
-approach  with the  following algorithms:  uniform Random  Sampling (RS);  Latin
-Hypercube Sampling (LHS); Greedy Search  (GS); Greedy Search with Restart (GSR);
-and Genetic Algorithm (GA). Each  algorithm performed /at most/ 125 measurements
-over 1000 repetitions, without user intervention.
-
-#+ATTR_LATEX: :booktabs t :align llp{0.37\columnwidth} :font \scriptsize :float t :placement [t]
-#+NAME: tab:gpu_laplacian_factors
-#+CAPTION: Parameters of the Laplacian Kernel
-|-------------------------------+-------------------------------+--------------------------------|
-| Factor                        | Levels                        | Short Description              |
-|-------------------------------+-------------------------------+--------------------------------|
-| \texttt{vector\_length}       | $2^0,\dots,2^4$               | Size of support arrays         |
-| \texttt{load\_overlap}        | \textit{true}, \textit{false} | Load overlaps in vectorization |
-| \texttt{temporary\_size}      | $2,4$                         | Byte size of temporary data    |
-| \texttt{elements\_number}     | $1,\dots,24$                  | Size of equal data splits      |
-| \texttt{y\_component\_number} | $1,\dots,6$                   | Loop tile size                 |
-| \texttt{threads\_number}      | $2^5,\dots,2^{10}$            | Size of thread groups          |
-| \texttt{lws\_y}               | $2^0,\dots,2^{10}$            | Block size in $y$ dimension    |
-|-------------------------------+-------------------------------+--------------------------------|
-
-Since  we measured  the entire  valid search  space, we  could use  the /slowdown/
-relative   to   the   /global   minimum/   to   compare   algorithm   performance.
-Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget}  shows the  mean, minimum  and maximum
-slowdowns in comparison to the global minimum, for each algorithm. It also shows
-the     mean    and     maximum     budget    used     by    each     algorithm.
-Figure\nbsp{}[[fig:gpu_laplacian_comparison_histogram]] presents histograms with the count
-of the slowdowns found by each of the 1000 repetitions. Arrows point the maximum
-slowdown found by  each algorithm. Note that GS's maximum  slowdown was left out
-of range to help the comparison between the other algorithms.
-
-#+HEADER: :results output latex :session *R* :exports results :eval no-export
-#+BEGIN_SRC R
-library(xtable)
-
-df_all_methods <- read.csv("./dopt_anova_experiments/data/complete_1000.csv", strip.white = T, header = T)
-df_all_methods$method <- factor(df_all_methods$method, levels = c("RS","LHS","GS","GSR","GA","LM", "LMB", "LMBT", "RQ", "DOPT", "DLM", "DLMT"))
-df_all_methods <- subset(df_all_methods, method %in% c("RS", "LHS", "GS", "GSR", "GA", "LM", "DLMT"))
-
-summaries <- data.frame(RS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "RS", ]$slowdown)))[ , 1],
-                              mean(df_all_methods[df_all_methods$method == "RS",]$point_number),
-                              max(df_all_methods[df_all_methods$method == "RS",]$point_number)),
-                        LHS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "LHS", ]$slowdown)))[ , 1],
-                                mean(df_all_methods[df_all_methods$method == "LHS",]$point_number),
-                                max(df_all_methods[df_all_methods$method == "LHS",]$point_number)),
-                        GS = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GS", ]$slowdown)))[ , 1],
-                              mean(df_all_methods[df_all_methods$method == "GS",]$point_number),
-                              max(df_all_methods[df_all_methods$method == "GS",]$point_number)),
-                        GSR = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GSR", ]$slowdown)))[ , 1],
-                                mean(df_all_methods[df_all_methods$method == "GSR",]$point_number),
-                                max(df_all_methods[df_all_methods$method == "GSR",]$point_number)),
-                        GA = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "GA", ]$slowdown)))[ , 1],
-                              mean(df_all_methods[df_all_methods$method == "GA",]$point_number),
-                              max(df_all_methods[df_all_methods$method == "GA",]$point_number)),
-                        LM = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "LM", ]$slowdown)))[ , 1],
-                              mean(df_all_methods[df_all_methods$method == "LM",]$point_number),
-                              max(df_all_methods[df_all_methods$method == "LM",]$point_number)),
-                        DLMT = c(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "DLMT", ]$slowdown)))[ , 1],
-                                    mean(df_all_methods[df_all_methods$method == "DLMT",]$point_number),
-                                    max(df_all_methods[df_all_methods$method == "DLMT",]$point_number)))
-
-rownames(summaries) <- c(rownames(as.data.frame(unclass(summary(df_all_methods[df_all_methods$method == "RS", ]$slowdown)))), "Mean Budget", "Max. Budget")
-summaries <- t(summaries)
-summaries <- summaries[ , c("Mean", "Min.", "Max.", "Mean Budget", "Max. Budget")]
-
-cap <- "Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions"
-x <- xtable(summaries, caption = cap, digits = 2, label = "tab:gpu_laplacian_compare_budget")
-align(x) <- xalign(x)
-display(x) <- display(x)
-print(x,
-      size = "\\footnotesize",
-      booktabs = TRUE,
-      add.to.row = list(pos = as.list(c(6)), command = c("\\rowcolor{red!25}")),
-      math.style.exponents = TRUE,
-      table.placement = "b",
-      caption.placement = "top")
-#+END_SRC
-
-#+RESULTS:
-#+begin_export latex
-% latex table generated in R 4.0.3 by xtable 1.8-4 package
-% Thu Jan 14 14:05:23 2021
-\begin{table}[b]
-\centering
-\caption{Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions}
-\label{tab:gpu_laplacian_compare_budget}
-\begingroup\footnotesize
-\begin{tabular}{lrrrrr}
-  \toprule
- & Mean & Min. & Max. & Mean Budget & Max. Budget \\
-  \midrule
-RS & 1.10 & 1.00 & 1.39 & 120.00 & 120.00 \\
-  LHS & 1.17 & 1.00 & 1.52 & 98.92 & 125.00 \\
-  GS & 6.46 & 1.00 & 124.76 & 22.17 & 106.00 \\
-  GSR & 1.23 & 1.00 & 3.16 & 120.00 & 120.00 \\
-  GA & 1.12 & 1.00 & 1.65 & 120.00 & 120.00 \\
-  LM & 1.02 & 1.01 & 3.77 & 119.00 & 119.00 \\
-   \rowcolor{red!25}DLMT & 1.01 & 1.01 & 1.01 & 54.84 & 56.00 \\
-   \bottomrule
-\end{tabular}
-\endgroup
-\end{table}
-#+end_export
-
-All algorithms performed relatively well in  this kernel, with only GS not being
-able to find slowdowns smaller than 4$\times$ in some runs. As expected, other search
-algorithms had results similar to RS. LM was able to find slowdowns close to the
-global minimum on most runs, but some runs could not find slowdowns smaller than
-$4\times$. Our approach  reached a slowdown of  1% from the global minimum  /in all/ of
-the 1000 runs while using /at most/ fewer than half of the allotted budget.
-
-We  implemented a  simple  approach for  the prediction  step  in this  problem,
-choosing the best value of our fitted  models on the complete set of valid level
-combinations. This  was possible for  this problem since all  valid combinations
-were known. For problems were the search  space is too large to be generated, we
-would have  to either  adapt this  step and run  the prediction  on a  sample or
-minimize   the  model   using  the   differentiation  strategies   mentioned  in
-Section\nbsp{}[[Screening & Plackett-Burman Designs]].
-
-#+NAME: fig:gpu_laplacian_comparison_histogram
-#+CAPTION: Distribution of slowdowns in relation to the global minimum for 7 optimization methods on the Laplacian Kernel, using a budget of 125 points over 1000 repetitions \vspace{-.5cm}
-#+ATTR_LATEX: :float t :placement [t]\vspace{-.5cm} :width .9\columnwidth
-[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
-
-This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
-performance model is approximately known and  the complete valid search space is
-small enough to be  used for prediction. The global minimum  also appears to not
-be isolated in a  region of points with bad performance,  since our approach was
-able to exploit space geometry. We  will now present a performance evaluation of
-our approach in a larger and more comprehensive benchmark.
 ** Stochastic Methods for High-Level Synthesis FPGA Kernels
 A Field-Programmable Gate Array (FPGA)  is a reprogrammable circuit that enables
 writing  specialized  hardware  specifications  for a  variety  of  applications
@@ -12762,6 +12603,203 @@ autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 
+** Stochastic Methods, Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel
+We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
+implemented using  BOAST\nbsp{}\cite{videau2017boast} and targeting  the /Nvidia
+K40c/ GPU.  The  objective was to minimize  the /time to compute  each pixel/ by
+finding  the   best  level   combination  for  the   factors  listed   in  Table
+[[tab:gpu_laplacian_factors]]. Considering only factors and  levels, the size of the
+search space is $1.9\times10^5$, but removing points that fail at runtime yields
+a search space of size $2.3\times10^4$. The complete search space took 154 hours
+to be evaluated  on /Debian Jessie/, using an /Intel  Xeon E5-2630v2/ CPU, /gcc/
+version /4.8.3/ and /Nvidia/ driver version /340.32/.
+
+*** Building a Performance Model
+The starting model we used is written
+#+BEGIN_EXPORT latex
+\begin{align}
+  \label{eq:gpu_laplacian_performance_model}
+  \textit{time\_per\_pixel} \sim &  \textit{y\_component\_number} + \frac{1}{\textit{y\_component\_number}} \; + \\
+  & \textit{temporary\_size} + \textit{vector\_length} + \textit{load\_overlap} \; + \\
+  & \textit{lws\_y} + \frac{1}{\textit{lws\_y}} + \textit{elements\_number} + \frac{1}{\textit{elements\_number}} \; + \nonumber \\
+  & \textit{threads\_number} + \frac{1}{\textit{threads\_number}}\text{,} \nonumber
+\end{align}
+#+END_EXPORT
+where coefficients were omitted.
+
+This performance model was used by the Iterative Linear Model (LM) algorithm and
+by our D-Optimal Design approach (DLMT). LM is almost identical to our approach,
+described in  Chapter\nbsp{}[[Experimental Design and Gaussian  Process Regression
+for CPU  Kernels]], but  it uses a  fixed-size random sample  of the  search space
+instead of  generating D-Optimal  designs.  We compared  the performance  of our
+approach  with the  following algorithms:  uniform Random  Sampling (RS);  Latin
+Hypercube Sampling (LHS); Greedy Search  (GS); Greedy Search with Restart (GSR);
+and Genetic Algorithm (GA). Each  algorithm performed /at most/ 125 measurements
+over 1000 repetitions, without user intervention.
+
+#+ATTR_LATEX: :booktabs t :align lll :font \small :float t :placement [t]
+#+NAME: tab:gpu_laplacian_factors
+#+CAPTION: Parameters of the Laplacian Kernel
+|-------------------------------+-------------------------------+--------------------------------|
+| Factor                        | Levels                        | Short Description              |
+|-------------------------------+-------------------------------+--------------------------------|
+| \textit{vector\_length}       | $2^0,\dots,2^4$               | Size of support arrays         |
+| \textit{load\_overlap}        | \textit{true}, \textit{false} | Load overlaps in vectorization |
+| \textit{temporary\_size}      | $2,4$                         | Byte size of temporary data    |
+| \textit{elements\_number}     | $1,\dots,24$                  | Size of equal data splits      |
+| \textit{y\_component\_number} | $1,\dots,6$                   | Loop tile size                 |
+| \textit{threads\_number}      | $2^5,\dots,2^{10}$            | Size of thread groups          |
+| \textit{lws\_y}               | $2^0,\dots,2^{10}$            | Block size in $y$ dimension    |
+|-------------------------------+-------------------------------+--------------------------------|
+
+*** Results
+
+Since we  measured the entire  valid search space,  we could use  the /slowdown/
+relative   to   the  /global   minimum/   to   compare  algorithm   performance.
+Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget} shows  the mean,  minimum and
+maximum slowdowns  in comparison to the  global minimum, for each  algorithm. It
+also   shows   the  mean   and   maximum   budget   used  by   each   algorithm.
+Figure\nbsp{}[[fig:gpu_laplacian_comparison_histogram]] presents histograms with the
+count of the slowdowns  found by each of the 1000  repetitions. Arrows point the
+maximum slowdown  found by each algorithm.  Note that GS's maximum  slowdown was
+left out of range to help the comparison between the other algorithms.
+
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
+#+BEGIN_SRC R
+library(xtable)
+library(dplyr)
+
+gpr_lin_data <- read.csv("dopt_anova_experiments/data/gpr_03sd_nugget_best_points.csv") %>%
+    select(slowdown, method, measurement_order, time_per_pixel) %>%
+    mutate(method = "GPR")
+
+names(gpr_lin_data) <- c("slowdown", "method", "point_number", "time_per_pixel")
+
+df_all_methods = read.csv("./dopt_anova_experiments/data/complete_1000.csv",
+                          strip.white = T, header = T) %>%
+    select(slowdown, method, point_number) %>%
+    bind_rows(gpr_lin_data) %>%
+    filter(method %in% c("RS", "LHS", "GS", "GSR", "GA", "LM",
+                         "DLMT", "RQ", "GPR")) %>%
+    mutate(method =  factor(method,
+                            levels = c("RS", "LHS", "GS", "GSR", "GA", "LM",
+                                       "RQ", "DLMT", "GPR"),
+                            labels = c("Random Sampling (RS)",
+                                       "Latin Hypercube Sampling (LHS)",
+                                       "Greedy Search (GS)",
+                                       "Greedy Search w. Restart (GSR)",
+                                       "Genetic Algorithm (GA)",
+                                       "Linear Model (LM)",
+                                       "Quantile Regression (QR)",
+                                       "D-Opt., Linear Model w. Transform (DLMT)",
+                                       "Gaussian Process Regression .w EI (GPR)")))
+
+summaries = df_all_methods %>%
+    group_by(method) %>%
+    summarise(method = method,
+              mean_slowdown = mean(slowdown),
+              min_slowdown = min(slowdown),
+              max_slowdown = max(slowdown),
+              mean_budget = mean(point_number),
+              max_budget = max(point_number),
+              .groups = "keep") %>%
+    distinct() %>%
+    ungroup()
+
+cap <- paste("Slowdown and budget used by 7 optimization methods on",
+             "the Laplacian Kernel, using a budget of 125 points with 1000 repetitions")
+
+x <- xtable(summaries,
+            caption = cap,
+            digits = 2,
+            label = "tab:gpu_laplacian_compare_budget")
+
+align(x) <- xalign(x)
+display(x) <- display(x)
+
+header = paste(paste("Method", "Mean", "Min.", "Max.", "Mean", "Max.",
+               sep = " & "), "\\\\ \n \\midrule \n")
+
+super_header = paste("\\toprule \n",
+                     "& \\multicolumn{3}{c}{Slowdown} & \\multicolumn{2}{c}{Budget}",
+                     "\\\\ \n")
+
+bottom = "\\bottomrule\n"
+
+print(x,
+      size = "\\small",
+      booktabs = TRUE,
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      hline.after = NULL,
+      add.to.row = list(pos = as.list(c(-1,
+                                        0,
+                                        7,
+                                        nrow(summaries))),
+                        command = c(super_header,
+                                    header,
+                                    "\\rowcolor{red!25}",
+                                    bottom)),
+      math.style.exponents = TRUE,
+      table.placement = "b",
+      caption.placement = "top")
+#+END_SRC
+
+#+RESULTS:
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Fri Mar  5 18:09:16 2021
+\begin{table}[b]
+\centering
+\caption{Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions}
+\label{tab:gpu_laplacian_compare_budget}
+\begingroup\small
+\begin{tabular}{lrrrrr}
+  \toprule
+ & \multicolumn{3}{c}{Slowdown} & \multicolumn{2}{c}{Budget} \\
+  Method & Mean & Min. & Max. & Mean & Max. \\
+ \midrule
+Random Sampling (RS) & 1.10 & 1.00 & 1.39 & 120.00 & 120 \\
+  Latin Hypercube Sampling (LHS) & 1.17 & 1.00 & 1.52 & 98.92 & 125 \\
+  Greedy Search (GS) & 6.46 & 1.00 & 124.76 & 22.17 & 106 \\
+  Greedy Search w. Restart (GSR) & 1.23 & 1.00 & 3.16 & 120.00 & 120 \\
+  Genetic Algorithm (GA) & 1.12 & 1.00 & 1.65 & 120.00 & 120 \\
+  Linear Model (LM) & 1.02 & 1.01 & 3.77 & 119.00 & 119 \\
+  Quantile Regression (QR) & 1.02 & 1.01 & 2.06 & 119.00 & 119 \\
+   \rowcolor{red!25}D-Opt., Linear Model w. Transform (DLMT) & 1.01 & 1.01 & 1.01 & 54.84 &  56 \\
+  Gaussian Process Regression .w EI (GPR) & 1.04 & 1.01 & 1.27 & 71.45 & 120 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+end_export
+
+All algorithms performed relatively well in  this kernel, with only GS not being
+able to find slowdowns smaller than 4$\times$ in some runs. As expected, other search
+algorithms had results similar to RS. LM was able to find slowdowns close to the
+global minimum on most runs, but some runs could not find slowdowns smaller than
+$4\times$. Our approach  reached a slowdown of  1% from the global minimum  /in all/ of
+the 1000 runs while using /at most/ fewer than half of the allotted budget.
+
+We  implemented a  simple  approach for  the prediction  step  in this  problem,
+choosing the best value of our fitted  models on the complete set of valid level
+combinations. This  was possible for  this problem since all  valid combinations
+were known. For problems were the search  space is too large to be generated, we
+would have  to either  adapt this  step and run  the prediction  on a  sample or
+minimize   the  model   using  the   differentiation  strategies   mentioned  in
+Section\nbsp{}[[Screening & Plackett-Burman Designs]].
+
+#+NAME: fig:gpu_laplacian_comparison_histogram
+#+CAPTION: Distribution of slowdowns in relation to the global minimum for 7 optimization methods on the Laplacian Kernel, using a budget of 125 points over 1000 repetitions \vspace{-.5cm}
+#+ATTR_LATEX: :float t :placement [t]\vspace{-.5cm} :width .9\columnwidth
+[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
+
+This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
+performance model is approximately known and  the complete valid search space is
+small enough to be  used for prediction. The global minimum  also appears to not
+be isolated in a  region of points with bad performance,  since our approach was
+able to exploit space geometry. We  will now present a performance evaluation of
+our approach in a larger and more comprehensive benchmark.
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
 This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from
@@ -13449,9 +13487,10 @@ performance.
 A possible  future direction  for exploring the  potential of  this Experimental
 Design  approach could  involve developing  a  lower level  set of  configurable
 kernels, where performance measurements are always tied to a theoretical peak or
-to a known global optimum.   As we discussed in Chapter\nbsp{}[[Stochastic Methods
-and Experimental Design  for a Laplacian GPU Kernel]], knowing  the global optimum
-helps evaluating the performance of an autotuning approach.
+to a known global optimum.  As we discussed in Chapter\nbsp{}[[Stochastic Methods,
+Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]],
+knowing the  global optimum  helps evaluating the  performance of  an autotuning
+approach.
 
 ** Gaussian Process Regression for Neural Network Bit Quantization
 * Conclusion

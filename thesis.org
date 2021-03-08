@@ -12614,6 +12614,94 @@ a search space of size $2.3\times10^4$. The complete search space took 154 hours
 to be evaluated  on /Debian Jessie/, using an /Intel  Xeon E5-2630v2/ CPU, /gcc/
 version /4.8.3/ and /Nvidia/ driver version /340.32/.
 
+Section\nbsp{}[[A  Transparent  and  Parsimonious  Approach  to  Autotuning  using
+Optimal Design]] Presents  our adaptation of a sequential  approach to autotuning,
+starting  with  modeling assumptions  about  the  search space  and  iteratively
+refining models based on ANOVA.
+
+*** A Transparent and Parsimonious Approach to Autotuning using Optimal Design
+In  this  section   we  discuss  in  detail  our   iterative,  transparent,  and
+parsimonious      Experimental      Design     approach      to      autotuning.
+Figure\nbsp{}[[fig:doe_anova_strategy]] presents  an overview.  In step  1 we define
+the factors and levels  that compose the search space of  the target problem, in
+step 2  we select an  initial performance  model, and in  step 3 we  generate an
+experimental design. We run the experiments in step 4 and then, as we discuss in
+the  next  section, we  identify  significant  factors  with  an ANOVA  test  in
+step 5. This  enables selecting and fitting  a new performance model  in steps 6
+and  7.  The  new  model  is used  in  step 8  for  predicting  levels for  each
+significant factor.  We then go back to  step 3, generating a new design for the
+new problem subspace with the remaining factors.  Informed decisions made by the
+user at each step guide the outcome of each iteration.
+
+#+NAME: fig:doe_anova_strategy
+#+CAPTION: Overview of the ED approach to autotuning we implemented
+#+ATTR_LATEX: :width .6\columnwidth :placement [t]
+[[./img/ccgrid19/doe_anova_strategy.pdf]]
+
+Step 1 of our approach is to define target factors and which of their levels are
+worth exploring.   Then, the user  must select  an initial performance  model in
+step  2.   Compilers typically  expose  many  2-level  factors  in the  form  of
+configuration flags, and the  performance model for a single flag  can only be a
+linear term,  since there are  only 2  values to measure.   Interactions between
+flags  and numerical  factors  such as  block  sizes in  CUDA  programs or  loop
+unrolling amounts  are also common. Deciding  which levels to include  for these
+kinds of factors requires more careful  analysis. For example, if we suspect the
+performance model has  a quadratic term for a certain  factor, the design should
+include at least  three factor levels. The ordering between  the levels of other
+compiler parameters,  such as  /-O(0,1,2,3)/, is not  obviously translated  to a
+number.   Factors  like these  are  named  /categorical/,  and must  be  treated
+differently when constructing designs in step 3 and analyzing results in step 5.
+
+After the design  is constructed in step  3, we run each  selected experiment in
+step 4. This step can run in parallel since experiments are independent. Not all
+target programs  run successfully  in their entire  input range,  making runtime
+failures common  in this step.  The user can decide  whether to construct  a new
+design  using the  successfully  completed  experiments or  to  continue to  the
+analysis step if enough experiments succeed.
+
+After running the ANOVA  test in step 5, the user  should apply domain knowledge
+to analyze the ANOVA table and  determine which factors are significant. Certain
+factors  might  not  appear  significant  and should  not  be  included  in  the
+regression  model. Selecting  the model  after  the ANOVA  test in  step 6  also
+benefits from domain knowledge.
+
+A central assumption  of ANOVA is the /homoscedasticity/ of  the response, which
+can  be interpreted  as  requiring  the observed  error  on  measurements to  be
+independent of  factor levels and  of the number of  measurements.  Fortunately,
+there are statistical  tests and corrections for lack  of homoscedasticity.  Our
+approach uses the homoscedasticity check and correction by power transformations
+from the =car= package\nbsp{}\cite{fox2011car} of the =R= language.
+
+We fit  the selected model to  our design's data in  step 7, and use  the fitted
+model in  step 8 to find  levels that minimize  the response. The choice  of the
+method used to find  these levels depends on factor types  and on the complexity
+of the  model and search  space. If  factors have discrete  levels, neighborhood
+exploration might  be needed to  find levels  that minimize the  response around
+predicted  levels. Constraints  might put  predicted levels  on an  undefined or
+invalid region on the search space. This presents challenge, because the borders
+of valid regions would have to be explored.
+
+In  step  8 we  also  fix  factor levels  to  those  predicted to  achieve  best
+performance.   The  user can  also  decide  the level  of  trust  placed on  the
+prediction at this step, by keeping other levels available. In step 8 we perform
+a reduction of problem dimension by  eliminating factors and decreasing the size
+of the search space. If we  identified significant parameters correctly, we will
+have restricted further search to better regions.
+
+This  approach  can   be  applied  to  any  autotuning   domain  that  expresses
+optimization  as  a search  problem,  although  the performance  evaluations  we
+present in  this chapter and  in Chapter\nbsp{}[[Experimental Design  and Gaussian
+Process   Regression  for   CPU  Kernels]]   were  obtained   in  the   domain  of
+source-to-source  transformation. Several  frameworks, compilers  and autotuners
+provide    tools     to    generate    and     optimize    architecture-specific
+code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
+We            used             BOAST\nbsp{}\cite{videau2017boast}            and
+Orio\nbsp{}\cite{hartono2009annotation}     to      perform     source-to-source
+transformations targeting parallelization on  CPUs and GPUs, vectorization, loop
+transformations  such as  tiling  and  unrolling, and  data  structure size  and
+copying.
+
+*** The Laplacian Kernel
 *** Building a Performance Model
 The starting model we used is written
 #+BEGIN_EXPORT latex
@@ -12653,7 +12741,6 @@ over 1000 repetitions, without user intervention.
 |-------------------------------+-------------------------------+--------------------------------|
 
 *** Results
-
 Since we  measured the entire  valid search space,  we could use  the /slowdown/
 relative   to   the  /global   minimum/   to   compare  algorithm   performance.
 Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget} shows  the mean,  minimum and
@@ -12800,6 +12887,11 @@ small enough to be  used for prediction. The global minimum  also appears to not
 be isolated in a  region of points with bad performance,  since our approach was
 able to exploit space geometry. We  will now present a performance evaluation of
 our approach in a larger and more comprehensive benchmark.
+
+*** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:laplacian-summary
+:END:
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
 This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from
@@ -12808,21 +12900,18 @@ the SPAPT\nbsp{}\cite{balaprakash2012spapt} benchmark suite.
 The  chapter is  organized as  follows.  Section\nbsp{}[[Choosing  an Experimental
 Design Method  for Autotuning]] discusses  our choice of using  D-Optimal designs,
 considering  its applicability  to  autotuning among  other Experimental  Design
-methods.  Section\nbsp{}[[A  Transparent and  Parsimonious Approach  to Autotuning
-using  Optimal  Design]] Presents  our  adaptation  of  a sequential  approach  to
-autotuning,  starting  with modeling  assumptions  about  the search  space  and
-iteratively refining  models based on ANOVA.   Section\nbsp{}[[The SPAPT Benchmark
-Suite]]  presents  the  CPU  kernels  to   which  we  applied  our  approach,  and
-Section\nbsp{}[[Performance  Improvements  using   Optimal  Design]]  discusses  the
-results.   The work  presented  up  to Section\nbsp{}[[Performance  Improvements
-using Optimal Design]]  was published at CCGrid\nbsp{}\cite{bruel2019autotuning}
-in 2019.  The studies  we performed later were not yet  published at the writing
-of this thesis.  In Section\nbsp{}[[Identifying Significant Factors for the /bicg/
-Kernel]] we explore the optimization of one of the target kernels and identify the
-factors  and  levels  that  where   responsible  for  the  observed  performance
-improvements.  In  Section\nbsp{}[[Autotuning SPAPT kernels with  Gaussian Process
-Regression  and Expected  Improvement]]  we discuss  the  application of  Gaussian
-Process  Regression with  Expected  Improvement to  the  same kernel.   Finally,
+methods.  Section\nbsp{}[[The  SPAPT Benchmark Suite]]  presents the CPU  kernels to
+which we applied our  approach, and Section\nbsp{}[[Performance Improvements using
+Optimal   Design]]   discusses   the   results.   The   work   presented   up   to
+Section\nbsp{}[[Performance  Improvements using  Optimal Design]]  was published  at
+CCGrid\nbsp{}\cite{bruel2019autotuning} in 2019.  The studies we performed later
+were   not    yet   published   at    the   writing   of   this    thesis.    In
+Section\nbsp{}[[Identifying Significant  Factors for the /bicg/  Kernel]] we explore
+the  optimization of  one of  the target  kernels and  identify the  factors and
+levels that  where responsible  for the  observed performance  improvements.  In
+Section\nbsp{}[[Autotuning  SPAPT kernels  with  Gaussian  Process Regression  and
+Expected Improvement]] we  discuss the application of  Gaussian Process Regression
+with     Expected    Improvement     to    the     same    kernel.      Finally,
 Section\nbsp{}\ref{sec:dlmt-summary} summarizes the chapter and discusses future
 work.
 
@@ -12884,89 +12973,6 @@ according  to the  performance  model  we wish  to  explore.   This enables  the
 exploitation of global  search space structures, if we use  the right model.  We
 can  safely optimize  for  the  /D/ optimality  criterion  among other  criteria
 without loosing quality of designs\nbsp{}\cite{kiefer1974general}.
-
-*** A Transparent and Parsimonious Approach to Autotuning using Optimal Design
-In  this  section   we  discuss  in  detail  our   iterative,  transparent,  and
-parsimonious      Experimental      Design     approach      to      autotuning.
-Figure\nbsp{}[[fig:doe_anova_strategy]] presents  an overview.  In step  1 we define
-the factors and levels  that compose the search space of  the target problem, in
-step 2  we select an  initial performance  model, and in  step 3 we  generate an
-experimental design. We run the experiments in step 4 and then, as we discuss in
-the  next  section, we  identify  significant  factors  with  an ANOVA  test  in
-step 5. This  enables selecting and fitting  a new performance model  in steps 6
-and  7.  The  new  model  is used  in  step 8  for  predicting  levels for  each
-significant factor.  We then go back to  step 3, generating a new design for the
-new problem subspace with the remaining factors.  Informed decisions made by the
-user at each step guide the outcome of each iteration.
-
-#+NAME: fig:doe_anova_strategy
-#+CAPTION: Overview of the ED approach to autotuning we implemented
-#+ATTR_LATEX: :width .6\columnwidth :placement [t]
-[[./img/ccgrid19/doe_anova_strategy.pdf]]
-
-Step 1 of our approach is to define target factors and which of their levels are
-worth exploring.   Then, the user  must select  an initial performance  model in
-step  2.   Compilers typically  expose  many  2-level  factors  in the  form  of
-configuration flags, and the  performance model for a single flag  can only be a
-linear term,  since there are  only 2  values to measure.   Interactions between
-flags  and numerical  factors  such as  block  sizes in  CUDA  programs or  loop
-unrolling amounts  are also common. Deciding  which levels to include  for these
-kinds of factors requires more careful  analysis. For example, if we suspect the
-performance model has  a quadratic term for a certain  factor, the design should
-include at least  three factor levels. The ordering between  the levels of other
-compiler parameters,  such as  /-O(0,1,2,3)/, is not  obviously translated  to a
-number.   Factors  like these  are  named  /categorical/,  and must  be  treated
-differently when constructing designs in step 3 and analyzing results in step 5.
-
-After the design  is constructed in step  3, we run each  selected experiment in
-step 4. This step can run in parallel since experiments are independent. Not all
-target programs  run successfully  in their entire  input range,  making runtime
-failures common  in this step.  The user can decide  whether to construct  a new
-design  using the  successfully  completed  experiments or  to  continue to  the
-analysis step if enough experiments succeed.
-
-After running the ANOVA  test in step 5, the user  should apply domain knowledge
-to analyze the ANOVA table and  determine which factors are significant. Certain
-factors  might  not  appear  significant  and should  not  be  included  in  the
-regression  model. Selecting  the model  after  the ANOVA  test in  step 6  also
-benefits from domain knowledge.
-
-A central assumption  of ANOVA is the /homoscedasticity/ of  the response, which
-can  be interpreted  as  requiring  the observed  error  on  measurements to  be
-independent of  factor levels and  of the number of  measurements.  Fortunately,
-there are statistical  tests and corrections for lack  of homoscedasticity.  Our
-approach uses the homoscedasticity check and correction by power transformations
-from the =car= package\nbsp{}\cite{fox2011car} of the =R= language.
-
-We fit  the selected model to  our design's data in  step 7, and use  the fitted
-model in  step 8 to find  levels that minimize  the response. The choice  of the
-method used to find  these levels depends on factor types  and on the complexity
-of the  model and search  space. If  factors have discrete  levels, neighborhood
-exploration might  be needed to  find levels  that minimize the  response around
-predicted  levels. Constraints  might put  predicted levels  on an  undefined or
-invalid region on the search space. This presents challenge, because the borders
-of valid regions would have to be explored.
-
-In  step  8 we  also  fix  factor levels  to  those  predicted to  achieve  best
-performance.  The  user  can also  decide  the  level  of  trust placed  on  the
-prediction at this step, by keeping other levels available. In step 8 we perform
-a reduction of problem dimension by  eliminating factors and decreasing the size
-of the search space. If we  identified significant parameters correctly, we will
-have restricted further search to better regions. In the next section we present
-a simple fictional application our approach that illustrates the fundamentals of
-the DoE methodology, screening designs and D-Optimal designs.
-
-Our approach can be applied to any autotuning domain that expresses optimization
-as  a  search  problem,  although  the performance  evaluations  we  present  in
-Section\nbsp{}[[Performance Improvements using Optimal Design]] were obtained in the
-domain  of source-to-source  transformation. Several  frameworks, compilers  and
-autotuners  provide   tools  to  generate  and   optimize  architecture-specific
-code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
-We            used             BOAST\nbsp{}\cite{videau2017boast}            and
-Orio\nbsp{}\cite{hartono2009annotation}     to      perform     source-to-source
-transformations targeting parallelization on  CPUs and GPUs, vectorization, loop
-transformations  such as  tiling  and  unrolling, and  data  structure size  and
-copying.
 
 *** The SPAPT Benchmark Suite
 The    /Search   Problems    in    Automatic    Performance   Tuning/    (SPAPT)

@@ -12627,15 +12627,21 @@ values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 
 ** Stochastic Methods, Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel
-We  first evaluated  the  performance  of our  approach  in  a Laplacian  Kernel
-implemented using  BOAST\nbsp{}\cite{videau2017boast} and targeting  the /Nvidia
-K40c/ GPU.  The  objective was to minimize  the /time to compute  each pixel/ by
-finding  the   best  level   combination  for  the   factors  listed   in  Table
-[[tab:gpu_laplacian_factors]]. Considering only factors and  levels, the size of the
-search space is $1.9\times10^5$, but removing points that fail at runtime yields
-a search space of size $2.3\times10^4$. The complete search space took 154 hours
-to be evaluated  on /Debian Jessie/, using an /Intel  Xeon E5-2630v2/ CPU, /gcc/
-version /4.8.3/ and /Nvidia/ driver version /340.32/.
+This  chapter introduces  our Experimental  Design approach  to autotuning,  and
+presents  an  application   were  we  continued  the   exploration,  started  by
+Masnada\nbsp{}\cite{masnada2016semi},  of performance  optimization methods  for
+the search space defined by the parameters of a Laplacian GPU kernel.
+
+The kernel was implemented using BOAST\nbsp{}\cite{videau2017boast}, a framework
+that enables writing and optimizing  HPC applications using metaprogramming, and
+is publicly  hosted on  GitHub\nbsp{}\cite{boast2020laplacian}. We  targeted the
+/Nvidia  K40c/ GPU,  and the  objective function  we minimized  was the  time to
+compute each pixel. The factors and  levels defining the search space are listed
+in Table\nbsp{}[[tab:gpu_laplacian_factors]].  Considering  only factors and levels,
+the size of  the search space is $1.9\times10^5$, but  removing points that fail
+at runtime  yields a search space  of size $2.3\times10^4$. The  complete search
+space took 154  hours to be evaluated  on /Debian Jessie/, using  an /Intel Xeon
+E5-2630v2/ CPU, /gcc/ version /4.8.3/ and /Nvidia/ driver version /340.32/.
 
 Section\nbsp{}[[A  Transparent  and  Parsimonious  Approach  to  Autotuning  using
 Optimal Design]] Presents  our adaptation of a sequential  approach to autotuning,
@@ -12922,7 +12928,7 @@ our approach in a larger and more comprehensive benchmark.
 \begin{table}[ht]
   \centering
   \small
-  \caption{ANOVA tables}
+  \caption{ANOVA tests at each step. Red lines mark model terms that were considered significant and fixed in a given step}
   \begin{tabular}{llrrr}
     \toprule
     Step & Term & Sum Sq. & F-value & p($>$F) \\
@@ -13513,20 +13519,41 @@ whether more performance can be obtained from this kernel implementation.
 #+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
 #+CAPTION: SPAPT kernel
 #+LABEL: fig:xeon-generic-roofline-dgemv
-#+ATTR_LATEX: :width 0.65\textwidth :placement [h]
+#+ATTR_LATEX: :width 0.7\textwidth :placement [h]
 #+RESULTS:
-[[file:./img/journal/theoretical_roofline_xeonE52630v3.pdf]]
+[[file:./img/roofline/roofline_generic.pdf]]
+
+#+CAPTION: Empirical Roofline graph for the /Xeon E5-2630v3/
+#+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon},
+#+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
+#+CAPTION: SPAPT kernel
+#+LABEL: fig:xeon-native-roofline-dgemv
+#+ATTR_LATEX: :width 0.7\textwidth :placement [h]
+#+RESULTS:
+[[file:./img/roofline/roofline_native.pdf]]
 
 Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]]  shows  the best  kernel  configurations
 found  across 20  repetitions of  the GPR  and RS  methods. GPR  could not  find
 statistically or  practically significant  speedups in relation  to RS  for this
 kernel,  although  one   specific  GPR  run  found   an  outlier  configuration.
-Figure\nbsp{}[[fig:xeon-generic-roofline-dgemv]]  shows   the  theoretical  Roofline
-model\nbsp{}\cite{williams2009roofline}  for  the   processor  targeted  by  our
-experiments, which was the same from our CCGRID paper. The figure also shows the
-theoretical peak performance of the /DGEM/  kernel, and the performance that was
-achieved by the  best configuration we found for the  /dgemv3/ SPAPT kernel, the
-red outlier in Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
+Figures\nbsp{}[[fig:xeon-generic-roofline-dgemv]] and [[fig:xeon-native-roofline-dgemv]]
+show  the empirical  Roofline\nbsp{}\cite{williams2009roofline}  graphs for  the
+processor targeted by our experiments, which was the same from our CCGRID paper,
+using  /GCC/  /-march=generic,native/  options.    The  figure  also  shows  the
+performance  that was  achieved  by  the best  configuration  we  found for  the
+/dgemv3/        SPAPT       kernel,        the       red        outlier       in
+Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
+
+***** Theoretical Roofline                                     :noexport:
+#+CAPTION: Empirical Roofline graph for the /Xeon E5-2630v3/
+#+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon},
+#+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
+#+CAPTION: SPAPT kernel
+#+LABEL: fig:xeon-generic-roofline-dgemv
+#+ATTR_LATEX: :width 0.65\textwidth :placement [h]
+#+RESULTS:
+[[file:./img/journal/theoretical_roofline_xeonE52630v3.pdf]]
+
 
 *** Summary
 :PROPERTIES:

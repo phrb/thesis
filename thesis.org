@@ -12474,7 +12474,8 @@ modifying a  baseline C Laplacian  kernel, optimizing parameters  controlling to
 vectorization, loop transformations, and data structure size and copying.
 
 Figure\nbsp{}\ref{fig:cpu-laplacian} shows the  baseline Laplacian kernel, which
-is modified  and manipulated  by BOAST  to generate the  OpenCL kernel  shown in
+is modified and  manipulated by BOAST, using the Ruby  script partially shown in
+Figure\nbsp{}\ref{fig:boast-generator}, to  generate the OpenCL kernel  shown in
 Figure\nbsp{}\ref{fig:gpu-laplacian-generated}
 
 #+begin_export latex

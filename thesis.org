@@ -5,13 +5,14 @@
 
 #+LANGUAGE:    en
 #+TAGS: noexport(n) ignore(i)
-#+OPTIONS:   H:5 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   H:5 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
 #+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w@) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
 * Headers and Configuration                                 :noexport:ignore:
+** Emacs Optional Configuration
 #+begin_src emacs-lisp :exports none :eval no-export
 ;; Pour configurer les subdivisions de la classe book (indiquer : #+LaTeX_CLASS: book)
 (with-eval-after-load "ox-latex"
@@ -29,10 +30,9 @@
 | book    | \documentclass{book}                 | (\part{%s} . \part*{%s})       | (\chapter{%s} . \chapter*{%s})       | (\section{%s} . \section*{%s})             | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
 | beamer  | \documentclass[presentation]{beamer} | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |                                      |                                            |
 | article | \documentclass{article}              |                                |                                      |                                            |                                      |                                            |
-
+** Latex
 #+LATEX_CLASS: book
 #+LATEX_CLASS_OPTIONS: [11pt,twoside,openany,a4paper]
-#+DRAWERS: latex_headers
 
 :latex_headers:
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
@@ -58,6 +58,7 @@
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
+#+LATEX_HEADER: \usepackage{tocbibind}
 #+LATEX_HEADER: \usepackage{indentfirst}
 #+LATEX_HEADER: \usepackage{tabularx}
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
@@ -149,6 +150,7 @@
 #+LATEX_HEADER:     urlcolor={blue!80!black}
 #+LATEX_HEADER: }
 :end:
+
 
 * Early Drafts                                                     :noexport:
 ** First Draft
@@ -7808,6 +7810,11 @@ wireframe(interaction_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic_interactions_gp.pdf]]
 
+* Contents and Lists of Figures, Tables                              :ignore:
+#+TOC: headlines 5
+#+TOC: tables
+#+latex: \listoffigures{}
+#+TOC: figures
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
 Computer  performance has  sustained exponential  increases over  the last  half

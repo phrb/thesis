@@ -1,0 +1,38 @@
+\babel@toc {english}{}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Autotuning methods used by a sample of systems, in different domains, ordered by publishing year. Methods were classified as either Search Heuristics (SH), Machine Learning (ML), or more precisely when the originating work provided detailed information. Earlier work favored employing Search Heuristics, which are less prominent in recent work, which favors methods based on Machine Learning.\relax }}{30}{table.caption.13}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Summary of the notation, concepts, and examples discussed in this chapter, and common to the autotuning methods discussed in further chapters\relax }}{35}{table.caption.15}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Expressions for the covariance functions, or kernels, shown in Figure \ref {fig:radial-basis-kernels}. The variables $v$ and $l$ are kernel parameters that can themselves be estimated. The Matérn kernel depends on the gamma function $\Gamma $ and on the Bessel function of the second kind $K_{v}$. We refer the reader to Chapter \textit {4} of Rasmussen and Williams \cite {williams2006gaussian} for detailed definitions and discussions\relax }}{60}{table.caption.30}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces A Plackett-Burman design for 7 2-level factors, where low and high levels are represented by $-1$ and $1$, respectively\relax }}{69}{table.caption.41}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Randomized Plackett-Burman design for factors $x_1, \dots , x_8$, using 12 experiments and ``dummy'' factors $d_1, \dots , d_3$, and computed response $\mathbf {Y}$\relax }}{70}{table.caption.42}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Shortened ANOVA table for the fit of the naive model, with significance intervals from the \texttt {R} language\relax }}{71}{table.caption.43}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Comparison of the response $Y$ predicted by the linear model and the true global minimum. Factors used in the model are bolded\relax }}{71}{table.caption.44}%
+\contentsline {table}{\numberline {6.5}{\ignorespaces D-Optimal design constructed for the factors $\left \{x_1,x_3,x_5,x_7,x_8\right \}$ and computed response $Y$\relax }}{73}{table.caption.45}%
+\contentsline {table}{\numberline {6.6}{\ignorespaces Correct model fit comparing real and estimated coefficients, with significance intervals from the \texttt {R} language\relax }}{73}{table.caption.46}%
+\contentsline {table}{\numberline {6.7}{\ignorespaces Comparison of the response $Y$ predicted by our models and the true global minimum. Factors used in the models are bolded\relax }}{74}{table.caption.47}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {10.1}{\ignorespaces Description of flags in the search space\relax }}{85}{table.caption.53}%
+\contentsline {table}{\numberline {10.2}{\ignorespaces Hardware specifications of the target GPU architectures\relax }}{86}{table.caption.54}%
+\contentsline {table}{\numberline {10.3}{\ignorespaces Rodinia~\cite {che2009rodinia} kernels used in the experiments\relax }}{86}{table.caption.55}%
+\contentsline {table}{\numberline {10.4}{\ignorespaces Parameter clusters for all Rodinia problems in the GTX 750\relax }}{90}{table.caption.60}%
+\contentsline {table}{\numberline {10.5}{\ignorespaces Flags added to the search space from Table~\ref {tab:flags}\relax }}{91}{table.caption.61}%
+\contentsline {table}{\numberline {10.6}{\ignorespaces Hardware specifications of the GPU architectures targeted in the screening experiments\relax }}{91}{table.caption.62}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {11.1}{\ignorespaces Subset of All Autotuned LegUP HLS Parameters\relax }}{99}{table.caption.70}%
+\contentsline {table}{\numberline {11.2}{\ignorespaces Weights for Optimization Scenarios (\textit {High} $= 8$, \textit {Medium} $= 4$, \textit {Low} $= 2$)\relax }}{101}{table.caption.71}%
+\contentsline {table}{\numberline {11.3}{\ignorespaces Autotuned CHStone Kernels\relax }}{101}{table.caption.72}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {12.1}{\ignorespaces Parameters of the Laplacian Kernel\relax }}{112}{table.caption.81}%
+\contentsline {table}{\numberline {12.2}{\ignorespaces Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions\relax }}{113}{table.caption.82}%
+\contentsline {table}{\numberline {12.3}{\ignorespaces ANOVA tests at each step. Red lines mark model terms that were considered significant and fixed in a given step\relax }}{114}{table.caption.85}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {13.1}{\ignorespaces Kernels from the SPAPT benchmark used in this evaluation\relax }}{119}{table.caption.86}%
+\addvspace {10\p@ }

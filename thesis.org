@@ -13039,6 +13039,32 @@ that were  previously unclear.
 :PROPERTIES:
 :CUSTOM_ID: sec:laplacian-summary
 :END:
+
+This chapter  described a transparent  and parsimonious approach  to autotuning,
+based on  D-Optimal Designs, ANOVA tests,  and Linear Regression. We  dealt with
+the heteroscedasticity that could violate modeling assumptions by using standard
+detection  tests   and  transformation   procedures.   This   approach  produced
+optimizations  consistently  within  1%  of  the global  optimum  of  an  OpenCL
+Laplacian kernel run in an /NVIDIA/  GPU, using half of the allotted measurement
+budget for optimization.
+
+We  demonstrated  how  the  choices  made  during  optimization  are  completely
+transparent, in  such a  way that  it is straightforward  to envision  how users
+could interfere  with and learn from  the optimization process by,  for example,
+selecting  specific factors  that should  be treated  differently, and  changing
+initial modeling assumptions based on the results produced.
+
+The development,  testing, and tweaking of  this approach relied heavily  on the
+availability of a completely evaluated  search space, with known global optimum.
+Having access to this sort of search space is not possible in real applications,
+as we will see  in the next two chapters, but it  is also unfortunately uncommon
+in the autotuning literature.  We hope the studies presented in this thesis, and
+the  one in  this chapter  in particular,  help arguing  for and  justifying the
+elaboration  and  evaluation  of well-defined  and  completely-evaluated  search
+spaces for autotuning,  composed of high-interest computing  kernels, that could
+be  used  for  the  development  and  comparison  of  optimization  methods  for
+autotuning.
+
 ** Experimental Design and Gaussian Process Regression for CPU Kernels
 This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from

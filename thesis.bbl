@@ -739,10 +739,9 @@ S.~Q. Masnada, ``{Semi-Automatic Performance Optimization of HPC Kernels},''
   Available: \url{https://hal.inria.fr/hal-01579422}
 \BIBentrySTDinterwordspacing
 
-\bibitem{boast2020laplacian}
-``{BOAST Laplacian Sample GPU Kernel},''
-  \url{https://github.com/Nanosim-LIG/boast/blob/master/sample/Laplacian.rb},
-  accessed: 15 March 2021.
+\bibitem{boast2021source}
+``{BOAST Source Code},'' \url{https://github.com/Nanosim-LIG/boast}, accessed:
+  15 March 2021.
 
 \bibitem{fox2011car}
 \BIBentryALTinterwordspacing
@@ -757,6 +756,11 @@ Q.~Yi, K.~Seymour, H.~You, R.~Vuduc, and D.~Quinlan, ``{POET}: Parameterized
   optimizations for empirical tuning,'' in \emph{Parallel and Distributed
   Processing Symposium, 2007. IPDPS 2007. IEEE International}.\hskip 1em plus
   0.5em minus 0.4em\relax IEEE, 2007, pp. 1--8.
+
+\bibitem{boast2021laplacian}
+``{BOAST Laplacian Sample GPU Kernel},''
+  \url{https://github.com/Nanosim-LIG/boast/blob/master/sample/Laplacian.rb},
+  accessed: 15 March 2021.
 
 \bibitem{addelman1961some}
 S.~Addelman and O.~Kempthorne, ``Some main-effect plans and orthogonal arrays

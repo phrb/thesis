@@ -12922,13 +12922,16 @@ Random Sampling (RS) & 1.10 & 1.00 & 1.39 & 120.00 & 120 \\
 \end{table}
 #+end_export
 
-All algorithms performed relatively well in  this kernel, with only GS not being
-able to find  slowdowns smaller than 4$\times$ in some  runs. As expected, other
-search algorithms had results similar to RS. LM was able to find slowdowns close
-to the  global minimum  on most  runs, but  some runs  could not  find slowdowns
-smaller than  $4\times$. Our approach reached  a slowdown of 1%  from the global
-minimum /in all/ of  the 1000 runs while using /at most/ fewer  than half of the
-allotted budget.
+#+latex: \clearpage
+
+#+NAME: fig:gpu_laplacian_comparison_histogram
+#+CAPTION: Distribution of slowdowns in relation to the global optimum for 7
+#+CAPTION: optimization methods on the Laplacian Kernel, using a budget of 125
+#+CAPTION: points over 1000 repetitions
+#+ATTR_LATEX: :placement [h] :width .9\columnwidth
+[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
+
+#+latex: \clearpage
 
 We  implemented a  simple  approach for  the prediction  step  in this  problem,
 choosing the best value of our fitted  models on the complete set of valid level
@@ -12938,20 +12941,41 @@ would have  to either  adapt this  step and run  the prediction  on a  sample or
 minimize   the  model   using  the   differentiation  strategies   mentioned  in
 Section\nbsp{}[[Screening & Plackett-Burman Designs]].
 
-#+NAME: fig:gpu_laplacian_comparison_histogram
-#+CAPTION: Distribution of slowdowns in relation to the global minimum for 7 optimization methods on the Laplacian Kernel, using a budget of 125 points over 1000 repetitions
-#+ATTR_LATEX: :placement [t] :width .9\columnwidth
-[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
-
 This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
 performance model is approximately known and  the complete valid search space is
-small enough to be  used for prediction. The global minimum  also appears to not
+small enough to be  used for prediction. The global optimum  also appears to not
 be isolated in a  region of points with bad performance,  since our approach was
-able to exploit space geometry. We  will now present a performance evaluation of
-our approach in a larger and more comprehensive benchmark.
+able to exploit search space geometry.  In Chapter\nbsp{}[[Experimental Design and
+Gaussian  Process Regression  for CPU  Kernels]] we  present a  more comprehensive
+performance evaluation of our approach in a larger benchmark suite.
 
 *** Looking at a Single DLMT Run
-#+NAME: fig:gpu-laplacian-model-comparison
+This section  presents a more detailed  look at the iterative  process performed
+during   the   optimization   of   the   Laplacian   kernel   by   our   method.
+Figure\nbsp{}[[fig:dlmt-laplacian-steps]] shows the factors  that were eliminated in
+each of the 3 steps performed by DLMT, and compares each factor's predicted best
+level with  the level for  that factor in the  global optimum.
+
+Factors were chosen  based on ANOVA tests where factors  with /p/-values below a
+threshold  of  $p  <  0.05$  were  considered  significant.  The  threshold  for
+significance must  be adjusted to  better fit the  target problem, and  could be
+dispensed with  altogether, according  to the desired  degree of  automation and
+trust  in the  initial modeling  assumptions. All  experiments with  this method
+presented  in this  thesis were  completely automated  using fixed  significance
+thresholds.
+
+We see that  the chose factor level  matches the level on the  global optimum in
+all factor fixing steps, except for the  number of threads. This seems to have a
+small effect in the  final results, but could be fixed in  this specific case by
+dropping the inverse term, since the level  on the global optimum is the highest
+one  possible. This  is an  example of  how this  transparent approach  can help
+learning  about the  problem  begin optimized  by  challenging initial  modeling
+assumptions.  In this case, perhaps thread group management is a larger overhead
+than expected, and it is better to have larger groups.
+
+#+latex: \clearpage
+
+#+NAME: fig:dlmt-laplacian-steps
 #+CAPTION: Overview of a single DLMT run. Each panel shows a view of the
 #+CAPTION: completely evaluated search space, from the perspective of one of
 #+CAPTION: the factors eliminated in a given step.
@@ -12959,20 +12983,31 @@ our approach in a larger and more comprehensive benchmark.
 #+CAPTION: each factor, and a $\color{blue}\boldsymbol{\times}$ marks the factor
 #+CAPTION: level on the global optimum.
 #+ATTR_LATEX: :placement [t] :width .85\columnwidth
-[[./img/dopt_anova_experiments/model_comparison.pdf]]
+[[./img/dopt_anova_experiments/model_sample_execution.pdf]]
+
+#+latex: \clearpage
+
+Table\nbsp{}\ref{tab:laplacian-anova} shows  the ANOVA  tests performed  at each
+step   in   Figure\nbsp{}[[fig:dlmt-laplacian-steps]],  highlighting   the   factors
+identified to  be significant  at each  step, which  were subsequently  fixed to
+their  best predicted  levels. Note  that  the size  of the  model being  tested
+decreases at each step, as factors are fixed.  These progressive restrictions to
+slices of the search space enable the  ANOVA test to detect differences in means
+that were  previously unclear.
 
 #+begin_export latex
 \begin{table}[ht]
   \centering
   \small
-  \caption{ANOVA tests at each step. Red lines mark model terms that were considered significant and fixed in a given step}
+  \caption{ANOVA tests at each step. Red lines mark model terms that were considered significant, with $p < 0.05$, and fixed in a given step}
+  \label{tab:laplacian-anova}
   \begin{tabular}{llrrr}
     \toprule
     Step & Term & Sum Sq. & F-value & p($>$F) \\
     \midrule
     \multirow{11}{*}{$1^{\text{st}}$} & \textit{y\_component\_number} & $2.1 \times 10^{-18}$ & $7.3 \times 10^{-1}$ & $4.1 \times 10^{-1}$ \\
     & \textit{1/y\_component\_number} & $4.4 \times 10^{-18}$ & $1.6 \times 10^{0}$ & $2.4 \times 10^{-1}$ \\
-    & \cellcolor{red!25}\textit{vector\_length} & \cellcolor{red!25}$1.3 \times 10^{-17}$ & \cellcolor{red!25}$4.4 \times 10^{0}$ & \cellcolor{red!25}$5.7 \times 10^{-2}$ \\
+    & \cellcolor{red!25}\textit{vector\_length} & \cellcolor{red!25}$1.3 \times 10^{-17}$ & \cellcolor{red!25}$4.4 \times 10^{0}$ & \cellcolor{red!25}$4.7 \times 10^{-2}$ \\
     & \cellcolor{red!25}\textit{lws\_y} & \cellcolor{red!25}$6.9 \times 10^{-17}$ & \cellcolor{red!25}$2.4 \times 10^{1}$ & \cellcolor{red!25}$3.5 \times 10^{-4}$ \\
     & \cellcolor{red!25}\textit{1/lws\_y} & \cellcolor{red!25}$1.8 \times 10^{-17}$ & \cellcolor{red!25}$6.2 \times 10^{0}$ & \cellcolor{red!25}$2.8 \times 10^{-2}$ \\
     & \textit{load\_overlap} & $9.1 \times 10^{-20}$ & $3.2 \times 10^{-2}$ & $8.6 \times 10^{-1}$ \\
@@ -12989,10 +13024,10 @@ our approach in a larger and more comprehensive benchmark.
     & \textit{elements\_number} & $6.0 \times 10^{-22}$ & $1.1 \times 10^{-1}$ & $7.5 \times 10^{-1}$ \\
     & \textit{1/elements\_number} & $2.7 \times 10^{-21}$ & $4.8 \times 10^{-1}$ & $5.0 \times 10^{-1}$ \\
     & \cellcolor{red!25}\textit{threads\_number} & \cellcolor{red!25}$7.2 \times 10^{-21}$ & \cellcolor{red!25}$1.3 \times 10^{0}$ & \cellcolor{red!25}$2.9 \times 10^{-1}$ \\
-    & \cellcolor{red!25}\textit{1/threads\_number} & \cellcolor{red!25}$2.9 \times 10^{-20}$ & \cellcolor{red!25}$5.1 \times 10^{0}$ & \cellcolor{red!25}$5.0 \times 10^{-2}$ \\
+    & \cellcolor{red!25}\textit{1/threads\_number} & \cellcolor{red!25}$2.9 \times 10^{-20}$ & \cellcolor{red!25}$5.1 \times 10^{0}$ & \cellcolor{red!25}$4.0 \times 10^{-2}$ \\
     \midrule
     \multirow{4}{*}{$3^{\text{rd}}$} & \textit{load\_overlap} & $7.4 \times 10^{-25}$ & $3.8 \times 10^{0}$ & $1.1 \times 10^{-1}$ \\
-    & \textit{temporary\_size} & $1.1 \times 10^{-22}$ & $5.7 \times 10^{2}$ & $2.4 \times 10^{-6}$ \\
+    & \textit{temporary\_size} & $1.1 \times 10^{-22}$ & $5.7 \times 10^{2}$ & $2.4 \times 10^{-1}$ \\
     & \cellcolor{red!25}\textit{elements\_number} & \cellcolor{red!25}$9.3 \times 10^{-22}$ & \cellcolor{red!25}$4.7 \times 10^{3}$ & \cellcolor{red!25}$1.2 \times 10^{-8}$ \\
     & \cellcolor{red!25}\textit{1/elements\_number} & \cellcolor{red!25}$3.1 \times 10^{-22}$ & \cellcolor{red!25}$1.6 \times 10^{3}$ & \cellcolor{red!25}$1.9 \times 10^{-7}$ \\
     \bottomrule

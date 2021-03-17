@@ -12345,7 +12345,7 @@ Masnada\nbsp{}\cite{masnada2016semi},  of performance  optimization methods  for
 the  search space  defined by  the parameters  of a  Laplacian GPU  kernel.  The
 kernel  was implemented  using  BOAST\nbsp{}\cite{videau2017boast}, a  framework
 that enables writing and optimizing  HPC applications using metaprogramming, and
-is publicly  hosted on  GitHub\nbsp{}\cite{boast2020laplacian}. We  targeted the
+is  publicly hosted  on  GitHub\nbsp{}\cite{boast2021source}.   We targeted  the
 /Nvidia  K40c/ GPU,  and the  objective function  we minimized  was the  time to
 compute each pixel.   We evaluated the performance of  nine optimization methods
 for this  kernel, including sampling strategies,  stochastic methods, variations
@@ -12355,7 +12355,9 @@ achieved  the  most consistent  results  across  the  methods we  tested,  which
 motivated searching  for a more  comprehensive set  of applications in  which we
 could evaluate the performance of our approach. This more comprehensive study is
 described in  Chapter\nbsp{}[[Experimental Design and Gaussian  Process Regression
-for CPU Kernels]].
+for CPU Kernels]].  The initial steps of the studies presented in this chapter and
+the      next      were      published     together      in      the      CCGRID
+conference\nbsp{}\cite{bruel2019autotuning}.
 
 The  remainder  of  this  chapter  is  organized  as  follows.   Section\nbsp{}[[A
 Transparent  and  Parsimonious  Approach  to  Autotuning  using  Optimal  Design]]
@@ -12470,13 +12472,15 @@ transformation. Several  frameworks, compilers, and autotuners  provide tools to
 generate             and              optimize             architecture-specific
 code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
 We used BOAST\nbsp{}\cite{videau2017boast}  to generate OpenCL code  for GPUs by
-modifying a  baseline C Laplacian  kernel, optimizing parameters  controlling to
+modifying  a  baseline C  Laplacian  kernel,  optimizing parameters  controlling
 vectorization, loop transformations, and data structure size and copying.
 
-Figure\nbsp{}\ref{fig:cpu-laplacian} shows the  baseline Laplacian kernel, which
-is modified and  manipulated by BOAST, using the Ruby  script partially shown in
-Figure\nbsp{}\ref{fig:boast-generator}, to  generate the OpenCL kernel  shown in
-Figure\nbsp{}\ref{fig:gpu-laplacian-generated}
+Figure\nbsp{}\ref{fig:cpu-laplacian} shows the baseline Laplacian kernel written
+in C,  which is modified and  manipulated by BOAST using  metaprogramming tools.
+The BOAST Ruby  script for manipulating the Laplacian kernel  is partially shown
+in  Figure\nbsp{}\ref{fig:boast-generator}. A  sample  of  the resulting  OpenCL
+kernel        generated        by         BOAST        is        shown        in
+Figure\nbsp{}\ref{fig:gpu-laplacian-generated}.
 
 #+begin_export latex
 \label{fig:cpu-laplacian}
@@ -12602,8 +12606,9 @@ def laplacian(options)
   return k
 end
 \end{lstlisting}
-\caption{Excerpts of the BOAST code, in Ruby, that generates the Laplacian
-  OpenCL kernel}
+\caption{Excerpts  of the  BOAST code,  in  Ruby, that  generates the  Laplacian
+  OpenCL      kernel.     The      code      is      publicly     hosted      at
+  GitHub~\cite{boast2021laplacian}}
 \end{figure}
 \clearpage
 #+end_export
@@ -12614,8 +12619,8 @@ end
 \begin{figure}[t]
 \lstset{language=C,basicstyle=\ttfamily\tiny,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-__kernel void math(const __global uchar * psrc, __global uchar * pdst,
-                   const int width, const int height){
+__kernel void kernel(const __global uchar * psrc, __global uchar * pdst,
+                     const int width, const int height){
     int y, x, w;
     x = (get_global_id(0)) * (1);
     y = (get_global_id(1)) * (3);
@@ -12663,6 +12668,7 @@ __kernel void math(const __global uchar * psrc, __global uchar * pdst,
     tempc014 = convert_int8( (uchar8)(tempload0_7.s345,tempload0_7.s67,tempload8_11.s012) );
     tempc024 = convert_int8( (uchar8)(tempload0_7.s67,tempload8_11.s0123,
                                       tempload12_13.s01) );
+    // Kernel computation
     resc00 =  -(tempc000) - (tempc010) - (tempc020) - (tempc001) + (tempc011) *
         ((int)9) - (tempc021) - (tempc002) - (tempc012) - (tempc022);
     res00 = convert_uchar8( clamp(resc00, (int)0, (int)255) );
@@ -12683,6 +12689,9 @@ __kernel void math(const __global uchar * psrc, __global uchar * pdst,
 #+end_export
 
 *** Building a Performance Model
+This section  describes the search space  exposed by the BOAST  Laplacian kernel
+and our initial modeling hypotheses.
+
 **** Search Space
 The   factors   and  levels   defining   the   search   space  are   listed   in
 Table\nbsp{}[[tab:gpu_laplacian_factors]].   The  complete   search  space  contains
@@ -12699,7 +12708,7 @@ version /340.32/.
 |-------------------------------+-------------------------------+--------------------------------|
 | Factor                        | Levels                        | Short Description              |
 |-------------------------------+-------------------------------+--------------------------------|
-| \textit{vector\_length}       | $2^0,\dots,2^4$               | Size of support arrays         |
+| \textit{vector\_length}       | $2^0,\dots,2^4$               | Size of vectors                |
 | \textit{load\_overlap}        | \textit{true}, \textit{false} | Load overlaps in vectorization |
 | \textit{temporary\_size}      | $2,4$                         | Byte size of temporary data    |
 | \textit{elements\_number}     | $1,\dots,24$                  | Size of equal data splits      |
@@ -12707,40 +12716,101 @@ version /340.32/.
 | \textit{threads\_number}      | $2^5,\dots,2^{10}$            | Size of thread groups          |
 | \textit{lws\_y}               | $2^0,\dots,2^{10}$            | Block size in $y$ dimension    |
 |-------------------------------+-------------------------------+--------------------------------|
-**** Modeling Choices for Each Factor
-The starting model we used is written
+**** Modeling the Impact of Each Factor
+This section briefly describes each factor and our modeling hypotheses regarding
+their impact on performance.
+
+***** Linear Terms
+The effects  of the following  factors were  modeled with linear  terms, whether
+because  they are  categorical  binary  factors or  to  attempt  to exploit  the
+simplest relationship under uncertainty of the effects.
+
+- The  /vector\under{}length/  factor  controls  the  vector  size  used  during
+  computation. Architectures supporting vectorization provide speedups by saving
+  instruction  decoding time,  but  vectors must  be  properly sized.   Although
+  /NVIDIA/  GPUs did  not  support  vectorization at  the  time  of this  study,
+  vectorization can still impact performance via cache effects
+- The /load\under{}overlap/  factor is  binary, and  its effect  is consequently
+  modeled with  a linear term.  The  parameter encodes the choice  of whether to
+  save memory load instructions by overlapping vectors in memory
+- The  /lws\under{}y/  factor controls  the  size  of  a  thread block,  in  the
+  /y/-axis. We did not have assumptions about the behavior of this factor, so we
+  attempted a linear term
+
+***** Linear plus Inverse Terms
+The effects  of the following  factors were modeled with  a linear term  plus an
+inverse term. In  our initial model we  assumed that these factors  had a linear
+effect on performance, but also that  a more complex relationship existed due to
+different kinds of  overhead. In all cases, we modeled  the expected overhead as
+an inverse term.
+
+- The /elements\under{}number/  factor controls the  size of image  portion that
+  will be  processed by each  thread, and  using smaller portions  implies using
+  more  threads.   As  more  threads  are  used  we  expect  an  improvement  on
+  performance, but also an overhead due to extra memory loads and to the cost of
+  managing threads
+- The /y\under{}component\under{}number/ factor controls tiling  on the /y/-axis of the
+  target image,  inside each  thread. The  optimal tiling  size is  a compromise
+  between fitting a tile in cache  and providing enough prefetched memory to not
+  slow computation down
+- The /threads\under{}number/  parameter controls the  size of an  OpenCL thread
+  work  group.  Threads  in  the same  group  share data  and  can be  scheduled
+  together.   Using more  smaller  groups can  improve  performance from  better
+  scheduling, but imply in more management overhead
+
+***** The Complete Initial Model
+Putting together the  terms for all factors, the complete  initial model for the
+time to compute a single pixel is written
 #+BEGIN_EXPORT latex
 \begin{align}
   \label{eq:gpu_laplacian_performance_model}
-  \textit{time\_per\_pixel} \sim &  \textit{y\_component\_number} + \frac{1}{\textit{y\_component\_number}} \; + \\
+  \textit{time\_per\_pixel} \sim &  \textit{y\_component\_number} + \frac{1}{\textit{y\_component\_number}} \; + \nonumber \\
   & \textit{temporary\_size} + \textit{vector\_length} + \textit{load\_overlap} \; + \nonumber \\
   & \textit{lws\_y} + \frac{1}{\textit{lws\_y}} + \textit{elements\_number} + \frac{1}{\textit{elements\_number}} \; + \nonumber \\
-  & \textit{threads\_number} + \frac{1}{\textit{threads\_number}}\text{,} \nonumber
+  & \textit{threads\_number} + \frac{1}{\textit{threads\_number}}\text{,}
 \end{align}
 #+END_EXPORT
-where coefficients were omitted.
-
+where coefficients were omitted. This model  was pruned at each iteration of our
+method, fixing significant factors to their best predicted level.
 
 *** Evaluation of Optimization Methods
-The  initial performance  model  was used  by the  Iterative  Linear Model  (LM)
-algorithm and by our D-Optimal Design approach (DLMT). LM is almost identical to
-our  approach,  described  in  Chapter\nbsp{}[[Experimental  Design  and  Gaussian
-Process Regression  for CPU Kernels]], but  it uses a fixed-size  random sample of
-the  search space  instead of  generating  D-Optimal designs.   We compared  the
-performance  of  our approach  with  the  following algorithms:  uniform  Random
-Sampling (RS); Latin Hypercube Sampling (LHS); Greedy Search (GS); Greedy Search
-with Restart  (GSR); and  Genetic Algorithm (GA).  Each algorithm  performed /at
-most/ 125 measurements over 1000 repetitions, without user intervention.
+This  section presents  a performance  evaluation of  the approach  described in
+Section\nbsp{}[[A  Transparent  and  Parsimonious  Approach  to  Autotuning  using
+Optimal Design]],  comparing this  approach to  eight other  optimization methods.
+The  performance  model described  in  the  previous  section  was used  by  the
+Iterative Linear Model (LM) and the Quantile Regression (QR) methods, as well as
+by   our   approach,  named   /D-Optimal   Designs,   with  Linear   Model   and
+heteroscedasticity  correction  Transform/  (DLMT).   The LM  method  is  almost
+identical to  our approach,  described in Chapter\nbsp{}[[Experimental  Design and
+Gaussian Process  Regression for CPU  Kernels]], but  it uses a  fixed-size random
+sample of  the search space  instead of generating D-Optimal  designs. Likewise,
+the QR  method used  random samples  and Quantile Regression,  in an  attempt to
+decrease  the impact  of  noisy outliers  in the  final  fit.  Additionally,  we
+compared the performance of our approach with nine other methods, namely uniform
+Random Sampling (RS), Latin Hypercube Sampling (LHS), Greedy Search (GS), Greedy
+Search with Restart (GSR), and a Genetic Algorithm (GA).  At a later date, after
+the   CCGRID  publication,   we  added   to  this   performance  comparison   an
+implementation  of   Gaussian  Process  Regression  with   Expected  Improvement
+acquisition function (GPR).  Each method performed at most 125 measurements over
+1000 repetitions, without user intervention.
 
-Since we  measured the entire  valid search space,  we could use  the /slowdown/
-relative   to   the  /global   minimum/   to   compare  algorithm   performance.
-Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget} shows  the mean,  minimum and
-maximum slowdowns  in comparison to the  global minimum, for each  algorithm. It
-also   shows   the  mean   and   maximum   budget   used  by   each   algorithm.
+Since we measured  the entire valid search  space for this kernel,  we could use
+the /slowdown/  relative to the  global optimum  to compare the  performances of
+each method.  Table\nbsp{}\ref{tab:gpu_laplacian_compare_budget} shows the mean,
+minimum, and  maximum slowdowns  in comparison  to the  global optimum  for each
+method.   It  also shows  the  mean  and maximum  budget  used  by each  method.
 Figure\nbsp{}[[fig:gpu_laplacian_comparison_histogram]] presents histograms with the
 count of the slowdowns  found by each of the 1000  repetitions. Arrows point the
-maximum slowdown  found by each algorithm.  Note that GS's maximum  slowdown was
-left out of range to help the comparison between the other algorithms.
+maximum slowdown  found by each  method.  Note that  maximum slowdown of  the GS
+method was left out of range to help the comparison between the other method.
+
+All methods  performed relatively well  in this kernel,  with only GS  not being
+able to find  slowdowns smaller than 4  times in some of the  runs. As expected,
+other search algorithms had results similar to RS. LM was able to find slowdowns
+close to the  global optimum on most runs,  but some of the runs  could not find
+slowdowns smaller than 4  times. Our approach reached a slowdown  of 1% from the
+global optimum in  all of the 1000 runs  while using at most fewer  than half of
+the allotted budget.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R

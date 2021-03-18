@@ -11155,20 +11155,6 @@ branching questions underlying each method.
 #+CAPTION: Some autotuning methods
 [[file:img/tree.pdf]]
 
-** Applications to Autotuning                                     :noexport:
-*** Function Minimization
-**** OpenTuner: Leveraging Ensembles of Heuristics
-***** The Multi-Armed Bandit, Area Under the Curve Approach
-*** Learning
-**** Software for Autotuning with Statistical Learning
-***** The /R/ Language
-**** Results using Statistical Learning
-***** Linear Regression and Design of Experiments
-***** Methods based on Machine Learning
-*** Design of Experiments
-**** Inference for Autotuning under a Tight Budget
-***** Fractional Factorial Designs for Chip Design on FPGAs
-*** Gaussian Process Regression
 * Applications
 ** Research Methodology: Efforts for Reproducible Science
 Sketch:

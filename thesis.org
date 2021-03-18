@@ -12974,9 +12974,7 @@ We  implemented a  simple  approach for  the prediction  step  in this  problem,
 choosing the best value of our fitted  models on the complete set of valid level
 combinations. This  was possible for  this problem since all  valid combinations
 were known. For problems were the search  space is too large to be generated, we
-would have  to either  adapt this  step and run  the prediction  on a  sample or
-minimize   the  model   using  the   differentiation  strategies   mentioned  in
-Section\nbsp{}[[Screening & Plackett-Burman Designs]].
+would have to either adapt this step and run the prediction on a sample.
 
 This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
 performance model is approximately known and  the complete valid search space is

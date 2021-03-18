@@ -834,6 +834,13 @@ git submodule add --depth=1 git@github.com:phrb/ccgrid19.git
 #+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
 git submodule add --depth=1 git@github.com:phrb/journal.git
 #+end_SRC
+*** HAQ Experiments
+- TODO (cleanup repo)
+- https://github.com/phrb/haq-autotuning-experiments
+*** HPE 2019 Journal
+- TODO (cleanup repo, make public)
+- https://github.com/phrb/hpe-2019-journal
+
 ** Initializing Sub-modules
 #+begin_SRC shell :results output :session *Shell* :eval no-export :exports results
 git submodule init

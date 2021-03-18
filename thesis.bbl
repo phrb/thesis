@@ -811,4 +811,9 @@ S.~Williams, A.~Waterman, and D.~Patterson, ``Roofline: an insightful visual
   performance model for multicore architectures,'' \emph{Communications of the
   ACM}, vol.~52, no.~4, pp. 65--76, 2009.
 
+\bibitem{talbi2021automated}
+E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified
+  taxonomy,'' \emph{ACM Computing Surveys (CSUR)}, vol.~54, no.~2, pp. 1--37,
+  2021.
+
 \end{thebibliography}

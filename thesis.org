@@ -13727,6 +13727,50 @@ knowing the  global optimum  helps evaluating the  performance of  an autotuning
 approach.
 
 ** Gaussian Process Regression for Neural Network Bit Quantization
+#+begin_export latex
+\todo[inline]{TODO: Fill in the sketched sections below}
+#+end_export
+
+*** Autotuning Bit Quantization for Neural Networks
+- Decrease size, keep accuracy
+- Add a figure
+**** Other Applications of Autotuning for Neural Networks
+- Talbi\nbsp{}\cite{talbi2021automated}
+- Neural Architecture Search
+- Hyperparameter Tuning
+*** ResNet50 and ImageNet
+**** ResNet50 Architecture and Objective Function
+- Schematic figure
+- The objective function
+**** The ImageNet Dataset
+*** Reinforcement Learning: The Baseline Method
+- Adapt a figure from the HAQ paper
+**** Respecting Size Constraints
+- Round-robin decrease of weights
+- "Reverse-engineering": we found out that  the first layers are less important,
+  the authors might have encoded that knowledge in the round-robin procedure
+*** Gaussian Process Regression with Expected Improvement
+- Add a schematic figure or pseudocode of GPR algorithm
+**** Using Space-Filling Designs
+**** Respecting Size Constraints
+**** Detecting Significance with Sobol Indices
+*** Performance Evaluation
+**** Accuracy for Fixed Network Size
+- Space-filling baseline
+- Compare RL and GPR
+- GPR achieves the same results in the same time
+- GPR  achieves  more  consistent quantization  distributions  across  different
+  optimizations
+**** Running GPR with All Collected Data
+- GPR can be restarted at any point and easily leverage past executions
+**** Measuring the Performance of the GPR Method
+- Training and testing the Net is the bottleneck
+- Model fit times becomes more important with more data
+  - Due to the R implementation? (it uses RCpp)
+*** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:gprnn-summary
+:END:
 * Conclusion
 #+begin_export latex
 \bibliographystyle{IEEEtran}

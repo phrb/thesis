@@ -785,9 +785,11 @@ context (where EI is more meaningful).
 
 - For the DGEMV kernel:
   - Peak performance is still 20 times faster than the best point we found
-  - [X] Describe Roofline computations, CPU specs?
+  - [-] Describe Roofline computations, CPU specs?
     - [X] Generate real Roofline plots
       - Hypothesis to explain slow kernel: cache usage and vectorization
+    - [ ] Add reference to ERT code/paper
+    - [ ] Add reference to ERT experiments code
     - [X] Check kernel data type (double)
     - Compare with MKL
   - [ ] Add best/achieved figure (like 13.3) for =-march=native=

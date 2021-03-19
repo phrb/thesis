@@ -81,3 +81,7 @@
 \contentsline {figure}{\numberline {13.13}{\ignorespaces Empirical Roofline graph for the \emph {Xeon E5-2630v3} processor~\cite {intel2021xeonAPP,intel2021xeon}, showing the best point we found during all experiments with the memory-bound \emph {dgemv3} SPAPT kernel\relax }}{136}{figure.caption.106}%
 \contentsline {figure}{\numberline {13.14}{\ignorespaces Empirical Roofline graph for the \emph {Xeon E5-2630v3} processor~\cite {intel2021xeonAPP,intel2021xeon}, showing the best point we found during all experiments with the memory-bound \emph {dgemv3} SPAPT kernel\relax }}{137}{figure.caption.107}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {14.1}{\ignorespaces \textit {ResNet50} architecture, implemented in \textit {pytorch}\relax }}{142}{figure.caption.109}%
+\contentsline {figure}{\numberline {14.2}{\ignorespaces Best quantization policy found by each method during optimization, across 10 repetitions\relax }}{143}{figure.caption.110}%
+\contentsline {figure}{\numberline {14.3}{\ignorespaces Results with the baseline Reinforcement Learning method\relax }}{144}{figure.caption.111}%
+\contentsline {figure}{\numberline {14.4}{\ignorespaces Results with Gaussian Process Regression\relax }}{145}{figure.caption.112}%

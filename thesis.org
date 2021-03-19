@@ -13822,6 +13822,11 @@ approach.
 **** ResNet50 Architecture and Objective Function
 - Schematic figure
 - The objective function
+#+NAME: fig:resnet50
+#+CAPTION: \textit{ResNet50} architecture, implemented in \textit{pytorch}
+#+ATTR_LATEX: :placement [t] :width .8\textwidth
+[[./img/neural_net_autotuning/resnet50_architecture.pdf]]
+
 **** The ImageNet Dataset
 *** Reinforcement Learning: The Baseline Method
 - Adapt a figure from the HAQ paper
@@ -13841,6 +13846,24 @@ approach.
 - GPR achieves the same results in the same time
 - GPR  achieves  more  consistent quantization  distributions  across  different
   optimizations
+
+#+NAME: fig:comparison_best_gpr_rl
+#+CAPTION: Best quantization policy found by each method
+#+CAPTION: during optimization, across
+#+CAPTION: 10 repetitions
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/gpr_rl_smooth.pdf]]
+
+#+NAME: fig:rl_results
+#+CAPTION: Results with the baseline Reinforcement Learning method
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/rl_original.png]]
+
+#+NAME: fig:gpr_results
+#+CAPTION: Results with Gaussian Process Regression
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/gpr_restricted.png]]
+
 **** Running GPR with All Collected Data
 - GPR can be restarted at any point and easily leverage past executions
 **** Measuring the Performance of the GPR Method

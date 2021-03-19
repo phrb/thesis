@@ -7819,6 +7819,78 @@ wireframe(interaction_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic_interactions_gp.pdf]]
 
+** Applications (Part III)
+*** HAQ Experiments with NNs
+**** ResNet50 Shrunken Structure
+#+begin_SRC python :results output :session *Python* :eval no-export :exports results
+import torch
+import torch.nn as nn
+from torchsummary import summary
+import torchvision.models as models
+import hiddenlayer as hl
+
+network = "resnet50"
+
+model = torch.hub.load('pytorch/vision:v0.6.0',
+                       network,
+                       pretrained = True)
+
+transforms = [
+    # Fold Conv, BN, RELU layers into one
+    hl.transforms.Fold("Conv > BatchNorm > Relu", "ConvBnRelu"),
+    # Fold Conv, BN layers together
+    hl.transforms.Fold("Conv > BatchNorm", "ConvBn"),
+    # Fold bottleneck blocks
+    hl.transforms.Fold("""
+        ((ConvBnRelu > ConvBnRelu > ConvBn) | ConvBn) > Add > Relu
+        """, "BottleneckBlock", "Bottleneck Block"),
+    # Fold residual blocks
+    hl.transforms.Fold("""ConvBnRelu > ConvBnRelu > ConvBn > Add > Relu""",
+                       "ResBlock", "Residual Block"),
+    # Fold repeated blocks
+    hl.transforms.FoldDuplicates(),
+]
+
+model_plot =  hl.build_graph(model,
+                             torch.zeros([1, 3, 224,  224]),
+                             transforms = transforms)
+
+model_plot.save("./img/neural_net_autotuning/resnet50_architecture_generated.svg",
+                format = "svg")
+#+end_SRC
+
+#+RESULTS:
+: Python 3.9.2 (default, Feb 20 2021, 18:40:11)
+: [GCC 10.2.0] on linux
+: Type "help", "copyright", "credits" or "license" for more information.
+: Using cache found in /home/phrb/.cache/torch/hub/pytorch_vision_v0.6.0
+: /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
+:   warnings.warn("ONNX export mode is set to " + training_mode +
+**** ResNet50 Full Structure
+#+begin_SRC python :results output :session *Python* :eval no-export :exports results
+import torch
+import torch.nn as nn
+from torchsummary import summary
+import torchvision.models as models
+import hiddenlayer as hl
+
+network = "resnet50"
+
+model = torch.hub.load('pytorch/vision:v0.6.0',
+                       network,
+                       pretrained = True)
+
+model_plot =  hl.build_graph(model,
+                             torch.zeros([1, 3, 224,  224]))
+
+model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generated.svg",
+                format = "svg")
+#+end_SRC
+
+#+RESULTS:
+: Using cache found in /home/phrb/.cache/torch/hub/pytorch_vision_v0.6.0
+: /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
+:   warnings.warn("ONNX export mode is set to " + training_mode +
 * Contents and Lists of Figures, Tables                              :ignore:
 #+TOC: headlines 5
 #+TOC: tables

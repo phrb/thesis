@@ -847,7 +847,7 @@ git submodule init
 #+end_SRC
 
 * Generating Figures                                               :noexport:
-** Historical Trends
+** Historical Trends (Part I)
 *** Introduction
 **** 49 Years of Processor Data
 ***** Load Data
@@ -3140,9 +3140,10 @@ p1 + p2 + p3
 
 
 
-** Optimization Methods
-*** Introduction
-**** (Old) Complete Classification Tree for Function Minimization Methods
+** Optimization Methods (Part II)
+*** Function Minimization Methods
+**** Introduction
+***** (Old) Complete Classification Tree for Function Minimization Methods
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3307,7 +3308,7 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/old_tree.pdf]]
 
-**** Complete Classification Tree for Function Minimization Methods
+***** Complete Classification Tree for Function Minimization Methods
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3439,7 +3440,7 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/tree.pdf]]
 
-**** Simplest Version
+***** Simplest Version
 #+begin_SRC emacs-lisp :eval no-export
 (setq org-format-latex-header "\\documentclass{standalone}
 [PACKAGES]
@@ -3501,8 +3502,8 @@ p1 + p2 + p3
 #+RESULTS:
 [[file:./img/simplest_tree.pdf]]
 
-**** Representing Sampling Strategies
-***** Generate Fake Data with Algorithms
+***** Representing Sampling Strategies
+****** Generate Fake Data with Algorithms
 #+HEADER: :results output :session *R* :exports none :eval no-export
 #+BEGIN_SRC R
 fake_gradient_df_seed <- data.frame(x1 = c(1, 1, 99, 99),
@@ -3566,7 +3567,7 @@ df <- bind_rows(df, fake_sima_df)
 
 #+RESULTS:
 
-***** Generate Data
+****** Generate Data
 #+HEADER: :results output :session *R* :eval no-export
 #+BEGIN_SRC R
 library(ggplot2)
@@ -3718,7 +3719,7 @@ null device
           1
 #+end_example
 
-***** Plot
+****** Plot
 #+HEADER: :results graphics output :session *R*
 #+HEADER: :file ./img/sampling_comparison.pdf :exports none :width 15 :height 11.5 :eval no-export
 #+BEGIN_SRC R
@@ -3813,9 +3814,9 @@ ggplot(df, aes(x = x1, y = x2)) +
 #+RESULTS:
 [[file:./img/sampling_comparison.pdf]]
 
-**** Search Space Introduction
-***** Simple Search Spaces
-****** Constants
+***** Search Space Introduction
+****** Simple Search Spaces
+******* Constants
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 a = 0.6
 c = -30
@@ -3826,7 +3827,7 @@ k = -6
 
 #+RESULTS:
 
-****** Generate Data
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 
@@ -3905,7 +3906,7 @@ write.csv(plot_df,
 
 #+RESULTS:
 
-****** Search Spaces Overview
+******* Search Spaces Overview
 j#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
 library(dplyr)
 library(ggplot2)
@@ -4220,8 +4221,8 @@ p_constrained_line = ggplot() +
 #+RESULTS:
 [[file:./img/simple_search_space.pdf]]
 
-***** Local, global optimum, convexity
-****** Plot
+****** Local, global optimum, convexity
+******* Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/optima_convexity.svg" :width 20 :height 10.5 :eval no-export
 library(dplyr)
 library(ggplot2)
@@ -4469,498 +4470,6 @@ p_no_noise_line | p_constrained_line
 
 #+RESULTS:
 [[file:./img/optima_convexity.svg]]
-*** Descent Template for Booth's Function (With gradient)
-**** Constants
-#+begin_SRC R :results output :session *R* :eval no-export :exports results
-l = 3
-k = -6
-#+end_SRC
-
-#+RESULTS:
-**** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
-library(dplyr)
-library(ggplot2)
-library(pracma)
-library(paletteer)
-library(patchwork)
-library(latex2exp)
-
-color_palette = "viridis::viridis"
-fill_palette = "ggthemes::Gray"
-
-constraint_border = paletteer_c(palette = "viridis::viridis",
-                                n = 2)[[1]]
-
-thickness = 1.3
-line_thickness = 1.4
-base_size = 32
-title_size = 39
-optimum_size = 8
-optimum_stroke = 3
-optima_shape = 4
-contour_color = "gray65"
-grad_alpha = 0.45
-
-theme_config = theme(axis.title.y = element_text(angle = 0,
-                                                 margin = margin(t = 0,
-                                                                 b = 0,
-                                                                 r = 0.3,
-                                                                 l = 0,
-                                                                 unit = "cm"),
-                                                 vjust = 0.5,
-                                                 size = title_size),
-                     axis.title.x = element_text(margin = margin(t = 0.4,
-                                                                 b = -0.7,
-                                                                 r = 0,
-                                                                 l = 0,
-                                                                 unit = "cm"),
-                                                 size = title_size),
-                     axis.ticks = element_blank(),
-                     axis.text.x = element_blank(),
-                     axis.text.y = element_blank())
-
-resolution = 100
-
-noise_sd = 20
-
-plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
-
-grad_resolution = 6
-grad_length = 0.83
-picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
-
-scale_limits = c(-10.1, 10.1)
-
-p_no_noise = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked),
-                aes(xend = y,
-                    yend = x,
-                    y = (x + (grad_length *
-                              (x_grad / sqrt((x_grad ^ 2) +
-                                             (y_grad ^ 2))))),
-                    x = (y + (grad_length *
-                              (y_grad / sqrt((x_grad ^ 2) +
-                                             (y_grad ^ 2))))),
-                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                size = 1.4,
-                alpha = grad_alpha,
-                show.legend = FALSE) +
-    geom_point(data = plot_df %>%
-                   filter(z == min(z)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    xlab(TeX("\\overset{$x_2$}{(a)}")) +
-    ylab(TeX("$x_1$")) +
-    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_noise = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z_noisy),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
-                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    y = (y + (grad_length *
-                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                alpha = grad_alpha,
-                size = 1.4,
-                show.legend = FALSE) +
-    geom_point(data = plot_df %>%
-                   filter(z == min(z)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    xlab(TeX("\\overset{$x_2$}{(b)}")) +
-    ylab(TeX("$x_1$")) +
-    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_constrained = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked) %>%
-                    filter(!is.na(z_constrained)),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
-                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    y = (y + (grad_length *
-                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                size = 1.4,
-                alpha = grad_alpha,
-                show.legend = FALSE) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z_constrained),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_hline(yintercept = l,
-               linetype = 2,
-               color = constraint_border,
-               size = 1.3) +
-    geom_hline(yintercept = k,
-               linetype = 2,
-               color = constraint_border,
-               size = 1.3) +
-    geom_ribbon(data = plot_df %>%
-                    filter(is.na(z_constrained)),
-                aes(x = x,
-                    ymin = l,
-                    ymax = 10),
-                alpha = 0.1) +
-    geom_ribbon(data = plot_df %>%
-                    filter(is.na(z_constrained)),
-                aes(x = x,
-                    ymin = -10,
-                    ymax = k),
-                alpha = 0.1) +
-    geom_point(data = plot_df %>%
-                   filter(!is.na(z_constrained)) %>%
-                   filter(z_constrained == min(z_constrained)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    xlab(TeX("\\overset{$x_2$}{(c)}")) +
-    ylab(TeX("$x_1$")) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_no_noise | p_noise | p_constrained
-#+end_SRC
-
-#+RESULTS:
-[[file:./img/booth_descent_gradient_template.pdf]]
-
-*** Methods Based on Derivatives
-**** Gradient of Booth's Function
-***** Constants
-#+begin_SRC R :results output :session *R* :eval no-export :exports results
-l = 3
-k = -6
-#+end_SRC
-
-#+RESULTS:
-***** Generate Data
-#+begin_SRC R :results output :session *R* :eval no-export :exports results
-library(dplyr)
-
-resolution = 100
-
-new_grid = expand.grid(seq(from = -10.0, to = 10.0, length.out = resolution),
-                       seq(from = -10.0, to = 10.0, length.out = resolution))
-
-df = data.frame(x = new_grid$Var1,
-                y = new_grid$Var2)
-
-noise_sd = 20
-grad_noise_sd = 30
-
-f <- function(y, x){
-    return(((x + (2 * y) - 7) ^ 2) + (((2 * x) + y - 5)^ 2))
-}
-
-f_grad <- function(x, y){
-    return(data.frame(grad_x = (10 * x) + (8 * y) - 34,
-                      grad_y = (8 * x) + (10 * y) - 38))
-}
-
-lin_constraint <- function(x1, x2, l, k){
-    return(x1 > l | x1 < k)
-}
-
-df$z = f(df$x, df$y)
-
-noise = rnorm(resolution ^ 2,
-              mean = 0.0,
-              sd = noise_sd)
-
-grad_noise_x = rnorm(resolution ^ 2,
-                     mean = 0.0,
-                     sd = grad_noise_sd)
-grad_noise_y = rnorm(resolution ^ 2,
-                     mean = 0.0,
-                     sd = grad_noise_sd)
-
-df$z_noisy = f(df$x, df$y) + noise
-
-df$z_constrained = df$z_noisy
-df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
-
-grad_f = f_grad(df$x, df$y)
-grad_f_noisy = f_grad(df$x, df$y)
-
-grad_f_noisy$grad_x = grad_f_noisy$grad_x + grad_noise_x
-grad_f_noisy$grad_y = grad_f_noisy$grad_y + grad_noise_y
-
-plot_df = df %>%
-    mutate(x_grad = grad_f$grad_x,
-           y_grad = grad_f$grad_y,
-           x_grad_noisy = grad_f_noisy$grad_x,
-           y_grad_noisy = grad_f_noisy$grad_y)
-
-write.csv(plot_df,
-          "data/search_spaces/gradient.csv",
-          row.names = FALSE)
-#+end_SRC
-
-#+RESULTS:
-
-***** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/booth_gradient.pdf" :width 30 :height 10.5 :eval no-export
-library(dplyr)
-library(ggplot2)
-library(pracma)
-library(paletteer)
-library(patchwork)
-library(latex2exp)
-
-color_palette = "viridis::viridis"
-fill_palette = "ggthemes::Green"
-
-constraint_border = paletteer_c(palette = "viridis::viridis",
-                                n = 2)[[1]]
-
-thickness = 1.3
-line_thickness = 1.4
-base_size = 32
-title_size = 39
-optimum_size = 8
-optimum_stroke = 3
-optima_shape = 4
-contour_color = "gray65"
-
-theme_config = theme(axis.title.y = element_text(angle = 0,
-                                                 margin = margin(t = 0,
-                                                                 b = 0,
-                                                                 r = 0.3,
-                                                                 l = 0,
-                                                                 unit = "cm"),
-                                                 vjust = 0.5,
-                                                 size = title_size),
-                     axis.title.x = element_text(margin = margin(t = 0.4,
-                                                                 b = -0.7,
-                                                                 r = 0,
-                                                                 l = 0,
-                                                                 unit = "cm"),
-                                                 size = title_size),
-                     axis.ticks = element_blank(),
-                     axis.text.x = element_blank(),
-                     axis.text.y = element_blank())
-
-resolution = 100
-
-plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
-
-grad_resolution = 6
-grad_length = 0.83
-picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
-
-scale_limits = c(-10.1, 10.1)
-
-p_no_noise = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked),
-                aes(xend = y,
-                    yend = x,
-                    y = (x + (grad_length *
-                              (x_grad / sqrt((x_grad ^ 2) +
-                                             (y_grad ^ 2))))),
-                    x = (y + (grad_length *
-                              (y_grad / sqrt((x_grad ^ 2) +
-                                             (y_grad ^ 2))))),
-                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                size = 1.4,
-                show.legend = FALSE) +
-    geom_point(data = plot_df %>%
-                   filter(z == min(z)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    xlab(TeX("\\overset{$x_2$}{(a)}")) +
-    ylab(TeX("$x_1$")) +
-    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_noise = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z_noisy),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked),
-                aes(xend = y,
-                    yend = x,
-                    y = (x + (grad_length *
-                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    x = (y + (grad_length *
-                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                size = 1.4,
-                show.legend = FALSE) +
-    geom_point(data = plot_df %>%
-                   filter(z == min(z)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    xlab(TeX("\\overset{$x_2$}{(b)}")) +
-    ylab(TeX("$x_1$")) +
-    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_constrained = ggplot() +
-    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
-    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
-    geom_segment(data = plot_df %>%
-                    filter(x %in% picked & y %in% picked) %>%
-                    filter(!is.na(z_constrained)),
-                aes(xend = x,
-                    yend = y,
-                    x = (x + (grad_length *
-                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    y = (y + (grad_length *
-                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
-                                             (y_grad_noisy ^ 2))))),
-                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
-                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
-                size = 1.4,
-                show.legend = FALSE) +
-    geom_contour(data = plot_df,
-                 aes(x = x,
-                     y = y,
-                     z = z_constrained),
-                 color = contour_color,
-                 size = thickness,
-                 linejoin = "round",
-                 lineend = "round",
-                 show.legend = FALSE) +
-    geom_hline(yintercept = l,
-               linetype = 2,
-               color = constraint_border,
-               size = 1.3) +
-    geom_hline(yintercept = k,
-               linetype = 2,
-               color = constraint_border,
-               size = 1.3) +
-    geom_ribbon(data = plot_df %>%
-                    filter(is.na(z_constrained)),
-                aes(x = x,
-                    ymin = l,
-                    ymax = 10),
-                alpha = 0.1) +
-    geom_ribbon(data = plot_df %>%
-                    filter(is.na(z_constrained)),
-                aes(x = x,
-                    ymin = -10,
-                    ymax = k),
-                alpha = 0.1) +
-    geom_point(data = plot_df %>%
-                   filter(!is.na(z_constrained)) %>%
-                   filter(z_constrained == min(z_constrained)),
-               aes(x = x,
-                   y = y),
-               color = "red",
-               size = optimum_size,
-               stroke = optimum_stroke,
-               shape = 4) +
-    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
-    xlab(TeX("\\overset{$x_2$}{(c)}")) +
-    ylab(TeX("$x_1$")) +
-    theme_bw(base_size = base_size) +
-    theme_config
-
-p_no_noise | p_noise | p_constrained
-#+end_SRC
-
-#+RESULTS:
-[[file:./img/booth_gradient.pdf]]
-
 **** Descent Template for Booth's Function (With gradient)
 ***** Constants
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
@@ -5176,10 +4685,502 @@ p_no_noise | p_noise | p_constrained
 
 #+RESULTS:
 [[file:./img/booth_descent_gradient_template.pdf]]
-** Learning
-*** Linear Regression
-**** 3d Booth's Function Example
-***** Loading Data
+
+**** Methods Based on Derivatives
+***** Gradient of Booth's Function
+****** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+****** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
+resolution = 100
+
+new_grid = expand.grid(seq(from = -10.0, to = 10.0, length.out = resolution),
+                       seq(from = -10.0, to = 10.0, length.out = resolution))
+
+df = data.frame(x = new_grid$Var1,
+                y = new_grid$Var2)
+
+noise_sd = 20
+grad_noise_sd = 30
+
+f <- function(y, x){
+    return(((x + (2 * y) - 7) ^ 2) + (((2 * x) + y - 5)^ 2))
+}
+
+f_grad <- function(x, y){
+    return(data.frame(grad_x = (10 * x) + (8 * y) - 34,
+                      grad_y = (8 * x) + (10 * y) - 38))
+}
+
+lin_constraint <- function(x1, x2, l, k){
+    return(x1 > l | x1 < k)
+}
+
+df$z = f(df$x, df$y)
+
+noise = rnorm(resolution ^ 2,
+              mean = 0.0,
+              sd = noise_sd)
+
+grad_noise_x = rnorm(resolution ^ 2,
+                     mean = 0.0,
+                     sd = grad_noise_sd)
+grad_noise_y = rnorm(resolution ^ 2,
+                     mean = 0.0,
+                     sd = grad_noise_sd)
+
+df$z_noisy = f(df$x, df$y) + noise
+
+df$z_constrained = df$z_noisy
+df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
+
+grad_f = f_grad(df$x, df$y)
+grad_f_noisy = f_grad(df$x, df$y)
+
+grad_f_noisy$grad_x = grad_f_noisy$grad_x + grad_noise_x
+grad_f_noisy$grad_y = grad_f_noisy$grad_y + grad_noise_y
+
+plot_df = df %>%
+    mutate(x_grad = grad_f$grad_x,
+           y_grad = grad_f$grad_y,
+           x_grad_noisy = grad_f_noisy$grad_x,
+           y_grad_noisy = grad_f_noisy$grad_y)
+
+write.csv(plot_df,
+          "data/search_spaces/gradient.csv",
+          row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_gradient.pdf" :width 30 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(pracma)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Green"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
+
+p_no_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
+                              (x_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    x = (y + (grad_length *
+                              (y_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    x = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_constrained = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked) %>%
+                    filter(!is.na(z_constrained)),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_constrained),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
+    geom_point(data = plot_df %>%
+                   filter(!is.na(z_constrained)) %>%
+                   filter(z_constrained == min(z_constrained)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_no_noise | p_noise | p_constrained
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_gradient.pdf]]
+
+***** Descent Template for Booth's Function (With gradient)
+****** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(pracma)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Gray"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+grad_alpha = 0.45
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+noise_sd = 20
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
+
+p_no_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = y,
+                    yend = x,
+                    y = (x + (grad_length *
+                              (x_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    x = (y + (grad_length *
+                              (y_grad / sqrt((x_grad ^ 2) +
+                                             (y_grad ^ 2))))),
+                    color = sqrt((x_grad ^ 2) + (y_grad ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                alpha = grad_alpha,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                alpha = grad_alpha,
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
+    #scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_constrained = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked) %>%
+                    filter(!is.na(z_constrained)),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                size = 1.4,
+                alpha = grad_alpha,
+                show.legend = FALSE) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_constrained),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
+    geom_point(data = plot_df %>%
+                   filter(!is.na(z_constrained)) %>%
+                   filter(z_constrained == min(z_constrained)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_no_noise | p_noise | p_constrained
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_descent_gradient_template.pdf]]
+*** Learning
+**** Linear Regression
+***** 3d Booth's Function Example
+****** Loading Data
 Using data from [[Gradient of Booth's Function]]
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
@@ -5196,7 +5197,7 @@ plot_df$interaction_prediction = predict(lm(z_noisy ~ x * y +
 #+end_SRC
 
 #+RESULTS:
-***** Computing Model Quality Assessment Metrics
+****** Computing Model Quality Assessment Metrics
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 model_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
 model_sampled = sample_n(model_df, size = 10)
@@ -5264,7 +5265,7 @@ print(summary(inter_model)$adj.r.squared)
 [1] 0.9985517
 #+end_example
 
-***** 3D Noisy
+****** 3D Noisy
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -5330,7 +5331,7 @@ wireframe(z_noisy ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy.pdf]]
 
-***** 3D Noisy: Linear Prediction
+****** 3D Noisy: Linear Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_linear.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -5404,7 +5405,7 @@ wireframe(linear_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_linear.pdf]]
 
-***** 3D Noisy: Quadratic Prediction
+****** 3D Noisy: Quadratic Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -5478,7 +5479,7 @@ wireframe(quadratic_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic.pdf]]
 
-***** 3D Noisy: Quadratic + Interactions Prediction
+****** 3D Noisy: Quadratic + Interactions Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_interactions.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -5552,8 +5553,8 @@ wireframe(interaction_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic_interactions.pdf]]
 
-**** 2d ad-hoc example
-***** Generating Data
+***** 2d ad-hoc example
+****** Generating Data
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example.pdf" :width 10 :height 10 :eval no-export
 library(latex2exp)
 library(ggplot2)
@@ -5607,7 +5608,7 @@ p1
 
 #+RESULTS:
 [[file:./img/regression_example.pdf]]
-***** Full Model
+****** Full Model
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example_full_model.pdf" :width 10 :height 10 :eval no-export
 library(latex2exp)
 library(ggplot2)
@@ -5639,7 +5640,7 @@ p2
 
 #+RESULTS:
 [[file:./img/regression_example_full_model.pdf]]
-***** Full Figure
+****** Full Figure
 #+begin_SRC R :results graphics output :session *R* :file "./img/regression_example_full.pdf" :width 20 :height 10 :eval no-export
 library(patchwork)
 
@@ -5648,10 +5649,10 @@ p1 | p2
 
 #+RESULTS:
 [[file:./img/regression_example_full.pdf]]
-*** Gaussian Process Regression
-**** Sampling from Multivariate Normal Distributions
-***** 2-Dimensional Example
-****** Generate Data
+**** Gaussian Process Regression
+***** Sampling from Multivariate Normal Distributions
+****** 2-Dimensional Example
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(MASS)
 
@@ -5675,7 +5676,7 @@ mv_sample_2 <- as.data.frame(mv_sample_2)
 
 #+RESULTS:
 
-****** 2D-uncorrelated plot
+******* 2D-uncorrelated plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/2d_gaussian_uncorrelated.pdf" :width 60 :height 20 :eval no-export
 library(ggplot2)
 library(patchwork)
@@ -5908,8 +5909,8 @@ panel_a | panel_b | panel_c
 #+RESULTS:
 [[file:./img/2d_gaussian_uncorrelated.pdf]]
 
-***** Covariance Kernels
-****** Generate Data
+****** Covariance Kernels
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
 library(latex2exp)
@@ -5951,7 +5952,7 @@ df = bind_rows(df,
 #+end_SRC
 
 #+RESULTS:
-****** Plot
+******* Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/radial_basis_kernels.pdf" :height 10 :width 13 :eval no-export
 library(ggplot2)
 library(latex2exp)
@@ -5980,8 +5981,8 @@ ggplot() +
 
 #+RESULTS:
 [[file:./img/radial_basis_kernels.pdf]]
-***** Larger Dimensional Example: Change of Perspective
-****** Generate Data
+****** Larger Dimensional Example: Change of Perspective
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
 library(dplyr)
@@ -6004,7 +6005,7 @@ mv_sample_3 = ys %>%
 #+end_SRC
 
 #+RESULTS:
-****** Plot
+******* Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_mv_samples.pdf" :width 20 :height 10 :eval no-export
 library(ggplot2)
 library(paletteer)
@@ -6128,8 +6129,8 @@ p1 | p2
 #+RESULTS:
 [[file:./img/matern52_50d_mv_samples.pdf]]
 
-***** Fitting Noiseless Data
-****** Generate Data
+****** Fitting Noiseless Data
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
 library(dplyr)
@@ -6190,7 +6191,7 @@ mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
 #+end_SRC
 
 #+RESULTS:
-****** Fitting Data
+******* Fitting Data
 #+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_fitting.pdf" :width 30 :height 10 :eval no-export
 library(ggplot2)
 library(paletteer)
@@ -6267,8 +6268,8 @@ p1 | p2 | p3
 
 #+RESULTS:
 [[file:./img/matern52_50d_fitting.pdf]]
-***** Fitting Noisy Data
-****** Generate Data
+****** Fitting Noisy Data
+******* Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(kergp)
 library(dplyr)
@@ -6329,7 +6330,7 @@ mv_sample_2 = data.frame(t(mvrnorm(n = sample_size, means_2, sigma_2))) %>%
 #+end_SRC
 
 #+RESULTS:
-****** Fitting Data
+******* Fitting Data
 #+begin_SRC R :results graphics output :session *R* :file "./img/matern52_50d_fitting_noisy.pdf" :width 30 :height 10 :eval no-export
 library(ggplot2)
 library(paletteer)
@@ -6406,7 +6407,7 @@ p1 | p2 | p3
 
 #+RESULTS:
 [[file:./img/matern52_50d_fitting_noisy.pdf]]
-***** Old
+****** Old
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(latex2exp)
@@ -6539,8 +6540,8 @@ ggplot(plot_data, aes(x = x, y = f_x)) +
 
 #+RESULTS:
 [[file:/tmp/babel-oICNIQ/figure128cP4.png]]
-**** Trends
-***** Generate Data
+***** Trends
+****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 library(DiceKriging)
@@ -7180,7 +7181,7 @@ converged
  0.5470274 0.551638 0.551638 0.551638 0.551638 0.5470274 0.551638 0.551638 0.551638 0.551638
 ,* The model corresponding to the best one (0.5470274) is stored.
 #+end_example
-***** Plot
+****** Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/gp_trends.pdf" :width 13 :height 10 :eval no-export
 library(ggplot2)
 library(dplyr)
@@ -7235,8 +7236,8 @@ ggplot() +
 #+RESULTS:
 [[file:./img/gp_trends.pdf]]
 
-**** 3d Booth Example
-***** Loading Data
+***** 3d Booth Example
+****** Loading Data
 Using data from [[Gradient of Booth's Function]]
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
@@ -7246,7 +7247,7 @@ sampled = sample_n(plot_df, size = 10)
 #+end_SRC
 
 #+RESULTS:
-***** Computing GP Fits
+****** Computing GP Fits
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(DiceKriging)
 
@@ -7444,7 +7445,7 @@ final  value 33.861945
 converged
 #+end_example
 
-***** Computing Quality Assessment Metrics
+****** Computing Quality Assessment Metrics
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 print("const trend, LOO train MSE")
 print(log10(mean((sampled$z_noisy -
@@ -7522,7 +7523,7 @@ print(log10(mean((plot_df$z -
 [1] 2.046654
 #+end_example
 
-***** 3D Noisy: Constant Trend Prediction
+****** 3D Noisy: Constant Trend Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_gp_const.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -7596,7 +7597,7 @@ wireframe(const_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_gp_const.pdf]]
 
-***** 3D Noisy: Linear Prediction
+****** 3D Noisy: Linear Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_gp_linear.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -7670,7 +7671,7 @@ wireframe(linear_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_gp_linear.pdf]]
 
-***** 3D Noisy: Quadratic Prediction
+****** 3D Noisy: Quadratic Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_gp.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)
@@ -7744,7 +7745,7 @@ wireframe(quadratic_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic_gp.pdf]]
 
-***** 3D Noisy: Quadratic + Interactions Prediction
+****** 3D Noisy: Quadratic + Interactions Prediction
 #+begin_SRC R :results graphics output :session *R* :file "./img/booth_3d_noisy_quadratic_interactions_gp.pdf" :width 10 :height 10 :eval no-export
 library(lattice)
 library(akima)

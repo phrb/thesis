@@ -11848,7 +11848,7 @@ show  for  each target  GPU  the  means and  95%  confidence  intervals for  the
 coefficients  of  a  linear  model  fit to  the  screening  measurements,  which
 represent the main effect estimates for each factor.
 
-#+ATTR_LATEX: :width \textwidth :placement [t]
+#+ATTR_LATEX: :width .9\textwidth :placement [t]
 #+NAME: fig:effects-gpu-screening
 #+CAPTION: Main effects estimates and 95% confidence intervals for the
 #+CAPTION: \textit{high level} of the 15 factors in the Plackett-Burman design,

@@ -403,12 +403,6 @@ A.~Saltelli, P.~Annoni, I.~Azzini, F.~Campolongo, M.~Ratto, and S.~Tarantola,
   for the total sensitivity index,'' \emph{Computer physics communications},
   vol. 181, no.~2, pp. 259--270, 2010.
 
-\bibitem{carnell2018lhs}
-\BIBentryALTinterwordspacing
-R.~Carnell, \emph{lhs: Latin Hypercube Samples}, 2018, {R} package version
-  0.16. [Online]. Available: \url{https://CRAN.R-project.org/package=lhs}
-\BIBentrySTDinterwordspacing
-
 \bibitem{plackett1946design}
 R.~L. Plackett and J.~P. Burman, ``The design of optimum multifactorial
   experiments,'' \emph{Biometrika}, vol.~33, no.~4, pp. 305--325, 1946.
@@ -437,6 +431,12 @@ V.~V. Fedorov, \emph{Theory of optimal experiments}.\hskip 1em plus 0.5em minus
 B.~Wheeler, \emph{AlgDesign: Algorithmic Experimental Design}, 2014, {R}
   package version 1.1-7.3. [Online]. Available:
   \url{https://CRAN.R-project.org/package=AlgDesign}
+\BIBentrySTDinterwordspacing
+
+\bibitem{carnell2018lhs}
+\BIBentryALTinterwordspacing
+R.~Carnell, \emph{lhs: Latin Hypercube Samples}, 2018, {R} package version
+  0.16. [Online]. Available: \url{https://CRAN.R-project.org/package=lhs}
 \BIBentrySTDinterwordspacing
 
 \bibitem{balaprakash2011can}
@@ -810,6 +810,11 @@ D.~Balouek, A.~Carpen~Amarie, G.~Charrier, F.~Desprez, E.~Jeannot,
 S.~Williams, A.~Waterman, and D.~Patterson, ``Roofline: an insightful visual
   performance model for multicore architectures,'' \emph{Communications of the
   ACM}, vol.~52, no.~4, pp. 65--76, 2009.
+
+\bibitem{wang2019haq}
+K.~Wang, Z.~Liu, Y.~Lin, J.~Lin, and S.~Han, ``{HAQ: Hardware-Aware Automated
+  Quantization With Mixed Precision},'' in \emph{Proceedings of the IEEE/CVF
+  Conference on Computer Vision and Pattern Recognition}, 2019, pp. 8612--8620.
 
 \bibitem{talbi2021automated}
 E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified

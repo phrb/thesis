@@ -13815,11 +13815,21 @@ approach.
 
 *** Autotuning Bit Quantization for Neural Networks
 - Decrease size, keep accuracy
-- Add a figure
+#+NAME: fig:resnet50
+#+CAPTION: Optimizing nonuniform weight quantization policies for the
+#+CAPTION: \textit{ResNet50} network, keeping total weight size
+#+CAPTION: below 10 /MB/, and attempting to keep accuracy.
+#+CAPTION: The optimization methods we compared were a Sobol Sampler,
+#+CAPTION: Reinforcement Learning\nbsp{}\cite{wang2019haq}, and
+#+CAPTION: Gaussian Process Regression with Expected Improvement
+#+ATTR_LATEX: :placement [t] :width .99\textwidth
+[[./img/neural_net_autotuning/quantization_autotuning.pdf]]
+
 **** Other Applications of Autotuning for Neural Networks
 - Talbi\nbsp{}\cite{talbi2021automated}
 - Neural Architecture Search
 - Hyperparameter Tuning
+
 *** ResNet50 and ImageNet
 **** ResNet50 Architecture and Objective Function
 - Schematic figure

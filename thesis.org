@@ -13808,14 +13808,47 @@ Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]
 knowing the  global optimum  helps evaluating the  performance of  an autotuning
 approach.
 
-** Gaussian Process Regression for Neural Network Bit Quantization
+** Gaussian Process Regression for Mixed-Precision Quantization in Convolutional Neural Networks
+This  chapter  presents  an  application of  Gaussian  Process  Regression  with
+Expected Improvement  acquisition function (GPR)  to bit precision tuning  for a
+Convolutional Neural Network (CNN).  We  compare GPR to a Reinforcement Learning
+approach which  uses an  actor-critic model (RL)\nbsp{}\cite{wang2019haq},  to a
+uniform random sampling algorithm, and  to a low-discrepancy sampler using Sobol
+sequences.   The objective  function we  attempted to  optimize was  the network
+accuracy                   over                   the                   ImageNet
+dataset\nbsp{}\cite{deng2009imagenet,russakovsky2015imagenet},   subject  to   a
+limit imposed on  network size. Our GPR approach achieved  comparable results to
+the  baseline  RL  approach,  but  the  random  samplers  also  performed  well,
+especially the low-discrepancy Sobol sequence.
+
+This work started during a two-month stay at /Hewlett Packard Enterprise/ (HPE),
+former  /HP   Labs/,  in   Palo  Alto,  California.    The  problem   of  tuning
+mixed-precision quantization for CNNs is  of interest to HPE researchers because
+it produces  smaller and  more energy-efficient  networks, which  are especially
+suited to embedded and custom-built hardware.   We expanded the initial study in
+the last year  of this thesis, still in collaboration  with HPE researchers, but
+this work is still unpublished at the time of writing.
+
+The remainder of this chapter is organized as follows.  Section\nbsp{}[[Autotuning
+Bit   Precision  for   Convolutional   Neural  Networks]]   describes  the   /HAQ/
+framework\nbsp{}\cite{wang2019haq} for  mixed-precision bit  quantization, which
+we  used to  change the  bitwidth of  network layers,  and which  implements the
+baseline  RL   approach.   Section\nbsp{}[[ResNet50  and  ImageNet]]   presents  the
+/ResNet50/  network   used  in  our   experiments  and  the   ImageNet  dataset.
+Section\nbsp{}[[Optimization Methods]]  discusses the implementation details  of the
+methods we  compared, and  Section\nbsp{}[[Performance Evaluation]]  evaluates their
+performance with respect to  network accuracy.  Section\nbsp{}[[Summary]] summarizes
+the discussion and concludes the chapter.
+
 #+begin_export latex
 \todo[inline]{TODO: Fill in the sketched sections below}
 #+end_export
 
-*** Autotuning Bit Quantization for Neural Networks
-- Important for mobile, FPGA application
-- Decrease size, keep accuracy
+*** Autotuning Bit Precision for Convolutional Neural Networks
+- Important for mobile, FPGA applications
+- Decrease size, power consumption, keep accuracy
+- Many works quantize uniformly
+- Describe the HAQ framework
 
 #+NAME: fig:resnet50
 #+CAPTION: Optimizing nonuniform weight quantization policies for the

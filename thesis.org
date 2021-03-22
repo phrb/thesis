@@ -13891,6 +13891,20 @@ approach.
 - Training and testing the Net is the bottleneck
 - Model fit times becomes more important with more data
   - Due to the R implementation? (it uses RCpp)
+***** Detecting Significance with Sobol Indices
+#+NAME: fig:sobol_sampled
+#+CAPTION: Sobol indices computed for the impact on /Top5/ accuracy
+#+CAPTION: of each /ResNet50/ layer, using Sobol samples
+#+ATTR_LATEX: :placement [t] :width .5\textwidth
+[[./img/neural_net_autotuning/sensitivity_top5.pdf]]
+
+#+NAME: fig:sobol_optimization
+#+CAPTION: Sobol indices computed for the impact on /Top5/ accuracy
+#+CAPTION: of each /ResNet50/ layer, using Sobol samples and
+#+CAPTION: search paths performed by /GPR/
+#+ATTR_LATEX: :placement [t] :width .5\textwidth
+[[./img/neural_net_autotuning/sensitivity_full_top5.pdf]]
+
 **** Perspective: Optimizing Accuracy and Weight
 #+NAME: fig:gpr_multi_results
 #+CAPTION: Optimizing accuracy and weight with

@@ -7990,9 +7990,9 @@ trades  some explanatory  power for  a much  larger and  more flexible  class of
 underlying models.   We also evaluate  the performance  of this approach  on the
 source-to-source transformation  problem from  Chapter\nbsp{}[[Stochastic Methods,
 Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]],
-and on  larger autotuning problem on  the quantization of /Deep  Neural Network/
-(DNN) layers,  in Chapter\nbsp{}[[Gaussian  Process Regression for  Neural Network
-Bit Quantization]].
+and  on  larger  autotuning  problem  on  the  mixed-precision  quantization  of
+/Convolutional Neural  Network/ (CNN) layers, in  Chapter\nbsp{}[[Gaussian Process
+Regression for Mixed-Precision Quantization in Convolutional Neural Networks]].
 
 #+begin_export latex
 \todo[inline]{Describe thesis structure}

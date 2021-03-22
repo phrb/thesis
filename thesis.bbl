@@ -811,6 +811,11 @@ S.~Williams, A.~Waterman, and D.~Patterson, ``Roofline: an insightful visual
   performance model for multicore architectures,'' \emph{Communications of the
   ACM}, vol.~52, no.~4, pp. 65--76, 2009.
 
+\bibitem{wang2019haq}
+K.~Wang, Z.~Liu, Y.~Lin, J.~Lin, and S.~Han, ``{HAQ: Hardware-Aware Automated
+  Quantization With Mixed Precision},'' in \emph{Proceedings of the IEEE/CVF
+  Conference on Computer Vision and Pattern Recognition}, 2019, pp. 8612--8620.
+
 \bibitem{deng2009imagenet}
 J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, and L.~Fei-Fei, ``Imagenet: A
   large-scale hierarchical image database,'' in \emph{2009 IEEE conference on
@@ -823,10 +828,29 @@ O.~Russakovsky, J.~Deng, H.~Su, J.~Krause, S.~Satheesh, S.~Ma, Z.~Huang,
   visual recognition challenge,'' \emph{International journal of computer
   vision}, vol. 115, no.~3, pp. 211--252, 2015.
 
-\bibitem{wang2019haq}
-K.~Wang, Z.~Liu, Y.~Lin, J.~Lin, and S.~Han, ``{HAQ: Hardware-Aware Automated
-  Quantization With Mixed Precision},'' in \emph{Proceedings of the IEEE/CVF
-  Conference on Computer Vision and Pattern Recognition}, 2019, pp. 8612--8620.
+\bibitem{elthakeb2019releq}
+A.~Elthakeb, P.~Pilligundla, F.~Mireshghallah, A.~Yazdanbakhsh, S.~Gao, and
+  H.~Esmaeilzadeh, ``{ReLeQ}: An automatic reinforcement learning approach for
+  deep quantization of neural networks,'' in \emph{NeurIPS ML for Systems
+  workshop, 2018}, 2019.
+
+\bibitem{zhu2016trained}
+C.~Zhu, S.~Han, H.~Mao, and W.~J. Dally, ``Trained ternary quantization,''
+  \emph{arXiv preprint arXiv:1612.01064}, 2016.
+
+\bibitem{han2015deep}
+S.~Han, H.~Mao, and W.~J. Dally, ``Deep compression: Compressing deep neural
+  networks with pruning, trained quantization and huffman coding,'' \emph{arXiv
+  preprint arXiv:1510.00149}, 2015.
+
+\bibitem{mishra2017wrpn}
+A.~Mishra, E.~Nurvitadhi, J.~J. Cook, and D.~Marr, ``Wrpn: Wide
+  reduced-precision networks,'' \emph{arXiv preprint arXiv:1709.01134}, 2017.
+
+\bibitem{zhou2016dorefa}
+S.~Zhou, Y.~Wu, Z.~Ni, X.~Zhou, H.~Wen, and Y.~Zou, ``Dorefa-net: Training low
+  bitwidth convolutional neural networks with low bitwidth gradients,''
+  \emph{arXiv preprint arXiv:1606.06160}, 2016.
 
 \bibitem{talbi2021automated}
 E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified

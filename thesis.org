@@ -13859,6 +13859,12 @@ approach.
 - GPR  achieves  more  consistent quantization  distributions  across  different
   optimizations
 
+#+NAME: fig:comparison_means
+#+CAPTION: Mean estimates with 95% confidence intervals,
+#+CAPTION: for 10 repetitions of the 4 methods we compared.
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/comparison_means.pdf]]
+
 #+NAME: fig:comparison_best_gpr_rl
 #+CAPTION: Best quantization policy found by each method
 #+CAPTION: during optimization, across
@@ -13882,6 +13888,19 @@ approach.
 - Training and testing the Net is the bottleneck
 - Model fit times becomes more important with more data
   - Due to the R implementation? (it uses RCpp)
+**** Perspective: Optimizing Accuracy and Weight
+#+NAME: fig:gpr_multi_results
+#+CAPTION: Optimizing accuracy and weight with
+#+CAPTION: the modified baseline Reinforcement Learning method
+#+ATTR_LATEX: :placement [b] :width \textwidth
+[[./img/neural_net_autotuning/rl_top5_size.png]]
+
+#+NAME: fig:rl_multi_results
+#+CAPTION: Optimizing accuracy and weight with
+#+CAPTION: Gaussian Process Regression with EI.
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/gpr_top5_size.png]]
+
 *** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:gprnn-summary

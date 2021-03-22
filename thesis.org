@@ -13814,7 +13814,9 @@ approach.
 #+end_export
 
 *** Autotuning Bit Quantization for Neural Networks
+- Important for mobile, FPGA application
 - Decrease size, keep accuracy
+
 #+NAME: fig:resnet50
 #+CAPTION: Optimizing nonuniform weight quantization policies for the
 #+CAPTION: \textit{ResNet50} network, keeping total weight size
@@ -13841,16 +13843,17 @@ approach.
 
 **** The ImageNet Dataset
 *** Reinforcement Learning: The Baseline Method
-- Adapt a figure from the HAQ paper
+- Describe on Online Learning Chapter, give small details here
+- Adapt a figure from the HAQ paper?
 **** Respecting Size Constraints
 - Round-robin decrease of weights
 - "Reverse-engineering": we found out that  the first layers are less important,
   the authors might have encoded that knowledge in the round-robin procedure
 *** Gaussian Process Regression with Expected Improvement
+- Describe on Online Learning Chapter, give small details here
 - Add a schematic figure or pseudocode of GPR algorithm
 **** Using Space-Filling Designs
 **** Respecting Size Constraints
-**** Detecting Significance with Sobol Indices
 *** Performance Evaluation
 **** Accuracy for Fixed Network Size
 - Space-filling baseline

@@ -13875,18 +13875,21 @@ the discussion and concludes the chapter.
 [[./img/neural_net_autotuning/resnet50_architecture.pdf]]
 
 **** The ImageNet Dataset
-*** Reinforcement Learning: The Baseline Method
+- Add a figure (?) and links
+*** Optimization Methods
+**** Reinforcement Learning: The Baseline Method
 - Describe on Online Learning Chapter, give small details here
 - Adapt a figure from the HAQ paper?
-**** Respecting Size Constraints
+***** Respecting Size Constraints
 - Round-robin decrease of weights
 - "Reverse-engineering": we found out that  the first layers are less important,
   the authors might have encoded that knowledge in the round-robin procedure
-*** Gaussian Process Regression with Expected Improvement
+**** Gaussian Process Regression with Expected Improvement
 - Describe on Online Learning Chapter, give small details here
 - Add a schematic figure or pseudocode of GPR algorithm
-**** Using Space-Filling Designs
-**** Respecting Size Constraints
+***** Using Space-Filling Designs
+***** Respecting Size Constraints
+**** Random and Quasi-Random Samplers
 *** Performance Evaluation
 **** Accuracy for Fixed Network Size
 - Space-filling baseline

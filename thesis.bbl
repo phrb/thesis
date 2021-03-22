@@ -811,6 +811,18 @@ S.~Williams, A.~Waterman, and D.~Patterson, ``Roofline: an insightful visual
   performance model for multicore architectures,'' \emph{Communications of the
   ACM}, vol.~52, no.~4, pp. 65--76, 2009.
 
+\bibitem{deng2009imagenet}
+J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, and L.~Fei-Fei, ``Imagenet: A
+  large-scale hierarchical image database,'' in \emph{2009 IEEE conference on
+  computer vision and pattern recognition}.\hskip 1em plus 0.5em minus
+  0.4em\relax Ieee, 2009, pp. 248--255.
+
+\bibitem{russakovsky2015imagenet}
+O.~Russakovsky, J.~Deng, H.~Su, J.~Krause, S.~Satheesh, S.~Ma, Z.~Huang,
+  A.~Karpathy, A.~Khosla, M.~Bernstein \emph{et~al.}, ``Imagenet large scale
+  visual recognition challenge,'' \emph{International journal of computer
+  vision}, vol. 115, no.~3, pp. 211--252, 2015.
+
 \bibitem{wang2019haq}
 K.~Wang, Z.~Liu, Y.~Lin, J.~Lin, and S.~Han, ``{HAQ: Hardware-Aware Automated
   Quantization With Mixed Precision},'' in \emph{Proceedings of the IEEE/CVF

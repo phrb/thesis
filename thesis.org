@@ -13845,10 +13845,18 @@ the discussion and concludes the chapter.
 #+end_export
 
 *** Autotuning Bit Precision for Convolutional Neural Networks
-- Important for mobile, FPGA applications
-- Decrease size, power consumption, keep accuracy
-- Many works quantize uniformly
-- Describe the HAQ framework
+A Neural Network is composed of interconnected layers of "neurons".  Each neuron
+can be interpreted as an agent  that receives /weighted/ inputs from connections
+with other neurons, combines them, and  produces an output if the combined input
+crosses an  /activation/ threshold.  The  process of /quantization/ of  a Neural
+Network consists  in choosing, according to  a performance metric, the  best bit
+precision for data representing weights  and activation thresholds in each layer
+of  the Neural  Network. Quantizing  a Network  consequently determines  the bit
+precision  of   the  computations  performed  during   training  and  inference.
+Quantization     is     increasingly      relevant     in     Neural     Network
+research\nbsp{}\cite{wang2019haq,elthakeb2019releq,zhu2016trained,han2015deep,mishra2017wrpn,zhou2016dorefa}
+because  it reduces  energy  and  space requirements  for  CNNs, enabling  their
+deployment in embedded, mobile, or custom-engineered hardware.
 
 #+NAME: fig:resnet50
 #+CAPTION: Optimizing nonuniform weight quantization policies for the

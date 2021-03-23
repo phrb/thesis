@@ -13813,6 +13813,10 @@ approach.
 \todo[inline]{TODO: Fill in the sketched sections below}
 #+end_export
 
+- Overfit (surapprendre) (variability of optimizations) (robustness)
+- Extensibility (modifier la metrique pour compris)
+- Restarting GPR with past experiments
+
 This  chapter  presents  an  application of  Gaussian  Process  Regression  with
 Expected Improvement  acquisition function (GPR)  to bit precision tuning  for a
 Convolutional Neural Network (CNN).  We  compare GPR to a Reinforcement Learning
@@ -13895,10 +13899,8 @@ resource constraints  or hardware architecture features.   Hyperparameter Tuning
 refers to  the optimization  of any  network parameters that  have an  impact on
 performance without necessarily requiring structure modification.
 
-
 *** ResNet50 and ImageNet
 **** ResNet50 Architecture and Objective Function
-- Schematic figure
 - The objective function
 
 #+NAME: fig:resnet50

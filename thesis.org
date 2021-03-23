@@ -13914,7 +13914,24 @@ performance without necessarily requiring structure modification.
 [[./img/neural_net_autotuning/resnet50_architecture.pdf]]
 
 **** The ImageNet Dataset
-- Add a figure (?) and links
+
+#+NAME: fig:imagenet
+#+CAPTION: Images sampled from some of the categories in \textit{ImageNet},
+#+CAPTION: adapted from Deng /et al./\nbsp{}\cite{deng2009imagenet}
+#+ATTR_LATEX: :placement [t] :width .99\textwidth
+[[./img/neural_net_autotuning/imagenet_small.pdf]]
+
+- Add a figure and references
+- Total size of dataset, categories
+- Size of subset used, categories
+- 2/3 training -- 1/3 validation split
+
+*** Search Space and Objective Function
+- Targeted only weights, not activation
+  - Activation code was released only after we did the study
+- Size of the search space: 8^54 \approx 10^49 configurations
+- Objective function: minimize accuracy loss with respect to
+  8-bit uniformly quantized ResNet50
 *** Optimization Methods
 **** Reinforcement Learning: The Baseline Method
 - Describe on Online Learning Chapter, give small details here

@@ -12506,7 +12506,14 @@ $f(x,y)$.  The discrete Laplacian operator  is commonly used in image processing
 algorithms such as edge detection, where it is typically composed with smoothing
 filters.  In the discrete setting the Laplacian of an image can be computed by a
 convolution filter,  where a single  kernel encodes the smoothing  and Laplacian
-filters.
+filters. Figure\nbsp{}[[fig:laplacian]] shows the effect of applying a /Laplacian of
+Gaussian/ convolution filter to detect edges in a picture.
+
+#+NAME: fig:laplacian
+#+CAPTION: Edge-detection effect of a
+#+CAPTION: /Laplacian of Gaussian/ filter
+#+ATTR_LATEX: :placement [t] :width .65\textwidth
+[[./img/laplacian/flower.jpg]]
 
 **** BOAST Code and the OpenCL Kernel
 Our Experimental  Design approach can be  applied to any autotuning  domain that

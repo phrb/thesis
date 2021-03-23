@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2008,8 +2008,8 @@
      id="namedview190"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="166.86551"
-     inkscape:cy="383.69337"
+     inkscape:cx="135.63916"
+     inkscape:cy="318.20532"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -2022,296 +2022,250 @@
      fit-margin-left="2"
      fit-margin-right="2"
      fit-margin-bottom="2" />
-  <g
-     id="node1"
-     class="node"
-     transform="translate(-139.5,86.79166)">
-    <title
-       id="title4">/outputs/324</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="178,-4 248,-4 248,-40 178,-40 "
-       id="polygon6" />
-    <text
-       text-anchor="start"
-       x="186"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text8">MaxPool3x3</text>
-  </g>
-  <g
-     id="node6"
-     class="node"
-     transform="translate(-255,131.08331)">
-    <title
-       id="title11">7518750240727800512</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="284,-4 373,-4 373,-40 284,-40 "
-       id="polygon13" />
-    <text
-       text-anchor="start"
-       x="292.5"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text15">Bottleneck Block</text>
-  </g>
-  <g
-     id="node2"
-     class="node"
-     transform="translate(-1222.5,517.4166)">
-    <title
-       id="title25">/outputs/493</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="1248,-40 1248,-4 1344,-4 1344,-40 "
-       id="polygon27" />
-    <text
-       text-anchor="start"
-       x="1256"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text29">GlobalAveragePool</text>
-  </g>
-  <g
-     id="node3"
-     class="node"
-     transform="translate(-1333.5,561.70826)">
-    <title
-       id="title32">/outputs/494</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="1380,-40 1380,-4 1434,-4 1434,-40 "
-       id="polygon34" />
-    <text
-       text-anchor="start"
-       x="1392"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text36">Flatten</text>
-  </g>
-  <g
-     id="node4"
-     class="node"
-     transform="translate(-1423.5,605.99993)">
-    <title
-       id="title46">/outputs/495</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="1470,-40 1470,-4 1524,-4 1524,-40 "
-       id="polygon48" />
-    <text
-       text-anchor="start"
-       x="1484"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text50">Linear</text>
-  </g>
-  <g
-     id="node5"
-     class="node"
-     transform="translate(2.5,42.5)">
-    <title
-       id="title60">6612196999183062567</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="0,-4 142,-4 142,-40 0,-40 "
-       id="polygon62" />
-    <text
-       text-anchor="start"
-       x="8"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text64">Conv7x7 &gt; BatchNorm &gt; Relu</text>
-  </g>
-  <g
-     id="node10"
-     class="node"
-     transform="translate(-375.5,179.37497)">
-    <title
-       id="title74">13865845886612794130</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="489,0 489,-44 409,-44 409,0 "
-       id="polygon76" />
-    <text
-       text-anchor="start"
-       x="417"
-       y="-28"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text78">Residual Block</text>
-    <text
-       text-anchor="start"
-       x="474"
-       y="-7"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text80">x2</text>
-  </g>
-  <g
-     id="node7"
-     class="node"
-     transform="translate(-496,227.66664)">
-    <title
-       id="title90">4093560529979265834</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="525,-4 614,-4 614,-40 525,-40 "
-       id="polygon92" />
-    <text
-       text-anchor="start"
-       x="533.5"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text94">Bottleneck Block</text>
-  </g>
-  <g
-     id="node12"
-     class="node"
-     transform="translate(-616.5,275.9583)">
-    <title
-       id="title97">13454866225307126396</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="650,-44 650,0 730,0 730,-44 "
-       id="polygon99" />
-    <text
-       text-anchor="start"
-       x="658"
-       y="-28"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text101">Residual Block</text>
-    <text
-       text-anchor="start"
-       x="715"
-       y="-7"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text103">x3</text>
-  </g>
-  <g
-     id="node8"
-     class="node"
-     transform="translate(-737,324.24997)">
-    <title
-       id="title113">13590463138705232227</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="766,-4 855,-4 855,-40 766,-40 "
-       id="polygon115" />
-    <text
-       text-anchor="start"
-       x="774.5"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text117">Bottleneck Block</text>
-  </g>
-  <g
-     id="g4671"
-     transform="translate(-8,-8)">
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="971,-44 891,-44 891,0 971,0 "
-       id="polygon122"
-       transform="translate(-849.5,380.54162)" />
-    <text
-       text-anchor="start"
-       x="49.5"
-       y="352.54163"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text124">Residual Block</text>
-    <text
-       text-anchor="start"
-       x="106.5"
-       y="373.54163"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text126">x5</text>
-  </g>
-  <g
-     id="node9"
-     class="node"
-     transform="translate(-978,420.83328)">
-    <title
-       id="title136">2033064278289035983</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="1096,-4 1096,-40 1007,-40 1007,-4 "
-       id="polygon138" />
-    <text
-       text-anchor="start"
-       x="1015.5"
-       y="-19"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text140">Bottleneck Block</text>
-  </g>
-  <g
-     id="node11"
-     class="node"
-     transform="translate(-1098.5,469.12494)">
-    <title
-       id="title143">9551728609861711074</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="1132,0 1212,0 1212,-44 1132,-44 "
-       id="polygon145" />
-    <text
-       text-anchor="start"
-       x="1140"
-       y="-28"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text147">Residual Block</text>
-    <text
-       text-anchor="start"
-       x="1197"
-       y="-7"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text149">x2</text>
-  </g>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="248,-40 178,-40 178,-4 248,-4 "
+     id="polygon6"
+     transform="translate(-139.5,86.79166)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="45.794922"
+     y="68.365875"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text8"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">MaxPool3x3</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="373,-40 284,-40 284,-4 373,-4 "
+     id="polygon13"
+     transform="translate(-255,131.08331)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="36.119629"
+     y="112.65753"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text15"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Bottleneck Block</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="1344,-4 1344,-40 1248,-40 1248,-4 "
+     id="polygon27"
+     transform="translate(-1222.5,517.4166)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="30.589844"
+     y="498.00204"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text29"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">GlobalAveragePool</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="1434,-4 1434,-40 1380,-40 1380,-4 "
+     id="polygon34"
+     transform="translate(-1333.5,561.70826)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="58.128906"
+     y="543.28247"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text36"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Flatten</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="1524,-4 1524,-40 1470,-40 1470,-4 "
+     id="polygon48"
+     transform="translate(-1423.5,605.99993)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="59.273926"
+     y="587.57416"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text50"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Linear</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="142,-40 0,-40 0,-4 142,-4 "
+     id="polygon62"
+     transform="translate(2.5,42.5)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="7.1572266"
+     y="24.074219"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text64"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Conv7x7 &gt; BatchNorm &gt; Relu</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="409,-44 409,0 489,0 489,-44 "
+     id="polygon76"
+     transform="translate(-375.5,179.37497)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="40.01123"
+     y="151.37497"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text78"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Residual Block</text>
+  <text
+     text-anchor="start"
+     x="98.5"
+     y="172.37497"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text80"
+     style="-inkscape-font-specification:'Liberation Sans';font-family:'Liberation Sans';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">x2</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="614,-40 525,-40 525,-4 614,-4 "
+     id="polygon92"
+     transform="translate(-496,227.66664)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="36.119629"
+     y="208.66664"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text94"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Bottleneck Block</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="730,0 730,-44 650,-44 650,0 "
+     id="polygon99"
+     transform="translate(-616.5,275.9583)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="40.01123"
+     y="247.9583"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text101"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Residual Block</text>
+  <text
+     text-anchor="start"
+     x="98.5"
+     y="268.95831"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text103"
+     style="-inkscape-font-specification:'Liberation Sans';font-family:'Liberation Sans';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">x3</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="855,-40 766,-40 766,-4 855,-4 "
+     id="polygon115"
+     transform="translate(-737,324.24997)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="36.119629"
+     y="305.82419"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text117"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Bottleneck Block</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="891,0 971,0 971,-44 891,-44 "
+     id="polygon122"
+     transform="translate(-857.5,372.54162)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="40.01123"
+     y="344.54163"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text124"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Residual Block</text>
+  <text
+     text-anchor="start"
+     x="98.5"
+     y="365.54163"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text126"
+     style="-inkscape-font-specification:'Liberation Sans';font-family:'Liberation Sans';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">x5</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="1007,-40 1007,-4 1096,-4 1096,-40 "
+     id="polygon138"
+     transform="translate(-978,420.83328)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="36.119629"
+     y="401.83328"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text140"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Bottleneck Block</text>
+  <polygon
+     fill="#e8e8e8"
+     stroke="#000000"
+     points="1212,-44 1132,-44 1132,0 1212,0 "
+     id="polygon145"
+     transform="translate(-1098.5,469.12494)"
+     style="fill:#f1f1f1;fill-opacity:1" />
+  <text
+     text-anchor="start"
+     x="40.01123"
+     y="441.12494"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text147"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Residual Block</text>
+  <text
+     text-anchor="start"
+     x="98.5"
+     y="462.12494"
+     font-family="Times"
+     font-size="10px"
+     fill="#000000"
+     id="text149"
+     style="-inkscape-font-specification:'Liberation Sans';font-family:'Liberation Sans';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">x2</text>
   <path
      style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749)"
      d="m 73.5,39 v 6.95533"
@@ -2321,35 +2275,35 @@
      d="m 73.5,83.29166 v 6.95533"
      id="path1816-7" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker43449)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker43449);"
      d="m 73.5,127.58331 v 6.95533"
      id="path1816-2" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker44125)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker44125);"
      d="m 73.5,179.87497 v 6.95533"
      id="path1816-6" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker44807)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker44807);"
      d="m 73.5,224.16664 v 6.95533"
      id="path1816-9" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker45495)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker45495);"
      d="m 73.5,276.4583 v 6.95533"
      id="path1816-0" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker46189)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker46189);"
      d="m 73.5,320.74997 v 6.95533"
      id="path1816-71" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker46889)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker46889);"
      d="m 73.5,373.04162 v 6.95533"
      id="path1816-76" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker47595)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker47595);"
      d="m 73.5,417.33328 v 6.95533"
      id="path1816-5" />
   <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker48307)"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker48307);"
      d="m 73.5,469.62494 v 6.95533"
      id="path1816-94" />
   <path
@@ -2360,306 +2314,292 @@
      style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker51737)"
      d="m 73.5,558.20826 v 6.95533"
      id="path1816-8" />
-  <g
-     id="node58"
-     class="node"
-     transform="translate(-69.3899,64.1179)">
-    <title
-       id="title2278">1566933711222021454</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="284,0 426,0 426,-44 284,-44 "
-       id="polygon2280" />
-    <text
-       text-anchor="start"
-       x="292"
-       y="-28"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text2282">Conv1x1 &gt; BatchNorm &gt; Relu</text>
-    <text
-       text-anchor="start"
-       x="411"
-       y="-7"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text2284">x2</text>
-  </g>
-  <g
-     id="node2-3"
-     class="node"
-     transform="translate(-292.01615,199.28755)">
-    <title
-       id="title2294">/outputs/335</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="664,-29 664,-65 610,-65 610,-29 "
-       id="polygon2296" />
-    <text
-       text-anchor="start"
-       x="628"
-       y="-44"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text2298">Add</text>
-  </g>
-  <g
-     id="node3-6"
-     class="node"
-     transform="translate(-382.01615,251.78755)">
-    <title
-       id="title2301">/outputs/336</title>
-    <polygon
-       fill="#e8e8e8"
-       stroke="#000000"
-       points="700,-65 700,-29 754,-29 754,-65 "
-       id="polygon2303" />
-    <text
-       text-anchor="start"
-       x="717"
-       y="-44"
-       font-family="Times"
-       font-size="10px"
-       fill="#000000"
-       id="text2305">Relu</text>
-  </g>
-  <g
-     id="g59854"
-     transform="translate(-709.35314,517.9362)">
-    <g
-       id="node39"
-       class="node"
-       transform="translate(597.087,-344.64865)">
-      <title
-         id="title2264">13975855955170608131</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="574,-92 462,-92 462,-56 574,-56 "
-         id="polygon2266" />
-      <text
-         text-anchor="start"
-         x="470"
-         y="-71"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text2268">Conv1x1 &gt; BatchNorm</text>
-    </g>
-    <g
-       id="node38"
-       class="node"
-       transform="translate(475.587,-398.64865)">
-      <title
-         id="title3052">5945602732302074034</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="462,-2 574,-2 574,-38 462,-38 "
-         id="polygon3054" />
-      <text
-         text-anchor="start"
-         x="470"
-         y="-17"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text3056">Conv1x1 &gt; BatchNorm</text>
-    </g>
-  </g>
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9)"
-     d="M 285.6101,3.59917 V 14.93048"
-     id="path1816-27" />
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-0)"
-     d="M 402.2911,3.59918 V 76.10013"
-     id="path1816-27-3" />
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6)"
-     d="M 284.23385,64.6179 V 75.94921"
-     id="path1816-27-6" />
-  <path
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064);stop-color:#000000;stop-opacity:1"
-     d="m 285.84771,117.42054 40.83179,16.77019"
-     id="path58269" />
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7)"
-     d="m 344.9839,170.78755 v 11.33131"
-     id="path1816-27-6-9" />
-  <path
-     style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064-2);stop-color:#000000"
-     d="m 403.89,117.42054 -40.8317,16.77019"
-     id="path58269-8" />
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9)"
-     d="m 344.2409,222.72338 -5.3152,10.00734"
-     id="path1816-27-6-9-3" />
-  <path
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-6)"
-     d="m 345.6981,222.72338 5.3152,10.00734"
-     id="path1816-27-6-9-3-2" />
-  <rect
-     style="fill:none;stroke:#000000;stroke-width:0.975;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:12;paint-order:markers fill stroke;stop-color:#000000"
-     id="rect2010"
-     width="262.48975"
-     height="234.05917"
-     x="207.59918"
-     y="3.1921186" />
   <path
      style="fill:none;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9;stroke-opacity:1"
-     d="M 118.00001,91.08331 207.59921,3.19212"
+     d="M 118.00001,91.08331 207.59918,30.192119"
      id="path2066" />
   <path
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-     d="m 118.00001,127.08331 89.5992,110.16798"
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.899999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+     d="m 118.00001,127.0833 89.59917,137.16799"
      id="path2068" />
-  <g
-     id="g4089"
-     transform="translate(-687.67902,479.50001)">
-    <g
-       id="node58-7"
-       class="node"
-       transform="translate(621.1007,-162.84965)">
-      <title
-         id="title2278-9">1566933711222021454</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="426,-44 284,-44 284,0 426,0 "
-         id="polygon2280-2" />
-      <text
-         text-anchor="start"
-         x="292"
-         y="-28"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text2282-0">Conv1x1 &gt; BatchNorm &gt; Relu</text>
-      <text
-         text-anchor="start"
-         x="411"
-         y="-7"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text2284-2">x2</text>
-    </g>
-    <g
-       id="node2-3-3"
-       class="node"
-       transform="translate(405.97445,-27.68)">
-      <title
-         id="title2294-7">/outputs/335</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="664,-65 610,-65 610,-29 664,-29 "
-         id="polygon2296-5" />
-      <text
-         text-anchor="start"
-         x="628"
-         y="-44"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text2298-9">Add</text>
-    </g>
-    <g
-       id="node3-6-2"
-       class="node"
-       transform="translate(315.97445,24.82)">
-      <title
-         id="title2301-2">/outputs/336</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="700,-29 754,-29 754,-65 700,-65 "
-         id="polygon2303-8" />
-      <text
-         text-anchor="start"
-         x="717"
-         y="-44"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text2305-9">Relu</text>
-    </g>
-    <g
-       id="node38-9"
-       class="node"
-       transform="translate(456.72446,-107.68)">
-      <title
-         id="title3052-3">5945602732302074034</title>
-      <polygon
-         fill="#e8e8e8"
-         stroke="#000000"
-         points="462,-2 574,-2 574,-38 462,-38 "
-         id="polygon3054-1" />
-      <text
-         text-anchor="start"
-         x="470"
-         y="-17"
-         font-family="Times"
-         font-size="10px"
-         fill="#000000"
-         id="text3056-9">Conv1x1 &gt; BatchNorm</text>
-    </g>
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-5)"
-       d="m 976.1007,-223.36838 v 11.33131"
-       id="path1816-27-4" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-0-2)"
-       d="M 1056.3665,-223.23649 V -95.452905"
-       id="path1816-27-3-7" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-1)"
-       d="m 974.72445,-162.34965 v 11.33131"
-       id="path1816-27-6-8" />
-    <path
-       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064-0);stop-color:#000000"
-       d="m 976.33831,-109.54701 40.83179,16.77019"
-       id="path58269-4" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-3)"
-       d="m 1042.9745,-56.18 v 11.33131"
-       id="path1816-27-6-9-5" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-2)"
-       d="m 1042.2315,-4.24417 -5.3152,10.00734"
-       id="path1816-27-6-9-3-3" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-6-1)"
-       d="m 1043.6887,-4.24417 5.3152,10.00734"
-       id="path1816-27-6-9-3-2-6" />
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.975;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:12;paint-order:markers fill stroke;stop-color:#000000"
-       id="rect2010-1"
-       width="187.21526"
-       height="234.05917"
-       x="895.2782"
-       y="-223.77544" />
-  </g>
   <path
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-     d="m 113.5,328.54162 94.09917,-72.81705"
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.900001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9.00001;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+     d="M 113.5,425.12493 245.23643,303.72457"
      id="path4348" />
   <path
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:9;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-     d="m 113.5,372.54162 94.09917,117.24213"
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.899998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.4, 5.4;stroke-dashoffset:8.99998;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+     d="m 113.5,469.12494 131.73643,68.65883"
      id="path4350" />
   <text
      text-anchor="start"
-     x="214.55983"
-     y="482.30139"
+     x="284.89615"
+     y="482.97208"
      font-family="Times"
      font-size="10px"
      fill="#000000"
-     id="text126-6">x5</text>
+     id="text126-6"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <g
+     id="g4767"
+     transform="translate(0,27)">
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="284,-44 284,0 426,0 426,-44 "
+       id="polygon2280"
+       transform="translate(-69.3899,64.1179)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="219.26733"
+       y="36.117901"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2282"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Conv1x1 &gt; BatchNorm &gt; Relu</text>
+    <text
+       text-anchor="start"
+       x="341.61011"
+       y="57.117901"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2284"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">x2</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="610,-29 664,-29 664,-65 610,-65 "
+       id="polygon2296"
+       transform="translate(-292.01615,199.28755)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="336.39987"
+       y="155.86177"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2298"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Add</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="754,-65 700,-65 700,-29 754,-29 "
+       id="polygon2303"
+       transform="translate(-382.01615,251.78755)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="334.62253"
+       y="208.36177"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2305"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Relu</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="462,-92 462,-56 574,-56 574,-92 "
+       id="polygon2266"
+       transform="translate(-112.26614,173.28755)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="355.37009"
+       y="102.86177"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2268"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Conv1x1 &gt; BatchNorm</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="574,-2 574,-38 462,-38 462,-2 "
+       id="polygon3054"
+       transform="translate(-233.76614,119.28755)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="233.87009"
+       y="102.86177"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text3056"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Conv1x1 &gt; BatchNorm</text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9)"
+       d="M 285.6101,3.59917 V 14.93048"
+       id="path1816-27" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-0)"
+       d="M 402.2911,3.59918 V 76.10013"
+       id="path1816-27-3" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6)"
+       d="M 284.23385,64.6179 V 75.94921"
+       id="path1816-27-6" />
+    <path
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064);stop-color:#000000;stop-opacity:1"
+       d="m 285.84771,117.42054 40.83179,16.77019"
+       id="path58269" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7)"
+       d="m 344.9839,170.78755 v 11.33131"
+       id="path1816-27-6-9" />
+    <path
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064-2);stop-color:#000000"
+       d="m 403.89,117.42054 -40.8317,16.77019"
+       id="path58269-8" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9)"
+       d="m 344.2409,222.72338 -5.3152,10.00734"
+       id="path1816-27-6-9-3" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-6)"
+       d="m 345.6981,222.72338 5.3152,10.00734"
+       id="path1816-27-6-9-3-2" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.975;stroke-miterlimit:4;stroke-dasharray:11.7, 11.7;stroke-dashoffset:9.75;paint-order:markers fill stroke;stop-color:#000000"
+       id="rect2010"
+       width="262.48975"
+       height="234.05917"
+       x="207.59918"
+       y="3.1921186" />
+    <text
+       text-anchor="start"
+       x="213.84393"
+       y="229.46237"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text15-3"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">(a) Bottleneck Block</text>
+  </g>
+  <g
+     id="g4486"
+     transform="translate(37.637245,48)">
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="284,-44 284,0 426,0 426,-44 "
+       id="polygon2280-2"
+       transform="translate(-66.57832,316.65036)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="222.0789"
+       y="288.65036"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2282-0"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'"
+         id="tspan4423">Conv1x1 &gt; BatchNorm &gt; Relu</tspan></text>
+    <text
+       text-anchor="start"
+       x="344.42169"
+       y="309.65036"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2284-2"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">x2</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="610,-65 610,-29 664,-29 664,-65 "
+       id="polygon2296-5"
+       transform="translate(-281.70457,451.82001)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="346.71146"
+       y="408.39423"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2298-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Add</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="754,-29 754,-65 700,-65 700,-29 "
+       id="polygon2303-8"
+       transform="translate(-371.70457,504.32001)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="344.93411"
+       y="460.89423"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text2305-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Relu</text>
+    <polygon
+       fill="#e8e8e8"
+       stroke="#000000"
+       points="574,-2 574,-38 462,-38 462,-2 "
+       id="polygon3054-1"
+       transform="translate(-230.95456,371.82001)"
+       style="fill:#f1f1f1;fill-opacity:1" />
+    <text
+       text-anchor="start"
+       x="236.68167"
+       y="355.39423"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text3056-9"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">Conv1x1 &gt; BatchNorm</text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-5)"
+       d="m 288.42168,256.13163 v 11.33131"
+       id="path1816-27-4" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-0-2)"
+       d="M 368.68748,256.26352 V 384.0471"
+       id="path1816-27-3-7" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-1)"
+       d="m 287.04543,317.15036 v 11.33131"
+       id="path1816-27-6-8" />
+    <path
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker59064-0);stop-color:#000000"
+       d="m 288.65929,369.953 40.83179,16.77019"
+       id="path58269-4" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-3)"
+       d="m 355.29548,423.32001 v 11.33131"
+       id="path1816-27-6-9-5" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-2)"
+       d="m 354.55248,475.25584 -5.3152,10.00734"
+       id="path1816-27-6-9-3-3" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.65;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker49749-9-6-7-9-6-1)"
+       d="m 356.00968,475.25584 5.3152,10.00734"
+       id="path1816-27-6-9-3-2-6" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.975;stroke-miterlimit:4;stroke-dasharray:11.7, 11.7;stroke-dashoffset:9.75;paint-order:markers fill stroke;stop-color:#000000"
+       id="rect2010-1"
+       width="187.21526"
+       height="234.05917"
+       x="207.59918"
+       y="255.72458" />
+    <text
+       text-anchor="start"
+       x="214.00262"
+       y="481.51208"
+       font-family="Times"
+       font-size="10px"
+       fill="#000000"
+       id="text78-6"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'">(b) Residual Block x5</text>
+  </g>
 </svg>

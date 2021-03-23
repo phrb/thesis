@@ -12522,56 +12522,55 @@ present  in  this  thesis  were  obtained  in  the  domain  of  source-to-source
 transformation. Several  frameworks, compilers, and autotuners  provide tools to
 generate             and              optimize             architecture-specific
 code\nbsp{}\cite{hartono2009annotation,videau2017boast,tiwari2009scalable,yi2007poet,ansel2009petabricks}.
-We used BOAST\nbsp{}\cite{videau2017boast}  to generate OpenCL code  for GPUs by
-modifying  a  baseline C  Laplacian  kernel,  optimizing parameters  controlling
+We  used  BOAST\nbsp{}\cite{videau2017boast}  to   generate  code  for  GPUs  by
+generating  an  OpenCL  Laplacian   kernel,  optimizing  parameters  controlling
 vectorization, loop transformations, and data structure size and copying.
-
-Figure\nbsp{}\ref{fig:cpu-laplacian} shows the baseline Laplacian kernel written
-in C,  which is modified and  manipulated by BOAST using  metaprogramming tools.
-The BOAST Ruby  script for manipulating the Laplacian kernel  is partially shown
-in  Figure\nbsp{}\ref{fig:boast-generator}. A  sample  of  the resulting  OpenCL
-kernel        generated        by         BOAST        is        shown        in
-Figure\nbsp{}\ref{fig:gpu-laplacian-generated}.
 
 #+begin_export latex
 \label{fig:cpu-laplacian}
 \begin{figure}[t]
 \lstset{language=C,basicstyle=\ttfamily\scriptsize,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-void kernel(const int32_t width, const int32_t height,
-            const uint8_t * psrc, uint8_t * pdst){
-    int32_t i;
-    int32_t j;
-    int32_t c;
-    int32_t tmp;
-    int32_t w;
-
-    w = (width) * (3);
-
-    for (j = 1; j <= height - (2); j += 1) {
-        for (i = 1; i <= width - (2); i += 1) {
-            for (c = 0; c <= 2; c += 1) {
-                tmp =  -(psrc[c + (3) * (i - (1) + (width) * (j - (1)))]) -
-                    (psrc[c + (3) * (i + (width) * (j - (1)))]) -
-                    (psrc[c + (3) * (i + 1 + (width) * (j - (1)))]) -
-                    (psrc[c + (3) * (i - (1) + (width) * (j))]) +
-                    (psrc[c + (3) * (i + (width) * (j))]) * (9) -
-                    (psrc[c + (3) * (i + 1 + (width) * (j))]) -
-                    (psrc[c + (3) * (i - (1) + (width) * (j + 1))]) -
-                    (psrc[c + (3) * (i + (width) * (j + 1))]) -
-                    (psrc[c + (3) * (i + 1 + (width) * (j + 1))]);
-
+void kernel(int width, int height, uint8_t *source, uint8_t *destination){
+    int i, j, d, ii, jj, tmp;
+    for (j = 1; j < height - 1; j++) {
+        for (i = 1; i < width - 1; i++) {
+            // Process RGB components separately
+            for (d = 0; d < 3; d ++) {
+                tmp = 0;
+                for(jj = -1; jj < 1; jj++) {
+                    for(ii = -1; ii < 1; ii++) {
+                        if(ii == 0 && jj == 0) {
+                            tmp += 9 * source[d + (3 * (i + (width * j)))];
+                        } else {
+                            tmp -= source[d + (3 * ((i + ii) + (width * (j + jj))))];
+                        }
+                    }
+                }
                 // Clamp to valid pixel values
-                pdst[c + (3) * (i + (width) * (j))] = (tmp < 0 ? 0 :
-                                                       (tmp > 255 ? 255 : tmp));
+                destination[d + (3 * (i + (width * j)))] = tmp < 0 ? 0 :
+                    (tmp > 255 ? 255 : tmp);
             }
         }
     }
 }
 \end{lstlisting}
-\caption{A comparison baseline CPU Laplacian kernel, generated in C by BOAST}
+\caption{A CPU Laplacian kernel written in C}
 \end{figure}
 #+end_export
+
+Figure\nbsp{}\ref{fig:cpu-laplacian} shows a Laplacian kernel naively written in
+C. In this code,  the RGB channels of an image are stored  a single /int/ array,
+representing a  color image. A three  by three convolution kernel  is applied to
+each color channel separately.
+
+For comparison, the  BOAST Ruby script for generating  a parameterized Laplacian
+kernel is  partially shown in Figure\nbsp{}\ref{fig:boast-generator}.   A sample
+of      the       resulting      OpenCL       kernel      is       shown      in
+Figure\nbsp{}\ref{fig:gpu-laplacian-generated}.   The  difference in  complexity
+between the naive implementation in Figure\nbsp{}\ref{fig:cpu-laplacian} and the
+parameterized  generated   version  helps   motivate  the  usage   of  automated
+optimization methods for autotuning.
 
 #+begin_export latex
 \clearpage
@@ -12902,48 +12901,13 @@ method, fixing significant factors to their best predicted level.
 *** Looking at a Single DLMT Run
 This section  presents a more detailed  look at the iterative  process performed
 during   the   optimization   of   the   Laplacian   kernel   by   our   method.
-Figure\nbsp{}[[fig:dlmt-laplacian-steps]] shows the factors  that were eliminated in
-each of the 3 steps performed by DLMT, and compares each factor's predicted best
-level with  the level for  that factor in the  global optimum.
-
-Factors were chosen  based on ANOVA tests where factors  with /p/-values below a
-threshold  of  $p  <  0.05$  were  considered  significant.  The  threshold  for
-significance must  be adjusted to  better fit the  target problem, and  could be
-dispensed with  altogether, according  to the desired  degree of  automation and
-trust  in the  initial modeling  assumptions. All  experiments with  this method
-presented  in this  thesis were  completely automated  using fixed  significance
-thresholds.
-
-We see that  the chose factor level  matches the level on the  global optimum in
-all factor fixing steps, except for the  number of threads. This seems to have a
-small effect in the  final results, but could be fixed in  this specific case by
-dropping the inverse term, since the level  on the global optimum is the highest
-one  possible. This  is an  example of  how this  transparent approach  can help
-learning  about the  problem  begin optimized  by  challenging initial  modeling
-assumptions.  In this case, perhaps thread group management is a larger overhead
-than expected, and it is better to have larger groups.
-
-#+latex: \clearpage
-
-#+NAME: fig:dlmt-laplacian-steps
-#+CAPTION: Overview of a single DLMT run. Each panel shows a view of the
-#+CAPTION: completely evaluated search space, from the perspective of one of
-#+CAPTION: the factors eliminated in a given step.
-#+CAPTION: A $\color{red}\boldsymbol{\times}$ marks the predicted best level of
-#+CAPTION: each factor, and a $\color{blue}\boldsymbol{\times}$ marks the factor
-#+CAPTION: level on the global optimum.
-#+ATTR_LATEX: :placement [t] :width .85\columnwidth
-[[./img/dopt_anova_experiments/model_sample_execution.pdf]]
-
-#+latex: \clearpage
-
 Table\nbsp{}\ref{tab:laplacian-anova} shows  the ANOVA  tests performed  at each
 step   in   Figure\nbsp{}[[fig:dlmt-laplacian-steps]],  highlighting   the   factors
 identified to  be significant  at each  step, which  were subsequently  fixed to
 their  best predicted  levels. Note  that  the size  of the  model being  tested
 decreases at each step, as factors are fixed.  These progressive restrictions to
 slices of the search space enable the  ANOVA test to detect differences in means
-that were  previously unclear.
+that were previously unclear.
 
 #+begin_export latex
 \begin{table}[ht]
@@ -12985,6 +12949,41 @@ that were  previously unclear.
 \end{table}
 #+end_export
 
+Factors were chosen  based on ANOVA tests where factors  with /p/-values below a
+threshold  of  $p  <  0.05$  were  considered  significant.  The  threshold  for
+significance must  be adjusted to  better fit the  target problem, and  could be
+dispensed with  altogether, according  to the desired  degree of  automation and
+trust  in the  initial modeling  assumptions. All  experiments with  this method
+presented  in this  thesis were  completely automated  using fixed  significance
+thresholds.
+
+Figure\nbsp{}[[fig:dlmt-laplacian-steps]] shows the factors  that were eliminated in
+each of the 3 steps performed by DLMT, and compares each factor's predicted best
+level with  the level for  that factor in the  global optimum.
+
+We see that  the chose factor level  matches the level on the  global optimum in
+all factor fixing steps, except for the  number of threads. This seems to have a
+small effect in the  final results, but could be fixed in  this specific case by
+dropping the inverse term, since the level  on the global optimum is the highest
+one  possible. This  is an  example of  how this  transparent approach  can help
+learning  about the  problem  begin optimized  by  challenging initial  modeling
+assumptions.  In this case, perhaps thread group management is a larger overhead
+than expected, and it is better to have larger groups.
+
+#+latex: \clearpage
+
+#+NAME: fig:dlmt-laplacian-steps
+#+CAPTION: Overview of a single DLMT run. Each panel shows a view of the
+#+CAPTION: completely evaluated search space, from the perspective of one of
+#+CAPTION: the factors eliminated in a given step.
+#+CAPTION: A $\color{red}\boldsymbol{\times}$ marks the predicted best level of
+#+CAPTION: each factor, and a $\color{blue}\boldsymbol{\times}$ marks the factor
+#+CAPTION: level on the global optimum.
+#+ATTR_LATEX: :placement [t] :width .85\columnwidth
+[[./img/dopt_anova_experiments/model_sample_execution.pdf]]
+
+#+latex: \clearpage
+
 *** Evaluation of Optimization Methods
 This  section presents  a performance  evaluation of  the approach  described in
 Section\nbsp{}[[A  Transparent  and  Parsimonious  Approach  to  Autotuning  using
@@ -13023,6 +13022,17 @@ close to the  global optimum on most runs,  but some of the runs  could not find
 slowdowns smaller than 4  times. Our approach reached a slowdown  of 1% from the
 global optimum in  all of the 1000 runs  while using at most fewer  than half of
 the allotted budget.
+
+#+latex: \clearpage
+
+#+NAME: fig:gpu_laplacian_comparison_histogram
+#+CAPTION: Distribution of slowdowns in relation to the global optimum for 7
+#+CAPTION: optimization methods on the Laplacian Kernel, using a budget of 125
+#+CAPTION: points over 1000 repetitions
+#+ATTR_LATEX: :placement [h] :width .9\columnwidth
+[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
+
+#+latex: \clearpage
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
@@ -13133,17 +13143,6 @@ Random Sampling (RS) & 1.10 & 1.00 & 1.39 & 120.00 & 120 \\
 \endgroup
 \end{table}
 #+end_export
-
-#+latex: \clearpage
-
-#+NAME: fig:gpu_laplacian_comparison_histogram
-#+CAPTION: Distribution of slowdowns in relation to the global optimum for 7
-#+CAPTION: optimization methods on the Laplacian Kernel, using a budget of 125
-#+CAPTION: points over 1000 repetitions
-#+ATTR_LATEX: :placement [h] :width .9\columnwidth
-[[./img/dopt_anova_experiments/comparison_histogram.pdf]]
-
-#+latex: \clearpage
 
 We  implemented a  simple  approach for  the prediction  step  in this  problem,
 choosing the best value of our fitted  models on the complete set of valid level

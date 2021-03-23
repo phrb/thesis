@@ -13809,6 +13809,10 @@ knowing the  global optimum  helps evaluating the  performance of  an autotuning
 approach.
 
 ** Gaussian Process Regression for Mixed-Precision Quantization in Convolutional Neural Networks
+#+begin_export latex
+\todo[inline]{TODO: Fill in the sketched sections below}
+#+end_export
+
 This  chapter  presents  an  application of  Gaussian  Process  Regression  with
 Expected Improvement  acquisition function (GPR)  to bit precision tuning  for a
 Convolutional Neural Network (CNN).  We  compare GPR to a Reinforcement Learning

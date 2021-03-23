@@ -84,11 +84,12 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {14.1}{\ignorespaces Optimizing nonuniform weight quantization policies for the \textit {ResNet50} network, keeping total weight size below 10 \emph {MB}, and attempting to keep accuracy. The optimization methods we compared were a Sobol Sampler, Reinforcement Learning~\cite {wang2019haq}, and Gaussian Process Regression with Expected Improvement\relax }}{142}{figure.caption.110}%
 \contentsline {figure}{\numberline {14.2}{\ignorespaces \textit {ResNet50} architecture, implemented in \textit {pytorch}\relax }}{146}{figure.caption.111}%
-\contentsline {figure}{\numberline {14.3}{\ignorespaces Mean estimates with 95\% confidence intervals, for 10 repetitions of the 4 methods we compared.\relax }}{147}{figure.caption.114}%
-\contentsline {figure}{\numberline {14.4}{\ignorespaces Best quantization policy found by each method during optimization, across 10 repetitions\relax }}{147}{figure.caption.115}%
-\contentsline {figure}{\numberline {14.5}{\ignorespaces Results with the baseline Reinforcement Learning method\relax }}{148}{figure.caption.116}%
-\contentsline {figure}{\numberline {14.6}{\ignorespaces Results with Gaussian Process Regression\relax }}{149}{figure.caption.117}%
-\contentsline {figure}{\numberline {14.7}{\ignorespaces Sobol indices computed for the impact on \emph {Top5} accuracy of each \emph {ResNet50} layer, using Sobol samples\relax }}{150}{figure.caption.119}%
-\contentsline {figure}{\numberline {14.8}{\ignorespaces Sobol indices computed for the impact on \emph {Top5} accuracy of each \emph {ResNet50} layer, using Sobol samples and search paths performed by \emph {GPR}\relax }}{150}{figure.caption.120}%
-\contentsline {figure}{\numberline {14.9}{\ignorespaces Optimizing accuracy and weight with the modified baseline Reinforcement Learning method\relax }}{151}{figure.caption.121}%
-\contentsline {figure}{\numberline {14.10}{\ignorespaces Optimizing accuracy and weight with Gaussian Process Regression with EI.\relax }}{151}{figure.caption.122}%
+\contentsline {figure}{\numberline {14.3}{\ignorespaces Images sampled from some of the categories in \textit {ImageNet}, adapted from Deng \emph {et al.}~\cite {deng2009imagenet}\relax }}{147}{figure.caption.112}%
+\contentsline {figure}{\numberline {14.4}{\ignorespaces Mean estimates with 95\% confidence intervals, for 10 repetitions of the 4 methods we compared.\relax }}{147}{figure.caption.115}%
+\contentsline {figure}{\numberline {14.5}{\ignorespaces Best quantization policy found by each method during optimization, across 10 repetitions\relax }}{148}{figure.caption.116}%
+\contentsline {figure}{\numberline {14.6}{\ignorespaces Results with the baseline Reinforcement Learning method\relax }}{149}{figure.caption.117}%
+\contentsline {figure}{\numberline {14.7}{\ignorespaces Results with Gaussian Process Regression\relax }}{150}{figure.caption.118}%
+\contentsline {figure}{\numberline {14.8}{\ignorespaces Sobol indices computed for the impact on \emph {Top5} accuracy of each \emph {ResNet50} layer, using Sobol samples\relax }}{151}{figure.caption.120}%
+\contentsline {figure}{\numberline {14.9}{\ignorespaces Sobol indices computed for the impact on \emph {Top5} accuracy of each \emph {ResNet50} layer, using Sobol samples and search paths performed by \emph {GPR}\relax }}{151}{figure.caption.121}%
+\contentsline {figure}{\numberline {14.10}{\ignorespaces Optimizing accuracy and weight with the modified baseline Reinforcement Learning method\relax }}{152}{figure.caption.122}%
+\contentsline {figure}{\numberline {14.11}{\ignorespaces Optimizing accuracy and weight with Gaussian Process Regression with EI.\relax }}{152}{figure.caption.123}%

@@ -852,6 +852,35 @@ S.~Zhou, Y.~Wu, Z.~Ni, X.~Zhou, H.~Wen, and Y.~Zou, ``Dorefa-net: Training low
   bitwidth convolutional neural networks with low bitwidth gradients,''
   \emph{arXiv preprint arXiv:1606.06160}, 2016.
 
+\bibitem{paszke2019pytorch}
+\BIBentryALTinterwordspacing
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~Kopf, E.~Yang, Z.~DeVito,
+  M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang, J.~Bai, and
+  S.~Chintala, ``{PyTorch: An Imperative Style, High-Performance Deep Learning
+  Library},'' in \emph{Advances in Neural Information Processing Systems 32},
+  H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d\textquotesingle
+  Alch\'{e}-Buc, E.~Fox, and R.~Garnett, Eds.\hskip 1em plus 0.5em minus
+  0.4em\relax Curran Associates, Inc., 2019, pp. 8024--8035. [Online].
+  Available:
+  \url{http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf}
+\BIBentrySTDinterwordspacing
+
+\bibitem{he2016deep}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
+  recognition,'' in \emph{Proceedings of the IEEE conference on computer vision
+  and pattern recognition}, 2016, pp. 770--778.
+
+\bibitem{wilson2003general}
+D.~R. Wilson and T.~R. Martinez, ``The general inefficiency of batch training
+  for gradient descent learning,'' \emph{Neural networks}, vol.~16, no.~10, pp.
+  1429--1451, 2003.
+
+\bibitem{lecun2012efficient}
+Y.~A. LeCun, L.~Bottou, G.~B. Orr, and K.-R. M{\"u}ller, ``Efficient
+  backprop,'' in \emph{Neural networks: Tricks of the trade}.\hskip 1em plus
+  0.5em minus 0.4em\relax Springer, 2012, pp. 9--48.
+
 \bibitem{talbi2021automated}
 E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified
   taxonomy,'' \emph{ACM Computing Surveys (CSUR)}, vol.~54, no.~2, pp. 1--37,

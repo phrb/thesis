@@ -30,9 +30,9 @@
 \contentsline {table}{\numberline {11.2}{\ignorespaces Weights for Optimization Scenarios (\textit {High} $= 8$, \textit {Medium} $= 4$, \textit {Low} $= 2$)\relax }}{103}{table.caption.76}%
 \contentsline {table}{\numberline {11.3}{\ignorespaces Autotuned CHStone Kernels\relax }}{103}{table.caption.77}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {12.1}{\ignorespaces Parameters of the Laplacian Kernel\relax }}{114}{table.caption.86}%
-\contentsline {table}{\numberline {12.2}{\ignorespaces Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions\relax }}{116}{table.caption.88}%
-\contentsline {table}{\numberline {12.3}{\ignorespaces ANOVA tests at each step. Red lines mark model terms that were considered significant, with $p < 0.05$, and fixed in a given step\relax }}{120}{table.caption.91}%
+\contentsline {table}{\numberline {12.1}{\ignorespaces Parameters of the Laplacian Kernel\relax }}{115}{table.caption.87}%
+\contentsline {table}{\numberline {12.2}{\ignorespaces ANOVA tests at each step. Red lines mark model terms that were considered significant, with $p < 0.05$, and fixed in a given step\relax }}{117}{table.caption.89}%
+\contentsline {table}{\numberline {12.3}{\ignorespaces Slowdown and budget used by 7 optimization methods on the Laplacian Kernel, using a budget of 125 points with 1000 repetitions\relax }}{121}{table.caption.92}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {13.1}{\ignorespaces Kernels from the SPAPT benchmark used in this evaluation\relax }}{124}{table.caption.92}%
+\contentsline {table}{\numberline {13.1}{\ignorespaces Kernels from the SPAPT benchmark used in this evaluation\relax }}{125}{table.caption.93}%
 \addvspace {10\p@ }

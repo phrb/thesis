@@ -13902,8 +13902,11 @@ refers to  the optimization  of any  network parameters that  have an  impact on
 performance without necessarily requiring structure modification.
 
 *** ResNet50 and ImageNet
-**** ResNet50 Architecture and Objective Function
-- The objective function
+**** ResNet50 Architecture
+- Cite original paper, describe:
+  - Residual Network: https://paperswithcode.com/method/resnet
+  - Residual Block: https://paperswithcode.com/method/residual-block
+  - Bottleneck Residual Block: https://paperswithcode.com/method/bottleneck-residual-block
 
 #+NAME: fig:resnet50
 #+CAPTION: \textit{ResNet50} architecture, implemented in \textit{pytorch}
@@ -13926,6 +13929,7 @@ performance without necessarily requiring structure modification.
 ***** Using Space-Filling Designs
 ***** Respecting Size Constraints
 **** Random and Quasi-Random Samplers
+- Sobol Sequences
 *** Performance Evaluation
 **** Accuracy for Fixed Network Size
 - Space-filling baseline

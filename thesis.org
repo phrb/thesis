@@ -13819,10 +13819,6 @@ approach.
 \todo[inline]{TODO: Fill in the sketched sections below}
 #+end_export
 
-- Overfit (surapprendre) (variability of optimizations) (robustness)
-- Extensibility (modifier la metrique pour compris)
-- Restarting GPR with past experiments
-
 This  chapter  presents  an  application of  Gaussian  Process  Regression  with
 Expected Improvement  acquisition function (GPR)  to bit precision tuning  for a
 Convolutional Neural Network (CNN).  We  compare GPR to a Reinforcement Learning
@@ -13995,6 +13991,13 @@ performance without necessarily requiring structure modification.
 [[./img/neural_net_autotuning/gpr_top5_size.png]]
 
 *** Summary
+- Overfitting for both methods:
+  - Variability of optimizations, Robustness
+- Extensibility:
+  - We can apply the same method with a different
+    objective function and still get sensible results
+- Restarting GPR with past experiments
+
 :PROPERTIES:
 :CUSTOM_ID: sec:gprnn-summary
 :END:

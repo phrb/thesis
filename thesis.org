@@ -13844,23 +13844,19 @@ methods we  compared, and  Section\nbsp{}[[Performance Evaluation]]  evaluates t
 performance with respect to  network accuracy.  Section\nbsp{}[[Summary]] summarizes
 the discussion and concludes the chapter.
 
-#+begin_export latex
-\todo[inline]{TODO: Fill in the sketched sections below}
-#+end_export
-
 *** Autotuning Bit Precision for Convolutional Neural Networks
 A Neural Network is composed of interconnected layers of "neurons".  Each neuron
 can be interpreted as an agent  that receives /weighted/ inputs from connections
 with other neurons, combines them, and  produces an output if the combined input
-crosses an  /activation/ threshold.  The  process of /quantization/ of  a Neural
-Network consists  in choosing, according to  a performance metric, the  best bit
-precision for data representing weights  and activation thresholds in each layer
-of  the Neural  Network. Quantizing  a Network  consequently determines  the bit
-precision  of   the  computations  performed  during   training  and  inference.
-Quantization     is     increasingly      relevant     in     Neural     Network
+crosses an /activation/  threshold.  The process of /quantization/  of a network
+consists in choosing, according to a  performance metric, the best bit precision
+for   data   representing   weights    and   activation   thresholds   in   each
+layer. Quantizing  a network  consequently determines the  bit precision  of the
+computations  performed   during  training   and  inference.    Quantization  is
+increasingly           relevant            in           Neural           Network
 research\nbsp{}\cite{wang2019haq,elthakeb2019releq,zhu2016trained,han2015deep,mishra2017wrpn,zhou2016dorefa}
-because  it reduces  energy  and  space requirements  for  CNNs, enabling  their
-deployment in embedded, mobile, or custom-engineered hardware.
+because  it  reduces  energy  and space  requirements,  enabling  deployment  in
+embedded, mobile, or custom-engineered hardware.
 
 #+NAME: fig:resnet50
 #+CAPTION: Optimizing nonuniform weight quantization policies for the
@@ -13872,15 +13868,39 @@ deployment in embedded, mobile, or custom-engineered hardware.
 #+ATTR_LATEX: :placement [t] :width .99\textwidth
 [[./img/neural_net_autotuning/quantization_autotuning.pdf]]
 
-**** Other Applications of Autotuning for Neural Networks
-- Talbi\nbsp{}\cite{talbi2021automated}
-- Neural Architecture Search
-- Hyperparameter Tuning
+Figure\nbsp{}[[fig:resnet50]] shows the bit  precision tuning experiments we present
+in this  chapter.  We used  different methods to optimize  quantization policies
+for   the   layer   groups   of   the   /PyTorch/\nbsp{}\cite{paszke2019pytorch}
+implementation of a /Residual  Network/\nbsp{}\cite{he2016deep} with 50 residual
+blocks, called /ResNet50/.  We used the /HAQ/ framework\nbsp{}\cite{wang2019haq}
+to quantize  each layer  with a  bitwidth in the  $[1,8]$ interval,  producing a
+smaller  network  that  was  retrained   on  /NVIDIA/  GPUs.   We  ensured  that
+quantization  policies respected  size  constraints, keeping  total weight  size
+under 10 /MB/, and  allowing the comparison of our results  to a reproduction of
+the approach of the original paper\nbsp{}\cite{wang2019haq}.
+
+**** Further Applications of Autotuning to Neural Networks
+Autotuning  methods can  be  applied to  optimize  networks targeting  different
+stages and structures.  Online Gradient  Descent coupled with backpropagation is
+a         well          established         approach          to         network
+training\nbsp{}\cite{wilson2003general,lecun2012efficient},  but fine  tuning of
+the network architecture  and its parameters is also a  promising target for the
+application of optimization methods.
+
+A recent survey and  taxonomy by Talbi\nbsp{}\cite{talbi2021automated} discusses
+work on /Neural Architecture Search/ (NAS), and /Hyperparameter Tuning/.  Neural
+Architecture  Search  consists  of  using   optimization  methods  to  find  the
+modifications of  the layers  and connections  of a network  that best  adapt to
+resource constraints  or hardware architecture features.   Hyperparameter Tuning
+refers to  the optimization  of any  network parameters that  have an  impact on
+performance without necessarily requiring structure modification.
+
 
 *** ResNet50 and ImageNet
 **** ResNet50 Architecture and Objective Function
 - Schematic figure
 - The objective function
+
 #+NAME: fig:resnet50
 #+CAPTION: \textit{ResNet50} architecture, implemented in \textit{pytorch}
 #+ATTR_LATEX: :placement [t] :width .99\textwidth

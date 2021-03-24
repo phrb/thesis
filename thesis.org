@@ -14114,8 +14114,6 @@ sample is smaller than the EI of any configuration in the backlog.
 \end{figure}
 #+end_export
 
-***** Using Space-Filling Designs
-***** Respecting Size Constraints
 ***** Performance of the Implementation
 #+NAME: fig:gpr_performance
 #+CAPTION: Execution time of the different steps of our GPR

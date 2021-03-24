@@ -13990,13 +13990,28 @@ follows  will regard  the  performance  of optimization  methods  on the  /Top5/
 distance minimization.
 
 *** Optimization Methods
+This section  describes the  four optimization  methods we  compare in  the next
+section.
+
 **** Reinforcement Learning: The Baseline Method
-- Describe on Online Learning Chapter, give small details here
-- Adapt a figure from the HAQ paper?
-***** Respecting Size Constraints
-- Round-robin decrease of weights
-- "Reverse-engineering": we found out that  the first layers are less important,
-  the authors might have encoded that knowledge in the round-robin procedure
+We reused  the Reinforcement Learning  (RL) /Python/ implementation  provided by
+the authors of the /HAQ/ paper\nbsp{}\cite{wang2019haq}.  Reinforcement Learning
+using  the /actor-critic/  model  was  discussed in  Section\nbsp{}[[Reinforcement
+Learning]],  and  the implementation  in  /HAQ/  employed additionally  the  /Deep
+Deterministic     Policy     Gradient/     method     from     Lillicrap     /et
+al./\nbsp{}\cite{lillicrap2015continuous}.  The cumulative regret to minimize is
+the  distance  of  the  quantized   accuracy  from  the  initial  8-bit  uniform
+quantization, across all tested quantization policies.
+
+***** Respecting the Size Constraint
+To respect  the constraint imposed on  the sum of network  weights, the original
+paper  implementation used  a /Round-Robin/  algorithms to  decrease the  weight
+bitwidth for each  layer sequentially, starting with the first,  until the total
+sum crossed  the 10  /MB/ threshold.   After analyzing our  results with  RL and
+other methods, our hypothesis for this  implementation choice is that it encodes
+the  implicit knowledge  that the  bit precision  of the  initial layers  of the
+/PyTorch/ /ResNet50/ implementation has a smaller impact on accuracy.
+
 **** Gaussian Process Regression with Expected Improvement
 - Describe on Online Learning Chapter, give small details here
 - Add a schematic figure or pseudocode of GPR algorithm

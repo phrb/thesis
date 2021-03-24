@@ -13875,7 +13875,7 @@ research\nbsp{}\cite{wang2019haq,elthakeb2019releq,zhu2016trained,han2015deep,mi
 because  it  reduces  energy  and space  requirements,  enabling  deployment  in
 embedded, mobile, or custom-engineered hardware.
 
-#+NAME: fig:resnet50
+#+NAME: fig:quantization
 #+CAPTION: Optimizing nonuniform weight quantization policies for the
 #+CAPTION: \textit{ResNet50} network, keeping total weight size
 #+CAPTION: below 10 /MB/, and attempting to keep accuracy.

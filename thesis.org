@@ -13955,7 +13955,7 @@ that quantized activation precision was only  released by the authors after this
 study was completed.
 
 Choosing between a bit precision in the $[1, 8]$ interval for the 54 quantizable
-layers  generates a  search space  with $8^54  \approx 10^{49}$  configurations.
+layers generates  a search space  with $8^{54} \approx  10^{49}$ configurations.
 This search  space is relatively large,  although not the largest  we studied in
 this thesis.  Completely evaluating it  is unfeasible, considering we would have
 to retrain and validate the quantized network on our 30 thousand image sample of

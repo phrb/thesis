@@ -13924,6 +13924,8 @@ networks because they are computationally less expensive.
 #+ATTR_LATEX: :placement [t] :width .99\textwidth
 [[./img/neural_net_autotuning/resnet50_architecture.pdf]]
 
+#+latex: \clearpage
+
 **** The ImageNet Dataset
 
 #+NAME: fig:imagenet
@@ -13987,15 +13989,21 @@ which 20 thousand were used for training and 10 thousand for validation.
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/neural_net_autotuning/gpr_rl_smooth.pdf]]
 
+#+latex: \clearpage
+
 #+NAME: fig:rl_results
 #+CAPTION: Results with the baseline Reinforcement Learning method
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/neural_net_autotuning/rl_original.png]]
 
+#+latex: \clearpage
+
 #+NAME: fig:gpr_results
 #+CAPTION: Results with Gaussian Process Regression
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/neural_net_autotuning/gpr_restricted.png]]
+
+#+latex: \clearpage
 
 **** Running GPR with All Collected Data
 - GPR can be restarted at any point and easily leverage past executions

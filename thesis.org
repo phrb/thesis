@@ -13908,7 +13908,7 @@ al./\nbsp{}\cite{he2016deep}, and  the intuition behind  the idea is to  add the
 original layer  input, or /residual/,  to the output  of a stack  of convolution
 layers. Keeping this residual component in  a layer output enables better global
 optimization  of  the  network. Figure\nbsp{}[[fig:resnet50]]  shows  the  /PyTorch/
-implementation  of a  50-layer Residual  Network, called  /ResNet50/.
+implementation of a 50-block Residual Network, called /ResNet50/.
 
 We generated this visualization of /ResNet50/'s structure with the /HiddenLayer/
 library\nbsp{}\cite{hiddenlayer2021visualization},    adding   the    underlying

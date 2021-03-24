@@ -13962,6 +13962,33 @@ to retrain and validate the quantized network on our 30 thousand image sample of
 /ImageNet/, which  took tens  of minutes  for each  quantization on  an /NVIDIA/
 /K80/ GPU.
 
+The  accuracy of  a  network is  typically  measured by  its  /Top1/ and  /Top5/
+accuracy  measures.  Both  metrics measure  the  ratio between  right and  wrong
+network predictions in the testing dataset, but the /Top1/ accuracy considers as
+a prediction  only the class with  the highest predicted probability,  while the
+/Top5/  metric  considers  the  classes  with the  top  five  highest  predicted
+probabilities. For example, if a network predicts a picture of a Chihuahua is in
+the  "Muffin"  class with  85%  probability  and in  the  "Dog"  class with  80%
+probability, this  would be considered  a miss in /Top1/  accuracy but a  hit in
+/Top5/.
+
+In this  work we were  interested in minimizing  the distance between  the 8-bit
+uniformly quantized /Top5/ accuracy and the /Top5/ for a quantized network whose
+total  weight size  was under  10 /MB/.   We targeted  /Top5/ because,  from the
+perspective of the HPE researchers we collaborated with, it was more interesting
+that the network was made to fit on the smallest possible device, perhaps at the
+cost of some /Top1/ accuracy, because then it would be cheap to run a larger set
+of predictions.  In  the end, suggesting the two metrics  are linked, optimizing
+for /Top5/ produced /Top1/ results comparable  to the ones found by the original
+paper\nbsp{}\cite{wang2019haq} and  by our replication  of their results  in our
+settings.
+
+We also performed experiments that added  the total weight size to the objective
+function and dropped  the 10 /MB/ restriction,  but we found it  hard to compare
+the results  we produced with  the original paper,  so the main  discussion that
+follows  will regard  the  performance  of optimization  methods  on the  /Top5/
+distance minimization.
+
 *** Optimization Methods
 **** Reinforcement Learning: The Baseline Method
 - Describe on Online Learning Chapter, give small details here

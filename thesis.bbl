@@ -743,14 +743,6 @@ S.~Q. Masnada, ``{Semi-Automatic Performance Optimization of HPC Kernels},''
 ``{BOAST Source Code},'' \url{https://github.com/Nanosim-LIG/boast}, accessed:
   15 March 2021.
 
-\bibitem{fox2011car}
-\BIBentryALTinterwordspacing
-J.~Fox and S.~Weisberg, \emph{An {R} Companion to Applied Regression},
-  2nd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Thousand Oaks {CA}: Sage,
-  2011. [Online]. Available:
-  \url{http://socserv.socsci.mcmaster.ca/jfox/Books/Companion}
-\BIBentrySTDinterwordspacing
-
 \bibitem{yi2007poet}
 Q.~Yi, K.~Seymour, H.~You, R.~Vuduc, and D.~Quinlan, ``{POET}: Parameterized
   optimizations for empirical tuning,'' in \emph{Parallel and Distributed
@@ -761,6 +753,14 @@ Q.~Yi, K.~Seymour, H.~You, R.~Vuduc, and D.~Quinlan, ``{POET}: Parameterized
 ``{BOAST Laplacian Sample GPU Kernel},''
   \url{https://github.com/Nanosim-LIG/boast/blob/master/sample/Laplacian.rb},
   accessed: 15 March 2021.
+
+\bibitem{fox2011car}
+\BIBentryALTinterwordspacing
+J.~Fox and S.~Weisberg, \emph{An {R} Companion to Applied Regression},
+  2nd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Thousand Oaks {CA}: Sage,
+  2011. [Online]. Available:
+  \url{http://socserv.socsci.mcmaster.ca/jfox/Books/Companion}
+\BIBentrySTDinterwordspacing
 
 \bibitem{addelman1961some}
 S.~Addelman and O.~Kempthorne, ``Some main-effect plans and orthogonal arrays
@@ -885,5 +885,10 @@ Y.~A. LeCun, L.~Bottou, G.~B. Orr, and K.-R. M{\"u}ller, ``Efficient
 E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified
   taxonomy,'' \emph{ACM Computing Surveys (CSUR)}, vol.~54, no.~2, pp. 1--37,
   2021.
+
+\bibitem{hiddenlayer2021visualization}
+``{HiddenLayer: A lightweight library for neural network graphs and training
+  metrics for PyTorch, Tensorflow, and Keras},''
+  \url{https://github.com/waleedka/hiddenlayer}, accessed: 24 March 2021.
 
 \end{thebibliography}

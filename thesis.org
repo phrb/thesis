@@ -149,6 +149,17 @@
 #+LATEX_HEADER:     citecolor={blue!50!black},
 #+LATEX_HEADER:     urlcolor={blue!80!black}
 #+LATEX_HEADER: }
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \newcommand\fs@ruled@notop{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
+#+LATEX_HEADER:   %\def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}% <----removed
+#+LATEX_HEADER:   \def\@fs@pre{}%
+#+LATEX_HEADER:   %\def\@fs@post{\kern2pt\hrule\relax}%
+#+LATEX_HEADER:   \def\@fs@post{}%
+#+LATEX_HEADER:   %\def\@fs@mid{\kern2pt\hrule\kern2pt}%
+#+LATEX_HEADER:   \def\@fs@mid{}%
+#+LATEX_HEADER:   \let\@fs@iftopcapt\iftrue}
+#+LATEX_HEADER: \renewcommand\fst@algorithm{\fs@ruled@notop}
+#+LATEX_HEADER: \makeatother
 :end:
 
 

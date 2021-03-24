@@ -14026,6 +14026,63 @@ the  implicit knowledge  that the  bit precision  of the  initial layers  of the
 **** Gaussian Process Regression with Expected Improvement
 - Describe on Online Learning Chapter, give small details here
 - Add a schematic figure or pseudocode of GPR algorithm
+
+#+begin_export latex
+\begin{figure}
+  \label{alg:gpr}
+  \begin{minipage}{\textwidth}
+    \begin{algorithm}[H]
+      \small
+      \begin{algorithmic}[1]
+        \Function{Filter\_Sobol}{$dimension,\,target\_size,\,max\_weight$}
+        \State $sample\_size \gets 10^6$
+        \State $samples \gets \emptyset$
+        \Statex
+        \While{$\textsc{Size}(samples) \leq target\_size$}
+        \State $samples \gets \textsc{Sobol}(dimension, \,sample\_size)$
+        \State $samples \gets \textsc{Filter}(samples, \,\leq max\_weight)$
+        \State $sample\_size \gets 2 * sample\_size$
+        \EndWhile
+        \Statex
+        \State \textbf{return} $samples$
+        \EndFunction
+        \Statex
+        \Function{GPR}{$budget, \,dimension, \,starting\_size, \,sample\_size, \,max\_weight$}
+        \State $starting\_sample \gets \textsc{Filter\_Sobol}(dimension, \,starting\_size, \,max\_weight)$
+        \State $training\_set \gets \textsc{Measure}(starting\_sample)$
+        \State $measurements \gets \textsc{Size}(training\_set)$
+        \State $EI\_backlog \gets \emptyset$
+        \Statex
+        \While{$measurements \leq budget$}
+        \State $model \gets \textsc{FitGP}(training\_set)$
+        \Statex
+        \State $new\_sample \gets \textsc{Filter\_Sobol}(dimension, \,sample\_size, \,max\_weight)$
+        \State $candidates \gets \textsc{ComputeEI}(model, \,new\_sample)$
+        \State $neighbors \gets \textsc{ComputeEI}(model, \,\textsc{Neighborhood}(candidates))$
+        \Statex
+        \State $new\_measurement \gets \textsc{MaxEI}(candidates \cup neighbors \cup EI\_backlog)$
+        \State $EI\_backlog \gets (EI\_backlog \cup candidates \cup neighbors) \setminus new\_measurement$
+        \Statex
+        \State $training\_set \gets training\_set \cup \textsc{Measure}(new\_measurement)$
+        \State $measurements \gets \textsc{Size}(training\_set)$
+        \EndWhile
+        \Statex
+        \State \textbf{return} $\textsc{MaxTop5}(traning\_set)$
+        \EndFunction
+        \Statex
+      \end{algorithmic}
+    \end{algorithm}
+  \end{minipage}
+  \caption[Pseudocode  implementations   of  the   GPR  method   using  Expected
+    Improvement   (EI),   and   of   the   constrained   sampler   using   Sobol
+    sequences]{Pseudocode  implementation  of  the  GPR  method  using  Expected
+    Improvement (EI), and  of the constrained sampler using  Sobol sequences. In
+    our experiments,  variables were $budget  \gets 245$, $dimension  \gets 54$,
+    $starting\_size \gets 64$, $sample\_size \gets 3240$, and $max\_weight \gets
+    10$ \textit{MB}}
+\end{figure}
+#+end_export
+
 ***** Using Space-Filling Designs
 ***** Respecting Size Constraints
 ***** Performance of the Implementation

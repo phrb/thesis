@@ -14017,6 +14017,13 @@ the  implicit knowledge  that the  bit precision  of the  initial layers  of the
 - Add a schematic figure or pseudocode of GPR algorithm
 ***** Using Space-Filling Designs
 ***** Respecting Size Constraints
+***** Performance of the Implementation
+#+NAME: fig:gpr_performance
+#+CAPTION: Execution time of the different steps of our GPR
+#+CAPTION: implementation
+#+ATTR_LATEX: :placement [t] :width .99\textwidth
+[[./img/neural_net_autotuning/timing_resnet50.pdf]]
+
 **** Random and Quasi-Random Samplers
 - Sobol Sequences
 *** Performance Evaluation

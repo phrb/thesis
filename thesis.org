@@ -13885,9 +13885,9 @@ embedded, mobile, or custom-engineered hardware.
 #+ATTR_LATEX: :placement [t] :width .99\textwidth
 [[./img/neural_net_autotuning/quantization_autotuning.pdf]]
 
-Figure\nbsp{}[[fig:resnet50]] shows the bit  precision tuning experiments we present
-in this  chapter.  We used  different methods to optimize  quantization policies
-for   the   layer   groups   of   the   /PyTorch/\nbsp{}\cite{paszke2019pytorch}
+Figure\nbsp{}[[fig:quantization]]  shows the  bit  precision  tuning experiments  we
+present in  this chapter.   We used different  methods to  optimize quantization
+policies for  the layer  groups of  the /PyTorch/\nbsp{}\cite{paszke2019pytorch}
 implementation of a /Residual  Network/\nbsp{}\cite{he2016deep} with 50 residual
 blocks, called /ResNet50/.  We used the /HAQ/ framework\nbsp{}\cite{wang2019haq}
 to quantize  each layer  with a  bitwidth in the  $[1,8]$ interval,  producing a

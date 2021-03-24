@@ -14024,8 +14024,25 @@ the  implicit knowledge  that the  bit precision  of the  initial layers  of the
 /PyTorch/ /ResNet50/ implementation has a smaller impact on accuracy.
 
 **** Gaussian Process Regression with Expected Improvement
-- Describe on Online Learning Chapter, give small details here
-- Add a schematic figure or pseudocode of GPR algorithm
+We used the same two /R/  packages we used in Chapters\nbsp{}[[Experimental Design
+and  Gaussian  Process  Regression  for  CPU  Kernels]]  and  [[Stochastic  Methods,
+Experimental Design, and Gaussian Process  Regression for a Laplacian GPU Kernel]]
+to  implement   the  GPR   algorithm\nbsp{}\cite{roustant2012dicekriging}.   The
+/DiceKriging/  package provided  Gaussian  Processes Regression  fits using  the
+/Matérn/ covariance  kernel, and the  /DiceOptim/ package provided  functions to
+compute  the Expected  Improvement (EI)  metric at  each step,  as described  in
+Section\nbsp{}[[Expected    Improvement   for    Gaussian   Process    Regression]].
+Additionally,           we           used           the           /future.apply/
+package\nbsp{}\cite{bengtsson2020unifying} to run EI computations in parallel.
+
+***** Respecting the Size Constraint with Sobol Samples
+We  used  the implementation  of  the  Sobol sequence  low-discrepancy  sampling
+algorithm from  the /randtoolbox/\nbsp{}\cite{dutang2020randtoolbox}/R/ package.
+Low-discrepancy   sampling  and   space-filling   designs   were  discussed   in
+Section\nbsp{}[[Space-Filling Designs]].   To ensure all samples  respected the size
+constraint,  we  progressively  doubled  the  sample  size  until  enough  valid
+configurations were produced.
+
 
 #+begin_export latex
 \begin{figure}

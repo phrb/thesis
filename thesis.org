@@ -13948,11 +13948,20 @@ Evaluation]] we used  distinct subset of 30 thousand uniformly  sampled images, 
 which 20 thousand were used for training and 10 thousand for validation.
 
 *** Search Space and Objective Function
-- Targeted only weights, not activation
-  - Activation code was released only after we did the study
-- Size of the search space: 8^54 \approx 10^49 configurations
-- Objective function: minimize accuracy loss with respect to
-  8-bit uniformly quantized ResNet50
+The search space  we explored consisted of 54 convolutional  layers, that is, 54
+component  layers  of  the  50  residual  blocks  in  the  /PyTorch/  /ResNet50/
+implementation. We optimized only the bit  precision for weights, since the code
+that quantized activation precision was only  released by the authors after this
+study was completed.
+
+Choosing between a bit precision in the $[1, 8]$ interval for the 54 quantizable
+layers  generates a  search space  with $8^54  \approx 10^{49}$  configurations.
+This search  space is relatively large,  although not the largest  we studied in
+this thesis.  Completely evaluating it  is unfeasible, considering we would have
+to retrain and validate the quantized network on our 30 thousand image sample of
+/ImageNet/, which  took tens  of minutes  for each  quantization on  an /NVIDIA/
+/K80/ GPU.
+
 *** Optimization Methods
 **** Reinforcement Learning: The Baseline Method
 - Describe on Online Learning Chapter, give small details here

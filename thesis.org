@@ -13903,10 +13903,21 @@ performance without necessarily requiring structure modification.
 
 *** ResNet50 and ImageNet
 **** ResNet50 Architecture
-- Cite original paper, describe:
-  - Residual Network: https://paperswithcode.com/method/resnet
-  - Residual Block: https://paperswithcode.com/method/residual-block
-  - Bottleneck Residual Block: https://paperswithcode.com/method/bottleneck-residual-block
+Residual    Networks,    or   /ResNets/,    were    introduced    by   He    /et
+al./\nbsp{}\cite{he2016deep}, and  the intuition behind  the idea is to  add the
+original layer  input, or /residual/,  to the output  of a stack  of convolution
+layers. Keeping this residual component in  a layer output enables better global
+optimization  of  the  network. Figure\nbsp{}[[fig:resnet50]]  shows  the  /PyTorch/
+implementation  of a  50-layer Residual  Network, called  /ResNet50/.
+
+We generated this visualization of /ResNet50/'s structure with the /HiddenLayer/
+library\nbsp{}\cite{hiddenlayer2021visualization},    adding   the    underlying
+structure  of /Bottleneck  Residual Blocks/  in  panel /(a)/,  and of  /Residual
+Blocks/ in  panel /(b)/. Bottleneck  blocks serve  the same purpose  as Residual
+blocks, adding  an input component  to layer output,  but are favored  in larger
+networks because they are computationally less expensive.
+
+#+latex: \clearpage
 
 #+NAME: fig:resnet50
 #+CAPTION: \textit{ResNet50} architecture, implemented in \textit{pytorch}

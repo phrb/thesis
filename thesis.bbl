@@ -891,4 +891,9 @@ E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified
   metrics for PyTorch, Tensorflow, and Keras},''
   \url{https://github.com/waleedka/hiddenlayer}, accessed: 24 March 2021.
 
+\bibitem{lillicrap2015continuous}
+T.~P. Lillicrap, J.~J. Hunt, A.~Pritzel, N.~Heess, T.~Erez, Y.~Tassa,
+  D.~Silver, and D.~Wierstra, ``Continuous control with deep reinforcement
+  learning,'' \emph{arXiv preprint arXiv:1509.02971}, 2015.
+
 \end{thebibliography}

@@ -14114,28 +14114,59 @@ configuration in the backlog.
 \end{figure}
 #+end_export
 
-***** Performance of the Implementation
-#+NAME: fig:gpr_performance
-#+CAPTION: Execution time of the different steps of our GPR
-#+CAPTION: implementation
-#+ATTR_LATEX: :placement [t] :width .99\textwidth
-[[./img/neural_net_autotuning/timing_resnet50.pdf]]
+**** Reinforcement Learning: The Baseline Method
+We reused  the Reinforcement Learning  (RL) /Python/ implementation  provided by
+the authors of the /HAQ/ paper\nbsp{}\cite{wang2019haq}.  Reinforcement Learning
+using  the /actor-critic/  model  was  discussed in  Section\nbsp{}[[Reinforcement
+Learning]],  and  the implementation  in  /HAQ/  employed additionally  the  /Deep
+Deterministic     Policy     Gradient/     method     from     Lillicrap     /et
+al./\nbsp{}\cite{lillicrap2015continuous}.  The cumulative regret to minimize is
+the  distance  of  the  quantized   accuracy  from  the  initial  8-bit  uniform
+quantization, across all tested quantization policies.
 
-**** Random and Quasi-Random Samplers
-- Sobol Sequences
-*** Performance Evaluation
-**** Accuracy for Fixed Network Size
-- Space-filling baseline
-- Compare RL and GPR
-- GPR achieves the same results in the same time
-- GPR  achieves  more  consistent quantization  distributions  across  different
-  optimizations
+***** Respecting the Size Constraint
+To respect  the constraint imposed on  the sum of network  weights, the original
+paper  implementation used  a /Round-Robin/  algorithms to  decrease the  weight
+bitwidth for each  layer sequentially, starting with the first,  until the total
+sum crossed  the 10  /MB/ threshold.   After analyzing our  results with  RL and
+other methods, our hypothesis for this  implementation choice is that it encodes
+the  implicit knowledge  that the  bit precision  of the  initial layers  of the
+/PyTorch/ /ResNet50/ implementation has a smaller impact on accuracy.
 
+*** Performance Evaluation and Comparison
+This section presents our evaluation of the performance of our implementation of
+Gaussian Process Regression with Expected  Improvement (GPR) and of the baseline
+Reinforcement  Learning  (RL)\nbsp{}\cite{wang2019haq}  on the  optimization  of
+quantization  policies for  /ResNet50/,  targeting the  /ImageNet/ dataset.   We
+compare the performance of GPR and RL  with a uniform random sampling method and
+with a low-discrepancy space-filling sampler using Sobol sequences.
+
+The simple samplers performed interestingly well in comparison with more complex
+approaches, a pattern we have already  observed in many of the studies presented
+in this thesis.  This  time, the more complex methods were  able to improve upon
+the  results  of  the  simpler  approaches.  Under  the  same  budget,  our  GPR
+implementation  achieved  accuracy   statistically  indistinguishable  from  the
+original RL implementation.  In comparison with  the RL algorithm, we argue that
+our approach produces more consistent quantization policies between repetitions,
+and  that it  is more  extensible  and perhaps  more  robust to  changes in  the
+objective function.
+
+**** Optimizing /Top5/ for Constrained Total Weight
 #+NAME: fig:comparison_means
-#+CAPTION: Mean estimates with 95% confidence intervals,
-#+CAPTION: for 10 repetitions of the 4 methods we compared.
+#+CAPTION: 10 repetitions of the 4 methods we compared,
+#+CAPTION: using a budget of 245 measurements,
+#+CAPTION: with 95% confidence intervals for estimates of the mean
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/neural_net_autotuning/comparison_means.pdf]]
+
+Figure\nbsp{}[[fig:comparison_means]] compares the  best quantization policies found
+by each  optimization method across  10 repetitions,  with a fixed  budget.  The
+total  /ResNet50/ weight  size was  constrained to  be no  larger than  10 /MB/.
+Comparing  the 95%  confidence  intervals for  the estimates  of  the mean  best
+configuration for each method  we see that GPR and RL  have similar results, but
+that the  Sobol sampler produces policies with good accuracy.
+Figure\nbsp{}[[fig:comparison_best_gpr_rl]] shows  the accuracy metrics of  the best
+configurations found at each iteration, for the 10 repetitions of GPR and RL.
 
 #+NAME: fig:comparison_best_gpr_rl
 #+CAPTION: Best quantization policy found by each method

@@ -748,26 +748,31 @@ context (where EI is more meaningful).
     fixed. Are there the same as the ones found by opentuner.
 - [ ] Separate new GPUs from older ones, into new figure
 
-*** Use Case 2: Kernel GPU Steven
-- [ ] What is the Laplacian kernel?
-- [ ] How was the model chosen?
+*** TODO Use Case 2: Kernel GPU Steven
+:LOGBOOK:
+- State "TODO"       from              [2021-03-25 Thu 20:28]
+:END:
+- [X] What is the Laplacian kernel?
+- [X] How was the model chosen?
 
-- [ ] Base strategies (RS, GAs, Local Descent, ...)
+- [X] Base strategies (RS, GAs, Local Descent, ...)
   - Good results too, especially compared to
     RS, but with high maximum variability
   - LM, RQ: Find the minimum, but get it
     wrong some of the time
 
-- [ ] D-opt based approach \to excellent results
+- [X] D-opt based approach \to excellent results
   - Able to consistently find the optimum
   - Motivated experiments on the next chapter
 
 - [X] Describe actual steps of the algorithm
   - Give a more concrete example
 
-- [ ] GP-EI based approach
+- [X] GP-EI based approach
   - Improves upon LM, RQ, but has more
     variability than DLMT
+
+- [ ] Add design points to Figure 12.6
 
 *** Use Case 3: SPAPT
 - Base strategies (RS because equivalent to other classical strategies

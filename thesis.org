@@ -14327,17 +14327,44 @@ parameter.
 [[./img/neural_net_autotuning/gpr_ensemble.png]]
 
 ***** Optimizing Accuracy and Weight
-#+NAME: fig:gpr_multi_results
-#+CAPTION: Optimizing accuracy and weight with
-#+CAPTION: the modified baseline Reinforcement Learning method
-#+ATTR_LATEX: :placement [b] :width \textwidth
-[[./img/neural_net_autotuning/rl_top5_size.png]]
+We run preliminary experiments with adding  the total weight size as a component
+of  the performance  metric for  GPR and  RL, but  this made  it unclear  how to
+compare the  GPR results to the  original RL implementation, because  to add the
+new  metric we  removed the  round-robin weight  decrease used  in the  original
+paper.
+
+Figures\nbsp{}[[fig:gpr_multi_results]]  and [[fig:rl_multi_results]]  show the  results
+for GPR and RL, respectively. We see that this expanded problem is a much harder
+task for both methods, but RL is especially impacted by it. This might be a good
+reason for  the original paper's usage  of the round-robin procedure  for weight
+decrease. Experiments /2/, /3/, and /4/  with the RL method show quirky features
+that  we  are  not able  to  explain,  but  we  hypothesize that  some  emerging
+restarting strategy has  taken place, especially for  experiment /4/. Experiment
+/2/ is the only one that seems to behave as expected.
+
+The  experiments with  GPR  were much  more  stable.   We show  two  of them  in
+Figure\nbsp{}[[fig:gpr_multi_results]], and we  can see red bands  that resemble the
+ones from Figure\nbsp{}[[fig:gpr_results]]. Although  this modified version does not
+achieve  the  same /Top5/  accuracy  it  does find  interesting  configurations,
+producing quantization policies equivalent to using  less than 2 bits per layer,
+without  letting /Top5/  go  below  80%. This  hints  that  policies exist  that
+generate much smaller networks with a manageable compromise in accuracy.
+
+#+latex: \clearpage
 
 #+NAME: fig:rl_multi_results
 #+CAPTION: Optimizing accuracy and weight with
-#+CAPTION: Gaussian Process Regression with EI.
+#+CAPTION: the modified baseline Reinforcement Learning method
 #+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/rl_top5_size.png]]
+
+#+NAME: fig:gpr_multi_results
+#+CAPTION: Optimizing accuracy and weight with
+#+CAPTION: Gaussian Process Regression with EI.
+#+ATTR_LATEX: :placement [b] :width \textwidth
 [[./img/neural_net_autotuning/gpr_top5_size.png]]
+
+#+latex: \clearpage
 
 *** Summary
 :PROPERTIES:

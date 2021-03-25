@@ -14040,19 +14040,23 @@ constraint,  we  progressively  doubled  the  sample  size  until  enough  valid
 configurations were produced.
 
 ***** Pseudocode for the GPR Method
-Figure\nbsp{}\ref{alg:gpr} shows  the pseudocode for  our GPR adaptation  to the
+Figure\nbsp{}\ref{alg:gpr} shows the pseudocode for our adaptation of GPR to the
 bit  precision   tuning  problem,  including  the   constrained  Sobol  sampling
 algorithm.  The  algorithm starts  with a  smaller valid  Sobol sample  which is
 completely evaluated and used to fit a Gaussian Process.  This model fit enables
-computing the Expected Improvement for a much larger valid Sobol sample. We pick
-the  three configurations  with  the highest  EI from  this  sample and  compute
-additional EI for  a neighborhood around these  configurations. The neighborhood
-is  also generated  using the  Sobol sampling  algorithm.  We  then measure  the
-unique configuration with the highest EI over this larger sample, augmented with
-a targeted neighborhood, and keep a backlog of the 200 other configurations with
-the highest EI  in the sample.  The  EI of the configurations in  the backlog is
-constantly reevaluated, and the backlog is used if the highest EI in the current
-sample is smaller than the EI of any configuration in the backlog.
+computing the  Expected Improvement for  a much  larger valid Sobol  sample.
+
+We  pick the  three configurations  with  the highest  EI from  this sample  and
+compute  additionally   the  EI   for  a   sampled  neighborhood   around  these
+configurations.  The  neighborhood is  also generated  using the  Sobol sampling
+algorithm.
+
+We then  measure the unique configuration  with the highest EI  over this larger
+sample, augmented  with a targeted neighborhood,  and keep a backlog  of the 200
+other  configurations  with  the highest  EI  in  the  sample.   The EI  of  the
+configurations in the backlog is constantly reevaluated, and the backlog is used
+if  the  highest EI  in  the  current  sample is  smaller  than  the EI  of  any
+configuration in the backlog.
 
 #+begin_export latex
 \begin{figure}

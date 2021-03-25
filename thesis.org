@@ -14006,39 +14006,30 @@ follows  will regard  the  performance  of optimization  methods  on the  /Top5/
 distance minimization.
 
 *** Optimization Methods
-This section  describes the  four optimization  methods we  compare in  the next
-section.
+This section describes  the optimization methods we applied  to the quantization
+policy optimization  for /ResNet50/. The performance  comparison between methods
+is presented in the next section.
 
-**** Reinforcement Learning: The Baseline Method
-We reused  the Reinforcement Learning  (RL) /Python/ implementation  provided by
-the authors of the /HAQ/ paper\nbsp{}\cite{wang2019haq}.  Reinforcement Learning
-using  the /actor-critic/  model  was  discussed in  Section\nbsp{}[[Reinforcement
-Learning]],  and  the implementation  in  /HAQ/  employed additionally  the  /Deep
-Deterministic     Policy     Gradient/     method     from     Lillicrap     /et
-al./\nbsp{}\cite{lillicrap2015continuous}.  The cumulative regret to minimize is
-the  distance  of  the  quantized   accuracy  from  the  initial  8-bit  uniform
-quantization, across all tested quantization policies.
-
-***** Respecting the Size Constraint
-To respect  the constraint imposed on  the sum of network  weights, the original
-paper  implementation used  a /Round-Robin/  algorithms to  decrease the  weight
-bitwidth for each  layer sequentially, starting with the first,  until the total
-sum crossed  the 10  /MB/ threshold.   After analyzing our  results with  RL and
-other methods, our hypothesis for this  implementation choice is that it encodes
-the  implicit knowledge  that the  bit precision  of the  initial layers  of the
-/PyTorch/ /ResNet50/ implementation has a smaller impact on accuracy.
+**** Random and Sobol Sampling
+Although practically  impossible, in  order to  properly explore  the /ResNet50/
+quantization search  space it would  be ideal know  the global optimum.   In the
+absence  of this  knowledge, it  is  useful to  compare the  performance of  the
+optimization methods we wish to use  to simple uniform random sampling. Since in
+high dimensional  spaces almost all  uniformly sampled  points would lie  in the
+extremes of the search space, we also  compare the performance of methods with a
+sampling  algorithm   using  Sobol  sequences,  that   produce  low-discrepancy,
+space-filling, samples.
 
 **** Gaussian Process Regression with Expected Improvement
-We used the same two /R/  packages we used in Chapters\nbsp{}[[Experimental Design
-and  Gaussian  Process  Regression  for  CPU  Kernels]]  and  [[Stochastic  Methods,
-Experimental Design, and Gaussian Process  Regression for a Laplacian GPU Kernel]]
-to  implement   the  GPR   algorithm\nbsp{}\cite{roustant2012dicekriging}.   The
-/DiceKriging/  package provided  Gaussian  Processes Regression  fits using  the
-/Matérn/ covariance  kernel, and the  /DiceOptim/ package provided  functions to
-compute  the Expected  Improvement (EI)  metric at  each step,  as described  in
-Section\nbsp{}[[Expected    Improvement   for    Gaussian   Process    Regression]].
-Additionally,           we           used           the           /future.apply/
-package\nbsp{}\cite{bengtsson2020unifying} to run EI computations in parallel.
+We used the same two /R/ packages we used in Chapters\nbsp{}\ref{chap:spapt} and
+\ref{chap:laplacian}           to           implement          the           GPR
+algorithm\nbsp{}\cite{roustant2012dicekriging}.    The   /DiceKriging/   package
+provided  Gaussian  Processes  Regression  fits using  the  /Matérn/  covariance
+kernel, and the  /DiceOptim/ package provided functions to  compute the Expected
+Improvement (EI)  metric at  each step,  as described  in Section\nbsp{}[[Expected
+Improvement  for  Gaussian  Process   Regression]].   Additionally,  we  used  the
+/future.apply/ package\nbsp{}\cite{bengtsson2020unifying} to run EI computations
+in parallel.
 
 ***** Respecting the Size Constraint with Sobol Samples
 We  used  the implementation  of  the  Sobol sequence  low-discrepancy  sampling

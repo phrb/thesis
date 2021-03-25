@@ -14126,7 +14126,7 @@ quantization, across all tested quantization policies.
 
 ***** Respecting the Size Constraint
 To respect  the constraint imposed on  the sum of network  weights, the original
-paper  implementation used  a /Round-Robin/  algorithms to  decrease the  weight
+paper  implementation used  a /round-robin/  algorithms to  decrease the  weight
 bitwidth for each  layer sequentially, starting with the first,  until the total
 sum crossed  the 10  /MB/ threshold.   After analyzing our  results with  RL and
 other methods, our hypothesis for this  implementation choice is that it encodes

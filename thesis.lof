@@ -96,3 +96,4 @@
 \contentsline {figure}{\numberline {14.12}{\ignorespaces Running GPR with the gathered ensemble of GPR experiments. The bottom row shows only the new measurements performed after fitting a Gaussian Process with the ensemble of experiments, and the top row shows all the data that were used\relax }}{157}{figure.caption.123}%
 \contentsline {figure}{\numberline {14.13}{\ignorespaces Optimizing accuracy and weight with the modified baseline Reinforcement Learning method\relax }}{158}{figure.caption.124}%
 \contentsline {figure}{\numberline {14.14}{\ignorespaces Optimizing accuracy and weight with Gaussian Process Regression with EI.\relax }}{158}{figure.caption.125}%
+\addvspace {10\p@ }

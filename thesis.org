@@ -14175,6 +14175,44 @@ configurations found at each iteration, for the 10 repetitions of GPR and RL.
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/neural_net_autotuning/gpr_rl_smooth.pdf]]
 
+Figures\nbsp{}[[fig:rl_results]] and [[fig:gpr_results]] present  four columns with more
+detailed looks  into the quantization  policies explored by  GPR and RL  and the
+corresponding network configuration, in the  first column, total weight size, in
+the  second column,  and /Top5/  and  /Top1/ accuracy  metrics in  the last  two
+columns.
+
+The  first  columns of  both  Figures  show  stacked  /ResNet50/ layers  in  the
+/y/-axis, in similar fashion to  what is presented in Figure\nbsp{}[[fig:resnet50]].
+The /x/-axis, as in all columns, shows each of the 245 measurements. Each square
+represents a  layer at  a given  time, and  is colored  with a  gradient between
+\textcolor{BrickRed}{red} for 1-bit  and \textcolor{OliveGreen}{green} for 8-bit
+quantization. Initial blocks  of measurements for all experiments  consist of 64
+/warm-up/  measurements, generating  visually distinct  starting regions  in all
+images.
+
+The three horizontal dashed lines in the second column, from top to bottom, mark
+the size of  /ResNet50/ with all layers quantized  with 8, 2, and 1  bit for all
+layers. Likewise for the third and fourth columns, the horizontal line marks the
+accuracy of the 8-bit quantized network.  The vertical lines in all columns mark
+the iteration  that found the point  with the highest /Top5/  accuracy, for each
+repetition.
+
+Figure\nbsp{}[[fig:rl_results]]  shows  that the  policies  arrived  at by  RL  have
+different quantization distributions.  Experiments /3/,  /5/, /6/, and /10/ have
+clearly defined red bands in similar  regions, corresponding to layers that were
+quantized with fewer bits.  Fainter bands in the same places can  be seen in the
+other experiments,  but we can  identify other features  as well, such  as green
+bands  or more  uniform orange  policies.  The  original RL  implementation used
+random sampling and  round-robin decrease of weights to obtain  the warm-up set,
+while our  GPR implementation used  Sobol sequences and filtering,  resulting in
+different-looking starting stages.
+
+Figure\nbsp{}[[fig:gpr_results]] shows clear  red bands in the same  top layers, and
+less variable  policy choices than  RL across  experiments. We see  regions that
+abruptly change  from darker to light  greens in experiments /2/,  /4/, /9/, and
+/10/,  which could  be due  to the  algorithm using  a configuration  on the  EI
+backlog and picking a new region of the search space to explore.
+
 #+latex: \clearpage
 
 #+NAME: fig:rl_results

@@ -14287,19 +14287,25 @@ accuracy by  changing them, so  the interpretation  is unclear. Likewise,  it is
 unclear how to interpret  that all indices seem to have  an equally large impact
 when the explored search spaces are added on the right panel, since we see clear
 bands of strongly quantized layers on the GPR results.
-#+CAPTION: Sobol indices computed for the impact on /Top5/ accuracy
-#+CAPTION: of each /ResNet50/ layer, using Sobol samples
-#+ATTR_LATEX: :placement [t] :width .5\textwidth
-[[./img/neural_net_autotuning/sensitivity_top5.pdf]]
 
-#+NAME: fig:sobol_optimization
+#+NAME: fig:sobol_resnet50
 #+CAPTION: Sobol indices computed for the impact on /Top5/ accuracy
-#+CAPTION: of each /ResNet50/ layer, using Sobol samples and
-#+CAPTION: search paths performed by /GPR/
-#+ATTR_LATEX: :placement [t] :width .5\textwidth
-[[./img/neural_net_autotuning/sensitivity_full_top5.pdf]]
+#+CAPTION: of the quantization of each /ResNet50/ layer using only Sobol
+#+CAPTION: samples, in the left panel, and Sobol samples plus the
+#+CAPTION: search spaces explored by GPR, in the right panel
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/neural_net_autotuning/sensitivity.pdf]]
 
-**** Perspective: Optimizing Accuracy and Weight
+**** Perspectives for Further Exploration
+***** Running GPR with All Collected Data
+- GPR can be restarted at any point and easily leverage past executions
+#+NAME: fig:gpr_ensemble
+#+CAPTION: Optimizing accuracy and weight with
+#+CAPTION: the modified baseline Reinforcement Learning method
+#+ATTR_LATEX: :placement [b] :width \textwidth
+[[./img/neural_net_autotuning/gpr_ensemble.png]]
+
+***** Optimizing Accuracy and Weight
 #+NAME: fig:gpr_multi_results
 #+CAPTION: Optimizing accuracy and weight with
 #+CAPTION: the modified baseline Reinforcement Learning method

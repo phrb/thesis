@@ -14229,14 +14229,64 @@ backlog and picking a new region of the search space to explore.
 
 #+latex: \clearpage
 
-**** Running GPR with All Collected Data
-- GPR can be restarted at any point and easily leverage past executions
-**** Measuring the Performance of the GPR Method
-- Training and testing the Net is the bottleneck
-- Model fit times becomes more important with more data
-  - Due to the R implementation? (it uses RCpp)
-***** Detecting Significance with Sobol Indices
-#+NAME: fig:sobol_sampled
+***** Comparing Policy Variability on Different Samples
+#+NAME: fig:variances
+#+CAPTION: Running optimized quantization policies with new
+#+CAPTION: /ImageNet/ samples, with 95% confidence intervals
+#+CAPTION: for the mean estimate. The baseline is the uniform 8-bit
+#+CAPTION: /ResNet50/ quantization
+#+ATTR_LATEX: :placement [t] :width 0.8\textwidth
+[[./img/neural_net_autotuning/variances.pdf]]
+
+Figure\nbsp{}[[fig:variances]]  shows the  result of  running some  of the  policies
+produced by GPR, and  all produced by RL, in new  random /ImageNet/ samples.  We
+wanted to check if the ``homogeneous'' RL experiments, that is, the ones without
+clear red bands, had a different  behavior when pitted against new datasets.  We
+did not see any difference between RL experiments, but we were surprised to find
+that  RL experiments  were consistently  better, and  outside of  the confidence
+intervals,  for   new  datasets,   although  differences  are   not  practically
+significant.  Experiment numbering is the same from Figures\nbsp{}[[fig:rl_results]]
+and [[fig:gpr_results]].
+
+*** Measuring Performance and Detecting Significance for GPR
+In this  section we analyze the  performance of our GPR  implementation, discuss
+our attempts to detect the significance of the quantization impact of each layer
+on /Top5/ accuracy,  and present perspectives on future explorations  of GPR for
+CNN quantization.
+
+**** Performance of the GPR Method
+Figure\nbsp{}[[fig:gpr_performance]] shows the performance  of six executions of the
+GPR  algorithm described  in  Figure\nbsp{}\ref{alg:gpr}, broken  down by  step.
+Most steps of  the algorithm have fixed computational cost,  since Sobol samples
+and neighborhoods have fixed sizes  across the optimization process, but fitting
+the model  takes more  time as the  size of training  data grows.   The accuracy
+measurement time  for a quantization policy  on an /ImageNet/ sample  depends on
+the policy. We did not explore the reasons why this happens, but we suspect that
+training a network using operations with less precision is faster.
+
+#+NAME: fig:gpr_performance
+#+CAPTION: Execution time of the different steps of our GPR
+#+CAPTION: implementation. The initial sample measurement is not shown,
+#+CAPTION: and the /y/-axis is logarithmic
+#+ATTR_LATEX: :placement [t] :width .99\textwidth
+[[./img/neural_net_autotuning/timing_resnet50.pdf]]
+
+**** Detecting Significance with Sobol Indices
+We  used  the  /sensitivity/  /R/  package\nbsp{}\cite{iooss2021sensitivity}  to
+compute Sobol indices,  using Gaussian Process surrogate models,  for the impact
+on /Top5/ of quantizing  each /ResNet50/ layer.  Figure\nbsp{}[[fig:sobol_resnet50]]
+shows the  indices computed for the  ensemble of Sobol samples  we collected, in
+the left  panel, and  for the  Sobol samples plus  the search  space exploration
+performed by GPR, in the right panel.
+
+It is expected that  the first and last layers have the  most impact, since they
+determine the  precision of all computations  that follow, and the  precision of
+the final  output, respectively. The confidence  intervals for the means  of the
+other indices in the Sobol sample all cross  zero but we know that we can impact
+accuracy by  changing them, so  the interpretation  is unclear. Likewise,  it is
+unclear how to interpret  that all indices seem to have  an equally large impact
+when the explored search spaces are added on the right panel, since we see clear
+bands of strongly quantized layers on the GPR results.
 #+CAPTION: Sobol indices computed for the impact on /Top5/ accuracy
 #+CAPTION: of each /ResNet50/ layer, using Sobol samples
 #+ATTR_LATEX: :placement [t] :width .5\textwidth

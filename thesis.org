@@ -13959,8 +13959,9 @@ for the work presented in this chapter  came from a series of visual recognition
 challenges\nbsp{}\cite{russakovsky2015imagenet}.
 
 In  each  repetition  the  experiments  discussed  in  Section\nbsp{}[[Performance
-Evaluation]] we used  distinct subset of 30 thousand uniformly  sampled images, of
-which 20 thousand were used for training and 10 thousand for validation.
+Evaluation  and Comparison]]  we used  distinct  subset of  30 thousand  uniformly
+sampled images, of which 20 thousand were  used for training and 10 thousand for
+validation.
 
 *** Search Space and Objective Function
 The search space  we explored consisted of 54 convolutional  layers, that is, 54

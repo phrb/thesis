@@ -14297,12 +14297,33 @@ bands of strongly quantized layers on the GPR results.
 [[./img/neural_net_autotuning/sensitivity.pdf]]
 
 **** Perspectives for Further Exploration
-***** Running GPR with All Collected Data
-- GPR can be restarted at any point and easily leverage past executions
+***** Running GPR with Data from Past Experiments
+An  interesting feature  of  Gaussian Process  Regression is  that,  due to  its
+stability, we  can leverage past executions  by keeping only a  /.csv/ file with
+the previous measurements.  It is more expensive to relaunch GPR with each added
+past exploration,  since we need to  fit a model for  more data, but the  way in
+which new experiments are picked does not change.
+
+The  top row  of Figure\nbsp{}[[fig:gpr_ensemble]]  shows  a GPR  instance that  was
+launched with the ensemble  of data from all past GPR  experiments.  On the last
+two columns we can  see each peak in accuracy, corresponding to  the end of each
+experiment from Figure\nbsp{}[[fig:gpr_results]]. The bottom  row shows the same GPR
+instance, but  focuses only on  the experiments  picked after fitting  the model
+with the data ensemble.
+
+We see that all newly picked configurations have around 95% /Top5/ accuracy, and
+that accuracy seems  to continue to increase. A long-running  optimizer could be
+continuously  fed  with   new  experiments  as  tests  are   made,  even  during
+prototyping, and  could be used  to produce  configurations similar to  the best
+known  ones, which  could help  understanding  the impact  of each  controllable
+parameter.
+
 #+NAME: fig:gpr_ensemble
-#+CAPTION: Optimizing accuracy and weight with
-#+CAPTION: the modified baseline Reinforcement Learning method
-#+ATTR_LATEX: :placement [b] :width \textwidth
+#+CAPTION: Running GPR with the gathered ensemble of GPR experiments.
+#+CAPTION: The bottom row shows only the new measurements performed after
+#+CAPTION: fitting a Gaussian Process with the ensemble of experiments, and the top
+#+CAPTION: row shows all the data that were used
+#+ATTR_LATEX: :placement [h] :width \textwidth
 [[./img/neural_net_autotuning/gpr_ensemble.png]]
 
 ***** Optimizing Accuracy and Weight

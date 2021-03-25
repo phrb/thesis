@@ -14379,14 +14379,33 @@ generate much smaller networks with a manageable compromise in accuracy.
 :CUSTOM_ID: sec:gprnn-summary
 :END:
 
-- Overfitting for both methods:
-  - Variability of optimizations, Robustness
-- Extensibility:
-  - We can apply the same method with a different
-    objective function and still get sensible results
-- Restarting GPR with past experiments
+This  chapter  presented an  application  of  Gaussian Process  Regression  with
+Expected  Improvement to  the problem  of finding  the smallest  mixed-precision
+quantization policies for the layers of a neural network, subject to keeping the
+accuracy comparable to the 8-bit per layer network version, and the total weight
+size below 10 /MB/.
+
+We compared our GPR approach with  a baseline Reinforcement Learning method, and
+with  uniform  and  space-filling  samplers.   The  sampling  methods  performed
+relatively well, but worse than  the more complex approaches. Our implementation
+produced  policies  with  comparable  accuracy  to  the  Reinforcement  Learning
+approach, with the  advantage of more consistent explorations.
+
+Although our  attempts to estimate  Sobol indices were inconclusive,  we believe
+that the  choices made  by the GPR  method are overall  easier to  interpret and
+understand, in comparison with the results produced by the RL.
+
+The  GPR method  was  also  capable of  leveraging  past  executions to  produce
+policies with similar accuracy. Additionally, we  argue that GPR was more robust
+to the addition  of the total weight size to  the objective function. Accurately
+estimating  Sobol  indices,  performing multi-objective  GPR  optimization,  and
+learning more about high-performing configurations  using past data are possibly
+interesting paths that we could point to during this chapter, but that we do not
+explore in this thesis.
 
 * Conclusion
+** Conclusion
+** References                                                       :ignore:
 #+begin_export latex
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography/references}

@@ -7988,22 +7988,19 @@ Further efforts in this direction were  dedicated to describe precisely what can
 be learned about  search spaces from the application of  the methodology, and to
 refine  the  differentiation  of  the approach  for  the  sometimes  conflicting
 objectives of model  assessment and prediction. These  discussions are presented
-in Chapter\nbsp{}[[Stochastic  Methods, Experimental Design, and  Gaussian Process
-Regression for a Laplacian GPU Kernel]].
+in Chapter\nbsp{}\ref{chap:laplacian}.
 
 Because the  Design of Experiments  methodology requires the specification  of a
 class of initial performance models, the methodology can sometimes achieve worse
 prediction  capabilities  when  there  is considerable  uncertainty  on  initial
-assumptions  about  the  underlying  relationships.   Chapter\nbsp{}[[Experimental
-Design  and  Gaussian  Process  Regression  for CPU  Kernels]]  and  describe  the
-application  to autotuning  of  Gaussian Process  Regression,  an approach  that
-trades  some explanatory  power for  a much  larger and  more flexible  class of
-underlying models.   We also evaluate  the performance  of this approach  on the
-source-to-source transformation  problem from  Chapter\nbsp{}[[Stochastic Methods,
-Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]],
-and  on  larger  autotuning  problem  on  the  mixed-precision  quantization  of
-/Convolutional Neural  Network/ (CNN) layers, in  Chapter\nbsp{}[[Gaussian Process
-Regression for Mixed-Precision Quantization in Convolutional Neural Networks]].
+assumptions         about          the         underlying         relationships.
+Chapter\nbsp{}\ref{chap:laplacian} and describe the application to autotuning of
+Gaussian Process Regression, an approach  that trades some explanatory power for
+a much  larger and more flexible  class of underlying models.   We also evaluate
+the performance of this approach  on the source-to-source transformation problem
+from Chapter\nbsp{}\ref{chap:laplacian}, and on larger autotuning problem on the
+mixed-precision quantization of /Convolutional  Neural Network/ (CNN) layers, in
+Chapter\nbsp{}\ref{chap:quantization}.
 
 #+begin_export latex
 \todo[inline]{Describe thesis structure}
@@ -9509,8 +9506,7 @@ technique to reduce reliance on starting conditions.
 Despite the high cost of exploration and strong hypotheses, methods for function
 minimization are used for autotuning  and can indeed achieve interesting results
 in  certain  problems.  We  will  present  our  results  with these  methods  on
-Chapters\nbsp{}[[Stochastic Methods and Screening  for CUDA Kernels]] and [[Stochastic
-Methods  for High-Level  Synthesis  FPGA  Kernels]], where  we  also review  their
+Chapters\nbsp{}\ref{chap:cuda} and  \ref{chap:fpga}, where we also  review their
 application  to  autotuning problems  in  different  domains.  The  explorations
 performed by these  methods are not structured in a  way that favors statistical
 analysis.   We will  postpone the  discussion of  how to  obtain well-structured
@@ -11264,7 +11260,10 @@ Sketch:
 *** Introduction
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
-** Stochastic Methods and Screening for CUDA Kernels
+** Compiler Parameters for CUDA Kernels
+:PROPERTIES:
+:CUSTOM_ID: chap:cuda
+:END:
 A Graphics Processing Unit (GPU) is a parallel computing coprocessor specialized
 in accelerating vector  operations such as graphics  rendering.  General Purpose
 computing  on GPUs  (GPGPU)  depends on  accessible  programming interfaces  for
@@ -11925,11 +11924,13 @@ simultaneously  allowing  the  identification   of  the  flags  responsible  for
 performance improvements. Future work in  this direction will explore the impact
 of adding host  compiler optimizations and kernel-specific  parameters.  In this
 larger search  space it would  be more interesting  to employ the  more flexible
-Optimal  Design   methods  we  discuss  in   Chapters\nbsp{}[[Stochastic  Methods,
-Experimental Design, and Gaussian Process  Regression for a Laplacian GPU Kernel]]
-and [[Experimental Design and Gaussian Process Regression for CPU Kernels]].
+Optimal  Design methods  we discuss  in Chapters\nbsp{}\ref{chap:laplacian}  and
+\ref{chap:spapt}.
 
-** Stochastic Methods for High-Level Synthesis FPGA Kernels
+** High-Level Synthesis for FPGA Kernels
+:PROPERTIES:
+:CUSTOM_ID: chap:fpga
+:END:
 A Field-Programmable Gate Array (FPGA)  is a reprogrammable circuit that enables
 writing  specialized  hardware  specifications  for a  variety  of  applications
 without  changing  the  underlying  chip.   In  recent  years  High  Performance
@@ -12452,12 +12453,11 @@ autotuning approach we used in this problem, even with distributed measurements,
 because the stochastic methods implemented  in OpenTuner reach better results if
 longer explorations of  the search space are performed.   An Experimental Design
 approach such as  the one we later  developed and applied to  other problems, as
-described in  Chapter\nbsp{}[[Experimental Design and Gaussian  Process Regression
-for  CPU Kernels]],  would be  ideal  for this  type  of problem.   Since the  HLS
-toolchain used in this study became proprietary software and FPGA programming is
-still  a  very  closed  domain,  requiring paid  licenses  and  still  expensive
-hardware,  we did  not  have the  opportunity  to revisit  this  study with  the
-Experimental Design methods we later studied.
+described in Chapter\nbsp{}\ref{chap:laplacian}, would be ideal for this type of
+problem.  Since the HLS toolchain used in this study became proprietary software
+and FPGA programming is still a  very closed domain, requiring paid licenses and
+still expensive hardware, we did not  have the opportunity to revisit this study
+with the Experimental Design methods we later studied.
 
 Future work in this direction will study the impact of different starting points
 on the  final tuned values in  each optimization scenario, for  example we could
@@ -12468,7 +12468,10 @@ autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 
-** Stochastic Methods, Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel
+** Parameters for an OpenCL Laplacian Kernel
+:PROPERTIES:
+:CUSTOM_ID: chap:laplacian
+:END:
 This  chapter introduces  our Experimental  Design approach  to autotuning,  and
 presents  an  application   were  we  continued  the   exploration,  started  by
 Masnada\nbsp{}\cite{masnada2016semi},  of performance  optimization methods  for
@@ -12484,9 +12487,8 @@ Regression.   Our  transparent  and parsimonious  Experimental  Design  approach
 achieved  the  most consistent  results  across  the  methods we  tested,  which
 motivated searching  for a more  comprehensive set  of applications in  which we
 could evaluate the performance of our approach. This more comprehensive study is
-described in  Chapter\nbsp{}[[Experimental Design and Gaussian  Process Regression
-for CPU Kernels]].  The initial steps of the studies presented in this chapter and
-the      next      were      published     together      in      the      CCGRID
+described in  Chapter\nbsp{}\ref{chap:spapt}.  The initial steps  of the studies
+presented in  this chapter and  the next were  published together in  the CCGRID
 conference\nbsp{}\cite{bruel2019autotuning}.
 
 The  remainder  of this  chapter  is  organized as  follows.   Section\nbsp{}[[The
@@ -12818,11 +12820,10 @@ a reduction of problem dimension by  eliminating factors and decreasing the size
 of the search space. If we  identified significant parameters correctly, we will
 have restricted further search to better regions.
 
-In this  chapter and in  Chapter\nbsp{}[[Experimental Design and  Gaussian Process
-Regression  for CPU  Kernels]] we  evaluate the  performance of  this Experimental
-Design  approach to  autotuning  in different  applications.   The next  section
-discusses the  implementation of a Laplacian  kernel for GPUs and  the resulting
-search space.
+In  this   chapter  and   in  Chapter\nbsp{}\ref{chap:spapt}  we   evaluate  the
+performance  of this  Experimental Design  approach to  autotuning in  different
+applications.   The next  section discusses  the implementation  of a  Laplacian
+kernel for GPUs and the resulting search space.
 
 *** Building a Performance Model
 This section  describes the search space  exposed by the BOAST  Laplacian kernel
@@ -13003,18 +13004,17 @@ The  performance  model described  in  the  previous  section  was used  by  the
 Iterative Linear Model (LM) and the Quantile Regression (QR) methods, as well as
 by   our   approach,  named   /D-Optimal   Designs,   with  Linear   Model   and
 heteroscedasticity  correction  Transform/  (DLMT).   The LM  method  is  almost
-identical to  our approach,  described in Chapter\nbsp{}[[Experimental  Design and
-Gaussian Process  Regression for CPU  Kernels]], but  it uses a  fixed-size random
-sample of  the search space  instead of generating D-Optimal  designs. Likewise,
-the QR  method used  random samples  and Quantile Regression,  in an  attempt to
-decrease  the impact  of  noisy outliers  in the  final  fit.  Additionally,  we
-compared the performance of our approach with nine other methods, namely uniform
-Random Sampling (RS), Latin Hypercube Sampling (LHS), Greedy Search (GS), Greedy
-Search with Restart (GSR), and a Genetic Algorithm (GA).  At a later date, after
-the   CCGRID  publication,   we  added   to  this   performance  comparison   an
-implementation  of   Gaussian  Process  Regression  with   Expected  Improvement
-acquisition function (GPR).  Each method performed at most 125 measurements over
-1000 repetitions, without user intervention.
+identical to our approach,  described in Chapter\nbsp{}\ref{chap:laplacian}, but
+it uses  a fixed-size random  sample of the  search space instead  of generating
+D-Optimal  designs. Likewise,  the QR  method used  random samples  and Quantile
+Regression, in an attempt to decrease the  impact of noisy outliers in the final
+fit.  Additionally, we compared the performance  of our approach with nine other
+methods, namely  uniform Random Sampling  (RS), Latin Hypercube  Sampling (LHS),
+Greedy Search  (GS), Greedy Search with  Restart (GSR), and a  Genetic Algorithm
+(GA).   At  a  later date,  after  the  CCGRID  publication,  we added  to  this
+performance  comparison an  implementation of  Gaussian Process  Regression with
+Expected Improvement acquisition function (GPR).   Each method performed at most
+125 measurements over 1000 repetitions, without user intervention.
 
 Since we measured  the entire valid search  space for this kernel,  we could use
 the /slowdown/  relative to the  global optimum  to compare the  performances of
@@ -13165,9 +13165,9 @@ This  kernel  provided  ideal  conditions  for using  our  approach,  where  the
 performance model is approximately known and  the complete valid search space is
 small enough to be  used for prediction. The global optimum  also appears to not
 be isolated in a  region of points with bad performance,  since our approach was
-able to exploit search space geometry.  In Chapter\nbsp{}[[Experimental Design and
-Gaussian  Process Regression  for CPU  Kernels]] we  present a  more comprehensive
-performance evaluation of our approach in a larger benchmark suite.
+able  to exploit  search space  geometry.  In  Chapter\nbsp{}\ref{chap:spapt} we
+present a more comprehensive performance evaluation  of our approach in a larger
+benchmark suite.
 
 *** Summary
 :PROPERTIES:
@@ -13199,7 +13199,10 @@ spaces for autotuning,  composed of high-interest computing  kernels, that could
 be  used  for  the  development  and  comparison  of  optimization  methods  for
 autotuning.
 
-** Experimental Design and Gaussian Process Regression for CPU Kernels
+** Parameters for SPAPT Kernels and Orio
+:PROPERTIES:
+:CUSTOM_ID: chap:spapt
+:END:
 This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from
 the SPAPT\nbsp{}\cite{balaprakash2012spapt} benchmark suite.
@@ -13820,15 +13823,14 @@ performance.
 A possible  future direction  for exploring the  potential of  this Experimental
 Design  approach could  involve developing  a  lower level  set of  configurable
 kernels, where performance measurements are always tied to a theoretical peak or
-to a known global optimum.  As we discussed in Chapter\nbsp{}[[Stochastic Methods,
-Experimental Design, and Gaussian Process Regression for a Laplacian GPU Kernel]],
-knowing the  global optimum  helps evaluating the  performance of  an autotuning
-approach.
+to     a      known     global     optimum.      As      we     discussed     in
+Chapter\nbsp{}\ref{chap:laplacian}, knowing the  global optimum helps evaluating
+the performance of an autotuning approach.
 
-** Gaussian Process Regression for Mixed-Precision Quantization in Convolutional Neural Networks
-#+begin_export latex
-\todo[inline]{TODO: Fill in the sketched sections below}
-#+end_export
+** Mixed-Precision Quantization for /ResNet50/
+:PROPERTIES:
+:CUSTOM_ID: chap:quantization
+:END:
 
 This  chapter  presents  an  application of  Gaussian  Process  Regression  with
 Expected Improvement  acquisition function (GPR)  to bit precision tuning  for a
@@ -13850,16 +13852,18 @@ suited to embedded and custom-built hardware.   We expanded the initial study in
 the last year  of this thesis, still in collaboration  with HPE researchers, but
 this work is still unpublished at the time of writing.
 
-The remainder of this chapter is organized as follows.  Section\nbsp{}[[Autotuning
-Bit   Precision  for   Convolutional   Neural  Networks]]   describes  the   /HAQ/
-framework\nbsp{}\cite{wang2019haq} for  mixed-precision bit  quantization, which
-we  used to  change the  bitwidth of  network layers,  and which  implements the
-baseline  RL   approach.   Section\nbsp{}[[ResNet50  and  ImageNet]]   presents  the
-/ResNet50/  network   used  in  our   experiments  and  the   ImageNet  dataset.
-Section\nbsp{}[[Optimization Methods]]  discusses the implementation details  of the
-methods we  compared, and  Section\nbsp{}[[Performance Evaluation]]  evaluates their
-performance with respect to  network accuracy.  Section\nbsp{}[[Summary]] summarizes
-the discussion and concludes the chapter.
+The    remainder     of    this    chapter    is     organized    as    follows.
+Section\nbsp{}[[Autotuning  Bit Precision  for  Convolutional Neural  Networks]]
+describes the  /HAQ/ framework\nbsp{}\cite{wang2019haq} for  mixed-precision bit
+quantization, which we used to change  the bitwidth of network layers, and which
+implements  the  baseline  RL  approach.   Section\nbsp{}[[ResNet50  and  ImageNet]]
+presents  the  /ResNet50/ network  used  in  our  experiments and  the  ImageNet
+dataset.   Section\nbsp{}[[Optimization   Methods]]  discusses   the  implementation
+details of the methods we compared, and Section\nbsp{}[[Performance Evaluation and
+Comparison]]  evaluates  their  performance  with  respect  to  network  accuracy.
+Section\nbsp{}[[Measuring Performance and Detecting  Significance for GPR]] presents
+a   more   detailed    assessment   of   the   GPR    method   we   implemented.
+Section\nbsp{}[[Summary]] summarizes the discussion and concludes the chapter.
 
 *** Autotuning Bit Precision for Convolutional Neural Networks
 A Neural Network is composed of interconnected layers of "neurons".  Each neuron

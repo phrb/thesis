@@ -11935,7 +11935,7 @@ larger search  space it would  be more interesting  to employ the  more flexible
 Optimal  Design methods  we discuss  in Chapters\nbsp{}\ref{chap:laplacian}  and
 \ref{chap:spapt}.
 
-** High-Level Synthesis for FPGA Kernels
+** High-Level Synthesis Kernels for FPGAs
 :PROPERTIES:
 :CUSTOM_ID: chap:fpga
 :END:

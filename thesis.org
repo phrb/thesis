@@ -14335,7 +14335,7 @@ parameter.
 [[./img/neural_net_autotuning/gpr_ensemble.png]]
 
 ***** Optimizing Accuracy and Weight
-We run preliminary experiments with adding  the total weight size as a component
+We ran preliminary experiments with adding  the total weight size as a component
 of  the performance  metric for  GPR and  RL, but  this made  it unclear  how to
 compare the  GPR results to the  original RL implementation, because  to add the
 new  metric we  removed the  round-robin weight  decrease used  in the  original

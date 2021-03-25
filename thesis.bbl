@@ -891,11 +891,6 @@ E.-G. Talbi, ``Automated design of deep neural networks: A survey and unified
   metrics for PyTorch, Tensorflow, and Keras},''
   \url{https://github.com/waleedka/hiddenlayer}, accessed: 24 March 2021.
 
-\bibitem{lillicrap2015continuous}
-T.~P. Lillicrap, J.~J. Hunt, A.~Pritzel, N.~Heess, T.~Erez, Y.~Tassa,
-  D.~Silver, and D.~Wierstra, ``Continuous control with deep reinforcement
-  learning,'' \emph{arXiv preprint arXiv:1509.02971}, 2015.
-
 \bibitem{bengtsson2020unifying}
 \BIBentryALTinterwordspacing
 H.~Bengtsson, ``A unifying framework for parallel and distributed processing in
@@ -906,5 +901,15 @@ H.~Bengtsson, ``A unifying framework for parallel and distributed processing in
 \bibitem{dutang2020randtoolbox}
 D.~Christophe and S.~Petr, \emph{randtoolbox: Generating and Testing Random
   Numbers}, 2020, r package version 1.30.1.
+
+\bibitem{lillicrap2015continuous}
+T.~P. Lillicrap, J.~J. Hunt, A.~Pritzel, N.~Heess, T.~Erez, Y.~Tassa,
+  D.~Silver, and D.~Wierstra, ``Continuous control with deep reinforcement
+  learning,'' \emph{arXiv preprint arXiv:1509.02971}, 2015.
+
+\bibitem{iooss2021sensitivity}
+``{sensitivity: Global Sensitivity Analysis of Model Outputs},''
+  \url{https://cran.r-project.org/web/packages/sensitivity/index.html},
+  accessed: 25 March 2021.
 
 \end{thebibliography}

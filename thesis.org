@@ -14293,7 +14293,7 @@ bands of strongly quantized layers on the GPR results.
 #+CAPTION: of the quantization of each /ResNet50/ layer using only Sobol
 #+CAPTION: samples, in the left panel, and Sobol samples plus the
 #+CAPTION: search spaces explored by GPR, in the right panel
-#+ATTR_LATEX: :placement [t] :width \textwidth
+#+ATTR_LATEX: :placement [h] :width \textwidth
 [[./img/neural_net_autotuning/sensitivity.pdf]]
 
 **** Perspectives for Further Exploration

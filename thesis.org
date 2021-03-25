@@ -736,7 +736,10 @@ context (where EI is more meaningful).
   - how to know whether the geometry hypothesis we make are sound in
     an unknown space ?
   - ...
-*** Use Case 1: GPU compiling flags
+*** TODO Use Case 1: GPU compiling flags
+:LOGBOOK:
+- State "TODO"       from              [2021-03-25 Thu 20:27]
+:END:
 - mix binaire/numérique, opentuner (multi-armed to select the right
   stochastic descent algorithm)
 - Tried to use clustering to identify significant parameters

@@ -14263,6 +14263,10 @@ backlog and picking a new region of the search space to explore.
 [[./img/neural_net_autotuning/gpr_top5_size.png]]
 
 *** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:gprnn-summary
+:END:
+
 - Overfitting for both methods:
   - Variability of optimizations, Robustness
 - Extensibility:
@@ -14270,9 +14274,6 @@ backlog and picking a new region of the search space to explore.
     objective function and still get sensible results
 - Restarting GPR with past experiments
 
-:PROPERTIES:
-:CUSTOM_ID: sec:gprnn-summary
-:END:
 * Conclusion
 #+begin_export latex
 \bibliographystyle{IEEEtran}

@@ -9678,7 +9678,7 @@ uncertainty  in  measurements  due  to  error propagates  to  the  linear  model
 surrogate, and we  can use this uncertainty to compute  confidence intervals for
 the  surrogate's  predictions.  We  will  use  the  fact  that the  variance  of
 $\hat{\theta}$ depends  on $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ when  we discuss
-Optimal Design on Section\nbsp{}[[Optimal Design]].
+Optimal Design on Section\nbsp{}\ref{sec:optimal}.
 
 An interesting interpretation  of the OLS estimator is that  it approximates the
 observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
@@ -9692,9 +9692,10 @@ projection matrix
 #+end_export
 The  difference   between  $\mathbf{y}$   and  its  projection   $H\mathbf{y}  =
 \hat{\mathbf{y}}$ is  the model  error $\varepsilon$,  orthogonal to  the column
-space of $\mathbf{X}$, as represented in Figure\nbsp{}[[fig:regression-projection]].
-The  OLS  estimator can  also  be  derived as  a  special  case of  the  Maximum
-Likelihood Estimator with $\varepsilon \sim \mathcal{N}(\mu,\sigma^2)$.
+space         of         $\mathbf{X}$,         as         represented         in
+Figure\nbsp{}[[fig:regression-projection]].   The  OLS  estimator  can  also  be
+derived as a special case of  the Maximum Likelihood Estimator with $\varepsilon
+\sim \mathcal{N}(\mu,\sigma^2)$.
 
 #+NAME: fig:regression-projection
 #+ATTR_LATEX: :width 0.48\textwidth :placement [t]
@@ -10635,10 +10636,10 @@ $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $d_1$ & $d_2$ & 
 #+END_EXPORT
 
 So    far,    we     have    performed    steps    1,    2,     and    3    from
-Figure\nbsp{}[[fig:doe_anova_strategy]].    We  use   our   initial  assumption   in
+Figure\nbsp{}[[fig:doe_anova_strategy]].   We  use  our  initial  assumption  in
 Equation\nbsp{}\eqref{eq:linear_assumption}  to  identify the  most  significant
 factors   by    performing   an   ANOVA    test,   which   is   step    5   from
-Figure\nbsp{}[[fig:doe_anova_strategy]].      The    results     are    shown     in
+Figure\nbsp{}[[fig:doe_anova_strategy]].     The    results   are    shown    in
 Table\nbsp{}\ref{tab:anova_linear}, where  the /significance/ of each  factor is
 interpreted    from    the    F-test    and    $\text{Pr}(>\text{F})$    values.
 Table\nbsp{}\ref{tab:anova_linear}  uses  ``$*$'',  as   is  convention  in  the
@@ -10647,7 +10648,7 @@ Table\nbsp{}\ref{tab:anova_linear}  uses  ``$*$'',  as   is  convention  in  the
 We      see     on      Table\nbsp{}\ref{tab:anova_linear}     that      factors
 $\left\{x_3,x_5,x_7,x_8\right\}$ have at least  one ``$*$'' of significance. For
 the purpose of  this example, this is  sufficient reason to include  them in our
-linear  model  for  the  next  step.  We  decide  as  well  to  discard  factors
+linear  model  for  the  next  step.   We decide  as  well  to  discard  factors
 $\left\{x_2,x_4,x_6\right\}$ from our  model, due to their  low significance. We
 see that factor $x_1$ has a significance mark of ``\cdot'', but comparing F-test
 and $\text{Pr}(>\text{F})$  values we decide  that they are fairly  smaller than
@@ -10738,8 +10739,8 @@ $x_1$ & 8.382 & 0.063 & $\cdot$ \\
 \end{table}
 #+END_EXPORT
 
-Moving forward to  steps 6, 7, and 8  in Figure\nbsp{}[[fig:doe_anova_strategy]], we
-will build  a linear  model using  factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$,
+Moving forward to steps 6,  7, and 8 in Figure\nbsp{}[[fig:doe_anova_strategy]],
+we will build a linear model using factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$,
 fit the model using  the values of $Y$ we obtained when  running our design, and
 use model  coefficients to predict the  levels of each factor  that minimize the
 real response. We  can do that because these factors  are numerical, even though
@@ -10830,21 +10831,22 @@ print(x,
 #+END_EXPORT
 
 Using 12 measurements and a simple linear model, the predicted best value of $Y$
-was around $10\times$  larger than the global optimum. Note  that the model predicted
-the correct  levels for  $x_3$ and $x_5$,  and almost for  $x_7$. The  linear model
-predicted wrong levels  for $x_1$, perhaps due to this  factor's interaction with
-$x_3$, and  for $x_8$.  Arguably, it  would be impossible  to predict  the correct
-level for $x_8$ using this linear model, since a quadratic term composes the true
-formula  of $Y$.  As we  showed in  Figure\nbsp{}[[fig:sampling_comparison]], a  D-Optimal
-design using a  linear model could detect the significance  of a quadratic term,
-but the resulting regression will often lead to the wrong level.
+was  around $10\times$  larger  than the  global optimum.  Note  that the  model
+predicted the  correct levels  for $x_3$  and $x_5$, and  almost for  $x_7$. The
+linear model  predicted wrong  levels for  $x_1$, perhaps  due to  this factor's
+interaction with  $x_3$, and  for $x_8$.   Arguably, it  would be  impossible to
+predict the correct  level for $x_8$ using this linear  model, since a quadratic
+term    composes   the    true   formula    of   $Y$.     As   we    showed   in
+Figure\nbsp{}[[fig:sampling_comparison]],  a  D-Optimal  design using  a  linear
+model  could detect  the significance  of a  quadratic term,  but the  resulting
+regression will often lead to the wrong level.
 
 We  can improve  upon this  result if  we introduce  some information  about the
 problem and  use a more  flexible design  construction technique. Next,  we will
 discuss the  construction of  efficient designs using  problem-specific formulas
 and continue the optimization of our example.
 
-*** Optimal Design
+*** Increasing Flexibility: Optimal Design
 :PROPERTIES:
 :CUSTOM_ID: sec:optimal
 :END:
@@ -14102,8 +14104,8 @@ We used the same two /R/ packages we used in Chapters\nbsp{}\ref{chap:spapt} and
 algorithm\nbsp{}\cite{roustant2012dicekriging}.    The   /DiceKriging/   package
 provided  Gaussian  Processes  Regression  fits using  the  /Matérn/  covariance
 kernel, and the  /DiceOptim/ package provided functions to  compute the Expected
-Improvement (EI)  metric at  each step,  as described  in Section\nbsp{}[[Expected
-Improvement  for  Gaussian  Process   Regression]].   Additionally,  we  used  the
+Improvement (EI) metric  at each step, as  described in Section\nbsp{}[[Expected
+Improvement  for  Gaussian  Process  Regression]].  Additionally,  we  used  the
 /future.apply/ package\nbsp{}\cite{bengtsson2020unifying} to run EI computations
 in parallel.
 
@@ -14111,7 +14113,7 @@ in parallel.
 We  used  the implementation  of  the  Sobol sequence  low-discrepancy  sampling
 algorithm from  the /randtoolbox/\nbsp{}\cite{dutang2020randtoolbox}/R/ package.
 Low-discrepancy   sampling  and   space-filling   designs   were  discussed   in
-Section\nbsp{}[[Space-Filling Designs]].   To ensure all samples  respected the size
+Section\nbsp{}\ref{sec:filling}.   To  ensure  all samples  respected  the  size
 constraint,  we  progressively  doubled  the  sample  size  until  enough  valid
 configurations were produced.
 

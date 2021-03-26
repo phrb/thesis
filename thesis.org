@@ -10407,7 +10407,13 @@ efficient designs  for factors with arbitrary  numbers and types of  levels, and
 present /D-Optimal/ designs, the method used in this our approach.
 
 *** 2-Level Factorial Designs
+:PROPERTIES:
+:CUSTOM_ID: sec:factorial
+:END:
 *** Screening Designs
+:PROPERTIES:
+:CUSTOM_ID: sec:screening
+:END:
 - Super efficient but very limited
 **** Plackett-Burman Designs
 ***** Paley Construction of Hadamard Matrices
@@ -10797,6 +10803,9 @@ discuss the  construction of  efficient designs using  problem-specific formulas
 and continue the optimization of our example.
 
 *** Optimal Design
+:PROPERTIES:
+:CUSTOM_ID: sec:optimal
+:END:
 - Extensive theory development
   - General equivalence of design criteria
 
@@ -11122,6 +11131,9 @@ Figure\nbsp{}[[fig:doe_anova_strategy]].   In  the  next  section  we  evaluate 
 performance of our ED approach in two scenarios.
 
 *** Space-Filling Designs
+:PROPERTIES:
+:CUSTOM_ID: sec:filling
+:END:
 - Not very  efficient for parameter  estimate but good  to evaluate the  lack of
   fit.
 
@@ -11131,6 +11143,9 @@ performance of our ED approach in two scenarios.
   - Sobol Sequences
 
 *** Comparing Sampling Strategies
+:PROPERTIES:
+:CUSTOM_ID: sec:comparing
+:END:
 #+begin_export latex
 \todo[inline]{TODO: Adapt this section from the CCGRID paper.}
 #+end_export
@@ -11170,6 +11185,9 @@ interesting  subspaces.  In  the  next  section  we  describe  our  approach  to
 autotuning based on the ED methodology.
 
 *** Summary
+:PROPERTIES:
+:CUSTOM_ID: sec:summary-ed
+:END:
 - Designs to obtain good-quality parameter estimates
   - Screening and D-opt for LM
   - SFD for GP

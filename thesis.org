@@ -10382,16 +10382,22 @@ experimental research, such as the studies we present in this thesis.
 #+latex: \todo[inline]{Add reference to PhD thesis from Rasmussen's student}
 
 *** Summary
-#+begin_export latex
-\todo[inline]{A couple of paragraphs to Wrap up the Learning/Surrogates Chapter}
-#+end_export
+This chapter presented Linear and Gaussian Process Regression, two large classes
+of  surrogate  model  construction  methods.   From the  point  of  view  of  an
+experimenter, a  practical difference  between these two  classes lies  in their
+balance  of  interpretability  and  generality.  Linear  models  are  easier  to
+interpret,  they have  high bias  and  low variance,  and  can be  used to  test
+hypotheses    about    search    space     structure,    or    leverage    known
+relationships. Gaussian  Process Regression is  hard to interpret, has  low bias
+and high variance, and  can be used to model search spaces for  which it is hard
+to elaborate  clear hypotheses, or where  simple structure does not  exist to be
+exploited.
 
-Sketch:
-
-- Two big classes of models.  Generality vs. interpretability. Yet everything we
-  mentioned assumes X  is given, sampled from observations. In  our contects, We
-  can  choose which  X to  test, either  to test  the model,  or to  improve its
-  quality, or to find a "good" value in our space $\mathcal{X}$.
+In this chapter we assumed that the design matrix $\mathbf{X}$ is a given, or is
+sampled from a fixed  set of observations.  In the next  chapter we will discuss
+methods of Experimental Design that  enable the construction of carefully chosen
+design matrices  for different purposes,  such as testing  hypotheses, improving
+model fits, or minimizing the objective function.
 
 ** Design of Experiments
 #+begin_export latex

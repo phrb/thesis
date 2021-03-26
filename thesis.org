@@ -7912,11 +7912,8 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 : Using cache found in /home/phrb/.cache/torch/hub/pytorch_vision_v0.6.0
 : /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
 :   warnings.warn("ONNX export mode is set to " + training_mode +
-* Contents and Lists of Figures, Tables                              :ignore:
+* Table of Contents                                                  :ignore:
 #+TOC: headlines 5
-#+TOC: tables
-#+latex: \listoffigures{}
-#+TOC: figures
 * Historical Hardware Design Trends and Consequences for Code Optimization
 ** Introduction
 Computer  performance has  sustained exponential  increases over  the last  half
@@ -14418,8 +14415,12 @@ explore in this thesis.
 
 * Conclusion
 ** Conclusion
-** References                                                       :ignore:
+* References                                                         :ignore:
 #+begin_export latex
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography/references}
 #+end_export
+* Lists of Figures, Tables                                           :ignore:
+#+TOC: tables
+#+latex: \listoffigures{}
+#+TOC: figures

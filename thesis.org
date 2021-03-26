@@ -705,14 +705,15 @@ value in our space $\mathcal{X}$.
 
 **** Screening
 Super efficient but very limited
+- adapt example from ccgrid
 **** Optimal designs
-A "flexible" screening: allows to include non-linear terms,
-interactions, etc. if needed.
+A  "flexible"  screening:  allows  to include  non-linear  terms,  interactions,
+etc. if needed.
 
-Awesome but if a parameter was not included in the model or if the
-model is too simple (e.g. only comprised a linear term where a
-quadratic one would have been needed, or an important interaction was
-not included), we won't be able to detect it (lack of fit).
+Awesome but if a parameter was not included  in the model or if the model is too
+simple (e.g. only comprised a linear term  where a quadratic one would have been
+needed,  or an  important interaction  was not  included), we  won't be  able to
+detect it (lack of fit).
 **** Space-filling Designs
 Not very efficient for parameter estimate but good to evaluate the
 lack of fit.

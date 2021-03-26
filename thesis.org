@@ -10368,11 +10368,18 @@ construct  the experiment  matrices  containing all  samples,  and computes  the
 sensitivity  indices  using the  estimators  described  in  the book  and  later
 reviewed and summarized by the authors\nbsp{}\cite{saltelli2010variance}.
 
-
 **** Gaussian Processes: Flexible but Hard to Interpret Surrogates
-#+begin_export latex
-\todo[inline]{A couple of paragraphs to wrap the GPR section}
-#+end_export
+Gaussian Process Regression is a nonparametric learning method with low bias and
+high  variance,  that  can  produce   surrogate  models  capable  of  describing
+observations with  essentially arbitrary precision, without  entirely committing
+to structure outside of observations.  Although  we can attempt to interpret the
+results produced by a Gaussian Process fit  with Sobol indices, it is not always
+possible or viable to collect sufficient data to reach accurate results.  Recent
+work  interprets  Gaussian  Process  fits by  identifying  the  contribution  of
+different  covariance  kernels  to  the  fitted  model.   Such  approaches  help
+constructing  useful models  in  high-dimensional spaces,  and  are valuable  to
+experimental research, such as the studies we present in this thesis.
+#+latex: \todo[inline]{Add reference to PhD thesis from Rasmussen's student}
 
 *** Summary
 #+begin_export latex

@@ -11337,7 +11337,43 @@ Sketch:
     an unknown space ?
   - ...
 
-*** Introduction
+*** Reproducible Research
+Conclusions  derived from  experimental data  can only  be considered  validated
+after  it  is   possible  to  reproduce  them   under  independent  experimental
+conditions.   This principle  has  guided experimental  research and  scientific
+progress.   Experimental  researchers on  computer  science  are in  a  singular
+position   to  promote   and  practice   reproducible  research,   because  some
+computational  experiments  can  be  monitored, registered,  and  repeated  with
+precision and  control that are  simply impossible in other  experimental fields
+such as chemistry and biology.
+
+**** Portuguese Text Previously Written                         :noexport:
+
+- Add reference to repro crisis?
+- Add mention to G. Fursin's efforts for ACM badging
+
+Os esforços da  ACM\nbsp{}\cite{acm2021badging} são um bom  exemplo dos esforços
+iniciais  que  podem ser  realizados  em  prol da  reprodutibilidade.   Diversas
+conferências e  periódicos da  ACM adotam  um sistema  de insígnias  para marcar
+trabalhos  cujos  esforços  para  reprodutibilidade  de  seus  experimentos  são
+significativos.  A  nomenclatura utilizada  pela ACM  é derivada  do Vocabulário
+Internacional   de    Metrologia   (VIM)\nbsp{}\cite{bipm2012international},   e
+distingue entre resultados e conclusões que podem ser reproduzidos:
+
+- Pela mesma equipe, nas mesmas condições experimentais (Repetibilidade)
+- Por uma equipe diferente, nas mesmas condições experimentais (Replicabilidade)
+- Por   uma   equipe   diferente,    em   condições   experimentais   diferentes
+  (Reprodutibilidade)
+
+O código e os dados que dão  suporte às conclusões de um estudo científico devem
+ser submetidos  junto ao  documento que será  publicado.  Esses  /artefatos/ são
+avaliados pelos  revisores e insígnias são  conferidas de acordo com  o nível de
+reprodutibilidade   alcançado.    Outras    organizações   também   promovem   a
+reprodutibilidade,    como   a    ReScience\nbsp{}\cite{rescience2021faq},   que
+recentemente      promoveu      o      Desafio      de      10      Anos      da
+Reprodutibilidade\nbsp{}\cite{rescience2020ten},   onde    pesquisadores   foram
+incentivados a submeter artigos com a  reprodução de seus próprios resultados de
+no mínimo 10 anos de idade.
 *** Computational Documents with Emacs and Org mode
 *** Versioning for Code, Text, and Data
 ** Compiler Parameters for CUDA Kernels

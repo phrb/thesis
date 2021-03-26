@@ -726,11 +726,10 @@ Also good for variance minimization in GP.
 - Designs to test the model quality (lack of fit)
   - SFD fo LM
 
-If model based, parameter significance and estimation can be used to
-reduce dimension and guide the optimization. With this DoE approach,
-we have a clear separation between the sampling phase and the
-interpretation phase. But what if no parameter really appears
-significant anymore ?
+If model  based, parameter  significance and  estimation can  be used  to reduce
+dimension and  guide the optimization. With  this DoE approach, we  have a clear
+separation between the sampling phase and  the interpretation phase. But what if
+no parameter really appears significant anymore ?
 *** Online Learning: the exploration / exploitation trade-off
 **** Bandits: simple (discrete choice, optimize regret = \sum_t R_t), UCB
 **** EI for GP (continuous choice, optimize EI = \max_t R_t)

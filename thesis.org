@@ -674,7 +674,24 @@ observations. In our contects, We can choose which X to test, either
 to test the model, or to improve its quality, or to find a "good"
 value in our space $\mathcal{X}$.
 *** Design of Experiments
-**** 2-level factorial designs
+**** Estimating Linear Effects
+- A Note on Terminology
+  - [ ] Factors, levels, designs, ...
+
+- [ ] Figure with 6 panels, with fits for:
+  - close / apart experiments
+  - apart experiments: low noise / high noise
+  - apart experiments: heteroscedastic / homoscedastic
+
+- [ ] Linear effects (one-dimensional example):
+  - Simplest hypothesis, other than the mean
+  - Experiments "too close" ~> high prediction variance
+  - Picking the extremes [-1, 1] decreases estimator variance
+
+- [ ] Effects of noise
+  - [ ] Too much noise can invert relationships
+  - [ ] Heteroscedasticity
+
 **** Screening
 Super efficient but very limited
 **** Optimal designs

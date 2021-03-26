@@ -10400,11 +10400,25 @@ model fits, or minimizing the objective function.
 
 #+latex: \todo[inline]{TODO: fill in and adapt the sections below}
 
-In  this  chapter  we  first  present  the  assumptions  of  a  traditional  DoE
-methodology using an example of /2-level screening designs/, an efficient way to
-identify  main effects.   We then  discuss  techniques for  the construction  of
-efficient designs  for factors with arbitrary  numbers and types of  levels, and
-present /D-Optimal/ designs, the method used in this our approach.
+This chapter presents some elements  of Experimental Design (ED).  Complementing
+the learning  methods we discussed  in the  previous chapter, ED  methods enable
+choosing the experiments on a  design matrix $\mathbf{X}$ according to different
+needs and criteria.  A well-constructed  design enables testing hypotheses about
+the objective function, which  can lead either to a useful model or  to a set of
+questions to ask and hypotheses to test.
+
+This  chapter   is  organized  as   follows.   Section\nbsp{}\ref{sec:factorial}
+introduces key concepts and presents 2-level Full Factorial designs.
+Section\nbsp{}\ref{sec:screening}
+Section\nbsp{}\ref{sec:optimal}
+Section\nbsp{}\ref{sec:filling}
+Section\nbsp{}\ref{sec:comparing}
+Section\nbsp{}\ref{sec:summary-ed}
+
+of /2-level screening  designs/, an efficient way to identify  main effects.  We
+then discuss  techniques for the  construction of efficient designs  for factors
+with arbitrary numbers and types of levels, and present /D-Optimal/ designs, the
+method used by our approach.
 
 *** 2-Level Factorial Designs
 :PROPERTIES:

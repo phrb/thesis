@@ -10818,7 +10818,7 @@ and continue the optimization of our example.
   It does not make sense to reference steps from the DLMT method here.}
 #+end_export
 
-The  application of  DoE  to autotuning  problems  requires design  construction
+The  application of  ED  to autotuning  problems  requires design  construction
 techniques  that  support factors  of  arbitrary  types  and number  of  levels.
 Autotuning problems typically combine factors  such as binary flags, integer and
 floating point numerical values, and  unordered enumerations of abstract values.
@@ -10978,7 +10978,7 @@ $x_1$ & 461.596 & 0.000 & $***$ \\
 
 We  now fit  this model  using the  results of  the experiments  in our  design.
 Table\nbsp{}\ref{tab:correct_fit}  shows the  model fit  table and  compares the
-estimated and  real model  coefficients. This example  illustrates that  the DoE
+estimated and  real model  coefficients. This example  illustrates that  the ED
 approach can achieve  close model estimations using few  resources, provided the
 approach  is  able to  use  user  input  to  identify significant  factors,  and
 knowledge about the problem domain to tweak the model.
@@ -11119,7 +11119,7 @@ latin hypercube sampling.
 The process of  screening for factor significance using ANOVA  and fitting a new
 model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
 Figure\nbsp{}[[fig:doe_anova_strategy]].   In  the  next  section  we  evaluate  the
-performance of our DoE approach in two scenarios.
+performance of our ED approach in two scenarios.
 
 *** Space-Filling Designs
 - Not very  efficient for parameter  estimate but good  to evaluate the  lack of
@@ -11159,15 +11159,15 @@ of  code  transformation, compilation,  and  execution.   Measurements in  other
 problem  domains  can  take  much  longer to  complete.   This  strengthens  the
 motivation to consider search space  exploration strategies capable of operating
 under  tight  budget constraints.   These  strategies  have been  developed  and
-improved by  statisticians for  a long time,  and can be  grouped under  the DoE
+improved by  statisticians for  a long time,  and can be  grouped under  the ED
 term.
 
 The D-Optimal  sampling strategies shown on  the two rightmost bottom  panels of
-Figure\nbsp{}[[fig:sampling_comparison]]  are  based  on the  DoE  methodology,  and
+Figure\nbsp{}[[fig:sampling_comparison]]  are  based  on the  ED  methodology,  and
 leverage previous  knowledge about search  spaces for an  efficient exploration.
 These  strategies   provide  transparent   analyses  that  enable   focusing  on
 interesting  subspaces.  In  the  next  section  we  describe  our  approach  to
-autotuning based on the DoE methodology.
+autotuning based on the ED methodology.
 
 *** Summary
 - Designs to obtain good-quality parameter estimates
@@ -11180,7 +11180,7 @@ autotuning based on the DoE methodology.
 - If model  based, parameter significance and  estimation can be used  to reduce
   dimension and guide the optimization.
 
-- With this DoE approach, we have  a clear separation between the sampling phase
+- With this ED approach, we have  a clear separation between the sampling phase
   and  the  interpretation  phase.  But  what if  no  parameter  really  appears
   significant anymore?
 
@@ -11217,7 +11217,7 @@ autotuning based on the DoE methodology.
   hook to Applications part}
 #+end_export
 
-- use glassbox (DoE based) approach to perform the optimization,
+- use glassbox (ED based) approach to perform the optimization,
   always try to interpret the results
 - 2 big methods based on different exploration/exploitation strategy:
   1. Evaluate parameter significance and reduce dimension (two phases,
@@ -11227,7 +11227,7 @@ autotuning based on the DoE methodology.
   Possibly combinations of both approaches could be used back and
   forth depending on the specific information we learn on the use
   case.
-- In this thesis, we evaluate these DoE-based approaches for several
+- In this thesis, we evaluate these ED-based approaches for several
   autotuning use cases and try to compare them with approaches that
   had beed previously proposed for these use cases.
 
@@ -13418,7 +13418,7 @@ between  parameters   and  performance.  In  /bicgkernel/,   for  example,  DLTM
 identified   a   linear  relationship   for   OpenMP   and  scalar   replacement
 optimizations, and  quadratic relationships  between register and  cache tiling,
 and loop unrolling.  This is an example of the  transparency in the optimization
-process that can be achieved with a DoE approach.
+process that can be achieved with an ED approach.
 
 Our approach used a generic initial performance model for all kernels, but since
 it iteratively eliminates  factors and model terms based on  ANOVA tests, it was

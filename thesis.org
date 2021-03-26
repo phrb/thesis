@@ -692,6 +692,17 @@ value in our space $\mathcal{X}$.
   - [ ] Too much noise can invert relationships
   - [ ] Heteroscedasticity
 
+***** 2-Level Factorial Designs
+- [ ] Going multivariate
+  - 2-level Full-Factorial designs have  complete information on linear effects,
+    plus interactions
+  - 2-level  Fractional Factorial:  add more  factors without  increasing design
+    size too much, but confound with interactions
+
+- [ ] Going multilevel
+  - Picking random levels from multi-level factors
+  - Just mention this, no need to expand on it
+
 **** Screening
 Super efficient but very limited
 **** Optimal designs

@@ -8809,9 +8809,9 @@ discussed in Chapter\nbsp{}[[Methods for Function Minimization]].
 If we are not capable of directly measuring $f$, if it is unreasonably expensive
 or time-consuming  to do so,  or if constructing statistical  performance models
 for our application is of crucial  importance, we can employ the surrogate-based
-methods discussed  in Chapters\nbsp{}[[Learning:  Building Surrogates]],
-[[Design  of  Experiments]],  and  [[Online Learning]].   These  methods  use  different
-strategies to construct a /surrogate model/
+methods   discussed   in   Chapters\nbsp{}[[Learning:   Building   Surrogates]],
+\ref{chap:ed}, and [[Online Learning]].   These methods use different strategies
+to construct a /surrogate model/
 #+begin_export latex
 \begin{align}
   \hat{f}_{\theta}: \mathcal{X} \to \mathbb{R}\text{, with }
@@ -8829,11 +8829,10 @@ compute the estimate.
 The constructed surrogate model $\hat{f}_{\theta(\mathbf{X},\mathbf{y})}$ can be
 used as a tool to attempt to  describe and optimize the underlying real function
 $f$,   provided   we   are   able    to   construct   a   useful   estimate   of
-$\theta(\mathbf{X},\mathbf{y})$.   We will  discuss in  Chapters\nbsp{}[[Learning:
-Building Surrogates]]  and\nbsp{}[[Design of  Experiments]] methods  that use  the $m$
-individual    parameter    estimates     $\theta(\mathbf{X},    \mathbf{y})    =
-[\theta_1 \;\dots\; \theta_m]^{\top}$  to   assess  the  significance   of  specific
-/factors/.
+$\theta(\mathbf{X},\mathbf{y})$.  We will  discuss in Chapters\nbsp{}[[Learning:
+Building  Surrogates]]   and\nbsp{}\ref{chap:ed}  methods   that  use   the  $m$
+individual  parameter  estimates  $\theta(\mathbf{X},  \mathbf{y})  =  [\theta_1
+\;\dots\; \theta_m]^{\top}$ to assess the significance of specific /factors/.
 
 If  we use  the  Ordinary Least  Squares  (OLS) estimator  for  $\theta$ in  our
 compiler flag  example, the parameter estimates  $\theta_2,\dots,\theta_m$ could
@@ -8946,14 +8945,14 @@ x_{1}^{\ast}$.
 The noise-free example  shown in panel (a)  has no local optima,  and its smooth
 surface can  be quickly navigated  by the derivative-based methods  discussed in
 Chapter\nbsp{}[[Methods for Function Minimization]]. Such  methods aim to follow the
-direction of /greatest descent/ in the neighborhood of a given point. In a contour
-plot, this direction  is always orthogonal to the contour  lines.  The panel (a)
-from   Figure\nbsp{}[[fig:optima-convexity]]  illustrates   the  /convexity/   of  our
-noise-free function. Informally, a line segment connecting any two points in the
-graph of a convex  function will not cross the graph  of the function. Convexity
-of  a function  over a  compact set  implies the  existence of  a single  global
-optimum, whereas  lack of convexity  implies the  existence of /local  optima/, as
-happens  in   our  noisy  functions,  and   is  highlighted  in  panel   (b)  of
+direction  of /greatest  descent/ in  the neighborhood  of a  given point.  In a
+contour plot,  this direction is  always orthogonal  to the contour  lines.  The
+panel (a) from Figure\nbsp{}[[fig:optima-convexity]]  illustrates the /convexity/ of
+our noise-free function. Informally, a line segment connecting any two points in
+the   graph  of   a  convex   function  will   not  cross   the  graph   of  the
+function. Convexity of a function over a  compact set implies the existence of a
+single global optimum, whereas lack of convexity implies the existence of /local
+optima/, as happens in  our noisy functions, and is highlighted  in panel (b) of
 Figure\nbsp{}[[fig:optima-convexity]].
 
 Local optima  are by  definition surrounded  by higher  values of  the objective
@@ -8976,9 +8975,9 @@ This  more abstract  and  simple example  aimed  to illustrate  that  it can  be
 non-trivial to find the  global optimum of the simplest of  search spaces, if we
 consider  the   significant  challenges   introduced  by  unknown   effects  and
 measurement error.   The additional  challenges introduced by  the time  cost to
-obtain measurements, which are discussed in Chapter\nbsp{}[[Design of Experiments]],
-guided the  selection of the optimization  methods studied in this  thesis.  The
-next  chapter discusses  derivative-based  and stochastic  methods for  function
+obtain measurements, which are  discussed in Chapter\nbsp{}\ref{chap:ed}, guided
+the selection  of the  optimization methods  studied in  this thesis.   The next
+chapter  discusses   derivative-based  and   stochastic  methods   for  function
 minimization.
 
 ** Methods for Function Minimization
@@ -9002,9 +9001,9 @@ Evaluating derivatives  to determine the next  best step or using  heuristics to
 explore a search space cannot be  done parsimoniously, because a large number of
 function evaluations is  required to estimate derivatives  when closed-forms are
 unknown, and to explore a search  space in the expectation of leveraging unknown
-structure.  We  will discuss  Design of  Experiments in  Chapter\nbsp{}[[Design of
-Experiments]], and present  optimization strategies for situations  where the cost
-of evaluating the objective function is prohibitive.
+structure.      We     will     discuss     Design     of     Experiments     in
+Chapter\nbsp{}\ref{chap:ed}, and present  optimization strategies for situations
+where the cost of evaluating the objective function is prohibitive.
 
 Methods based on  derivatives can be powerful, provided  their strong hypothesis
 are  respected. We  now  briefly  define and  discuss  these  methods and  their
@@ -9234,10 +9233,10 @@ autotuning search spaces.  Therefore, minimizing  experimentation cost is also a
 strong concern.
 
 Before    discussing    methods    to     construct    surrogate    models    in
-Chapter\nbsp{}[[Learning: Building Surrogates]],  and how to use  such surrogates to
-minimize experimental cost on Chapter\nbsp{}[[Design of Experiments]], we will relax
-the  convexity and  differentiability  requirements on  objective functions  and
-discuss stochastic methods for function minimization, and their applicability to
+Chapter\nbsp{}[[Learning: Building Surrogates]], and  how to use such surrogates
+to minimize experimental cost on  Chapter\nbsp{}\ref{chap:ed}, we will relax the
+convexity and differentiability requirements  on objective functions and discuss
+stochastic  methods  for  function  minimization,  and  their  applicability  to
 autotuning.
 
 *** Stochastic Methods
@@ -9515,11 +9514,10 @@ Chapters\nbsp{}\ref{chap:cuda} and  \ref{chap:fpga}, where we also  review their
 application  to  autotuning problems  in  different  domains.  The  explorations
 performed by these  methods are not structured in a  way that favors statistical
 analysis.   We will  postpone the  discussion of  how to  obtain well-structured
-experimental  data  until  Chapter\nbsp{}[[Design   of  Experiments]],  and  in  the
-following  chapter  we  will  discuss  learning  methods  that  enable  building
-surrogate  models $\hat{f}$  and  identifying  relationships between  parameters
-$\mathbf{X}$ in the search space $\mathcal{X}$ and observations of the objective
-function $f$.
+experimental  data  until  Chapter\nbsp{}\ref{chap:ed},  and  in  the  following
+chapter we will  discuss learning methods that enable  building surrogate models
+$\hat{f}$ and  identifying relationships between parameters  $\mathbf{X}$ in the
+search space $\mathcal{X}$ and observations of the objective function $f$.
 
 #+NAME: fig:booth-minimization
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -9565,9 +9563,8 @@ significance.
 
 We assume  for now  that $\mathbf{X}  \sim \text{Uniform}(\mathcal{X})$,  and we
 discuss how we  can construct better distributions of experiments  over a search
-space  on  Chapter\nbsp{}[[Design  of  Experiments]]. We  will  now  discuss  Linear
-Regression, a method  to build surrogates using linear models  on the parameters
-$\theta$.
+space on Chapter\nbsp{}\ref{chap:ed}.  We will  now discuss Linear Regression, a
+method to build surrogates using linear models on the parameters $\theta$.
 
 *** Linear Regression
 We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
@@ -9612,13 +9609,13 @@ $\mathbf{X}$, and  the distance between $\mathbf{y}$  and $\hat{\mathbf{y}}$ can
 be used to optimize the parameter vector  and estimate the quality of fit of the
 surrogate.
 
-A  key  advantage of  a  surrogate  model  is  that we  can  use
-$\hat{f}_{\theta}$   to  estimate   the  value   of   $f$  for   a  new   design
-$\mathbf{X}^{\prime}$  without  evaluating $f(\mathbf{X}^{\prime})$.   For  well
-chosen $\mathbf{X}$  and well fitted  $\theta$, these estimates can  be accurate
-and useful. We will discuss how to choose experiments on Chapter\nbsp{}[[Design of
-Experiments]],  and how  to  evaluate the  quality  of fit  for  linear models  on
-Section\nbsp{}[[Assessing the Quality of Fit of Linear Model Surrogates]].
+A key advantage  of a surrogate model  is that we can  use $\hat{f}_{\theta}$ to
+estimate  the  value of  $f$  for  a  new design  $\mathbf{X}^{\prime}$  without
+evaluating  $f(\mathbf{X}^{\prime})$.  For  well  chosen  $\mathbf{X}$ and  well
+fitted $\theta$, these estimates can be accurate and useful. We will discuss how
+to choose  experiments on Chapter\nbsp{}\ref{chap:ed},  and how to  evaluate the
+quality of fit for linear models on Section\nbsp{}[[Assessing the Quality of Fit
+of Linear Model Surrogates]].
 
 **** Fitting the Model: The Ordinary Least Squares Estimator
 For   simplicity,    we   will    for   now   use    $\theta$   to    refer   to
@@ -10256,13 +10253,13 @@ relationships  between  factors  and  the  values  of  the  objective  function,
 especially when the cost  of measuring a single point is  expensive, or when new
 experiments cannot be performed. However, if we can choose which measurements to
 perform   we   can   use   space-filling    designs,   which   we   discuss   on
-Chapter\nbsp{}[[Design of  Experiments]], to decrease  or sometimes remove  the need
-for a model trend.
+Chapter\nbsp{}\ref{chap:ed},  to decrease  or sometimes  remove the  need for  a
+model trend.
 
 The fits and predictions shown in Figure\nbsp{}[[fig:gp-trends]] were computed using
-the  /DiceKriging/ /R/  package\nbsp{}\cite{roustant2018dicekriging}.  We  refer the
-reader to the detailed descriptions of  trend functions and their application to
-Gaussian  Process  Regression   presented  in  Section  /2.1/   of  the  package's
+the  /DiceKriging/ /R/  package\nbsp{}\cite{roustant2018dicekriging}.  We  refer
+the reader to the detailed descriptions of trend functions and their application
+to  Gaussian Process  Regression presented  in  Section /2.1/  of the  package's
 accompanying paper\nbsp{}\cite{roustant2012dicekriging}.
 
 #+NAME: fig:gp-trends
@@ -10396,11 +10393,12 @@ methods of Experimental Design that  enable the construction of carefully chosen
 design matrices  for different purposes,  such as testing  hypotheses, improving
 model fits, or minimizing the objective function.
 
-** Design of Experiments
-#+begin_export latex
-\todo[inline]{TODO: Describe Full Factorial Designs}
-\todo[inline]{TODO: Fill in the sections sketched below}
-#+end_export
+** Experimental Design
+:PROPERTIES:
+:CUSTOM_ID: chap:ed
+:END:
+
+#+latex: \todo[inline]{TODO: fill in and adapt the sections below}
 
 In  this  chapter  we  first  present  the  assumptions  of  a  traditional  DoE
 methodology using an example of /2-level screening designs/, an efficient way to

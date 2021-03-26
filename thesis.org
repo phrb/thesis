@@ -9500,7 +9500,7 @@ $\mathbf{H}f$.  The strong hypotheses of derivative-based methods restrict their
 applicability by invalidating convergence guarantees. Stochastic methods have no
 such guarantees to begin with, and thus require costly exploration.
 
-Figure\nbsp{}[[fig:booth-minimization]]   shows   representations  of   optimization
+Figure\nbsp{}[[fig:booth-minimization]]  shows  representations of  optimization
 trajectories for  Booth's function  made by Gradient  Descent with  restarts, on
 panels (a), (b), and (c), Simulated Annealing,  on panels (d), (e), and (f), and
 a Genetic Algorithm, on panels (g), (h), and (i). Restarting optimization from a
@@ -10242,7 +10242,7 @@ linear regression.   Trend functions can  be added to the  surrogate's predicted
 mean  to  leverage  underlying  trends  in data,  that  should  be  followed  on
 prediction regions far from measurements.
 
-Figure\nbsp{}[[fig:gp-trends]]  shows Gaussian  Process surrogates  fitted with  and
+Figure\nbsp{}[[fig:gp-trends]] shows Gaussian Process surrogates fitted with and
 without  model   trends.   Black  circles   represent  six  measurements   of  a
 single-input  function,  and  each  line  represents  a  model  trend.   We  are
 considering noise-free  measurements in these  fits, so all surrogates  agree on

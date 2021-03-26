@@ -9548,14 +9548,14 @@ Gaussian  Process  Regression is  a  flexible  nonparametric method  capable  of
 modeling a  large class  of surrogates, for  which interpreting  significance is
 possible, but costly.
 
-The surrogate $\hat{f}_{\theta}: \mathcal{X}  \to \mathbb{R}$ depends on the
+The  surrogate $\hat{f}_{\theta}:  \mathcal{X}  \to \mathbb{R}$  depends on  the
 parameter  vector  $\theta(\mathbf{X},  \mathbf{y})$   in  the  parameter  space
 $\Theta$   constructed  using   the  pair   $(\mathbf{X},  \mathbf{y})$,   where
 $\mathbf{X}$ is a set of  experiments, and $\mathbf{y}$ the corresponding vector
 of  observations of  the  objective  function $f$.   The  process  of using  the
-available data  to construct a surrogate  model is called /learning/  and involves
+available data to construct a surrogate  model is called /learning/ and involves
 fitting the  surrogate model, which can  also be called training.   The class of
-surrogates  we  can  fit  depends  on  each  method's  definition  of  $\Theta$.
+surrogates we can fit depends on each method's definition of $\Theta$.
 
 In this chapter we assume that  an initial pair of $(\mathbf{X}, \mathbf{y})$ is
 given, and  that we can no  longer observe $f(\mathbf{x})$ for  new $\mathbf{x}$
@@ -9929,8 +9929,8 @@ probability distribution over functions.
 
 *** Gaussian Process Regression
 Similarly to the  surrogate model we built using linear  models, in this section
-we will fit a surrogate  $\hat{f}_{\theta}: \mathcal{X} \to \mathbb{R}$ to a
-fixed experimental  design $\mathbf{X}$  and observations $\mathbf{y}$.  We make
+we  will fit  a surrogate  $\hat{f}_{\theta}: \mathcal{X}  \to \mathbb{R}$  to a
+fixed experimental  design $\mathbf{X}$ and observations  $\mathbf{y}$.  We make
 the hypothesis that the observations $y_1, \dots, y_n$ are normally distributed.
 This is  a reasonable  hypothesis to  make, especially  after our  discussion on
 linear models, where our hypothesis over $f$ was
@@ -9970,8 +9970,8 @@ depends on $\mathbf{X}$.
 
 This   prior   is  more   general   than   the   linear  model   hypothesis   in
 Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  even  further.   In
-Chapter       /6/       of        /Gaussian       Processes       for       Machine
-Learning/\nbsp{}\cite{williams2006gaussian},  Rasmussen   and  Williams  describe
+Chapter       /6/      of       /Gaussian       Processes      for       Machine
+Learning/\nbsp{}\cite{williams2006gaussian},  Rasmussen  and  Williams  describe
 relationships and  equivalences of Gaussian  Processes to other methods  such as
 Splines, Support  Vector Machines, and  OLS estimation.  They also  describe how
 Neural Networks  can be  represented by specific  Gaussian Processes  in Section

@@ -10449,11 +10449,14 @@ then discuss  techniques for the  construction of efficient designs  for factors
 with arbitrary numbers and types of levels, and present /D-Optimal/ designs, the
 method used by our approach.
 
-*** 2-Level Factorial Designs
+*** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
 :END:
-*** Screening Designs
+
+**** 2-Level Factorial Designs
+
+*** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:
 :CUSTOM_ID: sec:screening
 :END:
@@ -11174,17 +11177,16 @@ model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
 Figure\nbsp{}[[fig:doe_anova_strategy]].   In  the  next  section  we  evaluate  the
 performance of our ED approach in two scenarios.
 
-*** Space-Filling Designs
+*** Exploration with Space-Filling Designs
 :PROPERTIES:
 :CUSTOM_ID: sec:filling
 :END:
-- Not very  efficient for parameter  estimate but good  to evaluate the  lack of
-  fit.
+- Not very efficient for parameter estimate but good to evaluate the lack of fit
+- Also good for variance minimization in GP
 
-- Also good for variance minimization in GP.
-
-- Quasi-random Sequences
-  - Sobol Sequences
+**** Quasi-Random Sequences for Low-Discrepancy Designs
+- Low-discrepancy
+- Sobol Sequences
 
 *** Comparing Sampling Strategies
 :PROPERTIES:

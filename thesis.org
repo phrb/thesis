@@ -10665,6 +10665,15 @@ method used by our approach.
 :CUSTOM_ID: sec:factorial
 :END:
 
+#+latex: \clearpage
+
+#+NAME: fig:lineffect
+#+CAPTION: Linear effects
+#+ATTR_LATEX: :placement [h] :width .65\textwidth
+[[./img/experimental_design/lin_effects.pdf]]
+
+Figure\nbsp{}[[fig:lineffect]] shows the effects
+
 **** 2-Level Factorial Designs
 
 *** Parsimony for Linear Effects with Screening Designs

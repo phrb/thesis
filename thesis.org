@@ -7868,6 +7868,134 @@ wireframe(interaction_prediction ~ x * y,
 #+RESULTS:
 [[file:./img/booth_3d_noisy_quadratic_interactions_gp.pdf]]
 
+*** Experimental Design
+**** Estimating Linear Effects
+***** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
+compute_y <- function(xs,
+                      beta = 1.2,
+                      noise_sd = 0.2,
+                      scedasticity = 0) {
+    return((beta * xs) +
+           rnorm(length(xs),
+                 0,
+                 noise_sd +
+                 ((xs ^ 2) * scedasticity)))
+}
+
+samples = 5
+
+resolution = 50
+
+xs = seq(from = 0, to = 1, length.out = resolution)
+
+sampled_xs = rep(xs, samples)
+
+small_noise = 0.01
+large_noise = 0.2
+scedasticity = 1
+
+min_close = (resolution / 2) - 1
+max_close = (resolution / 2) + 1
+
+min_far = 2
+max_far = resolution - 1
+
+generate_experiment <- function(noise_sd,
+                                scedasticity,
+                                id,
+                                model_id,
+                                x1,
+                                x2) {
+    df = data.frame(x = sampled_xs,
+                    y = compute_y(sampled_xs,
+                                  noise_sd = noise_sd,
+                                  scedasticity = scedasticity),
+                    id = id,
+                    model_id = model_id)
+
+    design_min = df %>%
+        filter(x == xs[x1]) %>%
+        filter(y == max(y)) %>%
+        distinct(x, y, .keep_all = TRUE) %>%
+        mutate(model_id = model_id)
+
+    design_max = df %>%
+        filter(x == xs[x2]) %>%
+        filter(y == min(y)) %>%
+        distinct(x, y, .keep_all = TRUE) %>%
+        mutate(model_id = model_id)
+
+    design = bind_rows(design_min,
+                       design_max)
+
+    predictions = data.frame(y = predict(lm(y ~ x,
+                                            design),
+                                         newdata = data.frame(x = xs)),
+                             x = xs) %>%
+        mutate(id = id,
+               model_id = model_id)
+
+    return(list(df, design, predictions))
+}
+
+experiment = generate_experiment(small_noise, 0,
+                                 "small_noise", "close_points",
+                                 min_close, max_close)
+
+df = experiment[[1]]
+design = experiment[[2]]
+predictions = experiment[[3]]
+
+experiment = generate_experiment(small_noise, 0,
+                                 "small_noise", "distant_points",
+                                 min_far, max_far)
+
+df = df %>% bind_rows(experiment[[1]])
+design = design %>% bind_rows(experiment[[2]])
+predictions = predictions %>% bind_rows(experiment[[3]])
+
+experiment = generate_experiment(large_noise, 0,
+                                 "large_noise", "distant_points",
+                                 min_far, max_far)
+
+df = df %>% bind_rows(experiment[[1]])
+design = design %>% bind_rows(experiment[[2]])
+predictions = predictions %>% bind_rows(experiment[[3]])
+
+experiment = generate_experiment(large_noise, 0,
+                                 "large_noise", "close_points",
+                                 min_close, max_close)
+
+df = df %>% bind_rows(experiment[[1]])
+design = design %>% bind_rows(experiment[[2]])
+predictions = predictions %>% bind_rows(experiment[[3]])
+
+experiment = generate_experiment(large_noise, scedasticity,
+                                 "heteroscedastic", "distant_points",
+                                 min_far, max_far)
+
+df = df %>% bind_rows(experiment[[1]])
+design = design %>% bind_rows(experiment[[2]])
+predictions = predictions %>% bind_rows(experiment[[3]])
+
+experiment = generate_experiment(large_noise, scedasticity,
+                                 "heteroscedastic", "close_points",
+                                 min_close, max_close)
+
+df = df %>% bind_rows(experiment[[1]])
+design = design %>% bind_rows(experiment[[2]])
+predictions = predictions %>% bind_rows(experiment[[3]])
+
+
+write.csv(df, "data/linear_effects/sample.csv", row.names = FALSE)
+write.csv(design, "data/linear_effects/design.csv", row.names = FALSE)
+write.csv(predictions, "data/linear_effects/predictions.csv", row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

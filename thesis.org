@@ -14192,13 +14192,13 @@ The    remainder     of    this    chapter    is     organized    as    follows.
 Section\nbsp{}[[Autotuning  Bit Precision  for  Convolutional Neural  Networks]]
 describes the  /HAQ/ framework\nbsp{}\cite{wang2019haq} for  mixed-precision bit
 quantization, which we used to change  the bitwidth of network layers, and which
-implements  the  baseline  RL  approach.   Section\nbsp{}[[ResNet50  and  ImageNet]]
+implements the  baseline RL  approach.  Section\nbsp{}[[ResNet50  and ImageNet]]
 presents  the  /ResNet50/ network  used  in  our  experiments and  the  ImageNet
-dataset.   Section\nbsp{}[[Optimization   Methods]]  discusses   the  implementation
-details of the methods we compared, and Section\nbsp{}[[Performance Evaluation and
-Comparison]]  evaluates  their  performance  with  respect  to  network  accuracy.
-Section\nbsp{}[[Measuring Performance and Detecting  Significance for GPR]] presents
-a   more   detailed    assessment   of   the   GPR    method   we   implemented.
+dataset.   Section\nbsp{}[[Optimization Methods]]  discusses the  implementation
+details of  the methods we compared,  and Section\nbsp{}[[Performance Evaluation
+and Comparison]] evaluates  their performance with respect  to network accuracy.
+Section\nbsp{}[[Measuring  Performance  and  Detecting  Significance  for  GPR]]
+presents  a  more  detailed  assessment   of  the  GPR  method  we  implemented.
 Section\nbsp{}[[Summary]] summarizes the discussion and concludes the chapter.
 
 *** Autotuning Bit Precision for Convolutional Neural Networks
@@ -14258,7 +14258,7 @@ Residual    Networks,    or   /ResNets/,    were    introduced    by   He    /et
 al./\nbsp{}\cite{he2016deep}, and  the intuition behind  the idea is to  add the
 original layer  input, or /residual/,  to the output  of a stack  of convolution
 layers. Keeping this residual component in  a layer output enables better global
-optimization  of  the  network. Figure\nbsp{}[[fig:resnet50]]  shows  the  /PyTorch/
+optimization of  the network. Figure\nbsp{}[[fig:resnet50]] shows  the /PyTorch/
 implementation of a 50-block Residual Network, called /ResNet50/.
 
 We generated this visualization of /ResNet50/'s structure with the /HiddenLayer/

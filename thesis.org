@@ -10824,9 +10824,14 @@ represented by the vertical dashed line.
 #+ATTR_LATEX: :placement [h] :width .65\textwidth
 [[./img/experimental_design/lin_effects.pdf]]
 
-Figure\nbsp{}[[fig:lineffect]] shows the effects
 
-**** Interactions
+**** Fractional Designs and Interactions
+
+#+NAME: fig:interactions
+#+CAPTION: Interactions
+#+ATTR_LATEX: :placement [h] :width .7\textwidth
+[[./img/experimental_design/interactions.pdf]]
+
 
 *** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:

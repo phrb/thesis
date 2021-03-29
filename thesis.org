@@ -10784,9 +10784,24 @@ Section\nbsp{}\ref{sec:comparing}  compares different  sampling strategies,  and
 Section\nbsp{}\ref{sec:summary-ed} summarizes  the discussion and  concludes the
 chapter.
 
+*** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
 :END:
+
+We have  been using Experimental  Design terminology  in this thesis,  where the
+vector $\mathbf{y}$ with  observations of an objective function $f$  in an input
+set $\mathbf{X}$ is called a /response/. The input set is an $n\times{}p$ matrix
+called  a /design/,  where  each  row is  an  /experiment/  with $p$  /factors/.
+Choosing an  adequate design depends on  characteristics of the factors,  of the
+objective function, and of the statistical  analysis or learning methods we wish
+to use.
+
+In this  chapter we discuss  methods for constructing experimental  designs with
+the  assumption that  the analysis  of  the results  will be  made using  linear
+models. This  section will present  the difficulties of  estimating coefficients
+for  linear  model  terms in  settings  with  high  levels  of error  or  noise,
+heteroscedasticity, and interactions between factors.
 
 #+latex: \clearpage
 

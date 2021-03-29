@@ -8079,6 +8079,65 @@ ggplot() +
 #+RESULTS:
 [[file:./img/experimental_design/lin_effects.pdf]]
 
+**** Interactions
+***** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
+compute_row_y <- function(xs,
+                          row,
+                          beta = c(1.2, 1.5, 1.9),
+                          noise_sd = 0.2,
+                          scedasticity = 0) {
+    return(
+        sum(
+        (beta * xs[row, ]) +
+        rnorm(1,
+              0,
+              noise_sd +
+              (mean(as.numeric(
+              (xs[row, ] ^ 2))) * scedasticity))
+        )
+    )
+}
+
+compute_y <- function(xs,
+                      beta = c(1, 2, 4),
+                      noise_sd = 0.12,
+                      scedasticity = 0) {
+    return(sapply(1:nrow(xs), function (x) {
+        compute_row_y(xs,
+                      x,
+                      beta,
+                      noise_sd,
+                      scedasticity)
+    }))
+}
+
+samples = 3
+
+resolution = 10
+
+x1 = seq(from = 0, to = 1, length.out = resolution)
+
+xs = expand.grid(x1 = x1, x2 = x1, KEEP.OUT.ATTRS = FALSE) %>%
+    mutate(x1x2 = x1 * x2)
+
+sampled_xs = xs
+
+for(i in 1:(samples -1)) {
+    sampled_xs = sampled_xs %>%
+        bind_rows(xs)
+}
+
+df = sampled_xs %>%
+    mutate(y = compute_y(sampled_xs))
+
+write.csv(df, "data/linear_effects/interactions.csv", row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

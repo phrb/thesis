@@ -8187,11 +8187,13 @@ ggplot() +
     xlab(TeX("$x_1$")) +
     facet_grid(experiment_id ~ ., scales = "free_y") +
     scale_color_brewer(palette = "Set1",
-                       labels = unname(TeX(c("$x_2 \\, < \\, 0.5$",
-                                             "$x_2 \\geq 0.5$")))) +
+                       labels = unname(TeX(c("$x_2 = 0$",
+                                             "$x_2 = 1$")))) +
+    scale_x_discrete(expand = c(0.02,0.02)) +
     theme_bw(base_size = 32) +
     theme(legend.position = c(0.14, 0.93),
           legend.title = element_blank(),
+          panel.grid = element_blank(),
           legend.text = element_text(size = 26),
           strip.background = element_rect(fill = "transparent"),
           strip.text.y = element_text(angle = 90),

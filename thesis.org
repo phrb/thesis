@@ -8443,22 +8443,22 @@ machine learning-based search  is that, usually, optimization  choices cannot be
 explained, and knowledge  gained during optimization is not  reusable.  The main
 contribution of this  thesis is to study  how to overcome the  reliance on these
 assumptions about search spaces, and the lack of explainable optimizations, from
-the point of view of a  /Design of Experiments/ (DoE), or /Experimental Design/,
-methodology to autotuning.
+the point of  view of a /Design of Experiments/  (DoE), or /Experimental Design/
+(ED), methodology to autotuning.
 
-One of  the first detailed  descriptions and  mathematical treatment of  DoE was
+One of  the first  detailed descriptions  and mathematical  treatment of  ED was
 presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
 Design of Experiments/, where he  discussed principles of experimentation, latin
 square  sampling and  factorial  designs.  Later  books such  as  the ones  from
 Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
 /et   al./\nbsp\cite{box2005statistics}  present   comprehensive  and   detailed
-foundations.   Techniques based  on DoE  are /parsimonious/  because they  allow
+foundations.   Techniques based  on  ED are  /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
 relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
 statistical tests.
 
-In DoE terminology, a /design/ is a plan for executing a series of measurements,
+In ED terminology, a /design/ is a  plan for executing a series of measurements,
 or /experiments/, whose objective is to identify relationships between /factors/
 and /responses/.   While factors and  responses can refer to  different concrete
 entities in other domains, in  computer experiments factors can be configuration
@@ -8467,12 +8467,12 @@ execution time or memory consumption of a program.
 
 Designs  can  serve diverse  purposes,  from  identifying the  most  significant
 factors  for  performance, to  fitting  analytical  performance models  for  the
-response.  The  field of DoE  encompasses the mathematical formalization  of the
+response.  The  field of  ED encompasses the  mathematical formalization  of the
 construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
-the         DoE        methodology,         and        /Gaussian         Process
+the         ED         methodology,        and         /Gaussian         Process
 Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
 and  a high-level  view  of  the theoretical  foundations  of  each method,  and
 detailed  discussions of  the challenges  involved in  specializing the  general

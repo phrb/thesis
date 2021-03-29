@@ -10940,27 +10940,139 @@ heteroscedasticity, and interactions between factors.
 **** 2-Level Factorial Designs
 Figure\nbsp{}[[fig:lineffect]] shows measurements of an objective function whose
 input is  a single real number  factor $x_1 \in  [0,1]$. Each of the  six panels
-represents an experiment where we fit a linear model to two observations of $f$.
-Hollow points  in each  panel represent the  values of a  much larger  sample of
-$f(\mathbf{x} = x_1)$, to aid the visualization of each experimental condition.
-
-The first row  shows measurements subject to small measurement  error.  In these
-conditions we  can produce a  fairly good linear model  fit for $f$,  which will
-guide future experiments in the  correct direction for minimizing it, regardless
-of how  close we pick our  two experiments. If  we followed each model  fit, the
-direction  in  which  we  should  look  for the  point  that  minimizes  $f$  is
-represented by the vertical dashed line.
-
-#+latex: \clearpage
+represents an experiment  where we fit a linear model  to a limited experimental
+budget of two observations of $f$, represented by blue points.  Hollow points in
+each  panel represent  the values  of a  much larger  sample of  $f(\mathbf{x} =
+x_1)$, to aid  the visualization of each experimental  condition.
 
 #+NAME: fig:lineffect
-#+CAPTION: Linear effects
+#+CAPTION: Modeling linear effects in different experimental settings
 #+ATTR_LATEX: :placement [h] :width .65\textwidth
 [[./img/experimental_design/lin_effects.pdf]]
 
+Our objective  is this example is  to distribute our  budget so as to  produce a
+linear model  fit for  $f$ which  will guide future  experiments in  the correct
+direction for  minimizing it.  The  direction in which  we would explored  if we
+followed each model fit is represented by dashed vertical red lines.
+
+The first row  shows measurements subject to small measurement  error.  In these
+conditions we can produce a fairly good  fit regardless of how close we pick our
+two  experiments. This  experiment with  small noise  reveals that  the ``true''
+shape of $f$ is linear, minimized by $x_1 = 0$.
+
+The  experiments in  the  second  row have  larger  measurement  error. In  real
+situations this could happen  if we were measuring $f$ in  a shared machine, for
+example, while  in the first  row we might have  had exclusive access.   In this
+setting, picking experiments too close to each other can invert the direction in
+which the model tells us to explore, and  we will be better off spending our two
+measurements at the interval extremes.
+
+The last  row shows an experimental  setting where measurement error  depends on
+the value of  $x_1$, violating a core hypothesis of  linear models.  Although we
+could still  fit a linear  model indicating  the right exploration  direction in
+this  scenario,  chances  are  high  that  we wont,  even  if  we  pick  extreme
+points. Heteroscedastic  error can  be produced in  real conditions  by resource
+management overhead, for example,  and the simplest way to try  and deal with it
+in practice is to model the logarithm of the response.
+
+In general, picking  far-apart points will help estimating  linear effects. This
+principle works too in higher-dimension search spaces, and is the motivation for
+2-level full factorial designs. The first step is to choose extreme /levels/ for
+each of the  $p$ factors, as we  did in the previous example,  and then /encode/
+these levels,  mapping their  original values  to the  $[-1, 1]$  interval.  The
+design is produced by listing all $2^{p}$ combinations of factor levels.
+
+Table\nbsp{}\ref{tab:2level-fac}  shows a  2-level full  factorial design  for a
+search space with $p = 3$ factors and $2^{p} = 8$ experiments. We added a fourth
+column to  the experimental design  matrix, representing the 8  measurements. To
+produce a  linear model  surrogate $\hat{f}_{\theta}$,  it suffices  to estimate
+$\theta$ as we did in Section\nbsp{}[[Linear Regression]], by computing
+#+begin_export latex
+\begin{align}
+  \hat{\theta} = (\mathbf{X}^{\top}\mathbf{X})^{-1}
+  \mathbf{X}^{\top}\mathbf{y}\text{,} \label{eq:linmodel-ed}
+\end{align}
+#+end_export
+where $\mathbf{X}$  contains the $x_1,x_2,x_3$  columns from the  design matrix,
+and $\mathbf{y}$ consists of the $y$ column.
+
+#+begin_SRC R :results output :session *R* :eval no-export :exports none
+library(FrF2)
+library(dplyr)
+
+df = data.frame(FrF2(nfactors = 3, resolution = 4)) %>%
+    mutate(y = rnorm(8, 0, 2))
+
+names(df) = c("$x_1$", "$x_2$", "$x_3$", "$y$")
+#+end_SRC
+
+#+RESULTS:
+: full factorial design needed
+: creating full factorial with 8 runs ...
+
+#+begin_SRC R :results output latex :session *R* :eval no-export :exports results
+library(dplyr)
+library(xtable)
+
+tab = xtable(df,
+             caption = paste("A 2-Level Full Factorial design for 4 factors,",
+                             "with response $y = f(x_1,x_2,x_3) + \\varepsilon$"),
+             label = "tab:2level-fac")
+
+align(tab) <- "ccccr"
+
+print(tab,
+      booktabs = TRUE,
+      include.rownames = FALSE,
+      caption.placement = "top",
+      size = "\\small",
+      table.placement="t",
+      sanitize.text.function = function(x){x})
+#+end_SRC
+
+#+RESULTS:
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Mon Mar 29 19:03:08 2021
+\begin{table}[t]
+\centering
+\caption{A 2-Level Full Factorial design for 4 factors, with response $y = f(x_1,x_2,x_3) + \varepsilon$}
+\label{tab:2level-fac}
+\begingroup\small
+\begin{tabular}{cccr}
+  \toprule
+$x_1$ & $x_2$ & $x_3$ & $y$ \\
+  \midrule
+1 & -1 & -1 & 0.65 \\
+  1 & 1 & -1 & 0.27 \\
+  -1 & -1 & 1 & -1.53 \\
+  -1 & 1 & -1 & 0.33 \\
+  -1 & 1 & 1 & 1.69 \\
+  -1 & -1 & -1 & -0.58 \\
+  1 & 1 & 1 & 2.77 \\
+  1 & -1 & 1 & 0.16 \\
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+#+end_export
+
+If we fit  models to distinct sets  of two points picked  at random, considering
+distant  and close  sets separately,  we  would get  much more  variance in  the
+predictions  of  the models  that  used  the close  point  sets,  as we  see  in
+Figure\nbsp{}[[fig:vareffect]].  We can interpret  this practical observation as
+meaning that  choice of the design  matrix $\mathbf{X}$ impacts the  variance of
+the     estimator      of     $\theta$      in     the     model      fit     in
+Equation\nbsp{}\ref{eq:linmodel-ed}.  We will  see a  more precise  statement of
+this interpretation in Section\nbsp{}\ref{sec:optimal}.
+
+#+NAME: fig:vareffect
+#+CAPTION: Prediction variance for model fits using random designs of
+#+CAPTION: two close or distant points
+#+ATTR_LATEX: :placement [h] :width .8\textwidth
+[[./img/experimental_design/model_variances.pdf]]
 
 **** Fractional Designs and Interactions
-
 #+NAME: fig:interactions
 #+CAPTION: Interactions
 #+ATTR_LATEX: :placement [h] :width .7\textwidth

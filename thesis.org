@@ -8207,6 +8207,76 @@ ggplot() +
 #+RESULTS:
 [[file:./img/experimental_design/interactions.pdf]]
 
+**** Model Variances
+***** Generate Data
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+
+generate_design <- function(df, x1, x2, design_id) {
+    design_min = df %>%
+        filter(x == unique(df$x)[x1]) %>%
+        sample_n(size = 2)
+
+    design_max = df %>%
+        filter(x == unique(df$x)[x2]) %>%
+        sample_n(size = 2)
+
+    return(bind_rows(design_min,
+                     design_max) %>%
+           mutate(design_id = design_id))
+}
+
+generate_prediction <- function(df, design) {
+    return(df %>%
+           bind_cols(data.frame(predict(lm(y ~ 1 + x, design),
+                                        newdata = df,
+                                        interval = "prediction"))) %>%
+           mutate(design_id = unique(design$design_id)))
+}
+
+generate_predictions <- function(df, x1, x2, id, model_id) {
+    design = generate_design(df, x1, x2, id)
+    predictions = generate_prediction(df, design)
+    return(predictions %>% mutate(model_id = model_id))
+}
+
+generate_variances <- function(df, xs1, xs2, runs, model_id) {
+    predictions = data.frame()
+    for(i in 1:runs) {
+        predictions = bind_rows(predictions,
+                                generate_predictions(df,
+                                                     sample(xs1, 1),
+                                                     sample(xs2, 1),
+                                                     i,
+                                                     model_id))
+    }
+    return(predictions)
+}
+
+df = read.csv("data/linear_effects/sample.csv") %>%
+    filter(id == "large_noise")
+
+designs = 30
+
+predictions = bind_rows(generate_variances(df %>%
+                                           filter(model_id == "close_points"),
+                                           22:25,
+                                           26:29,
+                                           designs,
+                                           "close_points"),
+                        generate_variances(df %>%
+                                           filter(model_id == "distant_points"),
+                                           1:4,
+                                           47:50,
+                                           designs,
+                                           "distant_points"))
+
+write.csv(predictions,
+          "data/linear_effects/variances_predictions.csv",
+          row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

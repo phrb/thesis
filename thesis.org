@@ -8138,6 +8138,59 @@ write.csv(df, "data/linear_effects/interactions.csv", row.names = FALSE)
 
 #+RESULTS:
 
+***** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/interactions.pdf" :width 12 :height 10 :eval no-export
+library(ggplot2)
+library(latex2exp)
+
+update_factors <- function(df) {
+    return(df %>%
+           mutate(id = factor(x2 < 0.5,
+                              levels = c(TRUE,
+                                         FALSE),
+                              labels = c("x_2 < 0.5",
+                                         "x_2 >= 0.5"))))
+}
+
+plot_df = update_factors(read.csv("data/linear_effects/interactions.csv"))
+
+ggplot() +
+    geom_point(data = plot_df,
+               aes(x = x1,
+                   y = y,
+                   color = id),
+               show.legend = TRUE,
+               size = 3,
+               stroke = 2,
+               alpha = 0.6,
+               shape = 1) +
+    geom_smooth(data = plot_df,
+                aes(x = x1,
+                    y = y,
+                    color = id),
+                size = 3,
+                show.legend = FALSE,
+                method = "lm",
+                formula = y ~ x) +
+    ylab(TeX("$f(x_1,\\,x_2) \\, + \\, \\epsilon$")) +
+    xlab(TeX("$x_1$")) +
+    scale_color_brewer(palette = "Set1",
+                       labels = unname(TeX(c("$x_2 \\, < \\, 0.5$",
+                                             "$x_2 \\geq 0.5$")))) +
+    theme_bw(base_size = 36) +
+    theme(legend.position = c(0.14, 0.93),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 35),
+          legend.background = element_blank()) +
+    guides(color = guide_legend(nrow = 2,
+                                override.aes = list(alpha = 1.0,
+                                                    shape = 19,
+                                                    size = 6)))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/experimental_design/interactions.pdf]]
+
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

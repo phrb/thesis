@@ -10803,6 +10803,20 @@ models. This  section will present  the difficulties of  estimating coefficients
 for  linear  model  terms in  settings  with  high  levels  of error  or  noise,
 heteroscedasticity, and interactions between factors.
 
+**** 2-Level Factorial Designs
+Figure\nbsp{}[[fig:lineffect]] shows measurements of an objective function whose
+input is  a single real number  factor $x_1 \in  [0,1]$. Each of the  six panels
+represents an experiment where we fit a linear model to two observations of $f$.
+Hollow points  in each  panel represent the  values of a  much larger  sample of
+$f(\mathbf{x} = x_1)$, to aid the visualization of each experimental condition.
+
+The first row  shows measurements subject to small measurement  error.  In these
+conditions we  can produce a  fairly good linear model  fit for $f$,  which will
+guide future experiments in the  correct direction for minimizing it, regardless
+of how  close we pick our  two experiments. If  we followed each model  fit, the
+direction  in  which  we  should  look  for the  point  that  minimizes  $f$  is
+represented by the vertical dashed line.
+
 #+latex: \clearpage
 
 #+NAME: fig:lineffect

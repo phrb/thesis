@@ -8053,7 +8053,7 @@ ggplot() +
                          as.numeric(model_id) == 1),
               aes(x = x,
                   y = 1.8,
-                  label = "Min. Prediction for X"),
+                  label = "Min. Prediction for x"),
               angle = 90,
               size = 10,
               vjust = 1.5,
@@ -8068,8 +8068,8 @@ ggplot() +
     ylim(min(df$y), max(df$y)) +
     facet_grid(id ~ model_id,
                labeller = label_parsed) +
-    ylab(TeX("$f(\\mathbf{X}) + \\epsilon$")) +
-    xlab(TeX("$\\mathbf{X}$")) +
+    ylab(TeX("$f(\\mathbf{x}) + \\epsilon$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
     theme_bw(base_size = 40) +
     theme(strip.background = element_rect(fill = "transparent"),
           strip.text = element_text(size = 40),
@@ -8103,7 +8103,7 @@ compute_row_y <- function(xs,
 
 compute_y <- function(xs,
                       beta = c(1, 2, 4),
-                      noise_sd = 0.12,
+                      noise_sd = 0.18,
                       scedasticity = 0) {
     return(sapply(1:nrow(xs), function (x) {
         compute_row_y(xs,
@@ -8114,9 +8114,15 @@ compute_y <- function(xs,
     }))
 }
 
+generate_experiment <- function(df, beta, id) {
+    return(df %>%
+           mutate(y = compute_y(df, beta = beta),
+                  experiment_id = id))
+}
+
 samples = 3
 
-resolution = 10
+resolution = 2
 
 x1 = seq(from = 0, to = 1, length.out = resolution)
 
@@ -8130,8 +8136,8 @@ for(i in 1:(samples -1)) {
         bind_rows(xs)
 }
 
-df = sampled_xs %>%
-    mutate(y = compute_y(sampled_xs))
+df = bind_rows(generate_experiment(sampled_xs, c(1,1,4), "interaction"),
+               generate_experiment(sampled_xs, c(1,1,0), "no_interaction"))
 
 write.csv(df, "data/linear_effects/interactions.csv", row.names = FALSE)
 #+end_SRC
@@ -8149,7 +8155,12 @@ update_factors <- function(df) {
                               levels = c(TRUE,
                                          FALSE),
                               labels = c("x_2 < 0.5",
-                                         "x_2 >= 0.5"))))
+                                         "x_2 >= 0.5")),
+                  experiment_id = factor(experiment_id,
+                                         levels = c("no_interaction",
+                                                    "interaction"),
+                                         labels = c("No interaction",
+                                                    "Interaction"))))
 }
 
 plot_df = update_factors(read.csv("data/linear_effects/interactions.csv"))
@@ -8160,27 +8171,30 @@ ggplot() +
                    y = y,
                    color = id),
                show.legend = TRUE,
-               size = 3,
-               stroke = 2,
-               alpha = 0.6,
-               shape = 1) +
+               size = 5,
+               alpha = 0.9,
+               shape = 19) +
     geom_smooth(data = plot_df,
                 aes(x = x1,
                     y = y,
                     color = id),
                 size = 3,
+                se = FALSE,
                 show.legend = FALSE,
                 method = "lm",
                 formula = y ~ x) +
     ylab(TeX("$f(x_1,\\,x_2) \\, + \\, \\epsilon$")) +
     xlab(TeX("$x_1$")) +
+    facet_grid(experiment_id ~ ., scales = "free_y") +
     scale_color_brewer(palette = "Set1",
                        labels = unname(TeX(c("$x_2 \\, < \\, 0.5$",
                                              "$x_2 \\geq 0.5$")))) +
-    theme_bw(base_size = 36) +
+    theme_bw(base_size = 32) +
     theme(legend.position = c(0.14, 0.93),
           legend.title = element_blank(),
-          legend.text = element_text(size = 35),
+          legend.text = element_text(size = 26),
+          strip.background = element_rect(fill = "transparent"),
+          strip.text.y = element_text(angle = 90),
           legend.background = element_blank()) +
     guides(color = guide_legend(nrow = 2,
                                 override.aes = list(alpha = 1.0,

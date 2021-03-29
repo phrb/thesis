@@ -9871,7 +9871,7 @@ Figure\nbsp{}[[fig:booth-minimization]]  shows  representations of  optimization
 trajectories for  Booth's function  made by Gradient  Descent with  restarts, on
 panels (a), (b), and (c), Simulated Annealing,  on panels (d), (e), and (f), and
 a Genetic Algorithm, on panels (g), (h), and (i). Restarting optimization from a
-different point, seem on  panels (a), (b), and (c), is a  common and widely used
+different point, seen on  panels (a), (b), and (c), is a  common and widely used
 technique to reduce reliance on starting conditions.
 
 Despite the high cost of exploration and strong hypotheses, methods for function

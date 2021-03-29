@@ -10772,7 +10772,8 @@ then discuss  techniques for the  construction of efficient designs  for factors
 with arbitrary numbers and types of levels, and present /D-Optimal/ designs, the
 method used by our approach.
 
-*** Estimating Linear Effects
+*** 2-Level Factorial Designs
+**** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
 :END:
@@ -10786,7 +10787,7 @@ method used by our approach.
 
 Figure\nbsp{}[[fig:lineffect]] shows the effects
 
-**** 2-Level Factorial Designs
+**** Interactions
 
 *** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:

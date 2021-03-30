@@ -11361,6 +11361,19 @@ next section we will present /fractional/ factorial designs.
 #+ATTR_LATEX: :placement [h] :width .7\textwidth
 [[./img/experimental_design/interactions.pdf]]
 
+#+begin_SRC R :results output :session *R* :eval no-export :exports none
+library(FrF2)
+library(dplyr)
+
+df = data.frame(FrF2(nfactors = 5, resolution = 3)) %>%
+    mutate(y = rnorm(8, 0, 2))
+
+names(df) = c("$x_1$", "$x_2$", "$x_3$",
+              "$x_4 = x_1x_2$",
+              "$x_5 = x_1x3$", "$y$")
+#+end_SRC
+
+#+RESULTS:
 
 *** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:

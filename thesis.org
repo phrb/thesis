@@ -8000,7 +8000,7 @@ write.csv(predictions, "data/linear_effects/predictions.csv", row.names = FALSE)
 
 #+RESULTS:
 
-***** Plot
+****** Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/lin_effects.pdf" :width 20 :height 30 :eval no-export
 library(ggplot2)
 library(latex2exp)
@@ -8055,10 +8055,10 @@ ggplot() +
                   filter(as.numeric(id) == 1,
                          as.numeric(model_id) == 1),
               aes(x = x,
-                  y = 1.8,
+                  y = 1.85,
                   label = "Min. Prediction for x"),
               angle = 90,
-              size = 10,
+              size = 12,
               vjust = 1.5,
               fontface = "bold",
               color = "red",

@@ -11274,7 +11274,7 @@ library(dplyr)
 library(xtable)
 
 tab = xtable(df,
-             caption = paste("A 2-Level Full Factorial design for 4 factors,",
+             caption = paste("A 2-level full factorial design for 3 factors,",
                              "with response $y = f(x_1,x_2,x_3) + \\varepsilon$"),
              label = "tab:2level-fac")
 

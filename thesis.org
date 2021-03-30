@@ -13207,7 +13207,7 @@ autotuning methodology  to HLS  tools that  enable a  fast prediction  of metric
 values.   These tools  will  enable  the exploration  of  the trade-off  between
 prediction accuracy and the time to measure an HLS configuration.
 
-** Parameters for an OpenCL Laplacian Kernel
+** An OpenCL Laplacian Kernel
 :PROPERTIES:
 :CUSTOM_ID: chap:laplacian
 :END:
@@ -13938,7 +13938,7 @@ spaces for autotuning,  composed of high-interest computing  kernels, that could
 be  used  for  the  development  and  comparison  of  optimization  methods  for
 autotuning.
 
-** Parameters for SPAPT Kernels and Orio
+** SPAPT Kernels and Orio
 :PROPERTIES:
 :CUSTOM_ID: chap:spapt
 :END:

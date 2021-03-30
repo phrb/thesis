@@ -12024,12 +12024,12 @@ journal\nbsp{}\cite{bruel2017autotuning}.
 
 The optimizations we found often  beat compiler high-level optimization options,
 such as the  /-O2/ flag.  The autotuner found compilation  options that produced
-speedups,  in relation  to /-O2/,  of around  2 times  for the  \textit{Gaussian
-Elimination} problem from the Rodinia Benchmark  Suite, 2 times for /Heart Wall/
-problem, also  from Rodinia, and  4 times for  one of the  matrix multiplication
-algorithms we  implemented.  We  observed that  the compilation  parameters that
-optimize an algorithm  for a given GPU architecture will  not always achieve the
-same performance in different hardware, which was a reasonable expectation.
+speedups, in relation to /-O2/, of around 2 times for the /Gaussian Elimination/
+problem from the Rodinia Benchmark Suite, 2 times for /Heart Wall/ problem, also
+from Rodinia,  and 4 times  for one of  the matrix multiplication  algorithms we
+implemented.   We observed  that  the compilation  parameters  that optimize  an
+algorithm  for a  given  GPU  architecture would  not  always  achieve the  same
+performance in different hardware, which was a reasonable expectation.
 
 #+begin_export latex
 \begin{figure}[t]
@@ -12240,8 +12240,8 @@ GPUs.
 
 **** Benchmark of CUDA Algorithms
 We  composed a  benchmark  with  17 heterogeneous  GPU  kernels.  The  benchmark
-contains  4 optimization  strategies for  /matrix multiplication/  counted as  a
-single kernel, 1 vector addition problem,  1 solution for the /maximum sub-array
+contains 4  code optimizations for  /matrix multiplication/ counted as  a single
+kernel,  1  vector addition  problem,  1  solution  for the  /maximum  sub-array
 problem/\nbsp{}\cite{ferreira2014parallel},  2   /sorting/  algorithms   and  12
 kernels from the Rodinia Benchmark Suite\nbsp{}\cite{che2009rodinia}.
 

@@ -8181,6 +8181,67 @@ write.csv(predictions,
 #+end_SRC
 
 #+RESULTS:
+
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/model_variances.pdf" :width 20 :height 30 :eval no-export :tangle model_variances_plot.R
+library(ggplot2)
+library(latex2exp)
+library(paletteer)
+
+p_palette = "pals::polychrome"
+
+update_factors <- function(df) {
+    return(df %>%
+           mutate(model_id = factor(model_id,
+                                    levels = c("close_points",
+                                               "distant_points"),
+                                    labels = c(TeX("Picking Close Points"),
+                                               TeX("Picking Distant Points"))),
+                  id = factor(id,
+                              levels = c("small_noise",
+                                         "large_noise",
+                                         "heteroscedastic"),
+                              labels = c(TeX("Smaller $\\epsilon$"),
+                                         TeX("Larger $\\epsilon$"),
+                                         TeX("Heteroscedastic")))))
+}
+
+df = update_factors(read.csv("data/linear_effects/sample.csv"))
+predictions = update_factors(
+    read.csv("data/linear_effects/variances_predictions.csv")
+)
+
+ggplot() +
+    geom_point(data = df,
+               aes(x = x,
+                   y = y),
+               color = "gray48",
+               size = 4,
+               stroke = 2,
+               alpha = 0.8,
+               shape = 1) +
+    geom_line(data = predictions,
+              size = 3,
+              alpha = 0.7,
+              aes(x = x,
+                  y = fit,
+                  color = as.factor(design_id)),
+              show.legend = FALSE) +
+    ylim(-3.5, 3.5) +
+    facet_grid(id ~ model_id,
+               labeller = label_parsed) +
+    ylab(TeX("$f(\\mathbf{x}) + \\epsilon$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme_bw(base_size = 40) +
+    scale_color_paletteer_d(palette = p_palette) +
+    theme(strip.background = element_rect(fill = "transparent"),
+          strip.text = element_text(size = 40),
+          strip.text.y = element_text(angle = 90))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/experimental_design/model_variances.pdf]]
+
 **** Interactions
 ***** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results

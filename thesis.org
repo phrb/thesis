@@ -10364,6 +10364,9 @@ quality of fit for linear models on Section\nbsp{}[[Assessing the Quality of Fit
 of Linear Model Surrogates]].
 
 **** Fitting the Model: The Ordinary Least Squares Estimator
+
+#+latex: \todo[inline]{Remove reference to H, add dot prod. equal zero}
+
 For   simplicity,    we   will    for   now   use    $\theta$   to    refer   to
 $\theta(\mathbf{X},\mathbf{y})$.  The sum of the squared differences between $f$
 and $\hat{f}_{\theta}$ for all points in $\mathbf{X}$ is the squared model error

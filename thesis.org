@@ -8758,21 +8758,21 @@ Chapter\nbsp{}\ref{chap:quantization}.
 #+end_export
 
 *** Text Structure                                               :noexport:
-The remainder of this thesis is organized as follows.  Chapter\nbsp{}[[Efforts for
-Reproducible Science]] describes the efforts made over the duration of the work on
-this thesis  to establish a  workflow that promotes reproducible  science, using
-computational  documents  and  versioning   for  code,  results,  and  analyses.
-Chapter\nbsp{}[[Methods  for Function  Minimization]]  presents  background for  the
+The remainder of  this thesis is organized  as follows.  Chapter\nbsp{}[[Efforts
+for Reproducible Science]]  describes the efforts made over the  duration of the
+work on this thesis to establish  a workflow that promotes reproducible science,
+using computational  documents and versioning  for code, results,  and analyses.
+Chapter\nbsp{}[[Methods for Function Minimization]]  presents background for the
 derived  from  search  heuristics, mathematical  optimization,  and  statistical
-learning,  and Chapter\nbsp{}[[Application  of  Function  Minimization Methods  to
-Autotuning]]  to autotuning.   Chapter\nbsp{}[[A Design  of Experiments  Methodology]]
-describes the DoE  methodology, and its application to  autotuning problems, and
-the method  limitations encountered during this  thesis.  Chapter\nbsp{}[[Gaussian
-Process  Regression:  A more  Flexible  Method]]  describes the  Gaussian  Process
-Regression    method,   and    its   application    to   autotuning    problems.
-Chapter\nbsp{}[[Conclusion]]  resumes and  concludes the  high-level discussions  of
-this  chapter, in  light of  the  results of  the excursions  performed in  this
-thesis.
+learning, and  Chapter\nbsp{}[[Application of  Function Minimization  Methods to
+Autotuning]]   to   autotuning.    Chapter\nbsp{}[[A   Design   of   Experiments
+Methodology]] describes the  DoE methodology, and its  application to autotuning
+problems,   and  the   method  limitations   encountered  during   this  thesis.
+Chapter\nbsp{}[[Gaussian Process Regression: A  more Flexible Method]] describes
+the  Gaussian  Process Regression  method,  and  its application  to  autotuning
+problems.   Chapter\nbsp{}[[Conclusion]] resumes  and  concludes the  high-level
+discussions of this chapter, in light of the results of the excursions performed
+in this thesis.
 ** The Need for Autotuning
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
@@ -8824,22 +8824,22 @@ machine learning-based search  is that, usually, optimization  choices cannot be
 explained, and knowledge  gained during optimization is not  reusable.  The main
 contribution of this  thesis is to study  how to overcome the  reliance on these
 assumptions about search spaces, and the lack of explainable optimizations, from
-the point of  view of a /Design of Experiments/  (DoE), or /Experimental Design/
-(ED), methodology to autotuning.
+the point of view of a  /Design of Experiments/ (DOE), or /Experimental Design/,
+methodology to autotuning.
 
-One of  the first  detailed descriptions  and mathematical  treatment of  ED was
+One of  the first  detailed descriptions  and mathematical  treatment of  DOE was
 presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
 Design of Experiments/, where he  discussed principles of experimentation, latin
 square  sampling and  factorial  designs.  Later  books such  as  the ones  from
 Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
 /et   al./\nbsp\cite{box2005statistics}  present   comprehensive  and   detailed
-foundations.   Techniques based  on  ED are  /parsimonious/  because they  allow
+foundations.   Techniques based  on  DOE are  /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
 relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
 statistical tests.
 
-In ED terminology, a /design/ is a  plan for executing a series of measurements,
+In DOE terminology, a /design/ is a  plan for executing a series of measurements,
 or /experiments/, whose objective is to identify relationships between /factors/
 and /responses/.   While factors and  responses can refer to  different concrete
 entities in other domains, in  computer experiments factors can be configuration
@@ -8848,12 +8848,12 @@ execution time or memory consumption of a program.
 
 Designs  can  serve diverse  purposes,  from  identifying the  most  significant
 factors  for  performance, to  fitting  analytical  performance models  for  the
-response.  The  field of  ED encompasses the  mathematical formalization  of the
+response.  The  field of  DOE encompasses the  mathematical formalization  of the
 construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
-the         ED         methodology,        and         /Gaussian         Process
+the         DOE         methodology,        and         /Gaussian         Process
 Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
 and  a high-level  view  of  the theoretical  foundations  of  each method,  and
 detailed  discussions of  the challenges  involved in  specializing the  general
@@ -11136,23 +11136,23 @@ exploited.
 
 In this chapter we assumed that the design matrix $\mathbf{X}$ is a given, or is
 sampled from a fixed  set of observations.  In the next  chapter we will discuss
-methods of Experimental Design that  enable the construction of carefully chosen
-design matrices  for different purposes,  such as testing  hypotheses, improving
-model fits, or minimizing the objective function.
+methods  of Design  of Experiments  that  enable the  construction of  carefully
+chosen  design matrices  for  different purposes,  such  as testing  hypotheses,
+improving model fits, or minimizing the objective function.
 
-** Experimental Design
+** Design of Experiments
 :PROPERTIES:
 :CUSTOM_ID: chap:ed
 :END:
 
 #+latex: \todo[inline]{TODO: fill in and adapt the sections below}
 
-This chapter presents some elements  of Experimental Design (ED).  Complementing
-the learning  methods we discussed  in the  previous chapter, ED  methods enable
-choosing the experiments on a  design matrix $\mathbf{X}$ according to different
-needs and criteria.  A well-constructed  design enables testing hypotheses about
-the objective function, which  can lead either to a useful model or  to a set of
-questions to ask and hypotheses to test.
+This  chapter   presents  some   elements  of   Design  of   Experiments  (DOE).
+Complementing the  learning methods  we discussed in  the previous  chapter, DOE
+methods  enable  choosing  the  experiments  on  a  design  matrix  $\mathbf{X}$
+according to  different needs and  criteria.  A well-constructed  design enables
+testing hypotheses  about the  objective function,  which can  lead either  to a
+useful model or to a set of questions to ask and hypotheses to test.
 
 This  chapter   is  organized  as   follows.   Section\nbsp{}\ref{sec:factorial}
 introduces  key  concepts and  presents  2-level  Full and  Fractional  designs.
@@ -11170,7 +11170,7 @@ chapter.
 :CUSTOM_ID: sec:factorial
 :END:
 
-We have  been using Experimental  Design terminology  in this thesis,  where the
+We have been  using Design of Experiments terminology in  this thesis, where the
 vector $\mathbf{y}$ with  observations of an objective function $f$  in an input
 set $\mathbf{X}$ is called a /response/. The input set is an $n\times{}p$ matrix
 called  a /design/,  where  each  row is  an  /experiment/  with $p$  /factors/.
@@ -11744,7 +11744,7 @@ and continue the optimization of our example.
   It does not make sense to reference steps from the DLMT method here.}
 #+end_export
 
-The  application of  ED  to autotuning  problems  requires design  construction
+The  application of  DOE  to autotuning  problems  requires design  construction
 techniques  that  support factors  of  arbitrary  types  and number  of  levels.
 Autotuning problems typically combine factors  such as binary flags, integer and
 floating point numerical values, and  unordered enumerations of abstract values.
@@ -11904,7 +11904,7 @@ $x_1$ & 461.596 & 0.000 & $***$ \\
 
 We  now fit  this model  using the  results of  the experiments  in our  design.
 Table\nbsp{}\ref{tab:correct_fit}  shows the  model fit  table and  compares the
-estimated and  real model  coefficients. This example  illustrates that  the ED
+estimated and  real model  coefficients. This example  illustrates that  the DOE
 approach can achieve  close model estimations using few  resources, provided the
 approach  is  able to  use  user  input  to  identify significant  factors,  and
 knowledge about the problem domain to tweak the model.
@@ -12044,8 +12044,8 @@ latin hypercube sampling.
 
 The process of  screening for factor significance using ANOVA  and fitting a new
 model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
-Figure\nbsp{}[[fig:doe_anova_strategy]].   In  the  next  section  we  evaluate  the
-performance of our ED approach in two scenarios.
+Figure\nbsp{}[[fig:doe_anova_strategy]].  In  the next  section we  evaluate the
+performance of our DOE approach in two scenarios.
 
 *** Exploration with Space-Filling Designs
 :PROPERTIES:
@@ -12090,15 +12090,15 @@ of  code  transformation, compilation,  and  execution.   Measurements in  other
 problem  domains  can  take  much  longer to  complete.   This  strengthens  the
 motivation to consider search space  exploration strategies capable of operating
 under  tight  budget constraints.   These  strategies  have been  developed  and
-improved by  statisticians for  a long time,  and can be  grouped under  the ED
+improved by  statisticians for  a long time,  and can be  grouped under  the DOE
 term.
 
 The D-Optimal  sampling strategies shown on  the two rightmost bottom  panels of
-Figure\nbsp{}[[fig:sampling_comparison]]  are  based  on the  ED  methodology,  and
+Figure\nbsp{}[[fig:sampling_comparison]] are  based on the DOE  methodology, and
 leverage previous  knowledge about search  spaces for an  efficient exploration.
 These  strategies   provide  transparent   analyses  that  enable   focusing  on
-interesting  subspaces.  In  the  next  section  we  describe  our  approach  to
-autotuning based on the ED methodology.
+interesting  subspaces.   In  the  next  section we  describe  our  approach  to
+autotuning based on the DOE methodology.
 
 *** Summary
 :PROPERTIES:
@@ -12114,7 +12114,7 @@ autotuning based on the ED methodology.
 - If model  based, parameter significance and  estimation can be used  to reduce
   dimension and guide the optimization.
 
-- With this ED approach, we have  a clear separation between the sampling phase
+- With this DOE approach, we have  a clear separation between the sampling phase
   and  the  interpretation  phase.  But  what if  no  parameter  really  appears
   significant anymore?
 
@@ -12151,7 +12151,7 @@ autotuning based on the ED methodology.
   hook to Applications part}
 #+end_export
 
-- use glassbox (ED based) approach to perform the optimization,
+- use glassbox (DOE based) approach to perform the optimization,
   always try to interpret the results
 - 2 big methods based on different exploration/exploitation strategy:
   1. Evaluate parameter significance and reduce dimension (two phases,
@@ -12161,7 +12161,7 @@ autotuning based on the ED methodology.
   Possibly combinations of both approaches could be used back and
   forth depending on the specific information we learn on the use
   case.
-- In this thesis, we evaluate these ED-based approaches for several
+- In this thesis, we evaluate these DOE-based approaches for several
   autotuning use cases and try to compare them with approaches that
   had beed previously proposed for these use cases.
 
@@ -13437,13 +13437,13 @@ The improvements of metrics related to those objectives also increased.
 Kernels  with  large  measurement  time  still presented  a  challenge  for  the
 autotuning approach we used in this problem, even with distributed measurements,
 because the stochastic methods implemented  in OpenTuner reach better results if
-longer explorations of  the search space are performed.   An Experimental Design
+longer explorations of the search space  are performed.  A Design of Experiments
 approach such as  the one we later  developed and applied to  other problems, as
 described in Chapter\nbsp{}\ref{chap:laplacian}, would be ideal for this type of
 problem.  Since the HLS toolchain used in this study became proprietary software
 and FPGA programming is still a  very closed domain, requiring paid licenses and
 still expensive hardware, we did not  have the opportunity to revisit this study
-with the Experimental Design methods we later studied.
+with the Design of Experiments methods we later studied.
 
 Future work in this direction will study the impact of different starting points
 on the  final tuned values in  each optimization scenario, for  example we could
@@ -13468,7 +13468,7 @@ is  publicly hosted  on  GitHub\nbsp{}\cite{boast2021source}.   We targeted  the
 /Nvidia  K40c/ GPU,  and the  objective function  we minimized  was the  time to
 compute each pixel.   We evaluated the performance of  nine optimization methods
 for this  kernel, including sampling strategies,  stochastic methods, variations
-on linear  regression, our  Experimental Design  approach, and  Gaussian Process
+on linear regression,  our Design of Experiments approach,  and Gaussian Process
 Regression.   Our  transparent  and parsimonious  Experimental  Design  approach
 achieved  the  most consistent  results  across  the  methods we  tested,  which
 motivated searching  for a more  comprehensive set  of applications in  which we
@@ -13477,19 +13477,20 @@ described in  Chapter\nbsp{}\ref{chap:spapt}.  The initial steps  of the studies
 presented in  this chapter and  the next were  published together in  the CCGRID
 conference\nbsp{}\cite{bruel2019autotuning}.
 
-The  remainder  of this  chapter  is  organized as  follows.   Section\nbsp{}[[The
-Laplacian  Kernel]] presents  the target  kernel and  the associated  search space
-exposed   by  the   BOAST  implementation.    Section\nbsp{}[[A  Transparent   and
-Parsimonious Approach to Autotuning using Optimal Design]] presents our adaptation
-of a sequential approach to autotuning, starting with modeling assumptions about
-the  search  space  and  iteratively  refining  models  based  on  ANOVA  tests.
-Section\nbsp{}[[Building  a  Performance  Model]]  discusses  our  initial  modeling
-hypotheses.  Section\nbsp{}[[Looking at a Single DLMT Run]] looks at a single run of
-our approach, linking the  factor levels that were chosen at  each step to ANOVA
-/p/-values,   and   comparing   to   the   levels   of   the   global   minimum.
-Section\nbsp{}[[Evaluation of  Optimization Methods]]  evaluates the  performance of
-each method.  Finally,  Section\nbsp{}\ref{sec:laplacian-summary} the discussion
-and concludes the chapter.
+The  remainder of  this chapter  is organized  as follows.   Section\nbsp{}[[The
+Laplacian Kernel]]  presents the target  kernel and the associated  search space
+exposed  by   the  BOAST  implementation.   Section\nbsp{}[[A   Transparent  and
+Parsimonious  Approach  to  Autotuning   using  Optimal  Design]]  presents  our
+adaptation  of  a sequential  approach  to  autotuning, starting  with  modeling
+assumptions  about the  search space  and iteratively  refining models  based on
+ANOVA  tests.   Section\nbsp{}[[Building  a Performance  Model]]  discusses  our
+initial  modeling hypotheses.   Section\nbsp{}[[Looking at  a Single  DLMT Run]]
+looks at  a single  run of  our approach,  linking the  factor levels  that were
+chosen at  each step  to ANOVA /p/-values,  and comparing to  the levels  of the
+global minimum.  Section\nbsp{}[[Evaluation  of Optimization Methods]] evaluates
+the         performance         of        each         method.          Finally,
+Section\nbsp{}\ref{sec:laplacian-summary}  the  discussion   and  concludes  the
+chapter.
 
 *** The Laplacian Kernel
 The Laplacian $\Delta{}f$ of a function $f$ with inputs $x$ and $y$ is written
@@ -13752,7 +13753,7 @@ new problem subspace with the remaining factors.  Informed decisions made by the
 user at each step guide the outcome of each iteration.
 
 #+NAME: fig:doe_anova_strategy
-#+CAPTION: Overview of the ED approach to autotuning we implemented
+#+CAPTION: Overview of the DOE approach to autotuning we implemented
 #+ATTR_LATEX: :width .6\columnwidth :placement [t]
 [[./img/ccgrid19/doe_anova_strategy.pdf]]
 
@@ -13807,7 +13808,7 @@ of the search space. If we  identified significant parameters correctly, we will
 have restricted further search to better regions.
 
 In  this   chapter  and   in  Chapter\nbsp{}\ref{chap:spapt}  we   evaluate  the
-performance  of this  Experimental Design  approach to  autotuning in  different
+performance  of this  Design of Experiments  approach to  autotuning in  different
 applications.   The next  section discusses  the implementation  of a  Laplacian
 kernel for GPUs and the resulting search space.
 
@@ -13900,7 +13901,7 @@ method, fixing significant factors to their best predicted level.
 This section  presents a more detailed  look at the iterative  process performed
 during   the   optimization   of   the   Laplacian   kernel   by   our   method.
 Table\nbsp{}\ref{tab:laplacian-anova} shows  the ANOVA  tests performed  at each
-step   in   Figure\nbsp{}[[fig:dlmt-laplacian-steps]],  highlighting   the   factors
+step  in  Figure\nbsp{}[[fig:dlmt-laplacian-steps]],  highlighting  the  factors
 identified to  be significant  at each  step, which  were subsequently  fixed to
 their  best predicted  levels. Note  that  the size  of the  model being  tested
 decreases at each step, as factors are fixed.  These progressive restrictions to
@@ -14388,7 +14389,7 @@ between  parameters   and  performance.  In  /bicgkernel/,   for  example,  DLTM
 identified   a   linear  relationship   for   OpenMP   and  scalar   replacement
 optimizations, and  quadratic relationships  between register and  cache tiling,
 and loop unrolling.  This is an example of the  transparency in the optimization
-process that can be achieved with an ED approach.
+process that can be achieved with a DOE approach.
 
 Our approach used a generic initial performance model for all kernels, but since
 it iteratively eliminates  factors and model terms based on  ANOVA tests, it was
@@ -14399,9 +14400,9 @@ speedups by efficiently exploring search spaces.
 
 *** Identifying Significant Factors for the /bicg/ Kernel
 The discussion on  the following sections was  not yet published at  the time of
-writing of this  thesis.  We continued to study the  application of Experimental
-Design methods to the optimization of SPAPT kernels, modifying the original DLMT
-algorithm  by removing  cubic terms  to simplify  the target  performance model,
+writing of  this thesis.   We continued  to study the  application of  Design of
+Experiments methods to the optimization of SPAPT kernels, modifying the original
+DLMT algorithm by removing cubic terms to simplify the target performance model,
 fixing binary parameters to look  for other significant effects, leveraging data
 collected in  previous designs, running  more optimization steps,  and assessing
 the performance  of quantile regression as  an alternative to the  linear model.
@@ -14781,10 +14782,10 @@ Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
 :CUSTOM_ID: sec:dlmt-summary
 :END:
 
-We have implemented an Experimental Design approach to autotuning based on ANOVA
-and D-Optimal  Designs. We have applied  this approach to a  set of configurable
-kernels  from  the  SPAPT  benchmark  suite and,  although  our  approach  found
-significant  speedups in  relation  an  /-O3/ compiler  baseline,  we could  not
+We have  implemented a  Design of  Experiments approach  to autotuning  based on
+ANOVA  and  D-Optimal  Designs. We  have  applied  this  approach  to a  set  of
+configurable kernels from  the SPAPT benchmark suite and,  although our approach
+found significant speedups in relation an  /-O3/ compiler baseline, we could not
 significantly  improve upon  the results  found  by an  uniform Random  Sampling
 algorithm using  the same  exploratory budget. Other  experiments with  the same
 kernels         also         showed          than         uniform         random
@@ -14806,8 +14807,8 @@ already found. Analyzing the Roofline theoretical model for our target CPU hints
 that tweaks to the kernel implementation  might be needed to improve the current
 performance.
 
-A possible  future direction  for exploring the  potential of  this Experimental
-Design  approach could  involve developing  a  lower level  set of  configurable
+A  possible future  direction  for exploring  the potential  of  this Design  of
+Experiments approach could involve developing  a lower level set of configurable
 kernels, where performance measurements are always tied to a theoretical peak or
 to     a      known     global     optimum.      As      we     discussed     in
 Chapter\nbsp{}\ref{chap:laplacian}, knowing the  global optimum helps evaluating

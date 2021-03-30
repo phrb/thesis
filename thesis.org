@@ -9228,22 +9228,21 @@ structure of this document.
 
 * Optimization Methods for Autotuning
 ** Notation and Search Spaces
-The  following chapters  discuss the  optimization  methods that  we applied  to
+The  following chapters  present the  optimization  methods that  we applied  to
 autotuning  problems in  different domains.   Each chapter  presents a  group of
 methods,  briefly discussing  each  method  in the  group  and their  underlying
-hypotheses.   The  objective  of  each  chapter is  to  provide  high-level  and
-straightforward   descriptions  of   optimization   methods,  presenting   clear
-definitions tied to the autotuning context.
+hypotheses.  The objective of each chapter is to provide high-level descriptions
+of optimization  methods, presenting  clear definitions  tied to  the autotuning
+context.
 
 Each chapter concludes  with a discussion of the applicability  of each group of
 methods  to  autotuning  problems.   The methods  we  discuss  have  significant
-differences  but  employ  the  same  basic  concepts.   We  will  use  the  same
-mathematical notation  to discuss all  methods when possible.  The  remainder of
-this chapter  presents common basic concepts  and the associated notation  to be
-used     in     subsequent     chapters,     which     are     summarized     in
-Table\nbsp{}[[tab:notation]]. Completing  this introduction  to optimization  in the
-context of autotuning, the chapter ends with a discussion of common search space
-properties.
+differences  but employ  basic  concepts.   We will  use  the same  mathematical
+notation to  discuss all methods when  possible.  The remainder of  this chapter
+presents  common basic  concepts  and  the associated  notation  to  be used  in
+subsequent  chapters,  which  are  summarized  in  Table\nbsp{}[[tab:notation]].
+Completing this introduction  to optimization in the context  of autotuning, the
+chapter ends with a discussion of common search space properties.
 
 *** Notation
 We will  call /optimization/ the minimization  of a real-valued function  with a
@@ -9319,11 +9318,11 @@ to construct a /surrogate model/
 #+end_export
 where  $\theta$  is  a  parameter vector  usually  estimated  from  measurements
 $(\mathbf{X},\mathbf{y})$.   The  function   $\theta  :  \mathcal{X}^{n}  \times
-\mathbb{R}^{n} \to \Theta$ represents the  /estimation process/, that uses the
-/observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$   from  an  experimental  design
-$\mathbf{X} =  [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top}$.  The  /parameter vector/
-$\theta(\mathbf{X},\mathbf{y})$ in the /parameter space/  $\Theta$ will be used to
-compute the estimate.
+\mathbb{R}^{n} \to  \Theta$ represents the  /estimation process/, that  uses the
+/observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$ from  an  experimental  design
+$\mathbf{X}  = [\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\top}$.  The  /parameter
+vector/ $\theta(\mathbf{X},\mathbf{y})$  in the /parameter space/  $\Theta$ will
+be used to compute the estimate.
 
 The constructed surrogate model $\hat{f}_{\theta(\mathbf{X},\mathbf{y})}$ can be
 used as a tool to attempt to  describe and optimize the underlying real function
@@ -9338,19 +9337,20 @@ compiler flag  example, the parameter estimates  $\theta_2,\dots,\theta_m$ could
 correspond  to each  one of  the $p$  flags.  In  this case,  $\theta_1$ is  the
 estimate of  the intercept of the  linear model, and  $m = p +  1$. Optimization
 methods  using  the  Bayesian  inference framework,  such  as  Gaussian  Process
-Regression,  which we  discuss in  Chapter\nbsp{}[[Learning: Building  Surrogates]],
+Regression, which we discuss in Chapter\nbsp{}[[Learning: Building Surrogates]],
 associate a  probability distribution to  $\theta(\mathbf{X},\mathbf{y})$, which
 propagates  with $\hat{f}_{\theta}$  and can  be exploited  in our  optimization
 context.
 
-Chapter\nbsp{}[[Learning:  Building Surrogates]]  differentiates between  parametric
-methods which make the hypothesis that  the number $m = \vert{}\theta\vert{}$ of
-estimated  parameters  is  finite  and often  interpretable,  and  nonparametric
-methods, which operate in parameter spaces of infinite dimension.
+Chapter\nbsp{}[[Learning:    Building   Surrogates]]    differentiates   between
+parametric   methods  which   make  the   hypothesis  that   the  number   $m  =
+\vert{}\theta\vert{}$ of estimated parameters is finite and often interpretable,
+and  nonparametric  methods,  which  operate in  parameter  spaces  of  infinite
+dimension.
 
-Table\nbsp{}[[tab:notation]] summarizes the notation  and concepts we have discussed
-so  far, tying  those concepts  to  the compiler  flag  example we  used in  the
-discussion.   The notation  and the  basic concepts  we have  described in  this
+Table\nbsp{}[[tab:notation]]  summarizes  the  notation  and  concepts  we  have
+discussed so far, tying  those concepts to the compiler flag  example we used in
+the discussion.  The  notation and the basic concepts we  have described in this
 section, although referring to abstract entities, enable a uniform discussion of
 different optimization methods in the next chapters.
 
@@ -9420,12 +9420,12 @@ observations $y_b$  closer to  a real application,  and incorporate  the unknown
 effects and  measurement errors  to which the  underlying objective  function is
 subject, represented by the  normally distributed random variable $\varepsilon$,
 with  mean  $0$  and  variance   $\sigma^{2}$.   There  are  often  algorithmic,
-theoretical, or practical /constraints/ on  the allowed combinations of parameters
-of a given  objective function.  The observations $y_c$  represent this scenario
-by incorporating constraints on the parameter $x_1$.
+theoretical,  or   practical  /constraints/  on  the   allowed  combinations  of
+parameters of a given objective function.  The observations $y_c$ represent this
+scenario by incorporating constraints on the parameter $x_1$.
 
-Panels (a),  (b), and (c) of  Figure\nbsp{}[[fig:simple-search-spaces]] show contour
-plots   for  our   search  space   variations  in   Equations\nbsp{}\ref{eq:f0},
+Panels  (a),  (b),  and (c)  of  Figure\nbsp{}[[fig:simple-search-spaces]]  show
+contour plots  for our  search space variations  in Equations\nbsp{}\ref{eq:f0},
 \ref{eq:f1}, and \ref{eq:f2} respectively. The  global optimum in each variation
 is  represented by  a  red cross,  and its  location  changes between  scenarios
 because of  $\varepsilon$. Panels (d), (e),  and (f) show slices  of panels (a),
@@ -9443,12 +9443,12 @@ x_{1}^{\ast}$.
 
 The noise-free example  shown in panel (a)  has no local optima,  and its smooth
 surface can  be quickly navigated  by the derivative-based methods  discussed in
-Chapter\nbsp{}[[Methods for Function Minimization]]. Such  methods aim to follow the
-direction  of /greatest  descent/ in  the neighborhood  of a  given point.  In a
+Chapter\nbsp{}[[Methods for Function Minimization]].  Such methods aim to follow
+the direction of /greatest descent/ in the  neighborhood of a given point.  In a
 contour plot,  this direction is  always orthogonal  to the contour  lines.  The
-panel (a) from Figure\nbsp{}[[fig:optima-convexity]]  illustrates the /convexity/ of
-our noise-free function. Informally, a line segment connecting any two points in
-the   graph  of   a  convex   function  will   not  cross   the  graph   of  the
+panel (a) from Figure\nbsp{}[[fig:optima-convexity]] illustrates the /convexity/
+of our noise-free function. Informally, a line segment connecting any two points
+in  the  graph  of   a  convex  function  will  not  cross   the  graph  of  the
 function. Convexity of a function over a  compact set implies the existence of a
 single global optimum, whereas lack of convexity implies the existence of /local
 optima/, as happens in  our noisy functions, and is highlighted  in panel (b) of
@@ -9457,18 +9457,18 @@ Figure\nbsp{}[[fig:optima-convexity]].
 Local optima  are by  definition surrounded  by higher  values of  the objective
 function,  and can  thus trap  optimization methods  that do  not plan  for such
 situations,   such   as   a   naive   implementation   of   a   derivative-based
-method. Adapting the step  size of a derivative-based method is  one way to deal
-with functions with many local optima, such as the ones on panels (b) and (c) of
-Figure\nbsp{}[[fig:simple-search-spaces]].
+method. Adapting and  randomizing the step size of a  derivative-based method is
+one way  to deal  with functions  with many local  optima, such  as the  ones on
+panels (b) and (c) of Figure\nbsp{}[[fig:simple-search-spaces]].
 
 Objective functions  including constraints can  present much harder  problems to
 optimization methods, if  certain conditions are met. For example,  on panel (c)
-of Figure\nbsp{}[[fig:simple-search-spaces]],  we have constraints that  cut contour
-lines in such a way that prevents  attempts to move inside the feasible space in
-the  direction of  greatest descent.   A derivative-based  method would  have to
-drastically  decrease its  step size  upon reaching  the constraint  border, and
-coast along the border in small steps  until it finds a more appealing direction
-of descent.
+of  Figure\nbsp{}[[fig:simple-search-spaces]],  we  have  constraints  that  cut
+contour lines in such  a way that prevents attempts to  move inside the feasible
+space in  the direction  of greatest descent.   A derivative-based  method would
+have to drastically decrease its step  size upon reaching the constraint border,
+and  coast along  the border  in small  steps until  it finds  a more  appealing
+direction of descent.
 
 This  more abstract  and  simple example  aimed  to illustrate  that  it can  be
 non-trivial to find the  global optimum of the simplest of  search spaces, if we

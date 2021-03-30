@@ -7869,8 +7869,9 @@ wireframe(interaction_prediction ~ x * y,
 [[file:./img/booth_3d_noisy_quadratic_interactions_gp.pdf]]
 
 *** Experimental Design
-**** Estimating Linear Effects
-***** Generate Data
+**** Single Prediction Variability
+***** Estimating Linear Effects
+****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 
@@ -7918,12 +7919,14 @@ generate_experiment <- function(noise_sd,
 
     design_min = df %>%
         filter(x == xs[x1]) %>%
+        filter(y < max(y)) %>%
         filter(y == max(y)) %>%
         distinct(x, y, .keep_all = TRUE) %>%
         mutate(model_id = model_id)
 
     design_max = df %>%
         filter(x == xs[x2]) %>%
+        filter(y > min(y)) %>%
         filter(y == min(y)) %>%
         distinct(x, y, .keep_all = TRUE) %>%
         mutate(model_id = model_id)

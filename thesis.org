@@ -11195,11 +11195,6 @@ budget of two observations of $f$, represented by blue points.  Hollow points in
 each  panel  represent a  much  larger  sample of  values  of  $f$, to  aid  the
 visualization of each experimental condition.
 
-#+NAME: fig:lineffect
-#+CAPTION: Modeling linear effects in different experimental settings
-#+ATTR_LATEX: :placement [h] :width .65\textwidth
-[[./img/experimental_design/lin_effects.pdf]]
-
 Our objective  is this  example is  to distribute  our 2-point  budget so  as to
 produce a linear  model fit for $f$  which will guide future  experiments in the
 correct direction for  minimizing it.  The direction in which  we would explored
@@ -11228,6 +11223,15 @@ this  scenario,  chances  are  high  that  we wont,  even  if  we  pick  extreme
 points. Heteroscedastic  error can  be produced in  real conditions  by resource
 management overhead, for example,  and the simplest way to try  and deal with it
 in practice is to fit a linear model to the logarithm of the response.
+
+#+latex: \clearpage
+
+#+NAME: fig:lineffect
+#+CAPTION: Modeling linear effects in different experimental settings
+#+ATTR_LATEX: :placement [h] :width .78\textwidth
+[[./img/experimental_design/lin_effects.pdf]]
+
+#+latex: \clearpage
 
 In general, picking  far-apart points will help estimating  linear effects. This
 principle keeps working in higher-dimension search spaces, and is the motivation
@@ -11315,23 +11319,40 @@ $x_1$ & $x_2$ & $x_3$ & $y$ \\
 If we fit  models to distinct sets  of two points picked  at random, considering
 distant  and close  sets separately,  we  would get  much more  variance in  the
 predictions   of  the   models   using  close   point  sets,   as   we  see   in
-Figure\nbsp{}[[fig:vareffect]].
+Figure\nbsp{}[[fig:vareffect]].   In   other  words,  the  linear   model  lacks
+robustness when  designs are not  constructed properly, especially for  noisy or
+heteroscedastic measurements.
 
-We can interpret this practical observation as meaning that choice of the design
-matrix $\mathbf{X}$  impacts the variance  of the  estimator of $\theta$  in the
-model fit  in Equation\nbsp{}\ref{eq:linmodel-ed}.  We  will see a  more precise
-statement of this interpretation in Section\nbsp{}\ref{sec:optimal}.
+We  can  fit  more  robust  linear  models if  we  allow  an  expansion  to  our
+experimental budget  and evaluate  eight additional  points in  each experiment.
+Figure\nbsp{}[[fig:conflineffect]]  shows the  resulting model  fits, this  time
+accompanied  by  95% confidence  intervals  for  predictions. We  observe  great
+improvements in the heteroscedastic scenario due  to the extra samples of $f$ we
+were able  to get,  but we see  the confidence intervals  are very  large.  This
+example allows pointing  out that the /uncertainty/ in our  model fits, which is
+proportional to  the narrowness of the  confidence intervals, is related  to the
+distribution of experiments and to the variance associated with measuring $f$.
+
+The  previous practical  examples  show that  the choice  of  the design  matrix
+$\mathbf{X}$ impacts the variance of the  estimator of $\theta$ in the model fit
+in Equation\nbsp{}\ref{eq:linmodel-ed}.  We will see a more precise statement of
+this interpretation in Section\nbsp{}\ref{sec:optimal}.
+
+#+latex: \clearpage
 
 #+NAME: fig:vareffect
 #+CAPTION: Prediction variance for model fits using random designs of
 #+CAPTION: two close or distant points
-#+ATTR_LATEX: :placement [h] :width .65\textwidth
+#+ATTR_LATEX: :placement [h] :width .78\textwidth
 [[./img/experimental_design/model_variances.pdf]]
 
 #+NAME: fig:conflineffect
 #+CAPTION: Modeling linear effects in different experimental settings
-#+ATTR_LATEX: :placement [h] :width .65\textwidth
+#+ATTR_LATEX: :placement [h] :width .78\textwidth
 [[./img/experimental_design/confidence_lin_effects.pdf]]
+
+
+#+latex: \clearpage
 
 **** Fractional Designs and Interactions
 #+NAME: fig:interactions

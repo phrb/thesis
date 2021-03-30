@@ -11189,23 +11189,27 @@ Figure\nbsp{}[[fig:lineffect]] shows measurements of an objective function whose
 input is  a single real number  factor $x_1 \in  [0,1]$. Each of the  six panels
 represents an experiment  where we fit a linear model  to a limited experimental
 budget of two observations of $f$, represented by blue points.  Hollow points in
-each  panel represent  the values  of a  much larger  sample of  $f(\mathbf{x} =
-x_1)$, to aid  the visualization of each experimental  condition.
+each  panel  represent a  much  larger  sample of  values  of  $f$, to  aid  the
+visualization of each experimental condition.
 
 #+NAME: fig:lineffect
 #+CAPTION: Modeling linear effects in different experimental settings
 #+ATTR_LATEX: :placement [h] :width .65\textwidth
 [[./img/experimental_design/lin_effects.pdf]]
 
-Our objective  is this example is  to distribute our  budget so as to  produce a
-linear model  fit for  $f$ which  will guide future  experiments in  the correct
-direction for  minimizing it.  The  direction in which  we would explored  if we
-followed each model fit is represented by dashed vertical red lines.
+Our objective  is this  example is  to distribute  our 2-point  budget so  as to
+produce a linear  model fit for $f$  which will guide future  experiments in the
+correct direction for  minimizing it.  The direction in which  we would explored
+if we followed each model fit is represented by dashed vertical red lines.  With
+such  a budget  restriction we  will not  have sufficient  data to  estimate the
+intercept term of our linear model of $f$. We did this in this example so we can
+more  clearly  see the  impact  of  the choice  of  design  points in  a  single
+prediction, and we later look at an experiment with more measurements.
 
-The first row  shows measurements subject to small measurement  error.  In these
-conditions we can produce a fairly good  fit regardless of how close we pick our
-two  experiments. This  experiment with  small noise  reveals that  the ``true''
-shape of $f$ is linear, minimized by $x_1 = 0$.
+The first  row of  Figure\nbsp{}[[fig:lineffect]] shows measurements  subject to
+small measurement error.   In these conditions we can produce  a fairly good fit
+regardless of how close we pick  our two experiments. This experiment with small
+noise reveals that the ``true'' shape of $f$ is linear, minimized by $x_1 = 0$.
 
 The  experiments in  the  second  row have  larger  measurement  error. In  real
 situations this could happen  if we were measuring $f$ in  a shared machine, for
@@ -11220,14 +11224,15 @@ could still  fit a linear  model indicating  the right exploration  direction in
 this  scenario,  chances  are  high  that  we wont,  even  if  we  pick  extreme
 points. Heteroscedastic  error can  be produced in  real conditions  by resource
 management overhead, for example,  and the simplest way to try  and deal with it
-in practice is to model the logarithm of the response.
+in practice is to fit a linear model to the logarithm of the response.
 
 In general, picking  far-apart points will help estimating  linear effects. This
-principle works too in higher-dimension search spaces, and is the motivation for
-2-level full factorial designs. The first step is to choose extreme /levels/ for
-each of the  $p$ factors, as we  did in the previous example,  and then /encode/
-these levels,  mapping their  original values  to the  $[-1, 1]$  interval.  The
-design is produced by listing all $2^{p}$ combinations of factor levels.
+principle keeps working in higher-dimension search spaces, and is the motivation
+for 2-level full factorial designs. The first step to construct such a design is
+to choose extreme /levels/  for each of the $p$ factors, as we  did in the right
+column  of  Figure\nbsp{}[[fig:lineffect]],  and  then  /encode/  these  levels,
+mapping their original values to the $[-1, 1]$ interval.  The design is produced
+by listing all $2^{p}$ combinations of factor levels.
 
 Table\nbsp{}\ref{tab:2level-fac}  shows a  2-level full  factorial design  for a
 search space with $p = 3$ factors and $2^{p} = 8$ experiments. We added a fourth
@@ -11306,18 +11311,24 @@ $x_1$ & $x_2$ & $x_3$ & $y$ \\
 
 If we fit  models to distinct sets  of two points picked  at random, considering
 distant  and close  sets separately,  we  would get  much more  variance in  the
-predictions  of  the models  that  used  the close  point  sets,  as we  see  in
-Figure\nbsp{}[[fig:vareffect]].  We can interpret  this practical observation as
-meaning that  choice of the design  matrix $\mathbf{X}$ impacts the  variance of
-the     estimator      of     $\theta$      in     the     model      fit     in
-Equation\nbsp{}\ref{eq:linmodel-ed}.  We will  see a  more precise  statement of
-this interpretation in Section\nbsp{}\ref{sec:optimal}.
+predictions   of  the   models   using  close   point  sets,   as   we  see   in
+Figure\nbsp{}[[fig:vareffect]].
+
+We can interpret this practical observation as meaning that choice of the design
+matrix $\mathbf{X}$  impacts the variance  of the  estimator of $\theta$  in the
+model fit  in Equation\nbsp{}\ref{eq:linmodel-ed}.  We  will see a  more precise
+statement of this interpretation in Section\nbsp{}\ref{sec:optimal}.
 
 #+NAME: fig:vareffect
 #+CAPTION: Prediction variance for model fits using random designs of
 #+CAPTION: two close or distant points
-#+ATTR_LATEX: :placement [h] :width .8\textwidth
+#+ATTR_LATEX: :placement [h] :width .65\textwidth
 [[./img/experimental_design/model_variances.pdf]]
+
+#+NAME: fig:conflineffect
+#+CAPTION: Modeling linear effects in different experimental settings
+#+ATTR_LATEX: :placement [h] :width .65\textwidth
+[[./img/experimental_design/confidence_lin_effects.pdf]]
 
 **** Fractional Designs and Interactions
 #+NAME: fig:interactions
@@ -13857,9 +13868,6 @@ simplest relationship under uncertainty of the effects.
 - The /load\under{}overlap/  factor is  binary, and  its effect  is consequently
   modeled with  a linear term.  The  parameter encodes the choice  of whether to
   save memory load instructions by overlapping vectors in memory
-- The  /lws\under{}y/  factor controls  the  size  of  a  thread block,  in  the
-  /y/-axis. We did not have assumptions about the behavior of this factor, so we
-  attempted a linear term
 
 ***** Linear plus Inverse Terms
 The effects  of the following  factors were modeled with  a linear term  plus an
@@ -13873,10 +13881,14 @@ an inverse term.
   more  threads.   As  more  threads  are  used  we  expect  an  improvement  on
   performance, but also an overhead due to extra memory loads and to the cost of
   managing threads
-- The /y\under{}component\under{}number/ factor controls tiling  on the /y/-axis of the
-  target image,  inside each  thread. The  optimal tiling  size is  a compromise
-  between fitting a tile in cache  and providing enough prefetched memory to not
-  slow computation down
+- The  /lws\under{}y/  factor controls  the  size  of  a  thread block,  in  the
+  /y/-axis. We did not have assumptions about the behavior of this factor, other
+  than a possible overhead due to thread management, so we attempted linear plus
+  inverse terms
+- The /y\under{}component\under{}number/ factor controls  tiling on the /y/-axis
+  of  the  target image,  inside  each  thread. The  optimal  tiling  size is  a
+  compromise between  fitting a  tile in cache  and providing  enough prefetched
+  memory to not slow computation down
 - The /threads\under{}number/  parameter controls the  size of an  OpenCL thread
   work  group.  Threads  in  the same  group  share data  and  can be  scheduled
   together.   Using more  smaller  groups can  improve  performance from  better
@@ -14194,32 +14206,32 @@ This  chapter presents  an application  of Optimal  Design and  Gaussian Process
 Regression to  the optimization of source-to-source  transformation kernels from
 the SPAPT\nbsp{}\cite{balaprakash2012spapt} benchmark suite.
 
-The  chapter is  organized as  follows.  Section\nbsp{}[[Choosing  an Experimental
-Design Method  for Autotuning]] discusses  our choice of using  D-Optimal designs,
-considering  its applicability  to  autotuning among  other Experimental  Design
-methods.  Section\nbsp{}[[The  SPAPT Benchmark Suite]]  presents the CPU  kernels to
-which we applied our  approach, and Section\nbsp{}[[Performance Improvements using
-Optimal   Design]]   discusses   the   results.   The   work   presented   up   to
-Section\nbsp{}[[Performance  Improvements using  Optimal Design]]  was published  at
-CCGrid\nbsp{}\cite{bruel2019autotuning} in 2019.  The studies we performed later
-were   not    yet   published   at    the   writing   of   this    thesis.    In
-Section\nbsp{}[[Identifying Significant  Factors for the /bicg/  Kernel]] we explore
-the  optimization of  one of  the target  kernels and  identify the  factors and
-levels that  where responsible  for the  observed performance  improvements.  In
-Section\nbsp{}[[Autotuning  SPAPT kernels  with  Gaussian  Process Regression  and
-Expected Improvement]] we  discuss the application of  Gaussian Process Regression
+The  chapter is  organized  as follows.   Section\nbsp{}[[Choosing  a Design  of
+Experiments  Method for  Autotuning]] discusses  our choice  of using  D-Optimal
+designs, considering  its applicability  to autotuning among  other Experimental
+Design methods.   Section\nbsp{}[[The SPAPT  Benchmark Suite]] presents  the CPU
+kernels  to  which  we  applied our  approach,  and  Section\nbsp{}[[Performance
+Improvements using Optimal  Design]] discusses the results.   The work presented
+up  to  Section\nbsp{}[[Performance  Improvements  using  Optimal  Design]]  was
+published at  CCGrid\nbsp{}\cite{bruel2019autotuning} in  2019.  The  studies we
+performed  later were  not yet  published  at the  writing of  this thesis.   In
+Section\nbsp{}[[Identifying  Significant  Factors  for the  /bicg/  Kernel]]  we
+explore the optimization  of one of the target kernels  and identify the factors
+and levels that where responsible for the observed performance improvements.  In
+Section\nbsp{}[[Autotuning SPAPT  kernels with  Gaussian Process  Regression and
+Expected Improvement]] we discuss the application of Gaussian Process Regression
 with     Expected    Improvement     to    the     same    kernel.      Finally,
 Section\nbsp{}\ref{sec:dlmt-summary} summarizes the chapter and discusses future
 work.
 
-*** Choosing an Experimental Design Method for Autotuning
-Our application of the ED methodology  requires support for factors of different
+*** Choosing a Design of Experiments Method for Autotuning
+Our application of the DOE methodology  requires support for factors of different
 types and  numbers of levels, such  as binary flags, integer  and floating point
 numerical values and  enumerations of categorical values.  We  also need designs
 that minimize the number of experiments needed for identifying the most relevant
 factors of a  problem, since at this  moment we are not interested  in a precise
 analytical   model.   The   design  construction   techniques  that   fit  these
-requirements  are limited.  The first  ED  approach we  studied was  /screening/
+requirements  are limited.  The first  DOE  approach we  studied was  /screening/
 which, despite being extremely parsimonious, does not have enough flexibility to
 explore the search spaces which we wished to study.
 
@@ -14319,7 +14331,7 @@ with  no code  transformations, as  a  /baseline/ for  computing the  /speedups/
 achieved  by each  strategy.  We  performed 10  autotuning repetitions  for each
 kernel using RS and DLMT, using a budget of /at most/ 400 measurements. DLMT was
 allowed    to    perform    only    4     of    the    iterations    shown    in
-Figure\nbsp{}[[fig:doe_anova_strategy]].     Experiments   were    performed   using
+Figure\nbsp{}[[fig:doe_anova_strategy]].    Experiments  were   performed  using
 Grid5000\nbsp{}\cite{balouek2013adding},  on /Debian  Jessie/,  using an  /Intel
 Xeon E5-2630v3/ CPU and /gcc/ version /6.3.0/.
 
@@ -14331,7 +14343,7 @@ minutes, considering cases  that took longer than that to  compile to be runtime
 failures.
 
 We automated  factor elimination based  on ANOVA  tests so that  a comprehensive
-evaluation  could be  performed.  We  also did  not  tailor initial  performance
+evaluation  could be  performed.  We  also  did not  tailor initial  performance
 models, which were  the same for all  kernels. Initial models had  a linear term
 for each  factor with  two or more  levels, plus quadratic  and cubic  terms for
 factors with sufficient levels. Although automation and identical initial models
@@ -14339,17 +14351,17 @@ might have limited the improvements at each step of our application, our results
 show that it still succeeded in decreasing the budget needed to find significant
 speedups for some kernels.
 
-Figure\nbsp{}[[fig:iteration_best_comparison]] presents the  /speedup/ found by each
-run of RS and DLMT, plotted against the algorithm /iteration/ where that speedup
-was found. We  divided the kernels into  3 groups according to  the results. The
-group where  no algorithm found  any speedups contains  3 kernels and  is marked
-with ``[0]'' and /blue/ headers.  The  group where both algorithms found similar
-speedups, in similar  iterations, contains 6 kernels and is  marked with ``[=]''
-and  /orange/ headers.   The group  where DLMT  found similar  speedups using  a
-significantly  smaller budget  than RS  contains 8  kernels and  is marked  with
-``[+]'' and /green/  headers.  Ellipses delimit an estimate of  where 95% of the
-underlying distribution  lies, and a dashed  line marks the /-03/  baseline.  In
-comparison to  RS, our  approach significantly decreased  the average  number of
+Figure\nbsp{}[[fig:iteration_best_comparison]] presents  the /speedup/  found by
+each run  of RS and DLMT,  plotted against the algorithm  /iteration/ where that
+speedup  was found.  We  divided the  kernels  into 3  groups  according to  the
+results. The group where no algorithm  found any speedups contains 3 kernels and
+is marked  with ``[0]''  and /blue/  headers.  The  group where  both algorithms
+found similar speedups, in similar iterations,  contains 6 kernels and is marked
+with ``[=]'' and /orange/ headers.  The  group where DLMT found similar speedups
+using a  significantly smaller budget than  RS contains 8 kernels  and is marked
+with ``[+]'' and /green/ headers.  Ellipses  delimit an estimate of where 95% of
+the underlying  distribution lies, and a  dashed line marks the  /-03/ baseline.
+In comparison to RS, our approach  significantly decreased the average number of
 iterations needed to find speedups for the 8 kernels in the green group.
 
 #+NAME: fig:iteration_best_comparison
@@ -14415,7 +14427,7 @@ step, for example.  We started with the /bicg/ SPAPT kernel because our approach
 achieved  equivalent solutions  using a  smaller budget  than a  random sampling
 approach.
 
-Figure\nbsp{}[[fig:best-all]]  shows   the  execution  times  of   the  best  kernel
+Figure\nbsp{}[[fig:best-all]]  shows  the execution  times  of  the best  kernel
 configurations, and the corresponding iterations  where each of these points was
 found. Results are  shown for Random Sampling, for our  DLMT implementation from
 the CCGRID paper, and for four  variations that we later explored, attempting to
@@ -14685,22 +14697,22 @@ We     used      two     /R/      packages     to     construct      our     GPR
 algorithm\nbsp{}\cite{roustant2012dicekriging}.    We  used   the  /DiceKriging/
 package to fit  Gaussian Processes using /Matérn/ covariance  functions, and the
 /DiceOptim/ package  to compute  the Expected Improvement  metric at  each step.
-Figure\nbsp{}[[fig:gp-rs-comparison]] compares  the performance  of the  best points
-found by GPR  and RS, across 20  independent tuning runs. The  figure also shows
-the  iteration finding  the  best point  at  each run.   Dashed  lines mark  the
+Figure\nbsp{}[[fig:gp-rs-comparison]]  compares  the  performance  of  the  best
+points found by GPR  and RS, across 20 independent tuning  runs. The figure also
+shows the iteration finding  the best point at each run.   Dashed lines mark the
 estimate  of  the  mean  execution  time  of  the  best  points  across  the  20
 experiments, and the  gray bands show the 95% confidence  intervals for the mean
 estimate.
 
 The GPR  method found statistically  significant better configurations  than RS,
 but the practical difference is less  than $0.1$ seconds. Since Gaussian Process
-Regression is a much more flexible  method than our previous Experimental Design
-approach, not finding expressively better configurations hints that it might not
-be possible to improve this kernel much more, in comparison to RS.
+Regression  is  a  much  more  flexible  method  than  our  previous  Design  of
+Experiments approach, not finding  expressively better configurations hints that
+it might not be possible to improve this kernel much more, in comparison to RS.
 
-Figures\nbsp{}[[fig:bicgkernel-gp-pareto]]  and  [[fig:bicgkernel-rs-pareto]]  show  the
-progression of  all configurations evaluated during  each of the 20  runs of GPR
-and RS,  respectively.  We can  see that after an  initial Sobol sample  the GPR
+Figures\nbsp{}[[fig:bicgkernel-gp-pareto]] and [[fig:bicgkernel-rs-pareto]] show
+the progression  of all configurations evaluated  during each of the  20 runs of
+GPR and RS, respectively.  We can see that after an initial Sobol sample the GPR
 method  quickly finds  regions with  better  configurations. The  RS method,  as
 expected, continues to randomly explore the search space.
 
@@ -15169,13 +15181,13 @@ the  second column,  and /Top5/  and  /Top1/ accuracy  metrics in  the last  two
 columns.
 
 The  first  columns of  both  Figures  show  stacked  /ResNet50/ layers  in  the
-/y/-axis, in similar fashion to  what is presented in Figure\nbsp{}[[fig:resnet50]].
-The /x/-axis, as in all columns, shows each of the 245 measurements. Each square
-represents a  layer at  a given  time, and  is colored  with a  gradient between
-\textcolor{BrickRed}{red} for 1-bit  and \textcolor{OliveGreen}{green} for 8-bit
-quantization. Initial blocks  of measurements for all experiments  consist of 64
-/warm-up/  measurements, generating  visually distinct  starting regions  in all
-images.
+/y/-axis,     in    similar     fashion    to     what    is     presented    in
+Figure\nbsp{}[[fig:resnet50]].  The /x/-axis,  as in all columns,  shows each of
+the 245  measurements. Each square  represents a layer at  a given time,  and is
+colored  with  a  gradient   between  \textcolor{BrickRed}{red}  for  1-bit  and
+\textcolor{OliveGreen}{green}   for  8-bit   quantization.  Initial   blocks  of
+measurements  for   all  experiments  consist  of   64  /warm-up/  measurements,
+generating visually distinct starting regions in all images.
 
 The three horizontal dashed lines in the second column, from top to bottom, mark
 the size of  /ResNet50/ with all layers quantized  with 8, 2, and 1  bit for all
@@ -15184,18 +15196,18 @@ accuracy of the 8-bit quantized network.  The vertical lines in all columns mark
 the iteration  that found the point  with the highest /Top5/  accuracy, for each
 repetition.
 
-Figure\nbsp{}[[fig:rl_results]]  shows  that the  policies  arrived  at by  RL  have
+Figure\nbsp{}[[fig:rl_results]] shows  that the policies  arrived at by  RL have
 different quantization distributions.  Experiments /3/,  /5/, /6/, and /10/ have
 clearly defined red bands in similar  regions, corresponding to layers that were
-quantized with fewer bits.  Fainter bands in the same places can  be seen in the
+quantized with fewer bits.  Fainter bands in  the same places can be seen in the
 other experiments,  but we can  identify other features  as well, such  as green
 bands  or more  uniform orange  policies.  The  original RL  implementation used
 random sampling and  round-robin decrease of weights to obtain  the warm-up set,
 while our  GPR implementation used  Sobol sequences and filtering,  resulting in
 different-looking starting stages.
 
-Figure\nbsp{}[[fig:gpr_results]] shows clear  red bands in the same  top layers, and
-less variable  policy choices than  RL across  experiments. We see  regions that
+Figure\nbsp{}[[fig:gpr_results]] shows clear  red bands in the  same top layers,
+and less variable policy choices than RL across experiments. We see regions that
 abruptly change  from darker to light  greens in experiments /2/,  /4/, /9/, and
 /10/,  which could  be due  to the  algorithm using  a configuration  on the  EI
 backlog and picking a new region of the search space to explore.
@@ -15225,15 +15237,15 @@ backlog and picking a new region of the search space to explore.
 #+ATTR_LATEX: :placement [t] :width 0.8\textwidth
 [[./img/neural_net_autotuning/variances.pdf]]
 
-Figure\nbsp{}[[fig:variances]]  shows the  result of  running some  of the  policies
+Figure\nbsp{}[[fig:variances]] shows the result of  running some of the policies
 produced by GPR, and  all produced by RL, in new  random /ImageNet/ samples.  We
 wanted to check if the ``homogeneous'' RL experiments, that is, the ones without
 clear red bands, had a different  behavior when pitted against new datasets.  We
 did not see any difference between RL experiments, but we were surprised to find
 that  RL experiments  were consistently  better, and  outside of  the confidence
 intervals,  for   new  datasets,   although  differences  are   not  practically
-significant.  Experiment numbering is the same from Figures\nbsp{}[[fig:rl_results]]
-and [[fig:gpr_results]].
+significant.       Experiment      numbering      is     the      same      from
+Figures\nbsp{}[[fig:rl_results]] and [[fig:gpr_results]].
 
 *** Measuring Performance and Detecting Significance for GPR
 In this  section we analyze the  performance of our GPR  implementation, discuss

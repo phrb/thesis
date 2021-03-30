@@ -8371,6 +8371,93 @@ write.csv(predictions, "data/linear_effects/confidence_predictions.csv", row.nam
 
 #+RESULTS:
 
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/confidence_lin_effects.pdf" :width 20 :height 30 :eval no-export :tangle confidence_lin_effects_plot.R
+library(ggplot2)
+library(latex2exp)
+
+update_factors <- function(df) {
+    return(df %>%
+           mutate(model_id = factor(model_id,
+                                    levels = c("close_points",
+                                               "distant_points"),
+                                    labels = c(TeX("Picking Close Points"),
+                                               TeX("Picking Distant Points"))),
+                  id = factor(id,
+                              levels = c("small_noise",
+                                         "large_noise",
+                                         "heteroscedastic"),
+                              labels = c(TeX("Smaller $\\epsilon$"),
+                                         TeX("Larger $\\epsilon$"),
+                                         TeX("Heteroscedastic")))))
+}
+
+df = update_factors(read.csv("data/linear_effects/confidence_sample.csv"))
+design = update_factors(read.csv("data/linear_effects/confidence_design.csv"))
+predictions = update_factors(read.csv("data/linear_effects/confidence_predictions.csv"))
+
+ggplot() +
+    geom_ribbon(data = predictions,
+                alpha = 0.2,
+                aes(ymin = lwr,
+                    ymax = upr,
+                    x = x)) +
+    geom_point(data = df,
+               aes(x = x,
+                   y = y),
+               color = "gray48",
+               size = 4,
+               stroke = 2,
+               alpha = 0.6,
+               shape = 1) +
+    geom_line(data = predictions,
+              size = 3,
+              alpha = 0.8,
+              color = "red",
+              aes(x = x,
+                  y = fit)) +
+    geom_vline(data = predictions %>%
+                   group_by(model_id, id) %>%
+                   filter(fit == min(fit)),
+               aes(xintercept = x),
+               size = 2.2,
+               alpha = 0.7,
+               color = "red",
+               linetype = 2) +
+    geom_text(data = predictions %>%
+                  group_by(model_id, id) %>%
+                  filter(fit == min(fit)) %>%
+                  ungroup() %>%
+                  filter(as.numeric(id) == 1,
+                         as.numeric(model_id) == 1),
+              aes(x = x,
+                  y = 1.85,
+                  label = "Min. Prediction for x"),
+              angle = 90,
+              size = 12,
+              vjust = 1.5,
+              fontface = "bold",
+              color = "red",
+              stat = "unique") +
+    geom_point(data = design,
+               size = 6,
+               color = "blue",
+               aes(x = x,
+                   y = y)) +
+    coord_cartesian(ylim = c(min(df$y), max(df$y))) +
+    facet_grid(id ~ model_id,
+               labeller = label_parsed) +
+    ylab(TeX("$f(\\mathbf{x}) + \\epsilon$")) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    theme_bw(base_size = 40) +
+    theme(strip.background = element_rect(fill = "transparent"),
+          strip.text = element_text(size = 40),
+          strip.text.y = element_text(angle = 90))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/experimental_design/confidence_lin_effects.pdf]]
+
 **** Interactions
 ***** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results

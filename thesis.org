@@ -513,8 +513,7 @@ implementation and the justification of optimization heuristics.
 
 * Final Draft and Work List                                        :noexport:
 ** Introduction
-General presentation of the manuscript
-** Context
+*** General presentation of the manuscript
 *** Observation: Historical Trends in Hardware Design
 *** Consequences for compilers and application developers: Generating optimized code has become increasingly difficult
 *** Autotuning approaches and difficulties
@@ -564,8 +563,14 @@ what is possibly "wrong" with current approaches.
   of f, of \nabla f and even sometimes of \Delta f! Stochastic methods are even
   worse as they need to explore whereas descent based methods head to
   the optimum more directly.
-*** Learning: Building a Surrogate
-**** Statistical Learning: Linear Regression
+*** TODO Learning: Building a Surrogate
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:20]
+:END:
+**** TODO Statistical Learning: Linear Regression
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:20]
+:END:
 - the model
 - how to fit
 - "Model quality" +how to check whether the model is correct or not ?+
@@ -574,6 +579,8 @@ what is possibly "wrong" with current approaches.
 
 Limitation: simple model with shape constraits, cannot "fit"
 everything
+
+- [ ] Fix notation for objective function, big X, small x
 
 ***** Fitting the Linear Model to Data
 - [X] paragraph: Computing $\hat{\beta}$: OLS
@@ -628,7 +635,10 @@ everything
       - Generate "power set" of all groups of model terms
       - Compare resulting models with F-tests
 
-**** Gaussian Process
+**** TODO Gaussian Process
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:21]
+:END:
 - Sampling Functions from Multidimensional Gaussian Distributions
 - Nonparametric Modeling with Covariance Kernels
 - Sensitivity Analysis with Sobol Indices
@@ -638,6 +648,9 @@ everything
 - how to fit
 - provides mean estimates with confidence estimation
 - how to interpret the significance (sobol indices) but quite costly
+
+- [ ] Change order of presentation:
+  - Talk first about the kernel, then about how to fit
 
 ***** Quality of Fit
 - [X] Introduction
@@ -673,35 +686,46 @@ everything we mentioned assumes X is given, sampled from
 observations. In our contects, We can choose which X to test, either
 to test the model, or to improve its quality, or to find a "good"
 value in our space $\mathcal{X}$.
-*** Design of Experiments
-**** Estimating Linear Effects
+*** TODO Design of Experiments
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:23]
+:END:
+**** TODO Estimating Linear Effects
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:23]
+:END:
 - A Note on Terminology
-  - [ ] Factors, levels, designs, ...
+  - [X] Factors, levels, designs, ...
 
-- [ ] Figure with 6 panels, with fits for:
+- [X] Figure with 6 panels, with fits for:
   - close / apart experiments
   - apart experiments: low noise / high noise
   - apart experiments: heteroscedastic / homoscedastic
 
-- [ ] Linear effects (one-dimensional example):
+- [X] Linear effects (one-dimensional example):
   - Simplest hypothesis, other than the mean
   - Experiments "too close" ~> high prediction variance
   - Picking the extremes [-1, 1] decreases estimator variance
 
-- [ ] Effects of noise
-  - [ ] Too much noise can invert relationships
-  - [ ] Heteroscedasticity
+- [X] Effects of noise
+  - [X] Too much noise can invert relationships
+  - [X] Heteroscedasticity
 
 ***** 2-Level Factorial Designs
 - [ ] Going multivariate
+  - What can be estimated?
   - 2-level Full-Factorial designs have  complete information on linear effects,
     plus interactions
-  - 2-level  Fractional Factorial:  add more  factors without  increasing design
-    size too much, but confound with interactions
 
 - [ ] Going multilevel
   - Picking random levels from multi-level factors
   - Just mention this, no need to expand on it
+
+***** Fractional Factorial
+- [ ] 2-level Fractional Factorial: add more  factors without increasing design size
+  too much, but confound with interactions
+  - Confounding, or aliasing
+  - What can be estimated from a fractional factorial?
 
 **** Screening
 Super efficient but very limited
@@ -755,7 +779,10 @@ context (where EI is more meaningful).
   autotuning use cases and try to compare them with approaches that
   had beed previously proposed fot these use cases.
 ** Evaluation
-*** Reproducible Research Methodology
+*** TODO Reproducible Research Methodology
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:25]
+:END:
 - Tools and such
 - Explain difficulty of finding a needle in a haystack:
   - how to know whether we found the optimal value ?
@@ -764,6 +791,7 @@ context (where EI is more meaningful).
   - how to know whether the geometry hypothesis we make are sound in
     an unknown space ?
   - ...
+  - [ ] Translate text from portuguese
 *** TODO Use Case 1: GPU compiling flags
 :LOGBOOK:
 - State "TODO"       from              [2021-03-25 Thu 20:27]
@@ -801,8 +829,12 @@ context (where EI is more meaningful).
     variability than DLMT
 
 - [ ] Add design points to Figure 12.6
+  - improve this figure
 
-*** Use Case 3: SPAPT
+*** TODO Use Case 3: SPAPT
+:LOGBOOK:
+- State "TODO"       from              [2021-03-30 Tue 19:19]
+:END:
 - Base strategies (RS because equivalent to other classical strategies
   s.a. GAs and others)
 
@@ -833,12 +865,13 @@ context (where EI is more meaningful).
 - For the DGEMV kernel:
   - Peak performance is still 20 times faster than the best point we found
   - [-] Describe Roofline computations, CPU specs?
-    - [X] Generate real Roofline plots
+    - [ ] Compare with MKL
+    - [ ] Generate real Roofline plots
       - Hypothesis to explain slow kernel: cache usage and vectorization
-    - [ ] Add reference to ERT code/paper
-    - [ ] Add reference to ERT experiments code
+      - [ ] Generate Intel Roofline
+      - [ ] Add reference to ERT code/paper
+      - [ ] Add reference to ERT experiments code
     - [X] Check kernel data type (double)
-    - Compare with MKL
   - [ ] Add best/achieved figure (like 13.3) for =-march=native=
 
 *** Use Case 4: FPGA
@@ -11421,7 +11454,6 @@ $x_1$ & $x_2$ & $x_3$ & $x_4 = x_1x_2$ & $x_5 = x_1x3$ & $y$ \\
 \endgroup
 \end{table}
 #+end_export
-
 
 *** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:

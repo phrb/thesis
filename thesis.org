@@ -712,7 +712,7 @@ value in our space $\mathcal{X}$.
   - [X] Heteroscedasticity
 
 ***** 2-Level Factorial Designs
-- [ ] Going multivariate
+- [X] Going multivariate
   - What can be estimated?
   - 2-level Full-Factorial designs have  complete information on linear effects,
     plus interactions
@@ -722,8 +722,8 @@ value in our space $\mathcal{X}$.
   - Just mention this, no need to expand on it
 
 ***** Fractional Factorial
-- [ ] 2-level Fractional Factorial: add more  factors without increasing design size
-  too much, but confound with interactions
+- [ ] 2-level  Fractional Factorial: add more factors  without increasing design
+  size too much, but confound with interactions
   - Confounding, or aliasing
   - What can be estimated from a fractional factorial?
 

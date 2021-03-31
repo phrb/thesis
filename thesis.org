@@ -11855,16 +11855,13 @@ print(x,
 \end{table}
 #+end_export
 
-Using 12 measurements and a simple linear model, the predicted best value of $Y$
-was  around $10\times$  larger than  the global  optimum.  Note  that the  model
-predicted the  correct levels  for $x_3$  and $x_5$, and  almost for  $x_7$. The
+Using only 12  measurements and a simple linear model,  the predicted best value
+of $f$ was around nine times larger than the global optimum.  Despite that, note
+that our  model predicted the  correct levels for  $x_3$, $x_5$, and  $x_7$. The
 linear model  predicted wrong  levels for  $x_1$, perhaps  due to  this factor's
-interaction with  $x_3$, and  for $x_8$.   Arguably, it  would be  impossible to
-predict the correct  level for $x_8$ using this linear  model, since a quadratic
-term    composes   the    true   formula    of   $Y$.     As   we    showed   in
-Figure\nbsp{}[[fig:sampling_comparison]],  a  D-Optimal  design using  a  linear
-model  could detect  the significance  of a  quadratic term,  but the  resulting
-regression will often lead to the wrong level.
+interaction with  $x_3$, and for $x_8$.   It would be impossible  to predict the
+correct level for $x_8$ using only  linear terms since a quadratic term composes
+the true formula of $f$, shown in Equation\ref{eq:real_model}.
 
 We  can improve  upon this  result if  we introduce  some information  about the
 problem and  use a more  flexible design  construction technique. Next,  we will

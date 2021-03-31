@@ -8343,7 +8343,7 @@ generate_experiment <- function(noise_sd,
                              x = xs) %>%
         bind_cols(data.frame(predict(lm(y ~ x, design),
                                      newdata = data.frame(x = xs),
-                                     interval = "prediction")))
+                                     interval = "confidence")))
 
     return(list(df, design, predictions))
 }
@@ -8467,7 +8467,7 @@ ggplot() +
                   y = 1.85,
                   label = "Min. Prediction for x"),
               angle = 90,
-              size = 12,
+              size = 14,
               vjust = 1.5,
               fontface = "bold",
               color = "red",
@@ -8477,7 +8477,8 @@ ggplot() +
                color = "blue",
                aes(x = x,
                    y = y)) +
-    coord_cartesian(ylim = c(min(df$y), max(df$y))) +
+    #coord_cartesian(ylim = c(min(df$y), max(df$y))) +
+    coord_cartesian(ylim = c(-0.7, 3.2)) +
     facet_grid(id ~ model_id,
                labeller = label_parsed) +
     ylab(TeX("$f(\\mathbf{x}) + \\epsilon$")) +

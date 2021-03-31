@@ -722,7 +722,7 @@ value in our space $\mathcal{X}$.
   - Just mention this, no need to expand on it
 
 ***** Fractional Factorial
-- [ ] 2-level  Fractional Factorial: add more factors  without increasing design
+- [X] 2-level  Fractional Factorial: add more factors  without increasing design
   size too much, but confound with interactions
   - Confounding, or aliasing
   - What can be estimated from a fractional factorial?
@@ -11182,8 +11182,6 @@ improving model fits, or minimizing the objective function.
 :PROPERTIES:
 :CUSTOM_ID: chap:ed
 :END:
-
-#+latex: \todo[inline]{TODO: fill in and adapt the sections below}
 
 This  chapter   presents  some   elements  of   Design  of   Experiments  (DOE).
 Complementing the  learning methods  we discussed in  the previous  chapter, DOE

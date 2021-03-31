@@ -13032,7 +13032,7 @@ not cross zero.
 
 We generated  a large  set of  points in  the CUDA  parameters search  space and
 picked the  points for  which the  models predict  the smallest  execution time.
-Figure\nbsp{}[[fig:timing-gpu-screening]]  shows  the  performances  of  the  points
+Figure\nbsp{}[[fig:timing-gpu-screening]] shows  the performances of  the points
 picked by the  models and the baseline for comparison,  for each Rodinia kernel.
 The baseline for comparison consisted  of using only the PTX-stage /opt-level=3/
 high-level  compiler  optimization.   There  was no  significant  difference  in

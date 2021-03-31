@@ -13097,7 +13097,7 @@ GPU  kernels  with  by  selecting  CUDA  compiler  parameters  and  flags.   The
 inconclusive  clustering  attempts for  the  data  obtained from  heuristic  and
 stochastic  explorations  of  the  search spaces  emphasize  the  importance  of
 well-designed  experiment.   Later  experiments with  screening  reproduced  the
-expressive  speedups   found  for   some  kernels   in  different   GPUs,  while
+interesting  speedups   found  for  some   kernels  in  different   GPUs,  while
 simultaneously  allowing  the  identification   of  the  flags  responsible  for
 performance improvements. Future work in  this direction will explore the impact
 of adding host  compiler optimizations and kernel-specific  parameters.  In this
@@ -13207,15 +13207,15 @@ configurations that can be tested per hour.  We worked around this limitation in
 this experiment by implementing a virtualized autotuner using Docker containers,
 which enabled parallel measurements of different configurations.
 
-The  rest of  this chapter  is organized  as follows.   Section\nbsp{}[[Autotuning
-High-Level  Synthesis  for FPGAs]]  discusses  the  background  on HLS  tools  and
-autotuning. Section\nbsp{}[[Autotuner and Search Space  for the LegUp HLS Compiler]]
-presents the search  space defined by LegUp HLS parameters  and the autotuner we
-implemented using OpenTuner. Section\nbsp{}[[Target Optimization Scenarios and HLS
-Kernels]]  introduces  the  optimization scenarios  balancing  different  hardware
-metrics we targeted  in this study, discusses the HLS  kernels we optimized, and
-presents   the    settings   in   which   the    experiments   were   performed.
-Section\nbsp{}[[Performance  Improvements using  Stochastic  Methods]] presents  and
+The rest  of this chapter  is organized as  follows.  Section\nbsp{}[[Autotuning
+High-Level  Synthesis for  FPGAs]] discusses  the  background on  HLS tools  and
+autotuning.  Section\nbsp{}[[Autotuner  and  Search  Space  for  the  LegUp  HLS
+Compiler]] presents  the search space  defined by  LegUp HLS parameters  and the
+autotuner  we implemented  using OpenTuner.  Section\nbsp{}[[Target Optimization
+Scenarios  and HLS  Kernels]]  introduces the  optimization scenarios  balancing
+different hardware metrics we targeted in  this study, discusses the HLS kernels
+we optimized, and presents the settings in which the experiments were performed.
+Section\nbsp{}[[Performance Improvements using Stochastic Methods]] presents and
 discusses      the      results       on      each      scenario.       Finally,
 Section\nbsp{}\ref{sec:fpga-summary} summarizes the chapter and discusses future
 work.
@@ -15213,7 +15213,7 @@ in parallel.
 
 ***** Respecting the Size Constraint with Sobol Samples
 We  used  the implementation  of  the  Sobol sequence  low-discrepancy  sampling
-algorithm from  the /randtoolbox/\nbsp{}\cite{dutang2020randtoolbox}/R/ package.
+algorithm from the /randtoolbox/\nbsp{}\cite{dutang2020randtoolbox} /R/ package.
 Low-discrepancy   sampling  and   space-filling   designs   were  discussed   in
 Section\nbsp{}\ref{sec:filling}.   To  ensure  all samples  respected  the  size
 constraint,  we  progressively  doubled  the  sample  size  until  enough  valid

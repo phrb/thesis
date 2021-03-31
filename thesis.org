@@ -690,8 +690,9 @@ value in our space $\mathcal{X}$.
 :LOGBOOK:
 - State "TODO"       from              [2021-03-30 Tue 19:23]
 :END:
-**** TODO Estimating Linear Effects
+**** DONE Estimating Linear Effects
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-03-31 Wed 18:15]
 - State "TODO"       from              [2021-03-30 Tue 19:23]
 :END:
 - A Note on Terminology
@@ -711,7 +712,10 @@ value in our space $\mathcal{X}$.
   - [X] Too much noise can invert relationships
   - [X] Heteroscedasticity
 
-***** 2-Level Factorial Designs
+***** TODO 2-Level Factorial Designs
+:LOGBOOK:
+- State "TODO"       from              [2021-03-31 Wed 18:14]
+:END:
 - [X] Going multivariate
   - What can be estimated?
   - 2-level Full-Factorial designs have  complete information on linear effects,
@@ -727,9 +731,15 @@ value in our space $\mathcal{X}$.
   - Confounding, or aliasing
   - What can be estimated from a fractional factorial?
 
-**** Screening
+**** TODO Screening
+:LOGBOOK:
+- State "TODO"       from              [2021-03-31 Wed 18:14]
+:END:
 Super efficient but very limited
 - adapt example from ccgrid
+
+- [ ] Mention Paley construction, Hadamard matrices
+- [ ] Add pseudocode for Paley Construction
 **** Optimal designs
 A  "flexible"  screening:  allows  to include  non-linear  terms,  interactions,
 etc. if needed.

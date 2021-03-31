@@ -8515,8 +8515,8 @@ compute_row_y <- function(xs,
 }
 
 compute_y <- function(xs,
-                      beta = c(1, 2, 4),
-                      noise_sd = 0.18,
+                      beta = c(1, 1, 1),
+                      noise_sd = 0.04,
                       scedasticity = 0) {
     return(sapply(1:nrow(xs), function (x) {
         compute_row_y(xs,
@@ -8598,7 +8598,8 @@ ggplot() +
                 formula = y ~ x) +
     ylab(TeX("$f(x_1,\\,x_2) \\, + \\, \\epsilon$")) +
     xlab(TeX("$x_1$")) +
-    facet_grid(experiment_id ~ ., scales = "free_y") +
+    #facet_grid(experiment_id ~ ., scales = "free_y") +
+    facet_grid(experiment_id ~ .) +
     scale_color_brewer(palette = "Set1",
                        labels = unname(TeX(c("$x_2 = 0$",
                                              "$x_2 = 1$")))) +
@@ -8607,7 +8608,7 @@ ggplot() +
     theme(legend.position = c(0.14, 0.93),
           legend.title = element_blank(),
           panel.grid = element_blank(),
-          legend.text = element_text(size = 26),
+          legend.text = element_text(size = 29),
           strip.background = element_rect(fill = "transparent"),
           strip.text.y = element_text(angle = 90),
           legend.background = element_blank()) +

@@ -11878,7 +11878,7 @@ problem and  use a more  flexible design  construction technique. Next,  we will
 discuss the  construction of  efficient designs using  problem-specific formulas
 and continue the optimization of our example.
 
-**** Plackett-Burman Designs using the Paley Construction of Hadamard Matrices
+**** Plackett-Burman Designs using the Paley Construction of Hadamard Matrices :noexport:
 :PROPERTIES:
 :CUSTOM_ID: sec:paley
 :END:
@@ -12282,6 +12282,8 @@ autotuning based on the DOE methodology.
 - With this DOE approach, we have  a clear separation between the sampling phase
   and  the  interpretation  phase.  But  what if  no  parameter  really  appears
   significant anymore?
+
+- Paley construction\nbsp{}\cite{paley1933orthogonal}
 
 ** Online Learning
 #+begin_export latex

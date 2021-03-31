@@ -11235,9 +11235,9 @@ produce a linear  model fit for $f$  which will guide future  experiments in the
 correct direction for  minimizing it.  The direction in which  we would explored
 if we followed each model fit is represented by dashed vertical red lines.  With
 such  a budget  restriction we  will not  have sufficient  data to  estimate the
-intercept term of our linear model of $f$. We did this in this example so we can
-more  clearly  see the  impact  of  the choice  of  design  points in  a  single
-prediction, and we later look at an experiment with more measurements.
+confidence intervals  for the predictions  of our linear  model. We did  this in
+this example so  we can discuss the impact  of the choice of design  points in a
+single prediction, and we later look at an experiment with more measurements.
 
 The first  row of  Figure\nbsp{}[[fig:lineffect]] shows measurements  subject to
 small measurement error.   In these conditions we can produce  a fairly good fit
@@ -11262,8 +11262,10 @@ in practice is to fit a linear model to the logarithm of the response.
 #+latex: \clearpage
 
 #+NAME: fig:lineffect
-#+CAPTION: Modeling linear effects in different experimental settings
-#+ATTR_LATEX: :placement [h] :width .78\textwidth
+#+CAPTION: Fitting linear models using only two measurements,
+#+CAPTION: in experimental settings with different properties
+#+CAPTION: of the error $\varepsilon$
+#+ATTR_LATEX: :placement [h] :width .9\textwidth
 [[./img/experimental_design/lin_effects.pdf]]
 
 #+latex: \clearpage
@@ -11288,7 +11290,10 @@ $\theta$ as we did in Section\nbsp{}[[Linear Regression]], by computing
 \end{align}
 #+end_export
 where $\mathbf{X}$  contains the $x_1,x_2,x_3$  columns from the  design matrix,
-and $\mathbf{y}$ consists of the $y$ column.
+and $\mathbf{y}$  consists of the  $y$ column. With this  design we are  able to
+estimate eight model  coefficients, one for the intercept, or  mean, term, three
+for the linear  effects of each factor, three for  the two-way interactions, and
+one for the three-way interaction $x_1x_2x_3$.
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports none
 library(FrF2)
@@ -11372,29 +11377,60 @@ The  previous practical  examples  show that  the choice  of  the design  matrix
 $\mathbf{X}$ impacts the variance of the  estimator of $\theta$ in the model fit
 in  Equation\nbsp{}\ref{eq:linmodel-ed}.    We  will  present  a   more  precise
 statement of this interpretation  in Section\nbsp{}\ref{sec:optimal}, and in the
-next section we will present /fractional/ factorial designs.
+next section  we will discuss the  impact of interactions on  our estimates, and
+present /fractional/ factorial designs.
 
 #+latex: \clearpage
 
 #+NAME: fig:vareffect
-#+CAPTION: Prediction variance for model fits using random designs of
-#+CAPTION: two close or distant points
-#+ATTR_LATEX: :placement [h] :width .78\textwidth
+#+CAPTION: Fitting linear models using 30 distinct random sets of
+#+CAPTION: two measurements, in experimental settings with different
+#+CAPTION: properties of the error $\varepsilon$
+#+ATTR_LATEX: :placement [h] :width .9\textwidth
 [[./img/experimental_design/model_variances.pdf]]
-
-#+NAME: fig:conflineffect
-#+CAPTION: Modeling linear effects in different experimental settings
-#+ATTR_LATEX: :placement [h] :width .78\textwidth
-[[./img/experimental_design/confidence_lin_effects.pdf]]
-
 
 #+latex: \clearpage
 
-**** Fractional Designs and Interactions
+#+NAME: fig:conflineffect
+#+CAPTION: Modeling linear effects in different experimental settings
+#+ATTR_LATEX: :placement [h] :width .9\textwidth
+[[./img/experimental_design/confidence_lin_effects.pdf]]
+
+#+latex: \clearpage
+
+**** Interactions and Fractional Factorial Designs
+Figure\nbsp{}[[fig:interactions]] shows two different objective functions of two
+input factors $x_1$ and  $x_2$, which can take real values  in the interval $[0,
+1]$. The top  and bottom panels show  the measures from a  full factorial design
+using the interval extremes  of both factors. We see the  impact on the measured
+values of $f$ when  we change $x_1$ from zero to one,  while keeping $x_2$ fixed
+to zero, represented by  the red line, or fixed to one,  represented by the blue
+line.
+
+The function on the top panel has no interaction between $x_1$ and $x_2$, and we
+see that  changing $x_2$ from  zero to one increases  the value of  the measured
+$f$, but  does not change the  slope of the  line.  These parallel lines  can be
+represented  in a  linear model  with two  separate coefficients  for $x_1$  and
+$x_2$.  The bottom panel shows measurements using the same design, evaluated for
+an objective function  where an interaction between $x_1$ and  $x_2$ is present.
+There  is still  an additive  effect,  since the  two lines  start at  different
+values, but  now the slopes do  not match.  In  a linear model we  can represent
+this interaction  as a multiplicative effect,  that is, in addition  to separate
+coefficients for each factor there is a third coefficient for the multiplication
+$x_1x_2$.
+
 #+NAME: fig:interactions
-#+CAPTION: Interactions
+#+CAPTION: Effect of interactions in the slopes for extreme values of factors
 #+ATTR_LATEX: :placement [h] :width .7\textwidth
 [[./img/experimental_design/interactions.pdf]]
+
+All interactions can  be estimated with full factorial designs,  but the cost of
+evaluating  all  combinations   of  extreme  levels  is   prohibitive  for  most
+high-dimensional problems. It is common practice, at least on the initial stages
+of  the  statistical modeling  of  a  problem,  to  consider that  higher  order
+interactions, such as those between three  or more factors, are not of practical
+significance.   This  hypothesis  supports  the  construction  and  analysis  of
+/fractional/ factorial designs.
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports none
 library(FrF2)
@@ -11415,8 +11451,12 @@ library(dplyr)
 library(xtable)
 
 tab = xtable(df,
-             caption = paste("A 2-level fractional factorial design for 5 factors,",
-                             "with response $y = f(x_1,x_2,x_3,x_4,x_5) + \\varepsilon$"),
+             caption = paste("A 2-level fractional factorial design of resolution 3",
+                             "for 5 factors, with response",
+                             "$y = f(x_1,x_2,x_3,x_4,x_5) + \\varepsilon$.",
+                             "The main effects for $x_4$ and $x_5$ are aliased by,",
+                             "or confounded with, the interaction effects $x_1x_2$",
+                             "and $x_1x_3$"),
              label = "tab:2level-fac")
 
 align(tab) <- "ccccccr"
@@ -11433,29 +11473,50 @@ print(tab,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Tue Mar 30 18:10:22 2021
+% Wed Mar 31 13:36:10 2021
 \begin{table}[t]
 \centering
-\caption{A 2-level fractional factorial design for 5 factors, with response $y = f(x_1,x_2,x_3,x_4,x_5) + \varepsilon$}
-\label{tab:frac-fac}
+\caption{A 2-level fractional factorial design of resolution 3 for 5 factors, with response $y = f(x_1,x_2,x_3,x_4,x_5) + \varepsilon$. The main effects for $x_4$ and $x_5$ are aliased by, or confounded with, the interaction effects $x_1x_2$ and $x_1x_3$}
+\label{tab:2level-fac}
 \begingroup\small
 \begin{tabular}{cccccr}
   \toprule
 $x_1$ & $x_2$ & $x_3$ & $x_4 = x_1x_2$ & $x_5 = x_1x3$ & $y$ \\
   \midrule
-1 & 1 & 1 & 1 & 1 & -2.81 \\
-  -1 & 1 & -1 & -1 & 1 & -3.49 \\
-  -1 & -1 & -1 & 1 & 1 & -2.86 \\
-  1 & -1 & 1 & -1 & 1 & -1.86 \\
-  1 & -1 & -1 & -1 & -1 & 0.75 \\
-  -1 & -1 & 1 & 1 & -1 & 0.63 \\
-  1 & 1 & -1 & 1 & -1 & 0.81 \\
-  -1 & 1 & 1 & -1 & -1 & -1.32 \\
+1 & -1 & 1 & -1 & 1 & 5.10 \\
+  1 & 1 & 1 & 1 & 1 & 4.47 \\
+  1 & -1 & -1 & -1 & -1 & 0.54 \\
+  -1 & -1 & -1 & 1 & 1 & -0.79 \\
+  -1 & -1 & 1 & 1 & -1 & -2.39 \\
+  1 & 1 & -1 & 1 & -1 & -1.70 \\
+  -1 & 1 & -1 & -1 & 1 & -1.78 \\
+  -1 & 1 & 1 & -1 & -1 & -1.97 \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
 #+end_export
+
+A  fractional factorial  design for  $p$ factors  consists of  a full  factorial
+design for $p  - k$ factors, augmented with $k$  columns produced by multiplying
+two  or more  of the  original $p  - k$  columns. Table\nbsp{}\ref{tab:frac-fac}
+shows a  fractional factorial  design for  $p =  5$ and  $k =  2$, said  to have
+/resolution/ 3, with $2^{5 - 2} = 8$ experiments.
+
+We can use this design to estimate the  six coefficients we need for the for the
+main effects of each  factor plus the intercept, but the  estimates for the main
+effects of $x_4$ and $x_5$ will be  multiplied by the interaction effects of the
+combined  columns. Effects  that are  indistinguishable because  of the  way the
+design is constructed are said to be aliased by, or confounded with, each other.
+We will only be able to accurately  estimate main effects in this setting if the
+interaction confounded with a main effect has small or nonexistent impact on the
+response.
+
+Fractional  factorial  designs  enable  reducing the  cost  of  estimating  main
+effects, but  the quality of the  estimates relies on weak  factor interactions.
+In the next  section we will see  how we can reduce the  experimental costs even
+more,  while  simultaneously  solving  the  confounding  problem,  by  carefully
+constructing orthogonal arrays.
 
 *** Parsimony for Linear Effects with Screening Designs
 :PROPERTIES:

@@ -11266,6 +11266,18 @@ in practice is to fit a linear model to the logarithm of the response.
 #+ATTR_LATEX: :placement [h] :width .9\textwidth
 [[./img/experimental_design/lin_effects.pdf]]
 
+#+NAME: fig:vareffect
+#+CAPTION: Fitting linear models using 30 distinct random sets of
+#+CAPTION: two measurements, in experimental settings with different
+#+CAPTION: properties of the error $\varepsilon$
+#+ATTR_LATEX: :placement [b] :width .9\textwidth
+[[./img/experimental_design/model_variances.pdf]]
+
+#+NAME: fig:conflineffect
+#+CAPTION: Modeling linear effects in different experimental settings
+#+ATTR_LATEX: :placement [b] :width .9\textwidth
+[[./img/experimental_design/confidence_lin_effects.pdf]]
+
 #+latex: \clearpage
 
 In general, picking  far-apart points will help estimating  linear effects. This

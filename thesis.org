@@ -11611,7 +11611,7 @@ objective_data <- expand.grid(seq(-1, 1, 0.2),
 names(objective_data) <- c("x1", "x3", "x5",
                            "x7", "x8")
 
-objective_data$Y <- get_cost(objective_data)
+objective_data$Y <- get_cost(objective_data, sd = 0.2)
 
 options(warn = -1)
 design <- pb(12, factor.names = c("x1", "x2", "x3",
@@ -11625,9 +11625,14 @@ design$Y <- get_cost(design)
 names(design) <- c("$x_1$", "$x_2$", "$x_3$",
                    "$x_4$", "$x_5$", "$x_6$",
                    "$x_7$", "$x_8$", "$d_1$",
-                   "$d_2$", "$d_3$", "$Y$")
+                   "$d_2$", "$d_3$", "$y = f(\\mathbf{x}) + \\varepsilon$")
 
-cap <- "Randomized Plackett-Burman design for factors $x_1, \\dots, x_8$, using 12 experiments and ``dummy'' factors $d_1, \\dots, d_3$, and computed response $\\mathbf{Y}$"
+cap <- paste("Randomized Plackett-Burman design for factors $x_1, \\dots, x_8$,",
+             "with experiments $\\mathbf{x}_1,\\dots,\\mathbf{x}_{12}$, and",
+             "added ``dummy'' factors $d_1, d_2, d_3$.",
+             "The response $y$ is subject to measurement",
+             "error $\\varepsilon$")
+
 tab <- xtable(design, caption = cap, label = "tab:plackett")
 align(tab) <- "ccccccccccccc"
 print(tab, booktabs = TRUE,
@@ -11639,80 +11644,59 @@ print(tab, booktabs = TRUE,
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:04:00 2018
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Wed Mar 31 17:25:56 2021
 \begin{table}[b]
 \centering
-\caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, using 12 experiments and ``dummy'' factors $d_1, \dots, d_3$, and computed response $\mathbf{Y}$}
+\caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, with experiments $\mathbf{x}_1,\dots,\mathbf{x}_{12}$, and added ``dummy'' factors $d_1, d_2, d_3$. The response $y$ is subject to measurement error $\varepsilon$}
 \label{tab:plackett}
 \begingroup\scriptsize
 \begin{tabular}{cccccccccccc}
   \toprule
-$x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $d_1$ & $d_2$ & $d_3$ & $Y$ \\
+$x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $d_1$ & $d_2$ & $d_3$ & $y = f(\mathbf{x}) + \varepsilon$ \\
   \midrule
-1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 13.74 \\
-  -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & 10.19 \\
-  -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & 9.22 \\
-  1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 7.64 \\
-  1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 8.63 \\
-  -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & 11.53 \\
-  -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & 2.09 \\
-  1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 9.02 \\
-  1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 10.68 \\
-  1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 11.23 \\
-  -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & 5.33 \\
-  -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & 14.79 \\
+1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 8.00 \\
+  1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 8.45 \\
+  -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & 4.67 \\
+  1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 12.48 \\
+  -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & 11.93 \\
+  -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & 14.27 \\
+  1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 11.70 \\
+  -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & 2.96 \\
+  1 & 1 & 1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 7.53 \\
+  1 & -1 & -1 & -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 10.69 \\
+  -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & -1 & 1 & 8.85 \\
+  -1 & 1 & -1 & 1 & 1 & -1 & 1 & 1 & 1 & -1 & -1 & 10.39 \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-So    far,    we     have    performed    steps    1,    2,     and    3    from
-Figure\nbsp{}[[fig:doe_anova_strategy]].   We  use  our  initial  assumption  in
-Equation\nbsp{}\eqref{eq:linear_assumption}  to  identify the  most  significant
-factors   by    performing   an   ANOVA    test,   which   is   step    5   from
-Figure\nbsp{}[[fig:doe_anova_strategy]].     The    results   are    shown    in
+We   fit  a   linear  model   corresponding   to  our   initial  hypothesis   in
+Equation\nbsp{}\ref{eq:linear_hypothesis},  and  identify the  most  significant
+factors   with   an    ANOVA   test.    The   test   results    are   shown   in
 Table\nbsp{}\ref{tab:anova_linear}, where  the /significance/ of each  factor is
-interpreted    from    the    F-test    and    $\text{Pr}(>\text{F})$    values.
-Table\nbsp{}\ref{tab:anova_linear}  uses  ``$*$'',  as   is  convention  in  the
-\texttt{R} language, to represent the significance values for each factor.
+interpreted from  $\text{p}(>\text{F})$ values.  We interpret  this /p/-value as
+the probability that we  would observe a value of the /F/  statistic at least as
+large as what we  did if the corresponding factor did not have  an impact on the
+response.  This approach  is subject to the usual  caveats regarding /p/-values,
+and it does not consider the practical significance of an effect.
 
-We      see     on      Table\nbsp{}\ref{tab:anova_linear}     that      factors
-$\left\{x_3,x_5,x_7,x_8\right\}$ have at least  one ``$*$'' of significance. For
-the purpose of  this example, this is  sufficient reason to include  them in our
-linear  model  for  the  next  step.   We decide  as  well  to  discard  factors
-$\left\{x_2,x_4,x_6\right\}$ from our  model, due to their  low significance. We
-see that factor $x_1$ has a significance mark of ``\cdot'', but comparing F-test
-and $\text{Pr}(>\text{F})$  values we decide  that they are fairly  smaller than
-the values of factors that had no significance, and we keep this factor.
-
-#+HEADER: :results graphics output :session *R* :exports none :eval no-export
-#+HEADER: :file ./img/ccgrid19/main_effects.pdf
-#+HEADER: :width 12 :height 4
-#+BEGIN_SRC R
-library(extrafont)
-
-names(design) <- c("x1", "x2", "x3",
-                   "x4", "x5", "x6",
-                   "x7", "x8", "d1",
-                   "d2", "d3", "Y")
-
-regression <- lm(Y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8, data = design)
-
-par(family = 'serif')
-MEPlot(regression, main = NULL, pch = 19,
-       lwd = 0, cex.xax = 2.9, cex.main = 3.1,
-       cex.axis = 1)
-#+END_SRC
-
-#+RESULTS:
-[[file:./img/ccgrid19/main_effects.pdf]]
+Table\nbsp{}\ref{tab:anova_linear} uses a  ``$*$'', as is convention  in /R/, to
+represent significance  levels for  each factor.  The  table shows  that factors
+$x_1$, $x_3$, $x_5$, $x_7$, and $x_8$ have at least two ``$*$'' of significance,
+corresponding  to a  /p/-value  smaller than  $0.01$. For  the  purpose of  this
+example, this will be sufficient reason to  include them in our linear model for
+the next  step.  We decide  as well to discard  factors $x_2$, $x_4$,  and $x_6$
+from the next model, due to their low significance.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
 library(xtable)
+library(broom)
+library(dplyr)
 
 options(warn = -1)
 names(design) <- c("x1", "x2", "x3",
@@ -11720,78 +11704,84 @@ names(design) <- c("x1", "x2", "x3",
                    "x7", "x8", "d1",
                    "d2", "d3", "Y")
 
-regression <- aov(Y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8, data = design)
-s_regression <- as.data.frame(summary.aov(regression)[[1]])
-s_regression <- s_regression[1:8, c("F value", "Pr(>F)")]
+regression <- tidy(aov(Y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8, data = design)) %>%
+    select(-df, -meansq) %>%
+    filter(term != "Residuals")
 
-s_regression$stars <- symnum(s_regression[ , "Pr(>F)"], na = FALSE,
-                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                             symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
+regression$stars <- symnum(regression$p.value, na = FALSE,
+                           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                           symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
 
-names(s_regression) <- c("F value", "$\\text{Pr}(>\\text{F})$", "Signif.")
+names(regression) <- c("Term",
+                       "Sum of Squares",
+                       "F-value",
+                       "$\\text{p}(>\\text{F})$",
+                       "``\\textit{Significance}''")
 
-rownames(s_regression) <- c("$x_1$", "$x_2$", "$x_3$",
-                            "$x_4$", "$x_5$", "$x_6$",
-                            "$x_7$", "$x_8$")
+cap <- paste("ANOVA table for the fit of the initial model,",
+             "with default significance levels from \\textit{R}")
 
-cap <- "Shortened ANOVA table for the fit of the naive model, with significance intervals from the \\texttt{R} language"
-x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "s"), label = "tab:anova_linear")
+x <- xtable(regression,
+            caption = cap,
+            digits = 3,
+            display = c("f", "s", "f", "f", "f", "s"),
+            label = "tab:anova_linear")
+
 align(x) <- xalign(x)
+
 options(warn = 0)
 print(x, size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       sanitize.text.function = function(x){x},
       table.placement="t",
+      include.rownames = FALSE,
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:04:10 2018
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Wed Mar 31 17:26:02 2021
 \begin{table}[t]
 \centering
-\caption{Shortened ANOVA table for the fit of the naive model, with significance intervals from the \texttt{R} language}
+\caption{ANOVA table for the fit of the initial model, with default significance levels from \textit{R}}
 \label{tab:anova_linear}
 \begingroup\small
-\begin{tabular}{lrrl}
+\begin{tabular}{lrrrl}
   \toprule
- & F value & $\text{Pr}(>\text{F})$ & Signif. \\
+Term & Sum of Squares & F-value & $\text{p}(>\text{F})$ & ``\textit{Significance}'' \\
   \midrule
-$x_1$ & 8.382 & 0.063 & $\cdot$ \\
-  $x_2$ & 0.370 & 0.586 &   \\
-  $x_3$ & 80.902 & 0.003 & $**$ \\
-  $x_4$ & 0.215 & 0.675 &   \\
-  $x_5$ & 46.848 & 0.006 & $**$ \\
-  $x_6$ & 5.154 & 0.108 &   \\
-  $x_7$ & 13.831 & 0.034 & $*$ \\
-  $x_8$ & 59.768 & 0.004 & $**$ \\
+x1 & 2.784 & 35.914 & 0.009 & $**$ \\
+  x2 & 0.216 & 2.790 & 0.193 &   \\
+  x3 & 38.896 & 501.798 & 0.000 & $***$ \\
+  x4 & 0.749 & 9.669 & 0.053 & $\cdot$ \\
+  x5 & 25.353 & 327.077 & 0.000 & $***$ \\
+  x6 & 0.995 & 12.832 & 0.037 & $*$ \\
+  x7 & 4.929 & 63.592 & 0.004 & $**$ \\
+  x8 & 43.838 & 565.548 & 0.000 & $***$ \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-Moving forward to steps 6,  7, and 8 in Figure\nbsp{}[[fig:doe_anova_strategy]],
-we will build a linear model using factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$,
-fit the model using  the values of $Y$ we obtained when  running our design, and
-use model  coefficients to predict the  levels of each factor  that minimize the
-real response. We  can do that because these factors  are numerical, even though
-only discrete values are allowed.
+Now, we fit a  linear model with factors $x_1$, $x_3$,  $x_5$, $x_7$, and $x_8$,
+using  the  measurements  of  $y$  we   obtained  when  running  our  design  in
+Table\nbsp{}\ref{tab:plackett},  and use  the  estimated  model coefficients  to
+predict the  levels of each  factor that minimize the  real response. We  can do
+that because these  factors are numerical, even though only  discrete values are
+allowed in the screening design.
 
-We now proceed to  the prediction step, where we wish to  identify the levels of
-factors  $\left\{x_1,x_3,x_5,x_7,x_8\right\}$ that  minimize  our fitted  model,
-without running any new  experiments. This can be done by,  for example, using a
-gradient descent  algorithm or  finding the  point where  the derivative  of the
-function given by the linear regression equals to zero.
+We now proceed  to the prediction step,  where the objective is  to identify the
+factor  levels  that  minimize  our   fitted  model,  without  running  any  new
+experiments.   This can  is done  in practice  by generating  a large  sample of
+experiments,  predicting the  value  of $f$  for each  one  using the  estimated
+coefficients, and picking the experiment with the smallest predicted response.
 
 Table\nbsp{}\ref{tab:linear_prediction_comparison}  compares the  prediction for
-$Y$     from    our     linear     model    with     the    selected     factors
-$\left\{x_1,x_3,x_5,x_7,x_8\right\}$ with the actual global minimum $Y$ for this
-problem.  Note  that factors  $\left\{x_2,x_4,x_6\right\}$ are included  for the
-global minimum. This  happens here because of the error  term $\varepsilon$, but
-could also be interpreted as due to model uncertainty.
+the best value of $f$, made with our linear model with significant factors, with
+the actual global optimum of $f$.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
@@ -11809,63 +11799,71 @@ regression <- lm(Y ~ x1 + x3 + x5 + x7 + x8, data = design)
 prediction <- predict(regression, newdata = objective_data)
 
 comparison_data <- objective_data[prediction == min(prediction), ]
-comparison_data <- bind_rows(comparison_data, objective_data[objective_data$Y == min(objective_data$Y), ])
-rownames(comparison_data) <- c(" Lin.", "Min.")
+comparison_data <- bind_rows(objective_data[objective_data$Y == min(objective_data$Y), ],
+                             comparison_data)
+rownames(comparison_data) <- c("\\textit{Global Optimum}",
+                               "\\textit{Screening Prediction}")
 
 names(comparison_data) <- c("$x_1$", "$x_3$", "$x_5$",
                             "$x_7$", "$x_8$", "$Y$")
 
-comparison_data[ , "$x_2$"] <- c("--", -0.2)
-comparison_data[ , "$x_4$"] <- c("--", 0.6)
-comparison_data[ , "$x_6$"] <- c("--", 0.4)
+comparison_data[ , "$x_2$"] <- c("--", "--")
+comparison_data[ , "$x_4$"] <- c("--", "--")
+comparison_data[ , "$x_6$"] <- c("--", "--")
 
 comparison_data <- comparison_data[ , c("$x_1$", "$x_2$", "$x_3$",
                                         "$x_4$", "$x_5$", "$x_6$",
                                         "$x_7$", "$x_8$", "$Y$")]
 
-names(comparison_data) <- c("$\\bm{x_1}$", "$x_2$", "$\\bm{x_3}$",
-                            "$x_4$", "$\\bm{x_5}$", "$x_6$",
-                            "$\\bm{x_7$}", "$\\bm{x_8}$", "$Y$")
+names(comparison_data) <- c("$\\mathbf{x_1}$", "$x_2$", "$\\mathbf{x_3}$",
+                            "$x_4$", "$\\mathbf{x_5}$", "$x_6$",
+                            "$\\mathbf{x_7$}", "$\\mathbf{x_8}$", "$y$")
 
-cap <- "Comparison of the response $Y$ predicted by the linear model and the true global minimum. Factors used in the model are bolded"
-x <- xtable(comparison_data, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3), label = "tab:linear_prediction_comparison")
+cap <- paste("Comparison between the response $y$",
+             "predicted by our linear model fit and the true global",
+             "optimum. Factors that were used in the model are in bold")
+
+x <- xtable(comparison_data,
+            caption = cap,
+            digits = c(2, 2, 2, 2, 2, 2, 2, 2, 2, 3),
+            label = "tab:linear_prediction_comparison")
+
 align(x) <- xalign(x)
 options(warn = 0)
+
 print(x,
-      size = "\\footnotesize",
+      size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       include.rownames = TRUE,
       sanitize.text.function = function(x){x},
-      tabular.environment = "tabularx",
-      width = "\\columnwidth",
       table.placement="b",
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:04:58 2018
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Wed Mar 31 17:38:23 2021
 \begin{table}[b]
 \centering
-\caption{Comparison of the response $Y$ predicted by the linear model and the true global minimum. Factors used in the model are bolded}
+\caption{Comparison between the response $y$ predicted by our linear model fit and the true global optimum. Factors that were used in the model are in bold}
 \label{tab:linear_prediction_comparison}
-\begingroup\footnotesize
-\begin{tabularx}{\columnwidth}{lrlrlrlrrr}
+\begingroup\small
+\begin{tabular}{lrlrlrlrrr}
   \toprule
- & $\bm{x_1}$ & $x_2$ & $\bm{x_3}$ & $x_4$ & $\bm{x_5}$ & $x_6$ & $\bm{x_7$} & $\bm{x_8}$ & $Y$ \\
+ & $\mathbf{x_1}$ & $x_2$ & $\mathbf{x_3}$ & $x_4$ & $\mathbf{x_5}$ & $x_6$ & $\mathbf{x_7$} & $\mathbf{x_8}$ & $y$ \\
   \midrule
- Lin. & -1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -1.0 & -1.046 \\
-  Min. & 1.0 & -0.2 & -1.0 & 0.6 & -1.0 & 0.4 & 0.8 & 0.0 & -9.934 \\
+\textit{Global Optimum} & 1.00 & -- & -1.00 & -- & -1.00 & -- & 1.00 & -0.40 & -8.998 \\
+  \textit{Screening Prediction} & -1.00 & -- & -1.00 & -- & -1.00 & -- & 1.00 & -1.00 & -1.258 \\
    \bottomrule
-\end{tabularx}
+\end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
 Using 12 measurements and a simple linear model, the predicted best value of $Y$
-was  around $10\times$  larger  than the  global optimum.  Note  that the  model
+was  around $10\times$  larger than  the global  optimum.  Note  that the  model
 predicted the  correct levels  for $x_3$  and $x_5$, and  almost for  $x_7$. The
 linear model  predicted wrong  levels for  $x_1$, perhaps  due to  this factor's
 interaction with  $x_3$, and  for $x_8$.   Arguably, it  would be  impossible to
@@ -11880,6 +11878,12 @@ problem and  use a more  flexible design  construction technique. Next,  we will
 discuss the  construction of  efficient designs using  problem-specific formulas
 and continue the optimization of our example.
 
+**** Plackett-Burman Designs using the Paley Construction of Hadamard Matrices
+:PROPERTIES:
+:CUSTOM_ID: sec:paley
+:END:
+
+- Describe algorithm
 *** Increasing Flexibility: Optimal Design
 :PROPERTIES:
 :CUSTOM_ID: sec:optimal
@@ -12126,7 +12130,7 @@ Intercept & 0.000 & 0.050 & 0.305 & 0.776 &   \\
 \end{table}
 #+END_EXPORT
 
-Table\nbsp{}\ref{tab:prediction_comparisons} compares the global minimum of this
+Table\nbsp{}\ref{tab:prediction_comparisons} compares the global optimum of this
 example with the predictions made by our initial linear model from the screening
 step, and  our improved  model. Using screening,  D-Optimal designs,  and domain
 knowledge,  we found  an optimization  within 10%  of the  global optimum  while
@@ -12154,7 +12158,7 @@ names(tab_dopt_data) <- c("$\\bm{x_1}$", "$x_2$", "$\\bm{x_3}$",
 dopt_comparison_data <- bind_rows(tab_dopt_data, comparison_data)
 rownames(dopt_comparison_data) <- c(" Quad.", "Lin.", "Min.")
 
-cap <- "Comparison of the response $Y$ predicted by our models and the true global minimum. Factors used in the models are bolded"
+cap <- "Comparison of the response $Y$ predicted by our models and the true global optimum. Factors used in the models are bolded"
 x <- xtable(dopt_comparison_data, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3), label = "tab:prediction_comparisons")
 align(x) <- xalign(x)
 options(warn = 0)
@@ -12174,7 +12178,7 @@ print(x,
 % Mon Oct 15 18:06:07 2018
 \begin{table}[ht]
 \centering
-\caption{Comparison of the response $Y$ predicted by our models and the true global minimum. Factors used in the models are bolded}
+\caption{Comparison of the response $Y$ predicted by our models and the true global optimum. Factors used in the models are bolded}
 \label{tab:prediction_comparisons}
 \begingroup\footnotesize
 \begin{tabular}{lrlrlrlrrr}
@@ -13648,7 +13652,7 @@ ANOVA  tests.   Section\nbsp{}[[Building  a Performance  Model]]  discusses  our
 initial  modeling hypotheses.   Section\nbsp{}[[Looking at  a Single  DLMT Run]]
 looks at  a single  run of  our approach,  linking the  factor levels  that were
 chosen at  each step  to ANOVA /p/-values,  and comparing to  the levels  of the
-global minimum.  Section\nbsp{}[[Evaluation  of Optimization Methods]] evaluates
+global optimum.  Section\nbsp{}[[Evaluation  of Optimization Methods]] evaluates
 the         performance         of        each         method.          Finally,
 Section\nbsp{}\ref{sec:laplacian-summary}  the  discussion   and  concludes  the
 chapter.

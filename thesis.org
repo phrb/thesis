@@ -11771,8 +11771,7 @@ We now proceed  to the prediction step,  where the objective is  to identify the
 factor  levels  that  minimize  our   fitted  model,  without  running  any  new
 experiments.   This can  is done  in practice  by generating  a large  sample of
 experiments,  predicting the  value  of $f$  for each  one  using the  estimated
-coefficients, and picking the experiment with the smallest predicted response.
-
+coefficients, and picking  the experiment with the  smallest predicted response.
 Table\nbsp{}\ref{tab:linear_prediction_comparison}  compares the  prediction for
 the best value of $f$, made with our linear model with significant factors, with
 the actual global optimum of $f$.
@@ -11811,7 +11810,7 @@ comparison_data <- comparison_data[ , c("$x_1$", "$x_2$", "$x_3$",
 
 names(comparison_data) <- c("$\\mathbf{x_1}$", "$x_2$", "$\\mathbf{x_3}$",
                             "$x_4$", "$\\mathbf{x_5}$", "$x_6$",
-                            "$\\mathbf{x_7$}", "$\\mathbf{x_8}$", "$y$")
+                            "$\\mathbf{x_7}$", "$\\mathbf{x_8}$", "$y$")
 
 cap <- paste("Comparison between the response $y$",
              "predicted by our linear model fit and the true global",
@@ -11831,22 +11830,22 @@ print(x,
       booktabs = TRUE,
       include.rownames = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="b",
+      table.placement="t",
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:38:23 2021
-\begin{table}[b]
+% Wed Mar 31 17:52:12 2021
+\begin{table}[t]
 \centering
 \caption{Comparison between the response $y$ predicted by our linear model fit and the true global optimum. Factors that were used in the model are in bold}
 \label{tab:linear_prediction_comparison}
 \begingroup\small
 \begin{tabular}{lrlrlrlrrr}
   \toprule
- & $\mathbf{x_1}$ & $x_2$ & $\mathbf{x_3}$ & $x_4$ & $\mathbf{x_5}$ & $x_6$ & $\mathbf{x_7$} & $\mathbf{x_8}$ & $y$ \\
+ & $\mathbf{x_1}$ & $x_2$ & $\mathbf{x_3}$ & $x_4$ & $\mathbf{x_5}$ & $x_6$ & $\mathbf{x_7}$ & $\mathbf{x_8}$ & $y$ \\
   \midrule
 \textit{Global Optimum} & 1.00 & -- & -1.00 & -- & -1.00 & -- & 1.00 & -0.40 & -8.998 \\
   \textit{Screening Prediction} & -1.00 & -- & -1.00 & -- & -1.00 & -- & 1.00 & -1.00 & -1.258 \\

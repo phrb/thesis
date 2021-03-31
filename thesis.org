@@ -11455,7 +11455,7 @@ tab = xtable(df,
                              "The main effects for $x_4$ and $x_5$ are aliased by,",
                              "or confounded with, the interaction effects $x_1x_2$",
                              "and $x_1x_3$"),
-             label = "tab:2level-fac")
+             label = "tab:frac-fac")
 
 align(tab) <- "ccccccr"
 
@@ -11471,11 +11471,11 @@ print(tab,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 13:36:10 2021
+% Wed Mar 31 14:38:57 2021
 \begin{table}[t]
 \centering
 \caption{A 2-level fractional factorial design of resolution 3 for 5 factors, with response $y = f(x_1,x_2,x_3,x_4,x_5) + \varepsilon$. The main effects for $x_4$ and $x_5$ are aliased by, or confounded with, the interaction effects $x_1x_2$ and $x_1x_3$}
-\label{tab:2level-fac}
+\label{tab:frac-fac}
 \begingroup\small
 \begin{tabular}{cccccr}
   \toprule

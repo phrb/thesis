@@ -11633,15 +11633,15 @@ print(tab, booktabs = TRUE,
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\scriptsize",
-      table.placement="b",
+      table.placement="t",
       sanitize.text.function = function(x){x})
 #+END_SRC
 
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:25:56 2021
-\begin{table}[b]
+% Wed Mar 31 17:49:43 2021
+\begin{table}[t]
 \centering
 \caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, with experiments $\mathbf{x}_1,\dots,\mathbf{x}_{12}$, and added ``dummy'' factors $d_1, d_2, d_3$. The response $y$ is subject to measurement error $\varepsilon$}
 \label{tab:plackett}
@@ -11728,7 +11728,7 @@ print(x, size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="t",
+      table.placement="b",
       include.rownames = FALSE,
       caption.placement = "top")
 #+END_SRC
@@ -11736,8 +11736,8 @@ print(x, size = "\\small",
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:26:02 2021
-\begin{table}[t]
+% Wed Mar 31 17:49:52 2021
+\begin{table}[b]
 \centering
 \caption{ANOVA table for the fit of the initial model, with default significance levels from \textit{R}}
 \label{tab:anova_linear}

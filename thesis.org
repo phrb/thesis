@@ -11520,115 +11520,86 @@ constructing orthogonal arrays.
 :PROPERTIES:
 :CUSTOM_ID: sec:screening
 :END:
-- Super efficient but very limited
-**** Plackett-Burman Designs
-***** Paley Construction of Hadamard Matrices
-- Describe algorithm
-**** An Example of Screening with Plackett-Burman Designs
-#+begin_export latex
-\todo[inline]{TODO: Adapt this section from the CCGRID paper.
-  It does not make sense to reference steps from the DLMT method here.}
-#+end_export
-
 Screening designs identify parsimoniously the main effects of 2-level factors in
-the initial stages of studying a  problem. While interactions are not considered
-at this stage, identifying main effects  early enables focusing on a smaller set
-of factors on subsequent experiments.  A specially efficient design construction
-technique   for    screening   designs    was   presented   by    Plackett   and
-Burman\nbsp{}\cite{plackett1946design} in  1946, and is available  in the =FrF2=
-package\nbsp{}\cite{gromping2014frf2}            of           the            =R=
+the initial  stages of  studying a  problem.  While  interactions are  still not
+considered at this  stage, identifying main effects early enables  focusing on a
+smaller set of factors on  subsequent experiments.  A specially efficient design
+construction  method  for  screening  designs  was  presented  by  Plackett  and
+Burman\nbsp{}\cite{plackett1946design} in  1946, and is available  in the /FrF2/
+package\nbsp{}\cite{gromping2014frf2}            of           the            /R/
 language\nbsp{}\cite{team2018rlanguage}.
 
-Despite  having  strong  restrictions  on   the  number  of  factors  supported,
-Plackett-Burman designs enable the identification of main effects of $n$ factors
-with $n  + 1$  experiments. Factors  may have  many levels,  but Plackett-Burman
-designs  can  only  be  constructed  for  2-level  factors.   Therefore,  before
-constructing a Plackett-Burman  design we must identify /high/  and /low/ levels
-for each factor.
+Despite  having strong  restrictions  on  the number  of  factors they  support,
+/Plackett-Burman/  designs enable  the  identification of  main  effects of  $p$
+factors  with $n  = p  +  1$ experiments.   Factors  may have  many levels,  but
+Plackett-Burman designs can only be constructed for 2-level factors.  Therefore,
+like we  did for fractional  and full  factorial designs, before  constructing a
+Plackett-Burman design we  must identify and encode /high/ and  /low/ levels for
+each factor.
 
-#+begin_export latex
-\begin{table}[b]
-    \centering
-    \scriptsize
-    \caption{A Plackett-Burman design for 7 2-level factors, where low and high levels are represented by $-1$ and $1$, respectively}
-    \label{tab:screening}
-    \begin{tabular}{@{}cccccccc@{}}
-        \toprule
-        Run & A & B & C & D & E & F & G \\ \midrule
-        1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 \\
-        2 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 \\
-        3 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 \\
-        4 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 \\
-        5 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 \\
-        6 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 \\
-        7 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!30}1 & \cellcolor{gray!10}-1 & \cellcolor{gray!30}1 \\
-        8 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1 & \cellcolor{gray!10}-1  \\ \bottomrule
-    \end{tabular}
-\end{table}
-#+end_export
+This section presents  an example of /screening/, an interesting  first stage on
+the  sequential approach  to  building  a linear  model  for  a given  objective
+function.  The first  step in the sequential  approach is to build  a design for
+the factors we wish  to study. Then, we run experiments  and analyze the results
+to  find /significant/  factors, using  a  statistical analysis  method such  as
+ANOVA.   Next, we  /restrict/  the  target search  space  by fixing  significant
+factors to their best predicted levels,  and start the process again.  There are
+many  caveats to  the effectiveness  of  this approach,  as we  will discuss  in
+Part\nbsp{}[[Applications]].  In the  next section we will  go beyond screening,
+and discuss how we can explore more complex linear models using Optimal Design.
 
-Assuming a linear  relationship between factors and the  response is fundamental
-for  running ANOVA  tests using  a Plackett-Burman  design. Consider  the linear
-relationship
-#+LATEX: \vspace{-2pt}
-#+BEGIN_EXPORT latex
-\begin{equation}
-\mathbf{Y} = \bm{\beta}\mathbf{X} + \varepsilon\text{,}
-\label{eq:linear_assumption}
-\vspace{-2pt}
-\end{equation}\noindent
-#+END_EXPORT
-where $\varepsilon$  is the error  term, $\mathbf{Y}$ is the  observed response,
-$\mathbf{X}  =  \left\{1,  x_1,\dots,x_n\right\}$  is the  set  of  $n$  2-level
-factors, and $\bm{\beta} = \left\{\beta_0,\dots,\beta_n\right\}$ is the set with
-the  /intercept/ $\beta_0$  and the  corresponding /model  coefficients/.  ANOVA
-tests can  rigorously compute the significance  of each factor, we  can think of
-that intuitively by noting that less significant factors will have corresponding
-values in $\bm{\beta}$ close to zero.
-
-The  next example  illustrates the  screening  methodology. Suppose  we wish  to
-minimize  a performance  metric $Y$  of a  problem with  factors $x_1,\dots,x_8$
-assuming values  in $\left\{-1,  -0.8, -0.6, \dots,  0.6, 0.8,  1\right\}$. Each
-$y_i \in Y$ is defined as
-#+LATEX: \vspace{-2pt}
+Because we are only  looking at the two extreme levels for  each factor, we must
+start  from the  hypothesis  of  linear relationships  between  factors and  the
+response.   This is  always  the  case when  using  Plackett-Burman designs  and
+two-level screening in general. We the  present how the screening approach works
+the example  that follows.  Suppose  we wish  to minimize an  objective function
+written
 #+BEGIN_EXPORT latex
 \begin{align}
-\label{eq:real_model}
-y_i = & -1.5x_1 + 1.3x_3 + 3.1x_5 + \\
-& -1.4x_7 + 1.35x_8^2 + 1.6x_3x_5 + \varepsilon\text{.} \nonumber
-\vspace{-2pt}
-\end{align}\noindent
+  \label{eq:real_model}
+  f(\mathbf{x}) = -1.5\,x_1 + 1.3\,x_3 + 3.1\,x_5 + -1.4\,x_7 +
+  1.35\,x_8^2 + 1.6\,x_3x_5 + \varepsilon\text{,}
+\end{align}
 #+END_EXPORT
-Suppose that, for the purpose of this example, the computation is done by a very
-expensive  black-box procedure.   Note  that factors  $\{x_2,x_4,x_6\}$ have  no
+where  $x1,\dots,x_8$ are  real  numbers in  the $[-1,  1]$  interval.  For  the
+purpose of this  example, suppose the measurement of  each point $f(\mathbf{x})$
+is  very  expensive.   Note  that  factors  $x_2$,  $x_4$,  and  $x_6$  have  no
 contribution to the  response, and we can think of  the error term $\varepsilon$
-as representing not only noise, but  our uncertainty regarding the model. Higher
-amplitudes of $\varepsilon$  might make isolating factors  with low significance
-harder to justify.
+as representing  not only measurement  noise, but our uncertainty  regarding the
+model.   Constructing a  Plackett-Burman  design will  minimize the  experiments
+needed to identify  significant linear effects, and the analysis  of this design
+will enable decreasing the dimension of the search space of interest.
 
-To  study this  problem efficiently  we decided  to construct  a Plackett-Burman
-design, which minimizes the experiments  needed to identify significant factors.
-The analysis of this design will enable decreasing the dimension of the problem.
-Table\nbsp{}\ref{tab:plackett} presents the Plackett-Burman design we generated.
-It contains  high and low  values, chosen  to be $-1$  and $1$, for  the factors
-$x_1,\dots,x_8$, and the observed response  $\mathbf{Y}$.  It is a required step
-to add the 3 ``dummy'' factors $d_1,\dots,d_3$ to complete the 12 columns needed
-to       construct       a        Plackett-Burman       design       for       8
-factors\nbsp{}\cite{plackett1946design}.
+Our initial modeling hypothesis for the screening experiment is written
+#+begin_export latex
+\begin{align}
+  \label{eq:linear_hypothesis}
+  \hat{f}_{\theta}(\mathbf{x}) = \mathbf{x}^{\top}\theta + \varepsilon \text{,}
+\end{align}
+#+end_export
+and Table\nbsp{}\ref{tab:plackett} shows the Plackett-Burman design we generated
+for testing it.  The design consists of an orthogonal matrix with twelve rows an
+eleven columns,  containing the extreme  levels of factors  $x_1,\dots,x_8$ plus
+three  ``dummy''  factors  $d_1,d_2,d_3$,   completing  the  columns  needed  to
+construct         a         Plackett-Burman         design         for         8
+factors\nbsp{}\cite{plackett1946design}.    We   present    an   algorithm   for
+constructing  such designs  in Section\nbsp{}\ref{sec:paley}.  The final  design
+matrix also contains a column for  the computed response, subject to measurement
+error.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
 library(FrF2)
 library(xtable)
 
-set.seed(3138989)
+set.seed(313899)
 
-get_cost <- function(data) {
+get_cost <- function(data, sd = 0.2) {
     return((-1.5 * as.numeric(data$x1)) + (1.3 * as.numeric(data$x3)) +
            (1.6 * as.numeric(data$x1) * as.numeric(data$x3)) +
            (1.35 * as.numeric(data$x8) * as.numeric(data$x8)) +
            (3.1 * as.numeric(data$x5)) + (-1.4 * as.numeric(data$x7)) +
-           rnorm(nrow(data), sd = 0.6))
+           rnorm(nrow(data), sd = sd))
 }
 
 objective_data <- expand.grid(seq(-1, 1, 0.2),

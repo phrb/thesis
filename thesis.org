@@ -8748,6 +8748,105 @@ df = bind_rows(
 #+end_SRC
 
 #+RESULTS:
+
+******* Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/booth_descent_gradient_sampling.pdf" :width 21 :height 16 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+fill_palette = "ggthemes::Gray"
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 36
+title_size = 34
+optimum_size = 8
+optimum_stroke = 4
+optima_shape = 4
+contour_color = "gray65"
+grad_alpha = 0.3
+
+scale_limits = c(-10.1, 10.1)
+
+theme_config <- function() {
+    theme(axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          strip.background = element_rect(fill = "transparent"),
+          strip.text = element_text(size = title_size))
+}
+
+colors = paletteer_d(palette = "RColorBrewer::Set1", n = 4)
+
+p_noise = ggplot(df) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy),
+                 color = contour_color,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_segment(data = plot_df %>%
+                    filter(x %in% picked & y %in% picked),
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
+                              (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    y = (y + (grad_length *
+                              (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
+                                             (y_grad_noisy ^ 2))))),
+                    color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                arrow = arrow(type = "closed", length = unit(0.01, "npc")),
+                alpha = grad_alpha,
+                size = 1.4,
+                show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z_noisy == min(z_noisy)),
+               aes(x = x,
+                   y = y),
+               color = colors[[1]],
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    geom_point(data = df %>%
+                   filter(z_noisy != min(z_noisy)),
+               aes(x = x,
+                   y = y),
+               color = colors[[2]],
+               size = optimum_size - 2) +
+    geom_point(data = df %>%
+                   group_by(id) %>%
+                   filter(z_noisy == min(z_noisy)) %>%
+                   ungroup(),
+               aes(x = x,
+                   y = y),
+               color = colors[[1]],
+               size = optimum_size) +
+    xlab(TeX("$x_2$")) +
+    ylab(TeX("$x_1$")) +
+    facet_wrap(id ~ ., ncol = 3) +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_color_paletteer_c(palette = fill_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config()
+
+p_noise
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/experimental_design/booth_descent_gradient_sampling.pdf]]
+
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

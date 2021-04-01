@@ -11899,10 +11899,6 @@ and continue the optimization of our example.
   been needed, or  an important interaction was not included),  we won't be able
   to detect it (lack of fit).
 
-**** The KL-Exchange Algorithm
-- Add pseudocode, or schematic figure
-- Fedorov's algorithm is a special case of this
-
 **** An Example with D-Optimal Designs
 #+begin_export latex
 \todo[inline]{TODO: Adapt this section from the CCGRID paper.
@@ -12212,6 +12208,10 @@ model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
 Figure\nbsp{}[[fig:doe_anova_strategy]].  In  the next  section we  evaluate the
 performance of our DOE approach in two scenarios.
 
+**** The KL-Exchange Algorithm                                  :noexport:
+- Add pseudocode, or schematic figure
+- Fedorov's algorithm is a special case of this
+
 *** Exploration with Space-Filling Designs
 :PROPERTIES:
 :CUSTOM_ID: sec:filling
@@ -12232,22 +12232,24 @@ performance of our DOE approach in two scenarios.
 #+end_export
 
 #+NAME: fig:sampling_comparison
-#+CAPTION: Exploration of the search space, using a fixed budget of 50 points. The red ``$+$'' represents the best point found by each strategy, and ``$\times$''s denote neighborhood exploration
+#+CAPTION: Exploration of the search space, using a fixed budget of 50 points.
+#+CAPTION: The red ``$+$'' represents the best point found by each strategy,
+#+CAPTION: and ``$\times$''s denote neighborhood exploration
 #+ATTR_LATEX: :width .95\columnwidth :placement [b]
 [[./img/ccgrid19/sampling_comparison.pdf]]
 
-Figure\nbsp{}[[fig:sampling_comparison]] shows the contour of a search space defined
-by a function of the form $z =  x^2 + y^2 + \varepsilon$, where $\varepsilon$ is
-a local perturbation, and the exploration  of that search space by six different
-strategies. In such a simple search space, even a uniform random sample can find
-points  close  to  the  optimum,  despite  not  exploiting  geometry.   A  Latin
-Hypercube\nbsp{}\cite{carnell2018lhs} sampling strategy  covers the search space
-more evenly, but  still does not exploit the space's  geometry. Strategies based
-on neighborhood exploration such as simulated annealing and gradient descent can
-exploit local structures, but may get trapped in local minima. Their performance
-is strongly dependent on search starting point. These strategies do not leverage
-global  search   space  structure,   or  provide  exploitable   knowledge  after
-optimization.
+Figure\nbsp{}[[fig:sampling_comparison]]  shows the  contour of  a search  space
+defined  by a  function  of  the form  $z  = x^2  +  y^2  + \varepsilon$,  where
+$\varepsilon$ is a local perturbation, and  the exploration of that search space
+by  six different  strategies. In  such a  simple search  space, even  a uniform
+random  sample can  find points  close to  the optimum,  despite not  exploiting
+geometry.   A  Latin   Hypercube\nbsp{}\cite{carnell2018lhs}  sampling  strategy
+covers the  search space  more evenly,  but still does  not exploit  the space's
+geometry.  Strategies  based  on  neighborhood  exploration  such  as  simulated
+annealing and gradient descent can exploit local structures, but may get trapped
+in  local minima.  Their performance  is strongly  dependent on  search starting
+point.  These strategies  do  not  leverage global  search  space structure,  or
+provide exploitable knowledge after optimization.
 
 Measurement  of  the  kernels  optimized   on  the  performance  evaluations  in
 Section\nbsp{}Performance Evaluation  can exceed 20 minutes,  including the time

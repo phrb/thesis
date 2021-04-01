@@ -11890,23 +11890,6 @@ and continue the optimization of our example.
 :PROPERTIES:
 :CUSTOM_ID: sec:optimal
 :END:
-- Extensive theory development
-  - General equivalence of design criteria
-
-- A  "flexible" screening:  allows  to include  non-linear terms,  interactions,
-  etc. if needed.
-
-- Awesome but if  a parameter was not included  in the model or if  the model is
-  too simple (e.g. only comprised a linear term where a quadratic one would have
-  been needed, or  an important interaction was not included),  we won't be able
-  to detect it (lack of fit).
-
-**** An Example with D-Optimal Designs
-#+begin_export latex
-\todo[inline]{TODO: Adapt this section from the CCGRID paper.
-  It does not make sense to reference steps from the DLMT method here.}
-#+end_export
-
 The  application of  DOE  to autotuning  problems  requires design  construction
 techniques  that  support factors  of  arbitrary  types  and number  of  levels.
 Autotuning problems typically combine factors  such as binary flags, integer and

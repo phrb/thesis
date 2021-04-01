@@ -8828,7 +8828,11 @@ the  Gaussian  Process Regression  method,  and  its application  to  autotuning
 problems.   Chapter\nbsp{}[[Conclusion]] resumes  and  concludes the  high-level
 discussions of this chapter, in light of the results of the excursions performed
 in this thesis.
-** The Need for Autotuning
+** Hardware Design Trends and Consequences for Code Optimization
+:PROPERTIES:
+:UNNUMBERED: nil
+:CUSTOM_ID: chap:trends
+:END:
 High Performance Computing  has been a cornerstone of  scientific and industrial
 progress for at least five decades.  By paying the cost of increased complexity,
 software  and  hardware  engineering   advances  continue  to  overcome  several

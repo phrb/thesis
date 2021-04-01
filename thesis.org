@@ -12318,7 +12318,7 @@ print(x,
       math.style.exponents = TRUE,
       booktabs = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="t",
+      table.placement="b",
       include.rownames = FALSE,
       caption.placement = "top")
 #+END_SRC
@@ -12326,8 +12326,8 @@ print(x,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Thu Apr  1 13:40:27 2021
-\begin{table}[t]
+% Thu Apr  1 17:18:16 2021
+\begin{table}[b]
 \centering
 \caption{ANOVA table for the fit of the improved model, with default significance levels from \textit{R}}
 \label{tab:anova_dopt}

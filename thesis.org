@@ -15653,7 +15653,17 @@ interesting paths that we could point to during this chapter, but that we do not
 explore in this thesis.
 
 * Conclusion
+:PROPERTIES:
+:UNNUMBERED: t
+:CUSTOM_ID: part:conclusion
+:END:
+#+latex: \addcontentsline{toc}{part}{\nameref{part:conclusion}}
+
 ** Conclusion
+:PROPERTIES:
+:UNNUMBERED: nil
+:CUSTOM_ID: chap:conclusion
+:END:
 * References                                                         :ignore:
 #+begin_export latex
 \bibliographystyle{IEEEtran}

@@ -10409,6 +10409,9 @@ quality of fit for linear models on Section\nbsp{}[[Assessing the Quality of Fit
 of Linear Model Surrogates]].
 
 **** Fitting the Model: The Ordinary Least Squares Estimator
+:PROPERTIES:
+:CUSTOM_ID: sec:fitting-ols
+:END:
 
 #+latex: \todo[inline]{Remove reference to H, add dot prod. equal zero}
 

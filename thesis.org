@@ -11948,12 +11948,26 @@ estimators.  The  search for the  best design model  matrix is done  by swapping
 experiments from  the current candidate design  with experiments from a  pool of
 possible experiments until some stopping criterion is met.
 
-Table\nbsp{}\ref{tab:d_optimal}.   Note that  the design  includes levels  $-1$,
-$0$, and $1$ for factor $x_8$. The  design will sample from different regions of
-the   search   space   due   to   the  quadratic   term,   as   was   shown   in
-Figure\nbsp{}[[fig:sampling_comparison]].
+Returning to our  screening example from the previous section,  suppose that, in
+addition to using our previous screening results, we decide to consult an expert
+in    the    problem    represented    by    our    objective    function,    in
+Equation\nbsp{}\ref{eq:real_model}.   The  expert  mentions  that  factor  $x_1$
+typically interacts strongly with factor $x_3$,  and also that we should replace
+include a quadratic term for $x_8$,  because there are some management overheads
+related to it. In Chapter\nbsp{}\ref{chap:laplacian}  we will see a real example
+of the impact of such expert-guided models on the effectiveness of autotuning.
 
-#+HEADER: :results output latex :session *R* :exports results :eval no-export
+Using this  improved performance  model, built with  a screening  experiment and
+expert knowledge, we can construct a D-Optimal design using Fedorov's algorithm.
+We have  much more  flexibility than screening  when using  exchange algorithms,
+being able  to choose more  model terms and also  how many experiments  we would
+like to run.  We still need sufficient  degrees of freedom to fit our new model,
+and  we  use  Fedorov's  algorithm  to  produce  the  12  experiments  shown  in
+Table\nbsp{}\ref{tab:d_optimal}.   Note that  the design  includes levels  $-1$,
+$0$, and  $1$ for  factor $x_8$.  Because  we have added  a quadratic  term, the
+optimal design will contain factor levels other than the extremes.
+
+#+HEADER: :results output :session *R* :exports none :eval no-export
 #+BEGIN_SRC R
 library(xtable)
 library(dplyr)

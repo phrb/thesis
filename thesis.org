@@ -8631,6 +8631,123 @@ ggplot() +
 #+RESULTS:
 [[file:./img/experimental_design/interactions.pdf]]
 
+**** Looking at Sampling Methods
+***** Booth's Function with Gradient
+****** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+******* Setup
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+library(dplyr)
+library(pracma)
+library(AlgDesign)
+library(randtoolbox)
+library(FrF2)
+library(DoE.base)
+library(DoE.wrapper)
+
+resolution = 100
+
+noise_sd = 20
+
+plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE) %>%
+    select(-z, -z_constrained, -x_grad, -y_grad)
+
+
+f <- function(y, x){
+    return(((x + (2 * y) - 7) ^ 2) +
+           (((2 * x) + y - 5)^ 2) +
+           rnorm(length(y),
+                 mean = 0.0,
+                 sd = 20))
+}
+
+map_intervals <- function(df_from, df_to) {
+    df_from %>%
+        mutate(x = (df_from$x * (max(df_to$x) - min(df_to$x))) + min(df_to$x),
+               y = (df_from$y * (max(df_to$y) - min(df_to$y))) + min(df_to$y))
+}
+
+sample_runif <- function(df, budget) {
+    sample = df %>%
+        sample_n(size = budget) %>%
+        mutate(id = "Uniform Random") %>%
+        select(x, y, z_noisy, id)
+}
+
+sample_lhs <- function(df, budget) {
+    sample = data.frame(
+        lhs.design(factor.names = list(x = c(min(unique(plot_df$x)),
+                                             max(unique(plot_df$x))),
+                                       y = c(min(unique(plot_df$y)),
+                                             max(unique(plot_df$y)))),
+                   nruns = budget, nfactors = 2)) %>%
+        mutate(id = "Latin Hypercube",
+               z_noisy = f(y, x))
+}
+
+sample_sobol <- function(df, budget) {
+    sample = data.frame(sobol(budget, 2)) %>%
+        rename(x = X1,
+               y = X2) %>%
+        map_intervals(df) %>%
+        mutate(id = "Sobol",
+               z_noisy = f(y, x))
+}
+
+sample_optimal <- function(df, budget, frml, id) {
+    output = optFederov(frml, df, nTrials = budget)
+    regression = lm(frml, output$design)
+
+    prediction = df %>%
+        mutate(pred = predict(regression,
+                              newdata = df)) %>%
+        filter(pred == min(pred))
+
+    sample = bind_rows(output$design,
+                       prediction) %>%
+        mutate(id = id) %>%
+        select(x, y, z_noisy, id)
+}
+
+samples = 30
+
+df = bind_rows(
+    sample_runif(plot_df,
+                 samples),
+    sample_lhs(plot_df,
+               samples),
+    sample_sobol(plot_df,
+                 samples),
+    sample_optimal(plot_df,
+                   samples,
+                   z_noisy ~ x + y,
+                   "Optimal Design: Linear"),
+    sample_optimal(plot_df,
+                   samples,
+                   z_noisy ~ x + y + I(x ^ 2) + I(y ^ 2),
+                   "Optimal Design: Quadratic"),
+    sample_optimal(plot_df,
+                   samples,
+                   z_noisy ~ x * y + I(x ^ 2) * I(y ^ 2),
+                   "Optimal Design: Interactions")
+) %>%
+    mutate(id = factor(id,
+                       levels = c("Uniform Random",
+                                  "Latin Hypercube",
+                                  "Sobol",
+                                  "Optimal Design: Linear",
+                                  "Optimal Design: Quadratic",
+                                  "Optimal Design: Interactions")))
+
+#+end_SRC
+
+#+RESULTS:
 ** Applications (Part III)
 *** HAQ Experiments with NNs
 **** ResNet50 Shrunken Structure

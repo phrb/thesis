@@ -8705,8 +8705,18 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 :   warnings.warn("ONNX export mode is set to " + training_mode +
 * Table of Contents                                                  :ignore:
 #+TOC: headlines 5
-* Historical Hardware Design Trends and Consequences for Code Optimization
+* Introduction
+:PROPERTIES:
+:UNNUMBERED: t
+:CUSTOM_ID: part:intro
+:END:
+#+latex: \addcontentsline{toc}{part}{\nameref{part:intro}}
+
 ** Introduction
+:PROPERTIES:
+:UNNUMBERED: nil
+:CUSTOM_ID: chap:intro
+:END:
 Computer  performance has  sustained exponential  increases over  the last  half
 century,  despite   current  physical  limits  on   hardware  design.   Software
 optimization  has  performed an  increasingly  substantial  role on  performance

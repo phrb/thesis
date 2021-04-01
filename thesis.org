@@ -10026,12 +10026,12 @@ of  such  methods.
 [[file:img/seymour2008comparison.pdf]]
 
 Typical  autotuning   search  spaces,  such   as  the  one  we   encountered  in
-Chapter\nbsp{}[[The    Need   for    Autotuning]],    which    is   reproduced    in
-Figure\nbsp{}[[fig:search-space-2]],  clearly  present  considerable  challenges  to
+Chapter\nbsp{}\ref{chap:trends},       which        is       reproduced       in
+Figure\nbsp{}[[fig:search-space-2]], clearly present  considerable challenges to
 derivative-based methods,  due to  the abundance of  local minima,  valleys, and
 ridges.   Since  we  have  closed-form   expression  for  the  search  space  in
-Figure\nbsp{}[[fig:search-space-2]], we would have  to perform a considerable number
-of  evaluations  of $f$  in  order  to estimate  its  derivative  at each  step.
+Figure\nbsp{}[[fig:search-space-2]],  we would  have to  perform a  considerable
+number of evaluations of  $f$ in order to estimate its  derivative at each step.
 Although gradient  descent and other  derivative-based methods can  be effective
 and  are  historically  important,  measuring  $f$  is  usually  not  cheap  for
 autotuning search spaces.  Therefore, minimizing  experimentation cost is also a

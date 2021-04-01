@@ -12551,8 +12551,8 @@ such designs.
 #+CAPTION: Exploration of the search space, using a fixed budget of 50 points.
 #+CAPTION: The red ``$+$'' represents the best point found by each strategy,
 #+CAPTION: and ``$\times$''s denote neighborhood exploration
-#+ATTR_LATEX: :width .95\columnwidth :placement [b]
-[[./img/ccgrid19/sampling_comparison.pdf]]
+#+ATTR_LATEX: :width .89\columnwidth :placement [t]
+[[./img/experimental_design/booth_descent_gradient_sampling.pdf]]
 
 Figure\nbsp{}[[fig:sampling_comparison]]  shows the  contour of  a search  space
 defined  by a  function  of  the form  $z  = x^2  +  y^2  + \varepsilon$,  where

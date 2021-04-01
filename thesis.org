@@ -11895,35 +11895,59 @@ techniques  that  support factors  of  arbitrary  types  and number  of  levels.
 Autotuning problems typically combine factors  such as binary flags, integer and
 floating point numerical values, and  unordered enumerations of abstract values.
 Because Plackett-Burman designs only support 2-level factors, we had to restrict
-factor levels  to interval extremities in  our example.  We have  seen that this
-restriction makes it  difficult to measure the significance  of quadratic terms.
-We  will now  show  how to  optimize  our example  further  by using  /D-Optimal
-designs/, which increase the number of  levels we can efficiently screen for and
-enables detecting the significance of more complex terms.
+factor levels  to interval extremities in  the example of the  previous section.
+We have seen that this restriction  makes it impossible to test hypotheses using
+quadratic terms.  We will continue to explore the search space of our example by
+using  /D-Optimal  designs/,  which  increase   the  number  of  levels  we  can
+efficiently screen for and enables testing more complex linear model hypotheses.
 
-To construct  a D-Optimal  design it  is necessary to  choose an  initial model,
-which can be  done based on previous  experiments or on expert  knowledge of the
-problem.  Once  a model  is selected, algorithmic  construction is  performed by
-searching for the set of experiments that minimizes /D-Optimality/, a measure of
-the /variance/ of the /estimators/  for the /regression coefficients/ associated
-with the  selected model. This  search is  usually done by  swapping experiments
-from  the current  candidate design  with experiments  from a  pool of  possible
-experiments, according to  certain rules, until some stopping  criterion is met.
-In  the  example  in  this  section   and  in  our  approach  we  use  Fedorov's
-algorithm\nbsp{}\cite{fedorov1972theory}  for  constructing  D-Optimal  designs,
-implemented in =R= in the =AlgDesign= package\nbsp{}\cite{wheeler2014algdesign}.
+Like  we did  for  screening, to  construct  a D-Optimal  design  we must  first
+determine  initial modeling  hypotheses, which  can  be done  based on  previous
+experiments and analyses, or on knowledge about the problem.  This initial model
+can be more complex than in the  screening example, using any basis function set
+for  linear  models,  as we  discussed  in  Section\nbsp{}\ref{sec:fitting-ols},
+including polynomial terms of higher  orders, interactions, and other non-linear
+relationships between factors.
 
-In our example, suppose that in addition to using our previous screening results
-we decide  to hire an  expert in our problem's  domain. The expert  confirms our
-initial assumptions that the factor $x_1$  should be included in our model since
-it is usually significant for this kind  of problem and has a strong interaction
-with factor $x_3$. She also mentions we should replace the linear term for $x_8$
-by a quadratic term for this factor.
+We can  then use /exchange/  algorithms to construct  an optimal design  for our
+selected  hypothesis,  optimizing  different  criteria  related  to  the  trace,
+determinant,  condition  number, and  other  properties  of the  design's  model
+matrix.   We refer  the reader  to  Chapters /9/  through /12/  of Atkinson  /et
+al./\nbsp{}\cite{atkinson2007optimum} for discussions  on Optimal Design theory,
+the general equivalence between design optimality criteria, and the construction
+of  /D-Optimal/ designs  using the  /KL Exchange/  algorithm.  In  the following
+examples, and  in our  work with  optimal designs for  autotuning, we  have used
+D-Optimal          designs          constructed          with          Fedorov's
+algorithm\nbsp{}\cite{fedorov1972theory},  a  particular  case of  KL  Exchange,
+implemented in the /AlgDesign/ /R/ package\nbsp{}\cite{wheeler2014algdesign}.
 
-Using our previous screening and the domain knowledge provided by our expert, we
-choose a new performance model and use  it to construct a D-Optimal design using
-Fedorov's algorithm. Since  we need enough degrees of freedom  to fit our model,
-we     construct    the     design    with     12    experiments     shown    in
+Exchange algorithms for optimal designs build a design model matrix $\mathbf{X}$
+by  selecting experiments  $\mathbf{x}_1,\dots,\mathbf{x}_n$ in  a search  space
+$\mathcal{X}$ that  optimize a  given design metric.   The /D-Criterion/  is one
+such metric, which measures the variance of the estimator $\hat{\theta}$ for the
+coefficients of a linear model, written
+#+begin_export latex
+\begin{align}
+  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\top}\mathbf{X})^{-1}\sigma^{2}\text{,}
+\end{align}
+#+end_export
+where $\sigma^{2}$  is the variance  of measurements of the  objective function.
+The  D-Criterion $D(\mathbf{X})$  of an  $n\times{}p$ design  model matrix  is a
+measure of the determinant of the information matrix related to the linear model
+we wish to test, and is written
+#+begin_export latex
+\begin{align}
+  \label{eq:d-crit}
+  D(\mathbf{X}) =
+  \text{det}\left(\frac{\mathbf{X}^{\top}\mathbf{X}}{p}\right)^{\dfrac{1}{n}}
+  \text{.}
+\end{align}
+#+end_export
+The higher  the value of  the D-Criterion, the smaller  will be the  variance of
+estimators.  The  search for the  best design model  matrix is done  by swapping
+experiments from  the current candidate design  with experiments from a  pool of
+possible experiments until some stopping criterion is met.
+
 Table\nbsp{}\ref{tab:d_optimal}.   Note that  the design  includes levels  $-1$,
 $0$, and $1$ for factor $x_8$. The  design will sample from different regions of
 the   search   space   due   to   the  quadratic   term,   as   was   shown   in

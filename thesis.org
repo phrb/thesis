@@ -11981,16 +11981,26 @@ dopt_design <- output$design
 
 dopt_regression <- lm(Y ~ x1 + x3 + x5 + x7 + x8 + I(x8 ^ 2) + x1:x3, data = dopt_design)
 dopt_prediction <- predict(dopt_regression, newdata = objective_data)
+#+end_SRC
 
+#+RESULTS:
+
+#+begin_SRC R :results output latex :session *R* :eval no-export :exports results
 dopt_data <- objective_data[dopt_prediction == min(dopt_prediction), ]
 names(dopt_data) <- c("$x_1$", "$x_3$", "$x_5$",
                       "$x_7$", "$x_8$", "$Y$")
 
 names(dopt_design) <- c("$x_1$", "$x_3$", "$x_5$",
-                        "$x_7$", "$x_8$", "$Y$")
+                        "$x_7$", "$x_8$", "$y = f(\\mathbf{x}) + \\varepsilon$")
 
-cap <- "D-Optimal design constructed for the factors $\\left\\{x_1,x_3,x_5,x_7,x_8\\right\\}$ and computed response $Y$"
-x <- xtable(dopt_design, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 3), label = "tab:d_optimal")
+cap <- paste("D-Optimal design with 12 experiments, constructed for the surrogate",
+             "$\\hat{f}_{\\theta} \\sim x_1 + x_3 + x_5 + x_7 + x_8",
+             "+ x_{8}^{2} + x_1x_3$, with corresponding measurements")
+
+x <- xtable(dopt_design,
+            caption = cap,
+            digits = c(1, 1, 1, 1, 1, 1, 2),
+            label = "tab:d_optimal")
 align(x) <- xalign(x)
 options(warn = 0)
 print(x,
@@ -12004,94 +12014,120 @@ print(x,
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:05:40 2018
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Thu Apr  1 13:41:36 2021
 \begin{table}[t]
 \centering
-\caption{D-Optimal design constructed for the factors $\left\{x_1,x_3,x_5,x_7,x_8\right\}$ and computed response $Y$}
+\caption{D-Optimal design with 12 experiments, constructed for the surrogate $\hat{f}_{\theta} \sim x_1 + x_3 + x_5 + x_7 + x_8 + x_{8}^{2} + x_1x_3$, with corresponding measurements}
 \label{tab:d_optimal}
 \begingroup\footnotesize
 \begin{tabular}{rrrrrr}
   \toprule
-$x_1$ & $x_3$ & $x_5$ & $x_7$ & $x_8$ & $Y$ \\
+$x_1$ & $x_3$ & $x_5$ & $x_7$ & $x_8$ & $y = f(\mathbf{x}) + \varepsilon$ \\
   \midrule
--1.0 & -1.0 & -1.0 & -1.0 & -1.0 & 2.455 \\
-  -1.0 & 1.0 & 1.0 & -1.0 & -1.0 & 6.992 \\
-  1.0 & -1.0 & -1.0 & 1.0 & -1.0 & -7.776 \\
-  1.0 & 1.0 & 1.0 & 1.0 & -1.0 & 4.163 \\
-  1.0 & 1.0 & -1.0 & -1.0 & 0.0 & 0.862 \\
-  -1.0 & 1.0 & 1.0 & -1.0 & 0.0 & 5.703 \\
-  1.0 & -1.0 & -1.0 & 1.0 & 0.0 & -9.019 \\
-  -1.0 & -1.0 & 1.0 & 1.0 & 0.0 & 2.653 \\
-  -1.0 & -1.0 & -1.0 & -1.0 & 1.0 & 1.951 \\
-  1.0 & -1.0 & 1.0 & -1.0 & 1.0 & 0.446 \\
-  -1.0 & 1.0 & -1.0 & 1.0 & 1.0 & -2.383 \\
-  1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 4.423 \\
+-1.0 & -1.0 & -1.0 & -1.0 & -1.0 & 1.85 \\
+  1.0 & 1.0 & 1.0 & -1.0 & -1.0 & 7.36 \\
+  -1.0 & 1.0 & -1.0 & 1.0 & -1.0 & -2.22 \\
+  1.0 & -1.0 & 1.0 & 1.0 & -1.0 & -1.54 \\
+  1.0 & -1.0 & -1.0 & -1.0 & 0.0 & -6.30 \\
+  -1.0 & 1.0 & 1.0 & -1.0 & 0.0 & 5.55 \\
+  -1.0 & -1.0 & -1.0 & 1.0 & 0.0 & -2.92 \\
+  1.0 & 1.0 & 1.0 & 1.0 & 0.0 & 2.86 \\
+  1.0 & -1.0 & -1.0 & -1.0 & 1.0 & -4.78 \\
+  -1.0 & 1.0 & 1.0 & -1.0 & 1.0 & 7.03 \\
+  1.0 & 1.0 & -1.0 & 1.0 & 1.0 & -1.60 \\
+  -1.0 & -1.0 & 1.0 & 1.0 & 1.0 & 4.39 \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-#+HEADER: :results output latex :session *R* :exports none :eval no-export
+#+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
-s_regression <- as.data.frame(summary.aov(dopt_regression)[[1]])
-s_regression <- s_regression[1:7, c("F value", "Pr(>F)")]
+library(xtable)
+library(broom)
+library(dplyr)
 
-rownames(s_regression) <- c("$x_1$", "$x_3$", "$x_5$",
-                            "$x_7$", "$x_8$", "I($x_8^2$)",
-                            "$x_1$:$x_3$")
+regression = tidy(aov(dopt_regression)) %>%
+    select(-df, -meansq) %>%
+    filter(term != "Residuals") %>%
+    mutate(term = c("$x_1$",
+                    "$x_3$",
+                    "$x_5$",
+                    "$x_7$",
+                    "$x_8$",
+                    "$x_8^2$",
+                    "$x_1x_3$"))
 
-s_regression$stars <- symnum(s_regression[ , "Pr(>F)"], na = FALSE,
-                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                             symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
+regression$stars <- symnum(regression$p.value, na = FALSE,
+                           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                           symbols = c("$***$", "$**$", "$*$", "$\\cdot$", " "))
 
-names(s_regression) <- c("F value", "Pr$(<\\text{F})$", "Signif.")
+names(regression) <- c("Term",
+                       "Sum of Squares",
+                       "F-value",
+                       "$\\text{p}(>\\text{F})$",
+                       "``\\textit{Significance}''")
 
-cap <- paste("Shortened ANOVA table for the fit of the naive model (", attributes(s_regression[ , "Signif."])$legend, ")", sep = "")
-x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "s"))
+cap <- paste("ANOVA table for the fit of the improved model,",
+             "with default significance levels from \\textit{R}")
+
+x <- xtable(regression,
+            caption = cap,
+            digits = c(2, 2, 2, 2, -1, 3),
+            display = c("f", "s", "f", "f", "f", "s"),
+            label = "tab:anova_dopt")
+
 align(x) <- xalign(x)
+
 options(warn = 0)
-print(x, size = "\\small",
+print(x,
+      size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="ht",
+      table.placement="t",
+      include.rownames = FALSE,
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:05:50 2018
-\begin{table}[ht]
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Thu Apr  1 13:40:27 2021
+\begin{table}[t]
 \centering
-\caption{Shortened ANOVA table for the fit of the naive model (0 ‘$***$’ 0.001 ‘$**$’ 0.01 ‘$*$’ 0.05 ‘$\cdot$’ 0.1 ‘ ’ 1)}
+\caption{ANOVA table for the fit of the improved model, with default significance levels from \textit{R}}
+\label{tab:anova_dopt}
 \begingroup\small
-\begin{tabular}{lrrl}
+\begin{tabular}{lrrrl}
   \toprule
- & F value & Pr$(<\text{F})$ & Signif. \\
+Term & Sum of Squares & F-value & $\text{p}(>\text{F})$ & ``\textit{Significance}'' \\
   \midrule
-$x_1$ & 461.596 & 0.000 & $***$ \\
-  $x_3$ & 661.241 & 0.000 & $***$ \\
-  $x_5$ & 721.313 & 0.000 & $***$ \\
-  $x_7$ & 293.822 & 0.000 & $***$ \\
-  $x_8$ & 2.297 & 0.204 &   \\
-  I($x_8^2$) & 38.191 & 0.003 & $**$ \\
-  $x_1$:$x_3$ & 398.202 & 0.000 & $***$ \\
+$x_1$ & 26.10 & 701.66 & $1.2 \times 10^{-5}$ & $***$ \\
+  $x_3$ & 66.73 & 1794.21 & $1.9 \times 10^{-6}$ & $***$ \\
+  $x_5$ & 97.13 & 2611.61 & $8.8 \times 10^{-7}$ & $***$ \\
+  $x_7$ & 11.51 & 309.40 & $6.1 \times 10^{-5}$ & $***$ \\
+  $x_8$ & 0.02 & 0.57 & $4.9 \times 10^{-1}$ &   \\
+  $x_8^2$ & 6.11 & 164.28 & $2.1 \times 10^{-4}$ & $***$ \\
+  $x_1x_3$ & 30.75 & 826.70 & $8.7 \times 10^{-6}$ & $***$ \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-We  now fit  this model  using the  results of  the experiments  in our  design.
-Table\nbsp{}\ref{tab:correct_fit}  shows the  model fit  table and  compares the
-estimated and  real model  coefficients. This example  illustrates that  the DOE
-approach can achieve  close model estimations using few  resources, provided the
-approach  is  able to  use  user  input  to  identify significant  factors,  and
-knowledge about the problem domain to tweak the model.
+Table\nbsp{}\ref{tab:anova_dopt} shows the results of  the new ANOVA test, where
+all factors lie below our chosen /p/-value threshold of $0.01$.  Note that if we
+consider that $x_8^{2}$ is significant  we also include the corresponding linear
+term.  We  can then fit this  model using the  results of the optimal  design we
+constructed.   Table\nbsp{}\ref{tab:dopt_fit} show  how  close the  coefficients
+estimated  by  this  model  fit  are   to  the  true  model  coefficients,  from
+Equation\nbsp{}\ref{eq:real_model}.   This  example  illustrates  that  the  DOE
+methodology  can help  experimenters  produce accurate  models  while using  few
+measurements, provided the modeling hypotheses are correct.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
@@ -12108,60 +12144,81 @@ s_regression$Significance <- symnum(s_regression[ , "Pr(>|t|)"], na = FALSE,
 names(s_regression) <- c("Estimated", "t value", "Pr$(>|\\text{t}|)$", "Signif.")
 s_regression$Real <- c(0, -1.5, 1.3, 3.1, -1.4, 0, 1.35, 1.6)
 
-s_regression <- s_regression[ , c("Real", "Estimated", "t value", "Pr$(>|\\text{t}|)$", "Signif.")]
+s_regression <- s_regression[ , c("Real",
+                                  "Estimated",
+                                  "t value",
+                                  "Pr$(>|\\text{t}|)$",
+                                  "Signif.")]
 
-cap <- "Correct model fit comparing real and estimated coefficients, with significance intervals from the \\texttt{R} language"
-x <- xtable(s_regression, caption = cap, digits = 3, display = c("s", "f", "f", "f", "f", "s"), label = "tab:correct_fit")
+names(s_regression) <- c("True Coefficient",
+                         "Estimate",
+                         "t-value",
+                         "$\\text{p}(>|\\text{t}|)$",
+                         "``\\textit{Significance}''")
+
+cap <- paste("Model fit comparing real and estimated coefficients",
+             ", with significance measurements as standard in \\textit{R}")
+
+x <- xtable(s_regression,
+            caption = cap,
+            digits = c(3, 2, 2, 2, -1, 3),
+            display = c("s", "f", "f", "f", "f", "s"),
+            label = "tab:dopt_fit")
+
 align(x) <- xalign(x)
 options(warn = 0)
 print(x, size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="b",
+      table.placement="t",
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:06:01 2018
-\begin{table}[b]
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Thu Apr  1 13:40:52 2021
+\begin{table}[t]
 \centering
-\caption{Correct model fit comparing real and estimated coefficients, with significance intervals from the \texttt{R} language}
-\label{tab:correct_fit}
+\caption{Model fit comparing real and estimated coefficients , with significance measurements as standard in \textit{R}}
+\label{tab:dopt_fit}
 \begingroup\small
 \begin{tabular}{lrrrrl}
   \toprule
- & Real & Estimated & t value & Pr$(>|\text{t}|)$ & Signif. \\
+ & True Coefficient & Estimate & t-value & $\text{p}(>|\text{t}|)$ & ``\textit{Significance}'' \\
   \midrule
-Intercept & 0.000 & 0.050 & 0.305 & 0.776 &   \\
-  $x_1$ & -1.500 & -1.452 & -14.542 & 0.000 & *** \\
-  $x_3$ & 1.300 & 1.527 & 15.292 & 0.000 & *** \\
-  $x_5$ & 3.100 & 2.682 & 26.857 & 0.000 & *** \\
-  $x_7$ & -1.400 & -1.712 & -17.141 & 0.000 & *** \\
-  $x_8$ & 0.000 & -0.175 & -1.516 & 0.204 &   \\
-  $x_8^2$ & 1.350 & 1.234 & 6.180 & 0.003 & ** \\
-  $x_1x_3$ & 1.600 & 1.879 & 19.955 & 0.000 & *** \\
+Intercept & 0.00 & -0.20 & -2.11 & $1.0 \times 10^{-1}$ &   \\
+  $x_1$ & -1.50 & -1.47 & -26.49 & $1.2 \times 10^{-5}$ & *** \\
+  $x_3$ & 1.30 & 1.35 & 22.90 & $2.2 \times 10^{-5}$ & *** \\
+  $x_5$ & 3.10 & 3.02 & 51.10 & $8.8 \times 10^{-7}$ & *** \\
+  $x_7$ & -1.40 & -1.55 & -26.17 & $1.3 \times 10^{-5}$ & *** \\
+  $x_8$ & 0.00 & -0.05 & -0.76 & $4.9 \times 10^{-1}$ &   \\
+  $x_8^2$ & 1.35 & 1.51 & 12.82 & $2.1 \times 10^{-4}$ & *** \\
+  $x_1x_3$ & 1.60 & 1.70 & 28.75 & $8.7 \times 10^{-6}$ & *** \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-Table\nbsp{}\ref{tab:prediction_comparisons} compares the global optimum of this
-example with the predictions made by our initial linear model from the screening
-step, and  our improved  model. Using screening,  D-Optimal designs,  and domain
-knowledge,  we found  an optimization  within 10%  of the  global optimum  while
-computing $Y$  only 24  times. We  were able to  do that  by first  reducing the
+Table\nbsp{}\ref{tab:prediction_comparisons} compares the true global optimum to
+the predictions made  by the initial screening model from  the previous section,
+and to the improved model fit to the experiments from the optimal design.  Using
+screening, D-Optimal designs, and domain knowledge to guide modeling hypotheses,
+we predicted a set of factor levels whose response lies within 10% of the global
+optimum, performing 24  measurements of $f$.  We did that  by first reducing the
 problem's dimension  when we eliminated  insignificant factors in  the screening
-step.   We then  constructed  a more  careful exploration  of  this new  problem
-subspace, aided  by domain knowledge provided  by an expert. Note  that we could
-have reused some of the 12 experiments from the previous step to reduce the size
-of the new design further.
+step.  Then, we performed a more careful exploration of this new subspace, aided
+by domain knowledge provided  by an expert. Note that we  could have reused some
+of the 12 experiments from the previous  step to reduce even further the size of
+the new design.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
+library(xtable)
+library(dplyr)
+
 dopt_data[ , "$x_2$"] <- c("--")
 dopt_data[ , "$x_4$"] <- c("--")
 dopt_data[ , "$x_6$"] <- c("--")
@@ -12170,66 +12227,72 @@ tab_dopt_data <- dopt_data[ , c("$x_1$", "$x_2$", "$x_3$",
                                 "$x_4$", "$x_5$", "$x_6$",
                                 "$x_7$", "$x_8$", "$Y$")]
 
-names(tab_dopt_data) <- c("$\\bm{x_1}$", "$x_2$", "$\\bm{x_3}$",
-                          "$x_4$", "$\\bm{x_5}$", "$x_6$",
-                          "$\\bm{x_7$}", "$\\bm{x_8}$", "$Y$")
+names(tab_dopt_data) <- c("$\\mathbf{x_1}$", "$x_2$", "$\\mathbf{x_3}$",
+                          "$x_4$", "$\\mathbf{x_5}$", "$x_6$",
+                          "$\\mathbf{x_7}$", "$\\mathbf{x_8}$", "$y$")
 
-dopt_comparison_data <- bind_rows(tab_dopt_data, comparison_data)
-rownames(dopt_comparison_data) <- c(" Quad.", "Lin.", "Min.")
+dopt_comparison_data <- bind_rows(comparison_data, tab_dopt_data)
+rownames(dopt_comparison_data) <- c("\\textit{Global Optimum}",
+                                    "\\textit{Screening Prediction}",
+                                    "\\textit{Optimal Design Prediction}")
 
-cap <- "Comparison of the response $Y$ predicted by our models and the true global optimum. Factors used in the models are bolded"
-x <- xtable(dopt_comparison_data, caption = cap, digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3), label = "tab:prediction_comparisons")
+cap <- paste("Comparison between the response $y$",
+             "predicted by our screening and optimal design model fits",
+             "and the true global optimum. Factors that were used",
+             "in the models are in bold")
+
+x <- xtable(dopt_comparison_data,
+            caption = cap,
+            digits = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 3),
+            label = "tab:prediction_comparisons")
+
 align(x) <- xalign(x)
 options(warn = 0)
 print(x,
-      size = "\\footnotesize",
+      size = "\\small",
       math.style.exponents = TRUE,
       booktabs = TRUE,
       include.rownames = TRUE,
       sanitize.text.function = function(x){x},
-      table.placement="ht",
+      table.placement="b",
       caption.placement = "top")
 #+END_SRC
 
 #+RESULTS:
-#+BEGIN_EXPORT latex
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Mon Oct 15 18:06:07 2018
-\begin{table}[ht]
+#+begin_export latex
+% latex table generated in R 4.0.4 by xtable 1.8-4 package
+% Thu Apr  1 13:28:48 2021
+\begin{table}[b]
 \centering
-\caption{Comparison of the response $Y$ predicted by our models and the true global optimum. Factors used in the models are bolded}
+\caption{Comparison between the response $y$ predicted by our screening and optimal design model fits and the true global optimum. Factors that were used in the models are in bold}
 \label{tab:prediction_comparisons}
-\begingroup\footnotesize
+\begingroup\small
 \begin{tabular}{lrlrlrlrrr}
   \toprule
- & $\bm{x_1}$ & $x_2$ & $\bm{x_3}$ & $x_4$ & $\bm{x_5}$ & $x_6$ & $\bm{x_7$} & $\bm{x_8}$ & $Y$ \\
+ & $\mathbf{x_1}$ & $x_2$ & $\mathbf{x_3}$ & $x_4$ & $\mathbf{x_5}$ & $x_6$ & $\mathbf{x_7}$ & $\mathbf{x_8}$ & $y$ \\
   \midrule
- Quad. & 1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & 0.0 & -9.019 \\
-  Lin. & -1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -1.0 & -1.046 \\
-  Min. & 1.0 & -0.2 & -1.0 & 0.6 & -1.0 & 0.4 & 0.8 & 0.0 & -9.934 \\
+\textit{Global Optimum} & 1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -0.4 & -8.998 \\
+  \textit{Screening Prediction} & -1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & -1.0 & -1.258 \\
+  \textit{Optimal Design Prediction} & 1.0 & -- & -1.0 & -- & -1.0 & -- & 1.0 & 0.0 & -8.894 \\
    \bottomrule
 \end{tabular}
 \endgroup
 \end{table}
-#+END_EXPORT
+#+end_export
 
-We are able to explain the performance  improvements we obtained in each step of
-the process, because we finish steps  with a performance model and a performance
-prediction. Each  factor is  included or removed  using information  obtained in
-statistical tests,  or expert  knowledge. If  we need  to optimize  this problem
-again,  for a  different  architecture  or with  larger  input,  we could  start
-exploring the search space  with a less naive model. We  could also continue the
-optimization    of   this    problem    by   exploring    levels   of    factors
-$\left\{x_2,x_4,x_6\right\}$.  The  significance of  these factors could  now be
-detectable by  ANOVA tests since  the other factors are  now fixed. If  we still
-cannot  identify any  significant factor,  it might  be advisable  to spend  the
-remaining budget  using another exploration  strategy such as uniform  random or
-latin hypercube sampling.
+Because of the  carefully constructed experiments, we are able  to /explain/ the
+improvements  we  obtained  in  each  step  of  the  process  using  results  of
+statistical tests.  If  we needed to optimize a similar  problem, we could start
+by /exploiting/ the relationships we have  discovered, but we could also attempt
+to /explore/ new  hypotheses for the factors  we did not include  at first. This
+balance  between  exploitation and  exploration  will  be discussed  further  in
+Chapter\nbsp{}[[Online  Learning]].
 
-The process of  screening for factor significance using ANOVA  and fitting a new
-model  using  acquired  knowledge  is  equivalent  to  steps  5,  6,  and  7  in
-Figure\nbsp{}[[fig:doe_anova_strategy]].  In  the next  section we  evaluate the
-performance of our DOE approach in two scenarios.
+In the  absence of reasonable  hypotheses about the  search space, we  can still
+construct designs  that favor  a balanced exploration,  enabling tests  for more
+complex   hypotheses  and   increasing   the   effectiveness  of   nonparametric
+optimization methods.  The next section  presents some methods  for constructing
+such designs.
 
 **** The KL-Exchange Algorithm                                  :noexport:
 - Add pseudocode, or schematic figure

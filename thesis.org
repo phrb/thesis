@@ -11589,10 +11589,8 @@ for testing it.  The design consists of an orthogonal matrix with twelve rows an
 eleven columns,  containing the extreme  levels of factors  $x_1,\dots,x_8$ plus
 three  ``dummy''  factors  $d_1,d_2,d_3$,   completing  the  columns  needed  to
 construct         a         Plackett-Burman         design         for         8
-factors\nbsp{}\cite{plackett1946design}.    We   present    an   algorithm   for
-constructing  such designs  in Section\nbsp{}\ref{sec:paley}.  The final  design
-matrix also contains a column for  the computed response, subject to measurement
-error.
+factors\nbsp{}\cite{plackett1946design}.  The final  design matrix also contains
+a column for the computed response, subject to measurement error.
 
 #+HEADER: :results output latex :session *R* :exports results :eval no-export
 #+BEGIN_SRC R
@@ -11645,7 +11643,7 @@ align(tab) <- "ccccccccccccc"
 print(tab, booktabs = TRUE,
       include.rownames = FALSE,
       caption.placement = "top",
-      size = "\\scriptsize",
+      size = "\\small",
       table.placement="t",
       sanitize.text.function = function(x){x})
 #+END_SRC
@@ -11653,12 +11651,12 @@ print(tab, booktabs = TRUE,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:49:43 2021
+% Thu Apr  1 13:43:15 2021
 \begin{table}[t]
 \centering
 \caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, with experiments $\mathbf{x}_1,\dots,\mathbf{x}_{12}$, and added ``dummy'' factors $d_1, d_2, d_3$. The response $y$ is subject to measurement error $\varepsilon$}
 \label{tab:plackett}
-\begingroup\scriptsize
+\begingroup\small
 \begin{tabular}{cccccccccccc}
   \toprule
 $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $d_1$ & $d_2$ & $d_3$ & $y = f(\mathbf{x}) + \varepsilon$ \\
@@ -11730,7 +11728,7 @@ cap <- paste("ANOVA table for the fit of the initial model,",
 
 x <- xtable(regression,
             caption = cap,
-            digits = 3,
+            digits = c(3, 2, 2, 2, -1, 2),
             display = c("f", "s", "f", "f", "f", "s"),
             label = "tab:anova_linear")
 
@@ -11749,7 +11747,7 @@ print(x, size = "\\small",
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:49:52 2021
+% Thu Apr  1 13:42:44 2021
 \begin{table}[b]
 \centering
 \caption{ANOVA table for the fit of the initial model, with default significance levels from \textit{R}}
@@ -11759,14 +11757,14 @@ print(x, size = "\\small",
   \toprule
 Term & Sum of Squares & F-value & $\text{p}(>\text{F})$ & ``\textit{Significance}'' \\
   \midrule
-x1 & 2.784 & 35.914 & 0.009 & $**$ \\
-  x2 & 0.216 & 2.790 & 0.193 &   \\
-  x3 & 38.896 & 501.798 & 0.000 & $***$ \\
-  x4 & 0.749 & 9.669 & 0.053 & $\cdot$ \\
-  x5 & 25.353 & 327.077 & 0.000 & $***$ \\
-  x6 & 0.995 & 12.832 & 0.037 & $*$ \\
-  x7 & 4.929 & 63.592 & 0.004 & $**$ \\
-  x8 & 43.838 & 565.548 & 0.000 & $***$ \\
+x1 & 2.78 & 35.91 & $9.3 \times 10^{-3}$ & $**$ \\
+  x2 & 0.22 & 2.79 & $1.9 \times 10^{-1}$ &   \\
+  x3 & 38.90 & 501.80 & $1.9 \times 10^{-4}$ & $***$ \\
+  x4 & 0.75 & 9.67 & $5.3 \times 10^{-2}$ & $\cdot$ \\
+  x5 & 25.35 & 327.08 & $3.7 \times 10^{-4}$ & $***$ \\
+  x6 & 0.99 & 12.83 & $3.7 \times 10^{-2}$ & $*$ \\
+  x7 & 4.93 & 63.59 & $4.1 \times 10^{-3}$ & $**$ \\
+  x8 & 43.84 & 565.55 & $1.6 \times 10^{-4}$ & $***$ \\
    \bottomrule
 \end{tabular}
 \endgroup
@@ -11807,6 +11805,7 @@ prediction <- predict(regression, newdata = objective_data)
 comparison_data <- objective_data[prediction == min(prediction), ]
 comparison_data <- bind_rows(objective_data[objective_data$Y == min(objective_data$Y), ],
                              comparison_data)
+
 rownames(comparison_data) <- c("\\textit{Global Optimum}",
                                "\\textit{Screening Prediction}")
 
@@ -11850,7 +11849,7 @@ print(x,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 17:52:12 2021
+% Thu Apr  1 13:41:55 2021
 \begin{table}[t]
 \centering
 \caption{Comparison between the response $y$ predicted by our linear model fit and the true global optimum. Factors that were used in the model are in bold}

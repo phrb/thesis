@@ -12825,21 +12825,37 @@ combining optimal design and space-filling designs should always be considered.
 :PROPERTIES:
 :CUSTOM_ID: sec:summary-ed
 :END:
-- Designs to obtain good-quality parameter estimates
-  - Screening and D-opt for LM
-  - SFD for GP
 
-- Designs to test the model quality (lack of fit)
-  - SFD fo LM
+This chapter presented an introduction to Design of Experiments, a collection of
+methods dedicated  to planning measurements,  which is fundamental  to empirical
+research.   We discussed  how we  can  construct screening  and optimal  designs
+tailored to estimate factor effects parsimoniously, and how we can generate more
+expensive space-filling  designs to aid  in the exploration  of high-dimensional
+search spaces.
 
-- If model  based, parameter significance and  estimation can be used  to reduce
-  dimension and guide the optimization.
+Space-filling designs are  best suited for testing quality of  fit and exploring
+with nonparametric  surrogates, while optimal  design and screening rely  on the
+linear  model and  its  hypotheses,  and are  transparent  and parsimonious  for
+estimating factor effects and significance,  provided we use good starting model
+hypotheses.
 
-- With this DOE approach, we have  a clear separation between the sampling phase
-  and  the  interpretation  phase.  But  what if  no  parameter  really  appears
-  significant anymore?
+We  presented  examples of  the  DOE  methodology, highlighting  the  separation
+between  the  stages of  sampling  search  spaces,  fitting linear  models,  and
+interpreting results, with the objectives  of reducing dimension and restricting
+further experimentation to promising regions of the search space.
 
-- Paley construction\nbsp{}\cite{paley1933orthogonal}
+During our study of design construction  methods we have implemented versions of
+the Paley  construction for  screening designs\nbsp{}\cite{paley1933orthogonal},
+the    KL    Exchange    algorithm,     as    described    in    Atkinson    /et
+al./\cite{atkinson2007optimum}, factorial  designs, and design  sampling methods
+based on mixes of distributions.  These  functions were collected in a Design of
+Experiments      package\nbsp{}\cite{bruel2021experimental}      written      in
+Julia\nbsp{}\cite{bezanson2014julia}.
+
+The next  chapter presents /online  learning/, a class  of methods adapted  to a
+different problem,  where the choice  of which experiment  to run is  made after
+each observation,  enabling the  search for a  balance between  exploiting known
+relationships and exploring unknown regions of the search space.
 
 ** Online Learning
 #+begin_export latex

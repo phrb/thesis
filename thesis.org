@@ -8631,17 +8631,149 @@ ggplot() +
 #+RESULTS:
 [[file:./img/experimental_design/interactions.pdf]]
 
-**** Looking at Sampling Methods
-***** Booth's Function with Gradient
-****** Constants
+**** Low-discrepancy Sampling
+***** Setup
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
-l = 3
-k = -6
+library(dplyr)
+library(pracma)
+library(AlgDesign)
+library(DiceDesign)
+library(randtoolbox)
+library(FrF2)
+library(DoE.base)
+library(DoE.wrapper)
+
+noise_sd = 20
+
+f <- function(y, x){
+    return(((x + (2 * y) - 7) ^ 2) +
+           (((2 * x) + y - 5)^ 2) +
+           rnorm(length(y),
+                 mean = 0.0,
+                 sd = 20))
+}
+
+map_intervals <- function(df_from, df_to) {
+    df_from %>%
+        mutate(x = (df_from$x * (max(df_to$x) - min(df_to$x))) + min(df_to$x),
+               y = (df_from$y * (max(df_to$y) - min(df_to$y))) + min(df_to$y))
+}
+
+update_quasirandom <- function(col, flip = FALSE) {
+    col = sample(col)
+    quart = length(col) / 4
+    q1 = col[1:quart]
+    q2 = col[(quart + 1):(2 * quart)]
+    q3 = col[((2 * quart) + 1):(3 * quart)]
+    q4 = col[((3 * quart) + 1):(4 * quart)]
+
+    if(flip) {
+        return(c(q1, q2, q3 + 0.5, q4 + 0.5))
+    } else {
+        return(c(q1, q2 + 0.5, q3, q4 + 0.5))
+    }
+}
+
+sample_runif <- function(df, budget) {
+    print("sample_runif")
+    sample = df %>%
+        sample_n(size = budget) %>%
+        mutate(id = "Uniform Random") %>%
+        select(x, y, z, id)
+}
+
+sample_lhs <- function(df, budget) {
+    print("sample_lhs")
+    output = lhsDesign(budget, 2)$design %>%
+                                discrepSA_LHS(it = 1000)
+
+    sample =  output$design %>%
+        data.frame() %>%
+        rename(x = X1,
+               y = X2) %>%
+        map_intervals(df) %>%
+        mutate(id = "Latin Hypercube",
+               z = f(y, x))
+}
+
+sample_quasirandom <- function(df, budget) {
+    print("sample_quasirandom")
+    samples = data.frame(
+        x = runif(n = budget, min = 0, max = 0.5),
+        y = runif(n = budget, min = 0, max = 1)) %>%
+        mutate(id = row_number()) %>%
+        mutate(x = update_quasirandom(x, flip = FALSE),
+               y = update_quasirandom(y, flip = TRUE)) %>%
+        map_intervals(df) %>%
+        mutate(id = "Offset",
+               z = f(y, x))
+}
+
+sample_sobol <- function(df, budget) {
+    print("sample_sobol")
+    sample = data.frame(sobol(budget, 2)) %>%
+        rename(x = X1,
+               y = X2) %>%
+        map_intervals(df) %>%
+        mutate(id = "Sobol",
+               z = f(y, x))
+}
+
+sample_halton <- function(df, budget) {
+    print("sample_halton")
+    sample = data.frame(halton(budget, 2)) %>%
+        rename(x = X1,
+               y = X2) %>%
+        map_intervals(df) %>%
+        mutate(id = "Halton",
+               z = f(y, x))
+}
+
+sample_torus <- function(df, budget) {
+    print("sample_torus")
+    sample = data.frame(torus(budget, 2)) %>%
+        rename(x = X1,
+               y = X2) %>%
+        map_intervals(df) %>%
+        mutate(id = "Torus",
+               z = f(y, x))
+}
+
+samples = 1000
+
+point_grid = seq(-1, 1, length.out = 100)
+
+search_space = expand.grid(x = point_grid,
+                           y = point_grid,
+                           KEEP.OUT.ATTRS = FALSE) %>%
+    mutate(z = f(y, x))
+
+df = bind_rows(
+    sample_runif(search_space,
+                 samples),
+    sample_lhs(search_space,
+               samples),
+    sample_quasirandom(search_space,
+                       samples),
+    sample_sobol(search_space,
+                 samples),
+    sample_halton(search_space,
+                  samples),
+    sample_torus(search_space,
+                 samples)
+)
+
+write.csv(df, "./data/sampling/low_discrepancy.csv", row.names = FALSE)
 #+end_SRC
 
 #+RESULTS:
-****** Plot
-******* Setup
+: [1] "sample_runif"
+: [1] "sample_lhs"
+: [1] "sample_quasirandom"
+: [1] "sample_sobol"
+: [1] "sample_halton"
+: [1] "sample_torus"
+
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
 library(pracma)

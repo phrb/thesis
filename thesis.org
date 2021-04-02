@@ -12789,48 +12789,35 @@ low-discrepancy sampler.
 #+ATTR_LATEX: :width \columnwidth :placement [t]
 [[./img/experimental_design/low_discrepancy.pdf]]
 
+*** Comparing Sampling Methods
 :PROPERTIES:
 :CUSTOM_ID: sec:comparing
 :END:
-#+begin_export latex
-\todo[inline]{TODO: Adapt this section from the CCGRID paper.}
-#+end_export
-
 #+NAME: fig:sampling_comparison
-#+CAPTION: Exploration of the search space, using a fixed budget of 50 points.
-#+CAPTION: The red ``$+$'' represents the best point found by each strategy,
-#+CAPTION: and ``$\times$''s denote neighborhood exploration
-#+ATTR_LATEX: :width .89\columnwidth :placement [t]
+#+CAPTION: Exploring the search space for Booth's function with different
+#+CAPTION: methods, using a  fixed budget of 30 measurements.
+#+CAPTION: A $\color{red}\boldsymbol{\times}$ marks the global optimum,
+#+CAPTION: a $\color{red}{\blacksquare}$ marks the best point found by each strategy,
+#+CAPTION: and \(\color{blue}{\bullet}\)s mark measurements
+#+ATTR_LATEX: :width .92\columnwidth :placement [t]
 [[./img/experimental_design/booth_descent_gradient_sampling.pdf]]
 
-Figure\nbsp{}[[fig:sampling_comparison]]  shows the  contour of  a search  space
-defined  by a  function  of  the form  $z  = x^2  +  y^2  + \varepsilon$,  where
-$\varepsilon$ is a local perturbation, and  the exploration of that search space
-by  six different  strategies. In  such a  simple search  space, even  a uniform
-random  sample can  find points  close to  the optimum,  despite not  exploiting
-geometry.   A  Latin   Hypercube\nbsp{}\cite{carnell2018lhs}  sampling  strategy
-covers the  search space  more evenly,  but still does  not exploit  the space's
-geometry.  Strategies  based  on  neighborhood  exploration  such  as  simulated
-annealing and gradient descent can exploit local structures, but may get trapped
-in  local minima.  Their performance  is strongly  dependent on  search starting
-point.  These strategies  do  not  leverage global  search  space structure,  or
-provide exploitable knowledge after optimization.
+Figure\nbsp{}[[fig:sampling_comparison]] shows  the contour of the  search space
+defined by  the Booth  function and  its exploration  by six  different sampling
+methods, restricted  to 30  measurements.  Here, a  uniform random  sample finds
+points  close  to   the  global  optimum,  even  though   measurements  are  not
+particularly  distributed  and there  is  no  attempt  to exploit  search  space
+structure. An LHS sample covers the search space more evenly, but still does not
+exploit structure. The Sobol sample is much more useful than the others for such
+a small space,  but we can clearly  see the impact of the  optimal designs built
+for different models.
 
-Measurement  of  the  kernels  optimized   on  the  performance  evaluations  in
-Section\nbsp{}Performance Evaluation  can exceed 20 minutes,  including the time
-of  code  transformation, compilation,  and  execution.   Measurements in  other
-problem  domains  can  take  much  longer to  complete.   This  strengthens  the
-motivation to consider search space  exploration strategies capable of operating
-under  tight  budget constraints.   These  strategies  have been  developed  and
-improved by  statisticians for  a long time,  and can be  grouped under  the DOE
-term.
-
-The D-Optimal  sampling strategies shown on  the two rightmost bottom  panels of
-Figure\nbsp{}[[fig:sampling_comparison]] are  based on the DOE  methodology, and
-leverage previous  knowledge about search  spaces for an  efficient exploration.
-These  strategies   provide  transparent   analyses  that  enable   focusing  on
-interesting  subspaces.   In  the  next  section we  describe  our  approach  to
-autotuning based on the DOE methodology.
+The D-optimal design  for a model with  linear terms samples the  corners of the
+search  space, and  adding quadratic  and interaction  terms to  the model  adds
+samples to the inner regions. Predictions  for models with these added terms are
+closer to the  global optimum, but the selection of  the experiments included in
+the designs is still made over an initial sample of the search space. Therefore,
+combining optimal design and space-filling designs should always be considered.
 
 *** Summary
 :PROPERTIES:

@@ -3,4 +3,5 @@
 *.bbl
 *.lof
 *.lot
+*-blx.bib
 thesis.pdf

@@ -8954,6 +8954,18 @@ library(paletteer)
 library(patchwork)
 library(latex2exp)
 
+
+df = read.csv("./data/sampling/sampling_comparison.csv") %>%
+    mutate(id = factor(id,
+                       levels = c("Uniform Random",
+                                  "Latin Hypercube",
+                                  "Sobol",
+                                  "Optimal Design: Linear",
+                                  "Optimal Design: Quadratic",
+                                  "Optimal Design: Interactions")))
+
+l = 3
+k = -6
 grad_resolution = 6
 grad_length = 0.83
 picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]

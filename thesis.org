@@ -59,6 +59,8 @@
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
 #+LATEX_HEADER: \usepackage{tocbibind}
+#+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex8]{biblatex}
+#+LATEX_HEADER: \addbibresource{bibliography/references.bib}
 #+LATEX_HEADER: \usepackage{indentfirst}
 #+LATEX_HEADER: \usepackage{tabularx}
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
@@ -16118,8 +16120,9 @@ explore in this thesis.
 :END:
 * References                                                         :ignore:
 #+begin_export latex
-\bibliographystyle{IEEEtran}
-\bibliography{bibliography/references}
+% \bibliographystyle{IEEEtran}
+% \bibliography{bibliography/references}
+\printbibliography[heading=bibintoc]
 #+end_export
 * Lists of Figures, Tables                                           :ignore:
 #+TOC: tables

@@ -8939,20 +8939,14 @@ df = bind_rows(
                    samples,
                    z_noisy ~ x * y + I(x ^ 2) * I(y ^ 2),
                    "Optimal Design: Interactions")
-) %>%
-    mutate(id = factor(id,
-                       levels = c("Uniform Random",
-                                  "Latin Hypercube",
-                                  "Sobol",
-                                  "Optimal Design: Linear",
-                                  "Optimal Design: Quadratic",
-                                  "Optimal Design: Interactions")))
+)
 
+write.csv(df, "./data/sampling/sampling_comparison.csv", row.names = FALSE)
 #+end_SRC
 
 #+RESULTS:
 
-******* Plot
+****** Plot
 #+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/booth_descent_gradient_sampling.pdf" :width 21 :height 16 :eval no-export
 library(dplyr)
 library(ggplot2)

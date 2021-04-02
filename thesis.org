@@ -12742,14 +12742,53 @@ such designs.
 :PROPERTIES:
 :CUSTOM_ID: sec:filling
 :END:
-- Not very efficient for parameter estimate but good to evaluate the lack of fit
-- Also good for variance minimization in GP
 
-**** Quasi-Random Sequences for Low-Discrepancy Designs
-- Low-discrepancy
-- Sobol Sequences
+For large integers /n/, most of the volume of an /n/-sphere lies in a thin outer
+shell. Therefore, in search  spaces with a large number of  /p/ factors, such as
+the  ones we  find  in some  autotuning search  spaces,  uniform random  samples
+concentrate in  the extreme levels,  which can make  it impossible to  test more
+complex linear models and to properly evaluate lack of fit.
 
-*** Comparing Sampling Strategies
+Space-filling designs are capable of generating better-distributed samples, even
+for high-dimensional search spaces, enabling  more precise measurements of model
+quality.  These  designs  also  help  to improve  the  accuracy  of  acquisition
+functions for  nonparametric optimization methods,  some of which we  discuss in
+Chapter\nbsp{}[[Online Learning]].
+
+Figure\nbsp{}[[fig:low_discrepancy]]   compares   5   sampling  methods   in   a
+two-dimensional search  space. Even  in low  dimension, we  can see  how uniform
+random sampling produces clusters of  points and leaves large regions unsampled.
+/Latin  Hypercube Sampling/\nbsp{}\cite{carnell2018lhs}  (LHS)  is  one kind  of
+space-filling  design,   constructed  by  partitioning  the   search  space  and
+attempting to distribute samples evenly across  partitions.  It is still hard to
+cover high-dimensional  spaces, and  it is  common to have  to optimized  an LHS
+design with function minimization methods.
+
+/Discrepancy/ is one criterion typically used to evaluate how evenly a sample is
+distributed.  For a given region of a search space, discrepancy can be described
+intuitively as the  ratio between the number  of samples that lie  in the region
+and the size  of the region. In a /low-discrepancy/  design, any arbitrary small
+region  of a  high-dimensional  search space  contains  a proportionately  small
+number   of  samples.    Sobol,  who   is  also   responsible  for   sensitivity
+indices\nbsp{}\cite{sobol1993sensitivity} from the  previous chapter, and Halton
+introduced          deterministic         /quasirandom/          low-discrepancy
+sequences\nbsp{}\cite{sobol1967distribution,halton1964algorithm}            that
+extensively   used.   Figure\nbsp{}[[fig:low_discrepancy]]  also   shows   these
+sequences,        implemented       in        the       /randtoolbox/        /R/
+package\nbsp{}\cite{dutang2020randtoolbox},  which  also  implements  a  /Torus/
+low-discrepancy sampler.
+
+#+NAME: fig:low_discrepancy
+#+CAPTION: Comparison of 1000 samples obtained with different sampling methods.
+#+CAPTION: The /Latin Hypercube/ design was produced with the /DiceDesign/ /R/
+#+CAPTION: package\nbsp{}\cite{dupuy2015dicedesign},
+#+CAPTION: and was optimized after an initial sampling,
+#+CAPTION: with Simulated Annealing.
+#+CAPTION: Sobol, Halton, and Torus are low-discrepancy sequences
+#+CAPTION: from the /randtoolbox/ /R/ package\nbsp{}\cite{dutang2020randtoolbox}.
+#+ATTR_LATEX: :width \columnwidth :placement [t]
+[[./img/experimental_design/low_discrepancy.pdf]]
+
 :PROPERTIES:
 :CUSTOM_ID: sec:comparing
 :END:

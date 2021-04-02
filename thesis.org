@@ -12866,7 +12866,7 @@ combining optimal design and space-filling designs should always be considered.
   self-optimizing  system (e.g.   facebook)  but not  in  an autotuning  context
   (where EI is more meaningful)
 
-** Towards Transparent and Parsimonious Methods for Automatic Performance Tuning
+** Optimization Methods for Autotuning: An Overview
 #+begin_export latex
 \todo[inline]{TODO: Revisit semi-conclusions of each chapter, wrap up this part,
   hook to Applications part}

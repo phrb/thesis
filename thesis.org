@@ -13039,7 +13039,32 @@ in this thesis were adapted or directly reproduced from our journal.
 :PROPERTIES:
 :CUSTOM_ID: sec:git
 :END:
-*** Summary:
+
+In addition to keeping notebooks we  maintained version control using remote and
+local /git/  repositories for all our  projects, which were backed  up to public
+hosting services.   We have used  /Docker/ images to facilitate  the environment
+configuration  for  running   our  code  when  applicable,  and   we  have  made
+/Zenodo/\nbsp{}\cite{eonr2013zenodo}  archive  releases  of published  work  and
+software  packages,  as shown  in  Table\nbsp{}\ref{tab:zenodo}.   We also  kept
+laboratory  notebooks for  the work  done during  our two-month  visit to  HPE's
+research   lab    in   Palo    Alto,   and   for    the   work    presented   in
+Chapter\nbsp{}\ref{chap:quantization}, which have not  yet been published at the
+time of writing.
+
+#+NAME: tab:zenodo
+#+CAPTION: Projects archived in /Zenodo/, and corresponding thesis chapters
+#+CAPTION: where they are mentioned
+#+ATTR_LATEX: :align rll :booktabs t
+|----------------+-------------------------------------------------------+---------------------------------------|
+| Project        | Archive                                               | Thesis Chapter                        |
+|----------------+-------------------------------------------------------+---------------------------------------|
+| Thesis journal | \cite{bruel2021phd-journal}                           | \ref{chap:method}                     |
+| CCPE paper     | \cite{bruel2021gpu-autotuning}                        | \ref{chap:cuda}                       |
+| ReConFig paper | \cite{bruel2021legup-tuner,bruel2021legup-dockerfile} | \ref{chap:fpga}                       |
+| CCGRID paper   | \cite{bruel2021ccgrid19,bruel2021dlmt,bruel2021dopt}  | \ref{chap:laplacian},\ref{chap:spapt} |
+| DOE package    | \cite{bruel2021experimental}                          | \ref{chap:ed}                         |
+|----------------+-------------------------------------------------------+---------------------------------------|
+
 :PROPERTIES:
 :CUSTOM_ID: sec:repro-summary
 :END:

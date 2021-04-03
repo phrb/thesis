@@ -13029,7 +13029,11 @@ which contains a portion of the notebook for this thesis.
 #+CAPTION: \LaTeX{} code
 [[./img/reproducible/org_thesis.png]]
 
-
+We  have  produced  a  paper  and  presentations  using  this  workflow,  but  a
+fundamental part of our day-to-day work included a /laboratory journal/. Keeping
+a  journal enabled  tracking discussions  and meetings,  annotating and  linking
+papers, and testing ideas with code  snippets. Entire chapters and many sections
+in this thesis were adapted or directly reproduced from our journal.
 
 *** Versioning and Archiving for Code, Text, and Data
 :PROPERTIES:

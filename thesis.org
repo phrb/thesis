@@ -13016,7 +13016,7 @@ programming languages with /markdown/ and inline \LaTeX{} when needed.
 
 A  properly  configured  /Emacs/  editor   turns  /orgmode/  notebooks  into  an
 integrated research environment where we can gather scripts for data generation,
-analysis, and  plotting.  We  can then  and /export/  the document  to propertly
+analysis,  and plotting.   We can  then and  /export/ the  document to  properly
 formatted /pdf/  files. Collapsible  headers enable isolating  each part  of the
 work  into meaningful  sections,  as  shown in  Figure\nbsp{}[[fig:org-thesis]],
 which contains a portion of the notebook for this thesis.

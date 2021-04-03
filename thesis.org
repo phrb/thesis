@@ -13022,7 +13022,7 @@ work  into meaningful  sections,  as  shown in  Figure\nbsp{}[[fig:org-thesis]],
 which contains a portion of the notebook for this thesis.
 
 #+NAME: fig:org-thesis
-#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+ATTR_LATEX: :width .73\textwidth :placement [t]
 #+CAPTION: Excerpt of the /org/ file generating this /pdf/ document.
 #+CAPTION: Collapsed regions mark chapters and sections written in
 #+CAPTION: /markdown/, with inline scripts to generate figures and

@@ -13021,19 +13021,23 @@ formatted /pdf/  files. Collapsible  headers enable isolating  each part  of the
 work  into meaningful  sections,  as  shown in  Figure\nbsp{}[[fig:org-thesis]],
 which contains a portion of the notebook for this thesis.
 
+We have  produced a  paper, shown partially  in Figure\nbsp{}[[fig:org-ccgrid]],
+presentations, and  reports using this workflow,  but a fundamental part  of our
+day-to-day  work included  a /laboratory  journal/.  Keeping  a journal  aids in
+tracking experiments, discussions, and  meetings, annotating and linking papers,
+and testing  ideas with code snippets.   This is not yet  widespread in computer
+science research,  but keeping a physical  laboratory journal has been  a common
+practice in other fields, such as biology.  Illustrating an additional advantage
+of  this methodology,  entire chapters  and many  sections in  this thesis  were
+adapted or directly reproduced from our journal.
+
 #+NAME: fig:org-thesis
-#+ATTR_LATEX: :width .73\textwidth :placement [t]
+#+ATTR_LATEX: :width .9\textwidth :placement [b]
 #+CAPTION: Excerpt of the /org/ file generating this /pdf/ document.
 #+CAPTION: Collapsed regions mark chapters and sections written in
 #+CAPTION: /markdown/, with inline scripts to generate figures and
 #+CAPTION: \LaTeX{} code
 [[./img/reproducible/org_thesis.png]]
-
-We  have  produced  a  paper  and  presentations  using  this  workflow,  but  a
-fundamental part of our day-to-day work included a /laboratory journal/. Keeping
-a  journal enabled  tracking discussions  and meetings,  annotating and  linking
-papers, and testing ideas with code  snippets. Entire chapters and many sections
-in this thesis were adapted or directly reproduced from our journal.
 
 *** Versioning and Archiving for Code, Text, and Data
 :PROPERTIES:
@@ -13054,7 +13058,7 @@ time of writing.
 #+NAME: tab:zenodo
 #+CAPTION: Projects archived in /Zenodo/, and corresponding thesis chapters
 #+CAPTION: where they are mentioned
-#+ATTR_LATEX: :align rll :booktabs t
+#+ATTR_LATEX: :align rll :booktabs t :placement [t]
 |----------------+-------------------------------------------------------+---------------------------------------|
 | Project        | Archive                                               | Thesis Chapter                        |
 |----------------+-------------------------------------------------------+---------------------------------------|
@@ -13080,6 +13084,13 @@ an example of one such occasion, where  we expanded work done in 2015 by running
 new  experiments  with the  DOE  methodology.  The  next chapters  will  discuss
 applications of  the methods  we presented in  the previous  chapters, performed
 during this thesis.
+
+#+NAME: fig:org-ccgrid
+#+ATTR_LATEX: :width .8\textwidth :placement [b]
+#+CAPTION: Excerpt of the /org/ file generating our CCGRID
+#+CAPTION: paper\nbsp{}\cite{bruel2019autotuning, bruel2021ccgrid19},
+#+CAPTION: showing code, generated output, and markdown text
+[[./img/reproducible/org_ccgrid.png]]
 
 ** Compiler Parameters for CUDA Kernels
 :PROPERTIES:

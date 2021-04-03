@@ -59,7 +59,7 @@
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
 #+LATEX_HEADER: \usepackage{tocbibind}
-#+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex8]{biblatex}
+#+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex]{biblatex}
 #+LATEX_HEADER: \addbibresource{bibliography/references.bib}
 #+LATEX_HEADER: \usepackage{indentfirst}
 #+LATEX_HEADER: \usepackage{tabularx}

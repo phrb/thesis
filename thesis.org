@@ -12934,9 +12934,9 @@ branching questions underlying each method.
 [[file:img/tree.pdf]]
 
 * Applications
-** Research Methodology: Efforts for Reproducible Science
+** Research Methodology: Efforts for Reproducibility
 :PROPERTIES:
-:CUSTOM_ID: sec:method
+:CUSTOM_ID: chap:method
 :END:
 
 This chapter presents our efforts to ensure  that the results we produce and the

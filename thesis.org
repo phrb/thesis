@@ -12954,44 +12954,51 @@ discusses    version    control    and    the    efforts    to    archive    our
 research. Section\nbsp{}\ref{sec:repro-summary} summarizes the discussion.
 
 *** Reproducible Research
+:PROPERTIES:
+:CUSTOM_ID: sec:repro
+:END:
+
 Conclusions  derived from  experimental data  can only  be considered  validated
 after  it  is   possible  to  reproduce  them   under  independent  experimental
-conditions.   This principle  has  guided experimental  research and  scientific
-progress.   Experimental  researchers on  computer  science  are in  a  singular
-position   to  promote   and  practice   reproducible  research,   because  some
-computational  experiments  can  be  monitored, registered,  and  repeated  with
-precision and  control that are  simply impossible in other  experimental fields
-such as chemistry and biology.
+conditions.  Formal  methods and theories  in the experimental sciences  must be
+accompanied by accurate,  careful, and reproducible technique,  a principle that
+guides experimental research and scientific progress since its earliest recorded
+accounts, going at  least as far back as Aristotle's  chicken embryology studies
+described in Rom Harré's book\nbsp{}\cite{harre2002great}.
 
-**** Portuguese Text Previously Written                         :noexport:
+Today, experimental researchers  on computer science are in  a singular position
+to promote  and practice reproducible research,  since computational experiments
+in certain situations can be  monitored, registered, and repeated with precision
+and control  that are extremely  hard to achieve,  or even impossible,  in other
+experimental fields such as chemistry, physics, and biology.
 
-- Add reference to repro crisis?
-- Add mention to G. Fursin's efforts for ACM badging
+Recent efforts\nbsp{}\cite{acm2021badging}  from the /Association  for Computing
+Machinery/  (ACM),   impelled  in  no  small   part  by  the  work   of  Grigori
+Fursin\nbsp{}\cite{fursin2011milepost,fursin2014collective,fursin2015collective,fursin2021collective},
+are  a great  start in  the direction  of rewarding  and promoting  reproducible
+research in computer science. Multiple ACM conferences now adopt a badge system,
+awarding   badges   to  works   that   make   significant  efforts   to   ensure
+reproducibility.  The  ACM badge system  is inspired  by the concepts  and terms
+from       the       /Vocabulaire       Internacional       de       Métrologie/
+(VIM)\nbsp{}\cite{bipm2012international}, which  makes distinctions  between the
+/repeatability/,   /replicability/,  and   /reproducibility/   of  results   and
+conclusions.
 
-Os esforços da  ACM\nbsp{}\cite{acm2021badging} são um bom  exemplo dos esforços
-iniciais  que  podem ser  realizados  em  prol da  reprodutibilidade.   Diversas
-conferências e  periódicos da  ACM adotam  um sistema  de insígnias  para marcar
-trabalhos  cujos  esforços  para  reprodutibilidade  de  seus  experimentos  são
-significativos.  A  nomenclatura utilizada  pela ACM  é derivada  do Vocabulário
-Internacional   de    Metrologia   (VIM)\nbsp{}\cite{bipm2012international},   e
-distingue entre resultados e conclusões que podem ser reproduzidos:
+According to the VIM,  research is /repeatable/ if it can  be reproduced by /the
+same research team/ in the same  experimental conditions, and /replicable/ if it
+can  be  reproduced in  different  experimental  conditions.  Research  is  only
+/reproducible/ if the same results can be produced, and the same conclusions can
+be  arrived  at, by  a  /different  research  team/, in  different  experimental
+conditions.
 
-- Pela mesma equipe, nas mesmas condições experimentais (Repetibilidade)
-- Por uma equipe diferente, nas mesmas condições experimentais (Replicabilidade)
-- Por   uma   equipe   diferente,    em   condições   experimentais   diferentes
-  (Reprodutibilidade)
+We hope that in the future it  becomes standard practice to provide the code and
+data that support the  conclusions of a study, in such a way  that we can browse
+and reproduce the code execution, results, and statistical analyses as easily as
+we do today with  /pdf/ files, often the sole survivor  of the research process.
+We     already      see     motivating      initiatives     such      as     the
+/ReScience/'s\nbsp{}\cite{rescience2021faq}     /10    Years     Reproducibility
+Challenge/\nbsp{}\cite{rescience2020ten}.
 
-O código e os dados que dão  suporte às conclusões de um estudo científico devem
-ser submetidos  junto ao  documento que será  publicado.  Esses  /artefatos/ são
-avaliados pelos  revisores e insígnias são  conferidas de acordo com  o nível de
-reprodutibilidade   alcançado.    Outras    organizações   também   promovem   a
-reprodutibilidade,    como   a    ReScience\nbsp{}\cite{rescience2021faq},   que
-recentemente      promoveu      o      Desafio      de      10      Anos      da
-Reprodutibilidade\nbsp{}\cite{rescience2020ten},   onde    pesquisadores   foram
-incentivados a submeter artigos com a  reprodução de seus próprios resultados de
-no mínimo 10 anos de idade.
-*** Computational Documents with Emacs and Org mode
-*** Versioning for Code, Text, and Data
 ** Compiler Parameters for CUDA Kernels
 :PROPERTIES:
 :CUSTOM_ID: chap:cuda

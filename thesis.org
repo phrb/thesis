@@ -13607,6 +13607,9 @@ finding associations between compiler  optimizations, kernels and GPUs justifies
 the autotuning of compiler parameters in the general case.
 
 *** Assessing Parameter Significance with Screening
+:PROPERTIES:
+:CUSTOM_ID: sec:gpu-screening
+:END:
 This study was done in 2015, the first  year of this thesis.  Since at that time
 we did  not have experience with  the methods for statistical  modeling which we
 later studied, and  since the measurement time for each  kernel was sufficiently

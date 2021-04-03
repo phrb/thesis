@@ -12999,6 +12999,46 @@ We     already      see     motivating      initiatives     such      as     the
 /ReScience/'s\nbsp{}\cite{rescience2021faq}     /10    Years     Reproducibility
 Challenge/\nbsp{}\cite{rescience2020ten}.
 
+*** Literate Programming and Laboratory Journals
+:PROPERTIES:
+:CUSTOM_ID: sec:orgmode
+:END:
+
+We produced  /computational notebooks/ for most  of the work we  did during this
+thesis, including presentations, papers,  laboratory notebooks, and this thesis.
+The key tools we have used were the /Emacs/ editor\nbsp{}\cite{gnu2021emacs} and
+its /orgmode/ plugin\nbsp{}\cite{many2021orgmode}.  Although these tools require
+a non-negligible  amount of configuration and  learning, they more than  pay off
+the initial time investment with powerful features and versatility. An /orgmode/
+computational              notebook               enables              /Literate
+Programming/\nbsp{}\cite{knuth1984literate},  intertwining  scripts  in  several
+programming languages with /markdown/ and inline \LaTeX{} when needed.
+
+A  properly  configured  /Emacs/  editor   turns  /orgmode/  notebooks  into  an
+integrated research environment where we can gather scripts for data generation,
+analysis, and  plotting.  We  can then  and /export/  the document  to propertly
+formatted /pdf/  files. Collapsible  headers enable isolating  each part  of the
+work  into meaningful  sections,  as  shown in  Figure\nbsp{}[[fig:org-thesis]],
+which contains a portion of the notebook for this thesis.
+
+#+NAME: fig:org-thesis
+#+ATTR_LATEX: :width .7\textwidth :placement [t]
+#+CAPTION: Excerpt of the /org/ file generating this /pdf/ document.
+#+CAPTION: Collapsed regions mark chapters and sections written in
+#+CAPTION: /markdown/, with inline scripts to generate figures and
+#+CAPTION: \LaTeX{} code
+[[./img/reproducible/org_thesis.png]]
+
+
+
+*** Versioning and Archiving for Code, Text, and Data
+:PROPERTIES:
+:CUSTOM_ID: sec:git
+:END:
+*** Summary:
+:PROPERTIES:
+:CUSTOM_ID: sec:repro-summary
+:END:
 ** Compiler Parameters for CUDA Kernels
 :PROPERTIES:
 :CUSTOM_ID: chap:cuda

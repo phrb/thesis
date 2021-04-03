@@ -12935,16 +12935,23 @@ branching questions underlying each method.
 
 * Applications
 ** Research Methodology: Efforts for Reproducible Science
-Sketch:
+:PROPERTIES:
+:CUSTOM_ID: sec:method
+:END:
 
-- Tools and such
-- Explain difficulty of finding a needle in a haystack:
-  - how to know whether we found the optimal value ?
-  - how to know how far we are from the optimal value ?
-  - how to know whether there is anything to find ?
-  - how to know whether the geometry hypothesis we make are sound in
-    an unknown space ?
-  - ...
+This chapter presents our efforts to ensure  that the results we produce and the
+conclusions we  reach in this  thesis are reproducible.   In most of  the search
+spaces we  explored it was  not possible to  compare our optimizations  with the
+global    optimum    because,    save    for   the    results    presented    in
+Chapter\nbsp{}\ref{chap:laplacian}, it was not even possible to know whether one
+existed. Under these conditions it was  sometimes hard to evaluate if there were
+optimizations to be found, and if the geometry hypotheses we made were sound.
+
+The  chapter is  organized as  follows. Section\nbsp{}\ref{sec:repro}  discusses
+reproducible science, Section\nbsp{}\ref{sec:orgmode} presents  the set of tools
+we  used to  produce  computational  documents, and  Section\nbsp{}\ref{sec:git}
+discusses    version    control    and    the    efforts    to    archive    our
+research. Section\nbsp{}\ref{sec:repro-summary} summarizes the discussion.
 
 *** Reproducible Research
 Conclusions  derived from  experimental data  can only  be considered  validated

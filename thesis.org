@@ -16239,7 +16239,7 @@ explore in this thesis.
 % \bibliography{bibliography/references}
 \printbibliography[heading=bibintoc]
 #+end_export
-* Lists of Figures, Tables                                           :ignore:
+* Lists of Figures, Tables                                  :noexport:ignore:
 #+TOC: tables
 #+latex: \listoffigures{}
 #+TOC: figures

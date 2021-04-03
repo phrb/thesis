@@ -13065,9 +13065,22 @@ time of writing.
 | DOE package    | \cite{bruel2021experimental}                          | \ref{chap:ed}                         |
 |----------------+-------------------------------------------------------+---------------------------------------|
 
+*** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:repro-summary
 :END:
+
+Archiving  and maintaining  version control  for computational  notebooks, code,
+environments,  text,   and  data  were  the   steps  we  took  to   improve  the
+reproducibility of  the work performed during  this thesis. These steps  are not
+future-proof and  do not guarantee reproducibility,  but we believe they  are of
+great value  and help, and  have ourselves  benefited from keeping  such records
+when we  had to revisit past  work.  Section\nbsp{}\ref{sec:gpu-screening} gives
+an example of one such occasion, where  we expanded work done in 2015 by running
+new  experiments  with the  DOE  methodology.  The  next chapters  will  discuss
+applications of  the methods  we presented in  the previous  chapters, performed
+during this thesis.
+
 ** Compiler Parameters for CUDA Kernels
 :PROPERTIES:
 :CUSTOM_ID: chap:cuda

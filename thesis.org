@@ -56,58 +56,60 @@
 #+LATEX_HEADER:   marginpar=20mm,
 #+LATEX_HEADER:   marginparsep=5mm,
 #+LATEX_HEADER: }
+
 #+LATEX_HEADER: \widowpenalty=10000
 #+LATEX_HEADER: \clubpenalty=10000
+
 #+LATEX_HEADER: \usepackage{tocbibind}
+
 #+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex]{biblatex}
 #+LATEX_HEADER: \addbibresource{bibliography/references.bib}
+
 #+LATEX_HEADER: \usepackage{indentfirst}
 #+LATEX_HEADER: \usepackage{tabularx}
 #+LATEX:HEADER: \usepackage[inline]{enumitem}
 #+LATEX_HEADER: \usepackage{setspace}
 #+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
+
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage[scale=2]{ccicons}
+
 #+LATEX_HEADER: \usepackage{newpxtext}
 #+LATEX_HEADER: \usepackage{newpxmath}
 #+LATEX_HEADER: \usepackage{DejaVuSansMono}
+
 #+LATEX_HEADER: \usepackage{forest}
 #+LATEX_HEADER: \usepackage{titling}
 #+LATEX_HEADER: \usepackage{rotating}
+
 #+LATEX_HEADER: \usepackage{booktabs}
 #+LATEX_HEADER: \usepackage{multirow}
 #+LATEX_HEADER: \usepackage{array}
 #+LATEX_HEADER: \usepackage{colortbl}
 #+LATEX_HEADER: \usepackage{listings}
+
 #+LATEX_HEADER: \usepackage{tikz}
 #+LATEX_HEADER: \usepackage{tikz-qtree}
 #+LATEX_HEADER: \usepackage{algpseudocode}
 #+LATEX_HEADER: \usepackage{algorithm}
+
 #+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \usepackage{subcaption}
-#+LATEX_HEADER: \usepackage[english]{babel}
-#+LATEX_HEADER: \usepackage[scale=2]{ccicons}
+
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \usepackage{relsize}
+
 #+LATEX_HEADER: \usepackage{bm}
 #+LATEX_HEADER: \usepackage{wasysym}
 #+LATEX_HEADER: \usepackage{float}
 #+LATEX_HEADER: \usepackage{ragged2e}
 #+LATEX_HEADER: \usepackage{textcomp}
 #+LATEX_HEADER: \usepackage{pgfplots}
+
 #+LATEX_HEADER: \usepackage{todonotes}
 #+LATEX_HEADER: \usepgfplotslibrary{dateplot}
-#+LATEX_HEADER: \lstdefinelanguage{Julia}%
-#+LATEX_HEADER:   {morekeywords={abstract,struct,break,case,catch,const,continue,do,else,elseif,%
-#+LATEX_HEADER:       end,export,false,for,function,immutable,mutable,using,import,importall,if,in,%
-#+LATEX_HEADER:       macro,module,quote,return,switch,true,try,catch,type,typealias,%
-#+LATEX_HEADER:       while,<:,+,-,::,/},%
-#+LATEX_HEADER:    sensitive=true,%
-#+LATEX_HEADER:    alsoother={$},%
-#+LATEX_HEADER:    morecomment=[l]\#,%
-#+LATEX_HEADER:    morecomment=[n]{\#=}{=\#},%
-#+LATEX_HEADER:    morestring=[s]{"}{"},%
-#+LATEX_HEADER:    morestring=[m]{'}{'},%
-#+LATEX_HEADER: }[keywords,comments,strings]%
+
 #+LATEX_HEADER: \lstset{ %
 #+LATEX_HEADER:   backgroundcolor={},
 #+LATEX_HEADER:   basicstyle=\ttfamily\tiny,
@@ -125,6 +127,7 @@
 #+LATEX_HEADER:   stringstyle=\color{gray},
 #+LATEX_HEADER:   tabsize=2,
 #+LATEX_HEADER: }
+
 #+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
 #+LATEX_HEADER: \onehalfspacing
 
@@ -152,6 +155,7 @@
 #+LATEX_HEADER:     urlcolor={blue!80!black}
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \makeatletter
+
 #+LATEX_HEADER: \newcommand\fs@ruled@notop{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
 #+LATEX_HEADER:   %\def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}% <----removed
 #+LATEX_HEADER:   \def\@fs@pre{}%

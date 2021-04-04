@@ -4938,7 +4938,7 @@ p_no_noise | p_noise | p_constrained
 : \pagestyle{empty} % do not remove
 
 #+HEADER: :headers '("\\usepackage[dvipsnames]{xcolor}" "\\usepackage{tikz}" "\\usepackage{forest}" "\\usepackage{amsmath}" "\\DeclareMathOperator*{\\argmin}{arg\\,min}" )
-#+HEADER: :exports results :results raw :file ./img/tree.pdf
+#+HEADER: :exports results :results raw :file ./img/optimization_methods/tree.pdf
 #+begin_src latex :eval no-export
 \begin{forest}
   for tree={%
@@ -5078,7 +5078,7 @@ p_no_noise | p_noise | p_constrained
 #+end_src
 
 #+RESULTS:
-[[file:./img/tree.pdf]]
+[[file:./img/optimization_methods/tree.pdf]]
 
 ***** Old
 ****** (Old) Complete Classification Tree for Function Minimization Methods

@@ -12903,19 +12903,30 @@ relationships and exploring unknown regions of the search space.
 
 *** Independent Bandits
 - simple (discrete choice, optimize $regret = \sum_t R_t$)
+
+- Bernoulli bandits
+- \epsilon greedy
+- Bayesian bandits: Thomsom sampling
 - UCB
+- Exp3?
+
+*** Reinforcement Learning
+- Markov Decision Processes
+
+- "Deep" RL
+- Actor-critic model
+
+- Main motivation for adding this section  was to contextualize results with GPR
+  and Neural Nets
 
 *** Expected Improvement for Gaussian Process Regression
+- Hybrid online learning?
+- Probability of Improvement
+- Expected Improvement
+
 - (continuous choice, optimize $EI = \max_t R_t$)
 - Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
   Model (LinUCB)
-
-*** Reinforcement Learning
-- Unsupervised learning
-- Actor-critic model
-
-- Main motivation for  adding this section is to contextualize  results with GPR
-  and Neural Nets. Could move to last Application chapter
 
 *** Summary
 - These  methods seamlessly  mix exploration  and exploitation  but the  overall

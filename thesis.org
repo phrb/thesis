@@ -13295,10 +13295,11 @@ The optimizations we found often  beat compiler high-level optimization options,
 such as the  /-O2/ flag.  The autotuner found compilation  options that produced
 speedups, in relation to /-O2/, of around 2 times for the /Gaussian Elimination/
 problem from the Rodinia Benchmark Suite, 2 times for /Heart Wall/ problem, also
-from Rodinia,  and 4 times  for one of  the matrix multiplication  algorithms we
-implemented.   We observed  that  the compilation  parameters  that optimize  an
-algorithm  for a  given  GPU  architecture would  not  always  achieve the  same
-performance in different hardware, which was a reasonable expectation.
+from  Rodinia,  and   4  times  for  one  of  the   matrix  multiplication  code
+optimizations we implemented.  We observed  that the compilation parameters that
+optimize an algorithm for a given  GPU architecture would not always achieve the
+same performance  in different hardware,  which evidences there  are significant
+differences between the targeted GPUs.
 
 #+begin_export latex
 \begin{figure}[t]
@@ -13781,17 +13782,18 @@ performance of the last improving configuration found by the autotuner.
 \end{table}
 #+end_export
 
-We attempted to associate compilation parameters  to kernels and GPUs using WEKA
-clustering algorithms\nbsp{}\cite{holmes1994weka}.   Although we could  not find
-significant relations for most kernels we detected that the /ftz=true/ in
-MMS and  the Compute Capabilities  3.0, 5.0 and 5.2  in GAU caused  the speedups
-observed      in       the      GTX       980      for       these      kernels.
-Table\nbsp{}\ref{tab:750RodiniaClusters}  shows   clusters  obtained   with  the
-K-means WEKA algorithm for autotuned parameter sets for the Rodinia Benchmark in
-the  GTX 750.   Unlike most  clusters  found for  all GPUs  and problems,  these
-clusters  did not  contain  an equal  number of  instances.   The difficulty  of
-finding associations between compiler  optimizations, kernels and GPUs justifies
-the autotuning of compiler parameters in the general case.
+We attempted to  associate compilation parameters to kernels and  GPUs using the
+/K/-means  clustering  algorithm.   Although   we  could  not  find  significant
+relations  for most  kernels we  detected  that the  /ftz=true/ in  MMS and  the
+Compute Capabilities 3.0, 5.0 and 5.2 in GAU caused the speedups observed in the
+GTX  980  for  these  kernels.   Table\nbsp{}\ref{tab:750RodiniaClusters}  shows
+clusters obtained with  the K-means WEKA algorithm for  autotuned parameter sets
+for the Rodinia  Benchmark in the GTX  750.  Unlike most clusters  found for all
+GPUs and problems, these clusters did  not contain an equal number of instances.
+Analysis  of   the  unstructured   explorations  performed  by   the  heuristics
+implemented in OpenTuner  did not permit finding  relationships between compiler
+optimizations, kernels, and GPUs, and motivated the application of the screening
+method described in the next section.
 
 *** Assessing Parameter Significance with Screening
 :PROPERTIES:
@@ -13909,17 +13911,20 @@ Figure\nbsp{}[[fig:speedup-gpu-screening]].
 #+CAPTION: configurations for three  Rodinia kernels on the Titan  X and
 #+CAPTION: Quadro M1200 GPUs. Circles mark each  of the 20  measurements
 #+CAPTION: of each flag  configuration, filled dots  and whiskers
-#+CAPTION: mark the  mean  and 95%  confidence intervals
+#+CAPTION: mark the  mean  and 95%  confidence intervals.
+#+CAPTION: The /OT/ experiments were made with OpenTuner using the same number of
+#+CAPTION: measurements used in screening, and the /OT:200/ experiments used 200
+#+CAPTION: measurements
 [[file:img/gpu-screening/timing_gpu_screening.pdf]]
 
-#+ATTR_LATEX: :width \textwidth :placement [t]
+#+ATTR_LATEX: :width .88\textwidth :placement [t]
 #+NAME: fig:speedup-gpu-screening
-#+CAPTION: Mean speedups found using the predictions of the screening model,
-#+CAPTION: for three Rodinia
+#+CAPTION: Mean speedups found using the predictions of the screening model
+#+CAPTION: and OpenTuner, for three Rodinia
 #+CAPTION: kernels on the Titan X and Quadro M1200 GPUs.
-#+CAPTION: The horizontal dashed lines mark the PTX-stage \texttt{opt-level=3}
+#+CAPTION: The vertical dashed lines mark the PTX-stage /opt-level=3/
 #+CAPTION: comparison baseline
-[[file:img/gpu-screening/speedup_gpu_screening.pdf]]
+[[file:img/gpu-screening/all_speedups.pdf]]
 
 *** Summary
 :PROPERTIES:

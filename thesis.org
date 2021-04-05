@@ -12944,52 +12944,89 @@ relationships and exploring unknown regions of the search space.
   (where EI is more meaningful)
 
 ** Optimization Methods for Autotuning: An Overview
-#+begin_export latex
-\todo[inline]{TODO: Revisit semi-conclusions of each chapter, wrap up this part,
-  hook to Applications part}
-#+end_export
+In the previous chapters we have presented a subset of optimization methods that
+can be applied to autotuning problems.  We chose to discuss methods and concepts
+that provide  interesting insight to  our perspective, centered  around applying
+these methods to autotuning problems.
 
-- use glassbox (DOE based) approach to perform the optimization,
-  always try to interpret the results
-- 2 big methods based on different exploration/exploitation strategy:
-  1. Evaluate parameter significance and reduce dimension (two phases,
-     iterative)
-  2. Expected Improvement (first a general exploration phase with a
-     SFD, then seamlessly mix exploration and exploitation)
-  Possibly combinations of both approaches could be used back and
-  forth depending on the specific information we learn on the use
-  case.
-- In this thesis, we evaluate these DOE-based approaches for several
-  autotuning use cases and try to compare them with approaches that
-  had beed previously proposed for these use cases.
+The     methods     for     function    minimization     we     discussed     in
+Chapter\nbsp{}\ref{chap:funcmin} attempt to directly optimize a target function,
+requiring  many objective  function evaluations  and sometimes  requiring strong
+hypotheses  to  hold, such  as  differentiability.   Despite having  interesting
+results on  autotuning problems, the  results produced by  function minimization
+methods are  not easy to  interpret, and are  not conducive to  building insight
+about the target problem.
 
+In  Chapter\nbsp{}\ref{chap:learning}  we  discuss linear  models  and  Gaussian
+Process regression, methods that build surrogates $\hat{f}_{\theta}$ using a set
+$\mathbf{X}$ of observations  of the objective function $f$.   Linear models are
+for the most part easy to  interpret but strongly biased, while regression using
+Gaussian  Processes  can essentially  interpolate  observations  but provides  a
+surrogate that is not clearly interpretable  in regions of high uncertainty.  We
+discussed in  that chapter  how to  measure a surrogate's  quality of  fit using
+ANOVA and  Sobol indices, which  can be used for  deciding how to  interpret the
+models and  where to focus  next experiments. Statistical learning  methods have
+been and still are widely used in  all of experimental science, but it is common
+to  find descriptions  and  derivations of  these methods  that  assume a  fixed
+experimental design $\textbf{X}$.
 
-#+begin_export latex
-\todo[inline]{TODO: Adapt this paragraph}
-#+end_export
-The  effectiveness   of  stochastic  descent   methods  on  autotuning   can  be
-limited\nbsp{}\cite{seymour2008comparison,balaprakash2011can,balaprakash2012experimental},
-between other factors, by underlying hypotheses  about the search space, such as
-the  reachability of  the  global optimum  and the  smoothness  of search  space
-surfaces, which  are frequently not  respected. The derivation  of relationships
-between  parameters  and  performance  from search  heuristic  optimizations  is
-greatly hindered,  if not rendered impossible,  by the biased way  these methods
-explore  parameters.   Some  parametric  learning methods,  such  as  Design  of
-Experiments,  are  not widely  applied  to  autotuning.  These  methods  perform
-structured  parameter  exploration,  and  can  be used  to  build  and  validate
-performance     models,     generating    transparent     and     cost-effective
-optimizations\nbsp{}\cite{mametjanov2015autotuning,bruel2019autotuning}.   Other
-methods  from  the parametric  family  are  more  widely  used, such  as  Bandit
-Algorithms\nbsp{}\cite{xu2017parallel}.  Nonparametric learning methods, such as
-Decision   Trees\nbsp{}\cite{balaprakash2016automomml}   and  Gaussian   Process
-Regression\nbsp{}\cite{parsa2019pabo}, are able to reduce model bias greatly, at
-the  expense  of  increased  prediction  variance.   Figure\nbsp{}\ref{fig:tree}
-categorizes some autotuning methods according to  some of the key hypotheses and
-branching questions underlying each method.
+In Chapter\nbsp{}\ref{chap:ed} we present Design of Experiments methods that are
+specifically concerned in selecting the  set $\mathbf{X}$ of experiments that is
+best suited  for the  intended analysis  method.  Screening  enables identifying
+significant linear main  effects with a very restricted  number of observations,
+and Optimal Design provides methods to expand the screening idea to exploit more
+complex hypotheses about the target search space. If we have no clear hypotheses
+about search space structure, Space-filling designs can be a good but costly way
+to uniformly explore, especially for  high-dimensional problems, and to decrease
+the variance  of more complex surrogate  models. In the studies  that follow, we
+will see that, although Design of Experiments methods are not yet widely applied
+in  autotuning research,  they can  significantly reduce  the experimental  cost
+building surrogate models, while simultaneously decreasing variance of estimates
+and increasing accuracy.
+
+Chapter\nbsp{}\ref{chap:online}    presents     methods    to     balance    the
+exploitation-exploration    trade-off,    which     is    left    implicit    in
+Chapters\nbsp{}\ref{chap:learning} and  \ref{chap:ed}.  Online  learning methods
+are not easy to  directly adapt to our context, since  the autotuning problem is
+more easily  stated in terms of  a batch of  observations to be modeled  and the
+target problem  and machine are  static for each  tuning run.  Despite  that, we
+discussed  how  Multi-armed Bandit  algorithms  helped  deciding which  function
+minimization  method  to  use  during   an  autotuning  run,  how  the  Expected
+Improvement metric helps mixing exploration and exploitation in Gaussian Process
+regression, and how Reinforcement Learning methods can be used to model problems
+with strong interactions between optimization choices.
+
+In this  thesis we built, applied,  and evaluated optimization methods  based on
+Design of Experiments  in different autotuning contexts, described  in detail in
+the next chapters, and compared our methods to others that are commonly applied.
+The inner  workings and the  interpretation of the  results produced by  our DOE
+approach are transparent  to statistical analysis and user  intervention, and we
+strive     to     be      parsimonious     regarding     experimental     costs.
+Figure\nbsp{}\ref{fig:tree}   attempts   to   represent   the   hypotheses   and
+relationships between  the subset  of optimization methods  we discussed  in the
+previous chapters,  viewed through the prism  of the studies and  experiments we
+performed in  this thesis.  Annotations mark  the chapters  were we  present and
+apply each method.
+
+We used two  main approaches to balance exploitation and  exploration. The first
+approach  is sequential  and breaks  down  exploration and  exploitation in  two
+phases.  It fist explores to identify  factor significance and then exploits the
+identified  relationships, reducing  the  problem dimension.   This approach  is
+described    in     Chapter\nbsp{}\ref{chap:laplacian},    and     applied    in
+Chapters\nbsp{}\ref{chap:cuda}, \ref{chap:laplacian}, and \ref{chap:spapt}.  The
+second  approach   is  based  in   Gaussian  Process  regression   and  Expected
+Improvement.   Its  first  stage   explores  using  Space-filling  designs,  and
+subsequent measurements mix exploration and exploitation seamlessly using EI and
+additional Space-filling designs for small neighborhoods of observations.
+
+We believe combinations of these  two approaches could be intercalated depending
+on the kinds of search space  structure revealed during optimization, and on the
+specific objectives at  hand, that is, whether  we need to simply  find the best
+possible optimization  in the shortest  time, build an accurate  surrogate model
+for observed data, or identify global search space structure.
 
 #+begin_export latex
 \begin{sidewaysfigure}
-  %\adjincludegraphics[width=0.9\textwidth,center,valign=M]{./img/optimization_methods/annotated_tree.pdf}
   \begin{adjustbox}{width=0.91\textwidth,center,valign=M}
     \includegraphics{./img/optimization_methods/annotated_tree.pdf}
   \end{adjustbox}
@@ -12997,7 +13034,6 @@ branching questions underlying each method.
   \label{fig:tree}
 \end{sidewaysfigure}
 #+end_export
-
 
 * Applications
 ** Research Methodology: Efforts for Reproducibility

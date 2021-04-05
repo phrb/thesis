@@ -10876,22 +10876,23 @@ space on Chapter\nbsp{}\ref{chap:ed}.  We will  now discuss Linear Regression, a
 method to build surrogates using linear models on the parameters $\theta$.
 
 *** Linear Regression
-We  will build  a surrogate  $\hat{f}_{\theta}$ for  a function  $f: \mathcal{X}
-\to  \mathbb{R}$   using  a  fixed  experimental   design  $\mathbf{X}$  and
-observations  $\mathbf{y}$. We make the hypothesis that $f$ is a linear model on
-$\theta$, with error $\varepsilon$, written
+We will build a surrogate $\hat{f}_{\theta}$  for a function $f: \mathcal{X} \to
+\mathbb{R}$  using a  fixed  experimental design  $\mathbf{X}$ and  observations
+$\mathbf{y}$. We make the hypothesis that $f$ is a linear model on $\theta$ with
+error $\varepsilon$, written
 #+begin_export latex
 \begin{align}
   \label{eq:linear-model}
-  f(\mathbf{X}) = \mathbf{X}\theta(\mathbf{X}, \mathbf{y}) + \varepsilon\text{.}
+  f(\mathbf{x}) = \mathbf{x}^{\transp}\theta(\mathbf{X},
+  \mathbf{y}) + \varepsilon\text{.}
 \end{align}
 #+end_export
 The  experimental  design  $\mathbf{X}$  is an  $n\times{}p$  matrix  of  column
 vectors,  where   each  element   $\mathbf{x}_{1},\dots,  \mathbf{x}_n$   is  an
 experiment.  We do not know how  well the linear model hypothesis represents the
 true $f$, but we assume that  each experiment in $\mathbf{X}$ was run, producing
-the  response  vector $\mathbf{y}  =  [y_1  \;\dots\; y_n]^{\top}$,  where  each
-element  is  an  observation  of   $f$  subject  to  measurement  error.
+the response  vector $\mathbf{y}  = [y_1  \;\dots\; y_n]^{\transp}$,  where each
+element is an observation of $f$ subject to measurement error.
 
 Using $\mathbf{y}$ we can construct  parameter vectors $\theta$ in the parameter
 space
@@ -10994,33 +10995,38 @@ $\mathbf{X}$  is fixed,  the  variance of  $\hat{\theta}$  shows explicitly  how
 uncertainty  in  measurements  due  to  error propagates  to  the  linear  model
 surrogate, and we  can use this uncertainty to compute  confidence intervals for
 the  surrogate's  predictions.  We  will  use  the  fact  that the  variance  of
-$\hat{\theta}$ depends  on $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ when  we discuss
-Optimal Design on Section\nbsp{}\ref{sec:optimal}.
-
-An interesting interpretation  of the OLS estimator is that  it approximates the
-observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
-space spanned  by the columns  of $\mathbf{X}$.  Substituting  $\hat{\theta}$ on
-the   surrogate  model\nbsp{}\ref{eq:linear-model-surrogate},   we  obtain   the
-projection matrix
-#+begin_export latex
-\begin{align}
-  H = \mathbf{X}(\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\text{.}
-\end{align}
-#+end_export
-The  difference   between  $\mathbf{y}$   and  its  projection   $H\mathbf{y}  =
-\hat{\mathbf{y}}$ is  the model  error $\varepsilon$,  orthogonal to  the column
-space         of         $\mathbf{X}$,         as         represented         in
-Figure\nbsp{}[[fig:regression-projection]].   The  OLS  estimator  can  also  be
-derived as a special case of  the Maximum Likelihood Estimator with $\varepsilon
-\sim \mathcal{N}(\mu,\sigma^2)$.
+$\hat{\theta}$  depends   on  $(\mathbf{X}^{\transp}\mathbf{X})^{-1}$   when  we
+discuss Optimal Design on Section\nbsp{}\ref{sec:optimal}.
 
 #+NAME: fig:regression-projection
-#+ATTR_LATEX: :width 0.48\textwidth :placement [t]
+#+ATTR_LATEX: :width 0.48\textwidth :placement [h]
 #+CAPTION: In Linear Regression, the prediction vector $\hat{\mathbf{y}}$
 #+CAPTION: is the orthogonal projection of the observations vector $\mathbf{y}$
 #+CAPTION: into the vector space
 #+CAPTION: spanned by the columns of $\mathbf{X}$.
+#+CAPTION: The vector $\boldsymbol{\varepsilon} = \mathbf{y} - \hat{\mathbf{y}}$
+#+CAPTION: is the model error, and is orthogonal to $\mathbf{X}\theta$
 [[file:img/linear_regression_projection.pdf]]
+
+An interesting interpretation  of the OLS estimator is that  it approximates the
+observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
+space    spanned    by    the    columns    of    $\mathbf{X}$.     Substituting
+Equation\nbsp{}\ref{eq:ols-0} on  the matrix from  of the surrogate  model from
+Equations\nbsp{}\ref{eq:linear-model-surrogate}, we obtain
+#+begin_export latex
+\begin{align}
+  \hat{\mathbf{y}} = \mathbf{X}\hat{\theta} =
+  \mathbf{X}(\mathbf{X}^{\transp}\mathbf{X})^{-1}\mathbf{X}^{\transp}\mathbf{y} =
+  H\mathbf{y}\text{,}
+\end{align}
+#+end_export
+where $H$ is called the  projection matrix mapping the observations $\mathbf{y}$
+to  the  surrogate's  predictions $\hat{\mathbf{y}}$.   The  difference  between
+$\mathbf{y}$ and  $\hat{\mathbf{y}}$ is the model  error $\mathbf{\varepsilon}$,
+orthogonal   to  the   column   space  of   $\mathbf{X}$,   as  represented   in
+Figure\nbsp{}[[fig:regression-projection]].   The  OLS  estimator  can  also  be
+derived as a special case of  the Maximum Likelihood Estimator with $\varepsilon
+\sim \mathcal{N}(\mu,\sigma^2)$.
 
 We  assumed  that the  design  matrix  $\mathbf{X}$  was  used directly  in  the
 surrogate  model\nbsp{}\ref{eq:linear-model-surrogate},  but   this  limits  the
@@ -11146,7 +11152,7 @@ We can almost  never compute the true  error $MSE_{f}$ of our  surrogate, but in
 our toy example  we can use the Booth  function without the error term  to get a
 sense of how well our models generalize.  As we could expect, since the true $f$
 in   our  example   can  be   represented  by   the  basis   functions  on   set
-$\mathcal{H}_{(d)}$, the surrogate  from panel (c) has the smallest  MSE and the
+$\mathcal{H}_{(d)}$, the surrogate  from panel (d) has the smallest  MSE and the
 generalizes the best, although it still differs from the true $f$.
 
 #+NAME: fig:regression-fitting

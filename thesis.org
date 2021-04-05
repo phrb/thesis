@@ -9171,7 +9171,7 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 : /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
 :   warnings.warn("ONNX export mode is set to " + training_mode +
 * Table of Contents                                                  :ignore:
-#+TOC: headlines 5
+#+TOC: :headlines 2
 * Introduction
 :PROPERTIES:
 :UNNUMBERED: t

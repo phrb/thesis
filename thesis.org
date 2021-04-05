@@ -10363,14 +10363,17 @@ additional points $\mathbf{x}_2,\dots,\mathbf{x}_n$, each iteration is written
 where $\alpha_k$  is the  step size  at iteration  $k$. The  step size  for each
 iteration can  be a parameter  fixed at the  beginning of optimization,  but the
 best $\alpha_k$ can alternatively be determined by searching along the direction
-of greatest descent.
+of greatest  descent. Equation\nbsp{}\ref{eq:newton}  in the next  section shows
+how  to leverage  higher order  derivative information  to determine  $\alpha_k$
+analytically.
 
-Figure\nbsp{}[[fig:booth-gradient]]  shows the  opposites  of the  gradients of  the
+Figure\nbsp{}[[fig:booth-gradient]] shows the opposites  of the gradients of the
 three variations of Booth's  function, described by Equations\nbsp{}\ref{eq:f0},
 \ref{eq:f1},   and  \ref{eq:f2},   in  panels   (a),  (b),   (c),  respectively.
-Figure\nbsp{}[[fig:booth-gradient-descent-path]]  shows, in  equally marked  panels,
-the paths  taken by a gradient  descent algorithm where $\alpha_k$  is chosen at
-each step, according to the values of  $f$ in the neighborhood $x_{k - 1}$.
+Figure\nbsp{}[[fig:booth-gradient-descent-path]]   shows,   in  equally   marked
+panels, the  paths taken  by a  gradient descent  algorithm where  $\alpha_k$ is
+chosen at each step, according to the  values of $f$ in the neighborhood $x_{k -
+1}$.
 
 #+NAME: fig:booth-gradient-descent-path
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -10449,10 +10452,13 @@ $\mathbf{x}_k$, as well  as the iterative step of Newton's  method.  Starting at
 $\mathbf{x}_1$, for points $\mathbf{x}_2, \dots, \mathbf{x}_n$, we have
 #+begin_export latex
 \begin{align}
-\mathbf{x}_k = \mathbf{x}_{k - 1} -
-\mathbf{H}f(\mathbf{x}_{k - 1})\nabla{}f(\mathbf{x}_{k - 1})\text{.} \label{eq:newton}
+  \mathbf{x}_k = \mathbf{x}_{k - 1} -
+  \mathbf{H}f(\mathbf{x}_{k - 1})\nabla{}f(\mathbf{x}_{k - 1})\text{.}
+  \label{eq:newton}
 \end{align}
 #+end_export
+Note  that $\mathbf{H}f(\mathbf{x}_{k  -  1})$ is  the  optimal $\alpha_k$  from
+Equation\nbsp{}\ref{eq:grad-desc}.
 
 Provided the strong hypotheses of convexity and differentiability are respected,
 derivative-based  methods  are  extremely effective.   In  particular,  Newton's

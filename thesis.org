@@ -13106,6 +13106,9 @@ for observed data, or identify global search space structure.
 #+end_export
 
 * Applications
+:PROPERTIES:
+:CUSTOM_ID: part:app
+:END:
 ** Research Methodology: Efforts for Reproducibility
 :PROPERTIES:
 :CUSTOM_ID: chap:method

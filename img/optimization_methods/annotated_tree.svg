@@ -40,12 +40,12 @@
      id="namedview3592"
      showgrid="false"
      inkscape:zoom="0.8406162"
-     inkscape:cx="261.66601"
-     inkscape:cy="547.14501"
+     inkscape:cx="494.35988"
+     inkscape:cy="404.61524"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg3590"
+     inkscape:current-layer="g6288"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -1715,15 +1715,15 @@
     <text
        xml:space="preserve"
        style="font-size:10px;line-height:1.28;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;stroke-width:0.75"
-       x="-351.42178"
+       x="-337.58344"
        y="7.1999998"
        id="text8947"
        transform="rotate(-90)"><tspan
          sodipodi:role="line"
          id="tspan8945"
-         x="-351.42178"
+         x="-337.58344"
          y="7.1999998"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';stroke-width:0.75">Strength of Hypotheses</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';stroke-width:0.75">More Hypotheses</tspan></text>
     <path
        style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker8889);stop-color:#000000"
        d="M 53.530405,610.0691 H 817.0996"
@@ -1731,14 +1731,14 @@
     <text
        xml:space="preserve"
        style="font-size:10px;line-height:1.28;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;stroke-width:0.75"
-       x="393.50714"
+       x="396.06372"
        y="624.73962"
        id="text8947-3"><tspan
          sodipodi:role="line"
          id="tspan8945-5"
-         x="393.50714"
+         x="396.06372"
          y="624.73962"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';stroke-width:0.75">Model Complexity</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';stroke-width:0.75">More Complexity</tspan></text>
     <g
        id="g7379"
        transform="translate(35.145661,3.2288474e-5)">
@@ -11675,12 +11675,12 @@
          id="tspan8945-5-7"
          x="238.63402"
          y="128.09662"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#b10000;fill-opacity:1;stroke-width:0.75">Presented in Chapter 4,</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#b10000;fill-opacity:1;stroke-width:0.75">Presented in Chapter: 4,</tspan><tspan
          sodipodi:role="line"
          x="238.63402"
          y="140.10983"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#001fa6;fill-opacity:1;stroke-width:0.75"
-         id="tspan24867">Applied in Chapters 10, 11, 12</tspan></text>
+         id="tspan24867">Applied in Chapters: 10, 11, 12</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:9px;line-height:1.28;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;stroke-width:0.75"
@@ -11696,7 +11696,12 @@
          x="585.92487"
          y="138.31898"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#001fa6;fill-opacity:1;stroke-width:0.75"
-         id="tspan24869">A: 10, 12, 13</tspan></text>
+         id="tspan24869">A: 10, 12,</tspan><tspan
+         sodipodi:role="line"
+         x="585.92487"
+         y="150.3322"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#001fa6;fill-opacity:1;stroke-width:0.75"
+         id="tspan3843">     13, 14</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:9px;line-height:1.28;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;stroke-width:0.75"
@@ -11803,12 +11808,17 @@
          id="tspan8945-5-7-9-20-1-7"
          x="573.867"
          y="496.83664"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#b10000;fill-opacity:1;stroke-width:0.75">P: 6,</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#b10000;fill-opacity:1;stroke-width:0.75">P: 5,</tspan><tspan
          sodipodi:role="line"
          x="573.867"
          y="508.84985"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#001fa6;fill-opacity:1;stroke-width:0.75"
-         id="tspan24869-2-9-8">A: 12, 13</tspan></text>
+         id="tspan24869-2-9-8">A: 10, 12,</tspan><tspan
+         sodipodi:role="line"
+         x="573.867"
+         y="520.86304"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';fill:#001fa6;fill-opacity:1;stroke-width:0.75"
+         id="tspan3835">     13, 14</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:9px;line-height:1.28;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;stroke-width:0.75"

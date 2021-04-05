@@ -10039,7 +10039,7 @@ chapter ends with a discussion of common search space properties.
 *** Notation
 We will  call /optimization/ the minimization  of a real-valued function  with a
 single vector input.  For a function $f: \mathcal{X} \to \mathbb{R}$, we wish to
-find  the input  vector  $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\top}$ in  the
+find  the input  vector  $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\transp}$ in  the
 /parameter    space/,    or    /search   space/    $\mathcal{X}$    for    which
 $f(\mathbf{x}^{\ast})$ is  the smallest, compared  to all other  $\mathbf{x} \in
 \mathcal{X}$.   The function  $f$  represents, in  the  autotuning context,  the
@@ -10052,13 +10052,13 @@ we can use the opposite of the performance metrics that should be maximized.
 
 As an example of an autotuning  problem, consider optimizing the choice of flags
 for a compiler with $p  = \vert{}\mathbf{x}\vert{}$ flags, where a configuration
-$\mathbf{x} = [x_1 \;\dots\; x_p]^{\top}$ consists  of a vector of $p$ /boolean/
+$\mathbf{x} = [x_1 \;\dots\; x_p]^{\transp}$ consists  of a vector of $p$ /boolean/
 values,  denoting whether  each flag  $x_1,  \dots, x_p$  is turned  on for  the
 compilation of a specific application.   To find the compiler configuration that
 generates the binary with the smallest execution  time, we conduct a set of $n =
 \vert{}\mathbf{X}\vert{}$  /experiments/, chosen  according  to some  criterion,
 generating  the   $n\times{}p$  /experimental   design  matrix/   $\mathbf{X}  =
-[\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\top}$.   Each experiment  consists  of
+[\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\transp}$.   Each experiment  consists  of
 compiling the target application using the specified compiler configuration, and
 measuring the execution time of the resulting binary.
 
@@ -10080,7 +10080,7 @@ such experimental design we would obtain the measurements
 #+begin_export latex
 \begin{align}
   \mathbf{y} =  [y_i = f(\mathbf{x}_i)  +
-    \varepsilon_i, \; i =  1,\dots,2^{p}]^{\top}\text{.}
+    \varepsilon_i, \; i =  1,\dots,2^{p}]^{\transp}\text{.}
 \end{align}
 #+end_export
 The  measurement  $y_i$  is  an  /estimate/  of  $f(\mathbf{x}_i)$,  with  error
@@ -10112,7 +10112,7 @@ where  $\theta$  is  a  parameter vector  usually  estimated  from  measurements
 $(\mathbf{X},\mathbf{y})$.   The  function   $\theta  :  \mathcal{X}^{n}  \times
 \mathbb{R}^{n} \to  \Theta$ represents the  /estimation process/, that  uses the
 /observations/  $\mathbf{y}  \in  \mathbb{R}^{n}$ from  an  experimental  design
-$\mathbf{X}  = [\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\top}$.  The  /parameter
+$\mathbf{X}  = [\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\transp}$.  The  /parameter
 vector/ $\theta(\mathbf{X},\mathbf{y})$  in the /parameter space/  $\Theta$ will
 be used to compute the estimate.
 
@@ -10122,7 +10122,7 @@ $f$,   provided   we   are   able    to   construct   a   useful   estimate   of
 $\theta(\mathbf{X},\mathbf{y})$.  We will  discuss in Chapters\nbsp{}[[Learning:
 Building  Surrogates]]   and\nbsp{}\ref{chap:ed}  methods   that  use   the  $m$
 individual  parameter  estimates  $\theta(\mathbf{X},  \mathbf{y})  =  [\theta_1
-\;\dots\; \theta_m]^{\top}$ to assess the significance of specific /factors/.
+\;\dots\; \theta_m]^{\transp}$ to assess the significance of specific /factors/.
 
 If  we use  the  Ordinary Least  Squares  (OLS) estimator  for  $\theta$ in  our
 compiler flag  example, the parameter estimates  $\theta_2,\dots,\theta_m$ could
@@ -10154,13 +10154,13 @@ different optimization methods in the next chapters.
 | Symbol                                                                                                      | Concept                         | Example                                                              |
 |-------------------------------------------------------------------------------------------------------------+---------------------------------+----------------------------------------------------------------------|
 | $\mathcal{X}$                                                                                               | Search space                    | All possible compiler flag assignments                               |
-| $\mathbf{x} = [x_1 \;\dots\; x_p]^{\top} \in \mathcal{X}$                                                   | Input variable                  | A specific flag assignment                                           |
-| $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\top} \subseteq \mathcal{X}$                           | Experimental design             | A set of flag assignments                                            |
+| $\mathbf{x} = [x_1 \;\dots\; x_p]^{\transp} \in \mathcal{X}$                                                   | Input variable                  | A specific flag assignment                                           |
+| $\mathbf{X} = [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\transp} \subseteq \mathcal{X}$                           | Experimental design             | A set of flag assignments                                            |
 | $p = \vert{}\mathbf{x}\vert{}$                                                                              | Search space dimension          | The number of flags to assign                                        |
 | $n = \vert{}\mathbf{X}\vert{}$                                                                              | Number of experiments           | Size of the set of flags to compile and measure                      |
 | $f: \mathcal{X} \to \mathbb{R}$                                                                             | Function to minimize            | Performance metric, such as the execution time of a binary           |
 | $y_i = f(\mathbf{x}_i) + \varepsilon_i$                                                                     | Observable quantity             | Execution time with flags $\mathbf{x}_i$, with error $\varepsilon_i$ |
-| $\mathbf{y} = [y_1 \;\dots\; y_n]^{\top} \in \mathbb{R}^{n}$                                                | Observations                    | List of execution times for all flags                                |
+| $\mathbf{y} = [y_1 \;\dots\; y_n]^{\transp} \in \mathbb{R}^{n}$                                                | Observations                    | List of execution times for all flags                                |
 | $\mathbf{x}^{\ast}: y^{\ast} = f(\mathbf{x}^{\ast}) \leq f(\mathbf{x}), \forall \mathbf{x} \in \mathcal{X}$ | Global optimum                  | Flag assignment with smallest execution time                         |
 | $\Theta$                                                                                                    | Parameter space                 | All possible values of the coefficients of a linear model            |
 | $\theta(\mathbf{X}, \mathbf{y}) \in  \Theta$                                                                | Parameter vector                | OLS estimate of the coefficients of a linear model                   |
@@ -10180,7 +10180,8 @@ from  the  last  section,  consisting  of finding  the  global  optimum  of  the
 paraboloid surface defined by the Booth function,
 #+begin_export latex
 \begin{align}
-y_a = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} + (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.} \label{eq:f0}
+  y_a = f(\mathbf{x} = [x_1, x_2]^{\transp}) = (x_1 + 2x_2 - 7)^{2} +
+  (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.} \label{eq:f0}
 \end{align}
 #+end_export
 In our notation, the search space for  this example is $\mathcal{X} = (x_1, x_2)
@@ -10201,8 +10202,10 @@ Besides the  search space defined  by the  observations $y_a$, we  will consider
 search spaces for two variations
 #+begin_export latex
 \begin{align}
-y_b &= f(\mathbf{x}) + \varepsilon, \; \text{with } \varepsilon \thicksim \mathcal{N}(0, \sigma^2)\text{, and} \label{eq:f1} \\
-y_c &= f(\mathbf{x}) + \varepsilon, \; \text{with } \; x_1 \in [3, -6]\text{.} \label{eq:f2}
+  y_b &= f(\mathbf{x}) + \varepsilon, \; \text{with }
+  \varepsilon \thicksim \mathcal{N}(0, \sigma^2)\text{, and} \label{eq:f1} \\
+  y_c &= f(\mathbf{x}) + \varepsilon, \; \text{with }
+  \; x_1 \in [3, -6]\text{.} \label{eq:f2}
 \end{align}
 #+end_export
 The underlying objective function in  this example has a closed-form expression,
@@ -10329,28 +10332,29 @@ Booth's function to discuss how noise and uncertainty impact these methods.
 #+CAPTION: function's basin is near zero.
 [[file:img/booth_gradient.pdf]]
 
-The  gradient  $\nabla{}f(\mathbf{x})$ of  a  function  $f: \mathcal{X}  \to
-\mathbb{R}$ at point  $\mathbf{x} = [x_1 \;\dots\; x_n]^{\top}$ is  defined as
+The  gradient   $\nabla{}f(\mathbf{x})$  of  a  function   $f:  \mathcal{X}  \to
+\mathbb{R}$ at point $\mathbf{x} = [x_1 \;\dots\; x_n]^{\transp}$ is defined as
 #+begin_export latex
 \begin{align}
-  \nabla{}f(\mathbf{x} = [x_1 \;\dots\; x_n]^{\top}) =
+  \nabla{}f(\mathbf{x} = [x_1 \;\dots\; x_n]^{\transp}) =
         \left[f^{\prime}_{x_1}(\mathbf{x})
           \;\dots\;
-          f^{\prime}_{x_n}(\mathbf{x})\right]^{\top}\text{,}
+          f^{\prime}_{x_n}(\mathbf{x})\right]^{\transp}\text{,}
 \end{align}
 #+end_export
 where  $f^{\prime}_{x_i}(\mathbf{x})$  is  the  partial  derivative  of  $f$  at
 $\mathbf{x}$,    with     respect    to    variable    $x_i$.      The    vector
-$\nabla{}f(\mathbf{x}_i)$ points to  the direction of /greatest  ascent/ in which,
+$\nabla{}f(\mathbf{x}_i)$ points to the direction of /greatest ascent/ in which,
 from the perspective of $f(\mathbf{x}_i)$, the value of $f$ increases the most.
 
 The gradient descent  method is one of the simplest  ways to leverage derivative
 information  for  optimization.   It  consists  in  moving  iteratively  in  the
-direction  of /greatest  descent/, opposite  the gradient,  from a  starting point
+direction of  /greatest descent/, opposite  the gradient, from a  starting point
 $\mathbf{x}_1$.  If we follow the opposite of the gradient at $\mathbf{x}_1$ for
 additional points $\mathbf{x}_2,\dots,\mathbf{x}_n$, each iteration is written
 #+begin_export latex
 \begin{align}
+  \label{eq:grad-desc}
   \mathbf{x}_{k} = \mathbf{x}_{k - 1} -
   \alpha_{k}\nabla{}f(\mathbf{x}_{k - 1}),
   \; k=2,\dots,n\text{,}
@@ -10419,8 +10423,8 @@ of $\mathbf{x}_{k - 1}$ using its second Taylor polynomial
 #+begin_export latex
 \begin{align}
   f(\mathbf{x}) \approx f(\mathbf{x}_{k - 1}) \; + \;
-    \nabla{}f(\mathbf{x}_{k - 1})^{\top}(\mathbf{x} - \mathbf{x}_{k - 1}) \; + \;
-    \frac{1}{2}(\mathbf{x} - \mathbf{x}_{k - 1})^{\top}\mathbf{H}f(\mathbf{x}_{k - 1})
+    \nabla{}f(\mathbf{x}_{k - 1})^{\transp}(\mathbf{x} - \mathbf{x}_{k - 1}) \; + \;
+    \frac{1}{2}(\mathbf{x} - \mathbf{x}_{k - 1})^{\transp}\mathbf{H}f(\mathbf{x}_{k - 1})
     (\mathbf{x} - \mathbf{x}_{k - 1})\text{,}
 \end{align}
 #+end_export
@@ -10457,30 +10461,32 @@ $\mathbf{H}f$ is positive definite.  This  happens in the following example with
 Booth's function
 #+begin_export latex
 \begin{align}
-y = f(\mathbf{x} = [x_1, x_2]^{\top}) = (x + 2y - 7)^{2} + (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
+  y = f(\mathbf{x} = [x_1, x_2]^{\transp}) = (x + 2y - 7)^{2} +
+  (2x + y - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{.}
 \end{align}
 #+end_export
-adapted from Kochenderfer and Wheeler\nbsp{}\cite{kochenderfer2019algorithms}.
 
-If we start with $\mathbf{x}_1 = [9, 8]^{\top}$ and plug
+The     following    example     was    adapted     from    Kochenderfer     and
+Wheeler\nbsp{}\cite{kochenderfer2019algorithms}.  If we start with $\mathbf{x}_1
+= [9, 8]^{\transp}$ and plug
 #+begin_export latex
 \begin{align}
-  \nabla{}f(\mathbf{x}_1 = [9, 8]^{\top}) = [10 \cdot 9 + 8 \cdot 8 - 34,
-    8 \cdot 9 + 10 \cdot 8 - 38]^{\top} = [120, 144]^{\top}\text{,}
+  \nabla{}f(\mathbf{x}_1 = [9, 8]^{\transp}) = [10 \cdot 9 + 8 \cdot 8 - 34,
+    8 \cdot 9 + 10 \cdot 8 - 38]^{\transp} = [120, 144]^{\transp}\text{,}
 \end{align}
 #+end_export
 and
 #+begin_export latex
 \begin{align}
-  \mathbf{H}f(\mathbf{x}_1 = [9, 8]^{\top}) =
+  \mathbf{H}f(\mathbf{x}_1 = [9, 8]^{\transp}) =
   \begin{bmatrix}
     10 & 8 \\
     8 & 10
   \end{bmatrix}
 \end{align}
 #+end_export
-into the Newton's method update step in Equation\nbsp{}\ref{eq:newton},
-we reach $\mathbf{x}^{\ast} = [1, 3]^{\top}$ in the next step
+into the Newton's method update step in Equation\nbsp{}\ref{eq:newton}, we reach
+$\mathbf{x}^{\ast} = [1, 3]^{\transp}$ in the next step
 #+begin_export latex
 \begin{align}
   \mathbf{x}_2 = \begin{bmatrix}
@@ -10896,54 +10902,84 @@ section, and use it to write the linear model surrogate
 #+begin_export latex
 \begin{align}
   \label{eq:linear-model-surrogate}
-  \hat{f}_{\theta}(\mathbf{X}) =
-  \mathbf{X}\hat{\theta}(\mathbf{X},\mathbf{y})\text{.}
+  \hat{f}_{\theta}(\mathbf{x}) =
+  \mathbf{x}^{\transp}\hat{\theta}(\mathbf{X},\mathbf{y})\text{.}
 \end{align}
 #+end_export
-The   vector  $\hat{\mathbf{y}}$   produced   by  evaluating   $\hat{f}_{\theta}
-(\mathbf{X})$ is  called the prediction  of the surrogate model  for experiments
-$\mathbf{X}$, and  the distance between $\mathbf{y}$  and $\hat{\mathbf{y}}$ can
-be used to optimize the parameter vector  and estimate the quality of fit of the
-surrogate.
+The  vector  $\hat{\mathbf{y}}  = [\hat{f}_{\theta}(\mathbf{x}_1)  \;  \dots  \;
+\hat{f}_{\theta}(\mathbf{x}_n)]^{\transp}$  is  called  the  prediction  of  the
+surrogate  model   for  experiments  $\mathbf{X}$,  and   the  distance  between
+$\mathbf{y}$ and $\hat{\mathbf{y}}$ can be used to optimize the parameter vector
+and estimate the quality of fit of the surrogate.
 
 A key advantage  of a surrogate model  is that we can  use $\hat{f}_{\theta}$ to
 estimate  the  value of  $f$  for  a  new design  $\mathbf{X}^{\prime}$  without
-evaluating  $f(\mathbf{X}^{\prime})$.  For  well  chosen  $\mathbf{X}$ and  well
-fitted $\theta$, these estimates can be accurate and useful. We will discuss how
-to choose  experiments on Chapter\nbsp{}\ref{chap:ed},  and how to  evaluate the
-quality of fit for linear models on Section\nbsp{}[[Assessing the Quality of Fit
-of Linear Model Surrogates]].
+evaluating $f$.   For well chosen  $\mathbf{X}$ and well fitted  $\theta$, these
+estimates can be accurate and useful.  We will discuss how to choose experiments
+on  Chapter\nbsp{}\ref{chap:ed}, and  how to  evaluate  the quality  of fit  for
+linear models  on Section\nbsp{}[[Assessing the  Quality of Fit of  Linear Model
+Surrogates]].
 
 **** Fitting the Model: The Ordinary Least Squares Estimator
 :PROPERTIES:
 :CUSTOM_ID: sec:fitting-ols
 :END:
 
-#+latex: \todo[inline]{Remove reference to H, add dot prod. equal zero}
-
-For   simplicity,    we   will    for   now   use    $\theta$   to    refer   to
+For   simplicity,   we  will   from   now   on   use   $\theta$  to   refer   to
 $\theta(\mathbf{X},\mathbf{y})$.  The sum of the squared differences between $f$
 and $\hat{f}_{\theta}$ for all points in $\mathbf{X}$ is the squared model error
 #+begin_export latex
 \begin{align}
   \left\lVert\varepsilon\right\rVert^{2} =
   \left\lVert\mathbf{y} - \hat{\mathbf{y}}\right\rVert^{2} =
-  (\mathbf{y} - \mathbf{X}\theta)^{\top}(\mathbf{y} - \mathbf{X}\theta)\text{,}
+  (\mathbf{y} - \mathbf{X}\theta)^{\transp}(\mathbf{y} - \mathbf{X}\theta)\text{,}
+  \label{eq:ols-1}
 \end{align}
 #+end_export
-which is a quadratic function of $\theta$. We can therefore differentiate it
-with respect to $\theta$ and set it to zero to obtain the OLS estimator
+which  is  a quadratic  function  of  $\theta$,  and where  $\hat{\mathbf{y}}  =
+\mathbf{X}\theta$. We  can therefore differentiate  it with respect  to $\theta$
+and set it to zero to obtain the OLS estimator
 #+begin_export latex
 \begin{align}
-  \hat{\theta} = (\mathbf{X}^{\top}\mathbf{X})^{-1}
-  \mathbf{X}^{\top}\mathbf{y}\text{,}
+  \hat{\theta} = (\mathbf{X}^{\transp}\mathbf{X})^{-1}
+  \mathbf{X}^{\transp}\mathbf{y}\text{.}
+  \label{eq:ols-0}
 \end{align}
 #+end_export
-provided $\mathbf{X}^{\top}\mathbf{X}$  is invertible.  The variance of  the OLS
-estimator is written
+First, we differentiate Equation\nbsp{}\ref{eq:ols-1} with respect to
+$\theta$, writing
 #+begin_export latex
 \begin{align}
-  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\top}\mathbf{X})^{-1}\sigma^{2}\text{,}
+  \dfrac{\partial\left\lVert\mathbf{y} - \hat{\mathbf{y}}\right\rVert^{2}}
+        {\partial\theta} &=
+        \dfrac{\partial\;(\mathbf{y} - \mathbf{X}\theta)^{\transp}(\mathbf{y} -
+          \mathbf{X}\theta)}
+              {\partial\theta} =
+              \dfrac{\partial\;\left(\mathbf{y}^{\transp}\mathbf{y} -
+                \mathbf{y}^{\transp}\mathbf{X}\theta -
+                \left(\mathbf{X}\theta\right)^{\transp}\mathbf{y} +
+                \left(\mathbf{X}\theta\right)^{\transp}\mathbf{X}\theta\right)}
+                    {\partial\theta} \nonumber \\
+                    &=
+                    \dfrac{\partial\;\left(\mathbf{y}^{\transp}\mathbf{y} -
+                      2\left(\mathbf{X}\theta\right)^{\transp}\mathbf{y} +
+                      \left(\mathbf{X}\theta\right)^{\transp}\mathbf{X}\theta\right)}
+                          {\partial\theta} =
+                          -2\mathbf{X}^{\transp}\mathbf{y} +
+                          2\mathbf{X}^{\transp}\mathbf{X}\theta \nonumber \\
+                          &=
+                          -\mathbf{X}^{\transp}\mathbf{y} +
+                          \mathbf{X}^{\transp}\mathbf{X}\theta\text{.}
+                          \label{eq:ols-2}
+\end{align}
+#+end_export
+Provided     $\mathbf{X}^{\transp}\mathbf{X}$     is     invertible,     setting
+Equation\nbsp{}\ref{eq:ols-2} to zero gives Equation\nbsp{}\ref{eq:ols-0}
+
+The variance of the OLS estimator is written
+#+begin_export latex
+\begin{align}
+  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\transp}\mathbf{X})^{-1}\sigma^{2}\text{,}
 \end{align}
 #+end_export
 assuming the observations $\mathbf{y}$  are uncorrelated and homoscedastic, with
@@ -11031,7 +11067,7 @@ effects, is written
 with $m = 6$, and the $m\times{}1$ parameter vector
 #+begin_export latex
 \begin{align}
-  \theta(\mathbf{X}, \mathbf{y}) = [\theta_0 \; \dots \; \theta_5]^{\top}
+  \theta(\mathbf{X}, \mathbf{y}) = [\theta_0 \; \dots \; \theta_5]^{\transp}
 \end{align}
 #+end_export
 is  constructed  using the  OLS  estimator  and  the  data we  collected.   From
@@ -11061,7 +11097,7 @@ constructed using  the same design $\mathbf{X}$  with $n = 10$  random uniformly
 distributed measurements of the Booth function
 #+begin_export latex
 \begin{align}
-  f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} +
+  f(\mathbf{x} = [x_1, x_2]^{\transp}) = (x_1 + 2x_2 - 7)^{2} +
   (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
 \end{align}
 #+end_export
@@ -11235,15 +11271,16 @@ linear models, where our hypothesis over $f$ was
 #+begin_export latex
 \begin{align}
   \label{eq:model-noisy}
-  f(\mathbf{X}) = \mathbf{X}\theta + \varepsilon\text{,}
+  f(\mathbf{x}) = \mathbf{x}^{\transp}\theta + \varepsilon\text{,}
 \end{align}
 #+end_export
-with $\varepsilon \sim \mathcal{N}(0,\sigma^{2})$, which makes $f(\mathbf{X})$ a
-multivariate random variable, written
+with  $\varepsilon \sim  \mathcal{N}(0,\sigma^{2})$, which  makes $\mathbf{y}  =
+[f(\mathbf{x}_1) \;  \dots \; f(\mathbf{x}_n)]^{\transp}$ a  multivariate random
+variable, written
 #+begin_export latex
 \begin{align}
   \label{eq:lin-mod-prob}
-  f(\mathbf{X}) \sim \mathcal{N}(\mathbf{X}\theta,
+  \mathbf{y} \sim \mathcal{N}(\mathbf{X}\theta,
   \sigma^{2}\text{\textbf{I}})\text{,}
 \end{align}
 #+end_export
@@ -11278,7 +11315,7 @@ Neural Networks  can be  represented by specific  Gaussian Processes  in Section
 #+NAME: fig:2d-gaussian
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Effects of three covariance matrices on a multivariate normal distribution
-#+CAPTION: with mean vector $\boldsymbol{\mu} = [0\; 0]^{\top}$ and covariance matrix
+#+CAPTION: with mean vector $\boldsymbol{\mu} = [0\; 0]^{\transp}$ and covariance matrix
 #+CAPTION: $\boldsymbol{\Sigma}$ as
 #+CAPTION: shown on the upper right corner of each plot
 [[file:img/2d_gaussian_uncorrelated_annotated.pdf]]
@@ -11524,7 +11561,7 @@ Equation\nbsp{}\ref{eq:gauss-posterior-dist} as
   \label{eq:posterior-mean-noisy}
   \boldsymbol{\mu}_{k} = \mathbf{K}(\mathbf{X}_k,\mathbf{X}_{k - 1})
   \; (\mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1} +
-  \sigma^{2}\mathbf{I})\;\mathbf{y}_{k - 1}^{\top}\text{,}
+  \sigma^{2}\mathbf{I})\;\mathbf{y}_{k - 1}^{\transp}\text{,}
 \end{align}
 #+end_export
 and
@@ -11581,12 +11618,12 @@ measurements used for fitting.
 **** Assessing the Quality of Fit of Gaussian Process Surrogates
 We will construct  three Gaussian Process surrogates for the  Booth function and
 use   the   model  fits   to   discuss   the   assessment  of   model   quality.
-Figure\nbsp{}[[fig:gp-fitting]] shows  the three  surrogate fits,  constructed using
-the  same  design  $\mathbf{X}$  with  $n =  10$  random  uniformly  distributed
+Figure\nbsp{}[[fig:gp-fitting]]  shows  the  three surrogate  fits,  constructed
+using the  same design $\mathbf{X}$ with  $n = 10$ random  uniformly distributed
 measurements of the Booth function
 #+begin_export latex
 \begin{align}
-  f(\mathbf{x} = [x_1, x_2]^{\top}) = (x_1 + 2x_2 - 7)^{2} +
+  f(\mathbf{x} = [x_1, x_2]^{\transp}) = (x_1 + 2x_2 - 7)^{2} +
   (2x_1 + x_2 - 5)^{2}, \; x_1,x_2 \in [-10, 10]\text{,}
 \end{align}
 #+end_export
@@ -11814,8 +11851,8 @@ produce a  linear model  surrogate $\hat{f}_{\theta}$,  it suffices  to estimate
 $\theta$ as we did in Section\nbsp{}[[Linear Regression]], by computing
 #+begin_export latex
 \begin{align}
-  \hat{\theta} = (\mathbf{X}^{\top}\mathbf{X})^{-1}
-  \mathbf{X}^{\top}\mathbf{y}\text{,} \label{eq:linmodel-ed}
+  \hat{\theta} = (\mathbf{X}^{\transp}\mathbf{X})^{-1}
+  \mathbf{X}^{\transp}\mathbf{y}\text{,} \label{eq:linmodel-ed}
 \end{align}
 #+end_export
 where $\mathbf{X}$  contains the $x_1,x_2,x_3$  columns from the  design matrix,
@@ -12087,7 +12124,7 @@ Our initial modeling hypothesis for the screening experiment is written
 #+begin_export latex
 \begin{align}
   \label{eq:linear_hypothesis}
-  \hat{f}_{\theta}(\mathbf{x}) = \mathbf{x}^{\top}\theta + \varepsilon \text{,}
+  \hat{f}_{\theta}(\mathbf{x}) = \mathbf{x}^{\transp}\theta + \varepsilon \text{,}
 \end{align}
 #+end_export
 and Table\nbsp{}\ref{tab:plackett} shows the Plackett-Burman design we generated
@@ -12434,7 +12471,7 @@ such metric, which measures the variance of the estimator $\hat{\theta}$ for the
 coefficients of a linear model, written
 #+begin_export latex
 \begin{align}
-  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\top}\mathbf{X})^{-1}\sigma^{2}\text{,}
+  \text{Var}(\hat{\theta}) = (\mathbf{X}^{\transp}\mathbf{X})^{-1}\sigma^{2}\text{,}
 \end{align}
 #+end_export
 where $\sigma^{2}$  is the variance  of measurements of the  objective function.
@@ -12445,7 +12482,7 @@ we wish to test, and is written
 \begin{align}
   \label{eq:d-crit}
   D(\mathbf{X}) =
-  \text{det}\left(\frac{\mathbf{X}^{\top}\mathbf{X}}{p}\right)^{\dfrac{1}{n}}
+  \text{det}\left(\frac{\mathbf{X}^{\transp}\mathbf{X}}{p}\right)^{\dfrac{1}{n}}
   \text{.}
 \end{align}
 #+end_export

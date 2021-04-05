@@ -9353,13 +9353,13 @@ assumptions about search spaces, and the lack of explainable optimizations, from
 the point of view of a  /Design of Experiments/ (DOE), or /Experimental Design/,
 methodology to autotuning.
 
-One of  the first  detailed descriptions  and mathematical  treatment of  DOE was
+One of  the first detailed  descriptions and  mathematical treatment of  DOE was
 presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
 Design of Experiments/, where he  discussed principles of experimentation, latin
 square  sampling and  factorial  designs.  Later  books such  as  the ones  from
 Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
 /et   al./\nbsp\cite{box2005statistics}  present   comprehensive  and   detailed
-foundations.   Techniques based  on  DOE are  /parsimonious/  because they  allow
+foundations.   Techniques based  on DOE  are /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
 relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
@@ -9374,12 +9374,12 @@ execution time or memory consumption of a program.
 
 Designs  can  serve diverse  purposes,  from  identifying the  most  significant
 factors  for  performance, to  fitting  analytical  performance models  for  the
-response.  The  field of  DOE encompasses the  mathematical formalization  of the
+response.  The  field of DOE  encompasses the mathematical formalization  of the
 construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
-the         DOE         methodology,        and         /Gaussian         Process
+the         DOE        methodology,         and        /Gaussian         Process
 Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
 and  a high-level  view  of  the theoretical  foundations  of  each method,  and
 detailed  discussions of  the challenges  involved in  specializing the  general
@@ -9415,10 +9415,10 @@ Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
 #+CAPTION: Data from Wikipedia\nbsp{}\cite{wiki2020transistor,wiki2020chronology}
 [[file:img/49_years_processor_data.pdf]]
 
-Figure\nbsp{}[[fig:trends]] highlights the unrelenting and so far successful pursuit
-of smaller transistor fabrication processes, and the resulting capability to fit
-more computing power on  a fixed chip area.  This trend  was already observed in
-integrated      circuits     by      Gordon      Moore      /et     al./      in
+Figure\nbsp{}[[fig:trends]]  highlights the  unrelenting and  so far  successful
+pursuit  of   smaller  transistor  fabrication  processes,   and  the  resulting
+capability to  fit more computing  power on a fixed  chip area.  This  trend was
+already  observed   in  integrated  circuits   by  Gordon  Moore  /et   al./  in
 1965\nbsp{}\cite{moore1965cramming},  who also  postulated its  continuity.  The
 performance improvements produced by the design efforts to make Moore's forecast
 a self-fulfilling  prophecy were  boosted until around  2005 by  the performance
@@ -9430,10 +9430,10 @@ decrease  the energy  required to  power  a circuit  and enable  an increase  in
 operation  frequency without  breaking  power usage  constraints.  This  scaling
 effect, named  /Dennard's scaling/,  is hindered  primarily by  leakage current,
 caused    by     quantum    tunneling    effects    in     small    transistors.
-Figure\nbsp{}[[fig:trends]] shows  a marked  stagnation on frequency  increase after
-around 2005,  as transistors crossed  the 10^{2}nm fabrication process.   It was
-expected that leakage  due to tunneling would limit  frequency scaling strongly,
-even     before      the     transistor     fabrication      process     reached
+Figure\nbsp{}[[fig:trends]]  shows a  marked  stagnation  on frequency  increase
+after around 2005, as transistors  crossed the 10^{2}nm fabrication process.  It
+was  expected  that leakage  due  to  tunneling  would limit  frequency  scaling
+strongly,   even    before   the   transistor   fabrication    process   reached
 10nm\nbsp{}\cite{frank2001device}.
 
 Current hardware is now past the  effects of Dennard's scaling.  The increase in
@@ -9448,18 +9448,18 @@ programmers\nbsp{}\cite{venkataramani2015approximate,cheng2015core,henkel2015new
 The   /Top500/\nbsp{}\cite{top5002020list}   list  gathers   information   about
 commercially  available supercomputers,  and ranks  them by  performance on  the
 /LINPACK/                            benchmark\nbsp{}\cite{dongarra2003linpack}.
-Figure\nbsp{}[[fig:rmax-rpeak]] shows the peak  theoretical performance $RPeak$, and
-the maximum performance achieved on the LINPACK benchmark $RMax$, in $Tflops/s$,
-for the  top-ranked supercomputers on  TOP500.  Despite the  smaller performance
-gains from  hardware design that are  to be expected for  post-Dennard's scaling
-processors, the  increase in computer  performance has sustained  an exponential
-climb, sustained mostly by software improvements.
+Figure\nbsp{}[[fig:rmax-rpeak]] shows the  peak theoretical performance $RPeak$,
+and  the  maximum performance  achieved  on  the  LINPACK benchmark  $RMax$,  in
+$Tflops/s$, for  the top-ranked supercomputers  on TOP500.  Despite  the smaller
+performance  gains   from  hardware   design  that  are   to  be   expected  for
+post-Dennard's  scaling processors,  the  increase in  computer performance  has
+sustained an exponential climb, sustained mostly by software improvements.
 
 Although /hardware  accelerators/ such as  GPUs and  FPGAs, have also  helped to
 support exponential performance  increases, their use is not an  escape from the
 fundamental  scaling  constraints  imposed   by  current  semiconductor  design.
-Figure\nbsp{}[[fig:acc-cores]] shows the increase  in processor and accelerator core
-count  on the  top-ranked  supercomputers  on Top500.   Half  of the  top-ranked
+Figure\nbsp{}[[fig:acc-cores]] shows  the increase in processor  and accelerator
+core count on  the top-ranked supercomputers on Top500.  Half  of the top-ranked
 supercomputers in the  last decade had accelerator cores and,  of those, all had
 around ten times more accelerator than processor cores.  The apparent stagnation
 of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
@@ -9502,7 +9502,7 @@ decide  which parameters  should be  restricted or  dropped.  The  next sections
 introduce a simple  autotuning problem, present an overview of  the magnitude of
 the dimension  of autotuning  search spaces, and  briefly introduce  the methods
 commonly used to explore search spaces, some of which are discussed in detail in
-Chapter\nbsp{}[[Optimization Methods for Autotuning]].
+Part\nbsp{}\ref{part:optim}.
 
 *** Consequences for Code Optimization: Autotuning Loop Nest Optimization
 Algorithms for linear  algebra problems are fundamental  to scientific computing
@@ -9522,7 +9522,7 @@ methods.
 
 Figure\nbsp{}\ref{fig:transpose-c}  shows  three versions  of  code  in the  /C/
 language that, given three square matrices $A$,  $B$, and $C$, computes $C = C +
-A +  B^{\top}$. The first  optimization we can make  is to preemptively  load to
+A +  B^{\transp}$. The first  optimization we can make  is to preemptively  load to
 cache, or /prefetch/, as many as possible of the elements we know will be needed
 at       any       given       iteration,       as       is       shown       in
 Figure\nbsp{}\ref{fig:transpose-regular-access}. The shaded  elements on the top
@@ -9620,14 +9620,14 @@ iteration, considerably slowing down the computation.
     \caption{Tiled and unrolled}
     \label{fig:transpose-unrolling}
   \end{subfigure}
-  \caption{Loop nest optimizations for $C = C + A + B^{\top}$, in C}
+  \caption{Loop nest optimizations for $C = C + A + B^{\transp}$, in C}
   \label{fig:transpose-c}
 \end{figure}
 #+end_export
 
 #+NAME: fig:blocking-unrolling
 #+ATTR_LATEX: :width .7\textwidth :placement [h!]
-#+CAPTION: Access patterns for matrices in $C = C + A + B^{\top}$, with
+#+CAPTION: Access patterns for matrices in $C = C + A + B^{\transp}$, with
 #+CAPTION: loop  nest optimizations. Panel \textit{(a)} shows the access order
 #+CAPTION: of a regular implementation, and panel \textit{(b)} shows the effect of
 #+CAPTION: loop \textit{tiling}, or \textit{blocking}
@@ -9999,7 +9999,26 @@ structure of this document.
   contributions}
 #+end_export
 
+*** Text Structure                                               :noexport:
+The remainder of  this thesis is organized  as follows.  Chapter\nbsp{}[[Efforts
+for Reproducible Science]]  describes the efforts made over the  duration of the
+work on this thesis to establish  a workflow that promotes reproducible science,
+using computational  documents and versioning  for code, results,  and analyses.
+Chapter\nbsp{}[[Methods for Function Minimization]]  presents background for the
+derived  from  search  heuristics, mathematical  optimization,  and  statistical
+learning, and  Chapter\nbsp{}[[Application of  Function Minimization  Methods to
+Autotuning]]   to   autotuning.    Chapter\nbsp{}[[A   Design   of   Experiments
+Methodology]] describes the  DoE methodology, and its  application to autotuning
+problems,   and  the   method  limitations   encountered  during   this  thesis.
+Chapter\nbsp{}[[Gaussian Process Regression: A  more Flexible Method]] describes
+the  Gaussian  Process Regression  method,  and  its application  to  autotuning
+problems.   Chapter\nbsp{}[[Conclusion]] resumes  and  concludes the  high-level
+discussions of this chapter, in light of the results of the excursions performed
+in this thesis.
 * Optimization Methods for Autotuning
+:PROPERTIES:
+:CUSTOM_ID: part:optim
+:END:
 ** Notation and Search Spaces
 The  following chapters  present the  optimization  methods that  we applied  to
 autotuning  problems in  different domains.   Each chapter  presents a  group of

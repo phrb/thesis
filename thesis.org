@@ -15598,10 +15598,10 @@ of the range.
 
 We  can  also  verify  that  the optimal  design  approach  is  restricting  the
 exploration  of  the  search  space   to  regions  with  faster  configurations.
-Figure\nbsp{}[[fig:predictions-no-cubic]] compares the  performance predicted by the
-fitted model,  represented by the green  line, with the performance  of the best
-point found at each design, represented by the blue line. The red line marks the
-best point found so far.
+Figure\nbsp{}[[fig:predictions-no-cubic]] compares the  performance predicted by
+the fitted  model, represented by  the green line,  with the performance  of the
+best point  found at  each design, represented  by the blue  line. The  red line
+marks the best point found so far.
 
 #+CAPTION: Performance of best points, step-by-step, by experiment
 #+LABEL: fig:predictions-no-cubic
@@ -15616,8 +15616,8 @@ to be  effectively restricting the search  space with our exploration,  which is
 evidenced  by the  improvement that  occurs as  steps progress  and by  the best
 points being found inside designs, the  models fit using experiment data are not
 able to improve the current best on the majority of cases. This is an indication
-that the  model is not capable  of describing the relationships  between factors
-and  response,  perhaps   because  of  the  presence   of  interactions  between
+that the  model might  not be  capable of  describing the  relationships between
+factors and  response, perhaps because  of the presence of  interactions between
 parameters.
 
 **** Reusing Data from All Steps
@@ -15697,8 +15697,8 @@ based  on  second   or  third  degree  polynomials,  even   with  well  designed
 experiments.  We could  not determine whether kernel  configurations with better
 performance than the  ones we found exist in these  search spaces. Additionally,
 the strongly biased  models we used could be responsible  for not finding better
-configurations. We  attempted to  find better configurations  using a  much more
-flexible   approach,  based   on  Gaussian   Process  Regression   and  Expected
+configurations. Thus,  we attempted to  find better configurations using  a much
+more  flexible  approach, based  on  Gaussian  Process Regression  and  Expected
 Improvement, which  we discuss  next. We  also compared  the performance  of the
 /dgemv/ SPAPT kernel with the peak theoretical performance for the /Xeon 2630v3/
 processor, indicating that better kernel configurations might exist.
@@ -15772,46 +15772,24 @@ theoretical peak, despite being around two times faster than the /-O3/ flag.  We
 did not perform  a detailed analysis of  the SPAPT kernel, which  could find out
 whether more performance can be obtained from this kernel implementation.
 
-#+CAPTION: Empirical Roofline graph for the /Xeon E5-2630v3/
+#+CAPTION: Theoretical /Roofline/ graph for the /Xeon E5-2630v3/
 #+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon},
 #+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
 #+CAPTION: SPAPT kernel
-#+LABEL: fig:xeon-generic-roofline-dgemv
+#+LABEL: fig:xeon-theoretical-roofline-dgemv
 #+ATTR_LATEX: :width 0.7\textwidth :placement [h]
 #+RESULTS:
-[[file:./img/roofline/roofline_generic.pdf]]
+[[file:./img/roofline/theoretical_roofline_xeonE52630v3.pdf]]
 
-#+CAPTION: Empirical Roofline graph for the /Xeon E5-2630v3/
-#+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon},
-#+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
-#+CAPTION: SPAPT kernel
-#+LABEL: fig:xeon-native-roofline-dgemv
-#+ATTR_LATEX: :width 0.7\textwidth :placement [h]
-#+RESULTS:
-[[file:./img/roofline/roofline_native.pdf]]
-
-Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]]  shows  the best  kernel  configurations
+Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]] shows the best kernel configurations
 found  across 20  repetitions of  the GPR  and RS  methods. GPR  could not  find
 statistically or  practically significant  speedups in relation  to RS  for this
 kernel,  although  one   specific  GPR  run  found   an  outlier  configuration.
-Figures\nbsp{}[[fig:xeon-generic-roofline-dgemv]] and [[fig:xeon-native-roofline-dgemv]]
-show  the empirical  Roofline\nbsp{}\cite{williams2009roofline}  graphs for  the
-processor targeted by our experiments, which was the same from our CCGRID paper,
-using  /GCC/  /-march=generic,native/  options.    The  figure  also  shows  the
-performance  that was  achieved  by  the best  configuration  we  found for  the
-/dgemv3/        SPAPT       kernel,        the       red        outlier       in
-Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
-
-***** Theoretical Roofline                                     :noexport:
-#+CAPTION: Empirical Roofline graph for the /Xeon E5-2630v3/
-#+CAPTION: processor\nbsp{}\cite{intel2021xeonAPP,intel2021xeon},
-#+CAPTION: showing the best point we found during all experiments with the memory-bound /dgemv3/
-#+CAPTION: SPAPT kernel
-#+LABEL: fig:xeon-generic-roofline-dgemv
-#+ATTR_LATEX: :width 0.65\textwidth :placement [h]
-#+RESULTS:
-[[file:./img/journal/theoretical_roofline_xeonE52630v3.pdf]]
-
+Figure\nbsp{}[[fig:xeon-theoretical-roofline-dgemv]]   shows   the   theoretical
+/Roofline/\nbsp{}\cite{williams2009roofline} graph for the processor targeted by
+our experiments, which  was the same from our CCGRID  paper, and the performance
+that was  achieved by  the best  configuration we found  for the  /dgemv3/ SPAPT
+kernel, the red outlier in Figure\nbsp{}[[fig:gp-rs-dgemv-comparison]].
 
 *** Summary
 :PROPERTIES:
@@ -15839,8 +15817,10 @@ explored  a Gaussian  Process Regression  approach which  is much  more complex,
 implying in high variance, but has  small bias. We found small improvements upon
 Random  Sampling  with this  new  approach,  but it  is  still  unclear if  Orio
 configurations are  capable of  further improving  the kernel  configurations we
-already found. Analyzing the Roofline theoretical model for our target CPU hints
-that tweaks to the kernel implementation  might be needed to improve the current
+already  found.   Although  it  is  a simplification  of  the  actual  processor
+behavior,  and although  it exaggerates  actual achievable  performance for  the
+/dgemv/ kernel, the  theoretical /Roofline/ graph for our target  CPU hints that
+tweaks  to the  kernel implementation  could be  needed to  improve the  current
 performance.
 
 A  possible future  direction  for exploring  the potential  of  this Design  of

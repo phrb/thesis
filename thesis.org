@@ -10253,6 +10253,9 @@ chapter  discusses   derivative-based  and   stochastic  methods   for  function
 minimization.
 
 ** Methods for Function Minimization
+:PROPERTIES:
+:CUSTOM_ID: chap:funcmin
+:END:
 This  chapter  aims  to  present  the  intuition  guiding  the  construction  of
 derivative-based and  stochastic methods for function  minimization.  We discuss
 the key hypotheses of these groups of methods, and for which autotuning problems
@@ -10808,6 +10811,9 @@ search space $\mathcal{X}$ and observations of the objective function $f$.
 [[file:img/booth_minimization.pdf]]
 
 ** Learning: Building Surrogates
+:PROPERTIES:
+:CUSTOM_ID: chap:learning
+:END:
 This  chapter  discusses two  methods  for  building surrogate  models.   Linear
 Regression is  a parametric  method capable  of modeling  a restricted  class of
 surrogates,  for  which  it  is relatively  simple  to  interpret  significance.
@@ -12897,6 +12903,9 @@ each observation,  enabling the  search for a  balance between  exploiting known
 relationships and exploring unknown regions of the search space.
 
 ** Online Learning
+:PROPERTIES:
+:CUSTOM_ID: chap:online
+:END:
 #+begin_export latex
 \todo[inline]{TODO: Fill in the sketched section below}
 #+end_export

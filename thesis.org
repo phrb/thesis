@@ -11307,7 +11307,7 @@ a prior probability distribution
 #+begin_export latex
 \begin{align}
   \label{eq:gauss-prior}
-  f(\mathbf{X}) = [y_1\;\dots\;y_n]^{\top} \sim
+  f(\mathbf{x}) \sim
   \mathcal{N}(\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)\text{,}
 \end{align}
 #+end_export
@@ -11352,7 +11352,7 @@ Note that  the mean vector depends  on the observations $\mathbf{y}$,  while the
 covariance matrix depends only on $\mathbf{X}$.  In a multivariate Gaussian, the
 diagonal of  the covariance  matrix contains the  variances associated  with its
 dimensions, and the off-diagonal elements  contain the covariances between pairs
-of  dimensions.    Figure\nbsp{}[[fig:2d-gaussian]]  shows   the  impact   of  three
+of  dimensions.   Figure\nbsp{}[[fig:2d-gaussian]]  shows the  impact  of  three
 covariance matrices, which must always be symmetric and positive semi-definite.
 
 Instead  of  looking for  the  best  parameter  vector  in $\Theta_0$,  we  will
@@ -11362,7 +11362,8 @@ model is also a multivariate normal written
 #+begin_export latex
 \begin{align}
   \label{eq:gauss-posterior}
-  \hat{f}_{\theta}(\mathbf{X}) \sim f(\mathbf{X}) \; \vert{} \; \mathbf{X}, \mathbf{y}\text{.}
+  \hat{f}_{\theta}(\mathbf{x}) \sim f(\mathbf{x}) \; \vert{} \;
+  \mathbf{X}, \mathbf{y}\text{.}
 \end{align}
 #+end_export
 We will  see how to  compute this  posterior in the  next section. Note  that it
@@ -11377,18 +11378,18 @@ this sense, Gaussian Process Regression is a nonparametric method.
 #+CAPTION: evaluated on 20 different input points, on the right panel
 [[file:img/matern52_50d_mv_samples.pdf]]
 
-To build an intuitive understanding of  Gaussian Processes it can be helpful to
+To build an  intuitive understanding of Gaussian Processes it  can be helpful to
 think  of  them as  a  reinterpretation  of the  dimensions  of  a sample  of  a
 multivariate  normal distribution.   If we  take 100  samples of  a 20-dimension
 Gaussian and unroll each  dimension into a single axis, we end  up with the left
-panel  of  Figure\nbsp{}[[fig:matern52-50d-mv-samples]].    Each  column  of  points
+panel  of Figure\nbsp{}[[fig:matern52-50d-mv-samples]].   Each column  of points
 contains the 100 values on each dimension  of our samples, and each dimension is
 correlated according to the distribution's covariance matrix. The values for one
 arbitrary sample are marked in larger red dots.
 
-The right panel of  Figure\nbsp{}[[fig:matern52-50d-mv-samples]] shows the same data
-in the left panel  but we now interpret the values of  each dimension $d_i$, for
-all   100   samples,  as   a   distribution   of   values  for   the   surrogate
+The right  panel of Figure\nbsp{}[[fig:matern52-50d-mv-samples]] shows  the same
+data in the left panel but we  now interpret the values of each dimension $d_i$,
+for  all   100  samples,  as  a   distribution  of  values  for   the  surrogate
 $\hat{f}_{\theta}$     evaluated     at      point     $\mathbf{x}_i$.      Each
 $\hat{f}_{\theta}(\mathbf{x}_i)$ is correlated to  other values of the surrogate
 function, with  covariance given  by the  distribution's covariance  matrix.  In
@@ -11401,12 +11402,12 @@ of means and variances conditioned to observations.
 **** Fitting the Model: Posterior Distributions over Functions
 Before fitting our surrogate, we must compute the covariance matrix of the prior
 Gaussian   distribution   from   Equation\nbsp{}\ref{eq:gauss-prior}   using   a
-covariance function, or kernel, $K: \mathcal{X}^{2} \to \mathbb{R}$. For any
+covariance function,  or kernel,  $K: \mathcal{X}^{2}  \to \mathbb{R}$.  For any
 pair  $(\mathbf{x},   \mathbf{x}^{\prime})  \in  \mathcal{X}^{2}$,   the  kernel
 determines how strong the  covariance between $\hat{f}_{\theta}(\mathbf{x})$ and
 $\hat{f}_{\theta}(\mathbf{x}^{\prime})$  should   be,  based  on   the  distance
 $\lVert{}\mathbf{x}                -               \mathbf{x}^{\prime}\rVert{}$.
-Figure\nbsp{}[[fig:radial-basis-kernels]]  shows  four   exponential  kernels,  also
+Figure\nbsp{}[[fig:radial-basis-kernels]] shows  four exponential  kernels, also
 called    radial    basis   functions,    whose    formulas    are   shown    in
 Table\nbsp{}\ref{tab:kernel-expressions}.
 
@@ -11448,7 +11449,7 @@ Table\nbsp{}\ref{tab:kernel-expressions}.
 The actual  parameter space $\Theta$  over which optimization is  performed when
 fitting a Gaussian Process surrogate is composed by the parameters of the chosen
 covariance  kernel, called  hyperparameters.   Typical  hyperparameters are  the
-Section  /5.1/  of  Rasmussen  and  Williams\nbsp{}\cite{williams2006gaussian},  .
+Section  /5.1/  of   Rasmussen  and  Williams\nbsp{}\cite{williams2006gaussian}.
 Explicitly  listing the  hyperparameters for  a Gaussian  Process fit  using the
 exponential kernel from Table\nbsp{}\ref{tab:kernel-expressions} would result in
 #+begin_export latex
@@ -11466,8 +11467,8 @@ and the parameter space $\Theta$ would be defined as
 We  can then  use the  conditioned posterior  distribution, discussed  below, to
 determine   the  best   specific   hyperparameter  values   by  minimizing   the
 cross-validated  mean   squared  error,  for   example,  which  we   discuss  in
-Section\nbsp{}[[Assessing the Quality of Fit of Gaussian Process Surrogates]], or by
-maximizing the posterior likelihood.
+Section\nbsp{}[[Assessing the  Quality of Fit of  Gaussian Process Surrogates]],
+or by maximizing the posterior likelihood.
 
 The posterior  distribution $\hat{f}_{\theta}$  is computed by  conditioning the
 prior  distribution from  Equation\nbsp{}\ref{eq:gauss-prior}  to observed  data
@@ -11477,17 +11478,17 @@ and can be written
 #+begin_export latex
 \begin{align}
   \label{eq:gauss-posterior-dist}
-  \hat{f}_{\theta}(\mathbf{X}_k) \sim
+  \hat{f}_{\theta}(\mathbf{x}) \sim
   \mathcal{N}(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)\text{,}
 \end{align}
 #+end_export
-where the  conditioned vector  mean, of size  $\vert{}\mathbf{X}_{k}\vert{}$, is
+where the conditioned vector mean, of size $\vert{}\mathbf{X}_{k}\vert{}$, is
 #+begin_export latex
 \begin{align}
   \label{eq:posterior-mean}
   \boldsymbol{\mu}_{k} = \mathbf{K}(\mathbf{X}_k,\mathbf{X}_{k - 1})
   \; \mathbf{K}(\mathbf{X}_{k - 1}, \mathbf{X}_{k - 1})^{-1}
-  \; \mathbf{y}_{k - 1}^{\top}\text{,}
+  \; \mathbf{y}_{k - 1}^{\transp}\text{,}
 \end{align}
 #+end_export
 and   the  conditioned   $\vert{}   \mathbf{X}_{k}   \vert{}  \times{}   \vert{}
@@ -11522,22 +11523,23 @@ Regression.
 #+CAPTION: $v_1,v_2 = \{\frac{3}{2},\frac{5}{2}\}$
 [[file:img/radial_basis_kernels.pdf]]
 
-The  left  panel  of  Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  300  sampled
+The left  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows  300 sampled
 functions  from   the  prior   in  Equation\nbsp{}\ref{eq:gauss-prior},   for  a
 50-dimension Gaussian  distribution, with covariance  matrix $\mathbf{\Sigma}_0$
 given by the Matérn  kernel from Table \nbsp{}\ref{tab:kernel-expressions}, with
 $v =  \frac{5}{2}$. The starting  mean vector $\boldsymbol{\mu}_0$ is  zero.  We
 see     that,     for     all     radial    basis     functions     shown     in
-Figure\nbsp{}[[fig:radial-basis-kernels]], the  covariance between  inputs decreases
-as the  distance between  inputs increases,  approaching zero.   Using different
-kernels we can  control properties of sampled functions, such  as smoothness and
-periodicity.   The center  panel of  Figure\nbsp{}[[fig:matern52-50d-fitting]] shows
-samples from the conditioned posterior  after a single observation $(\mathbf{x},
-\mathbf{y})$,   computed  using   Equations\nbsp{}\ref{eq:gauss-posterior-dist},
-\ref{eq:posterior-mean},  and  \ref{eq:posterior-cov}.   The right  panel  shows
-samples from  the posterior after  observing two additional  observations.  Note
-that all 300  functions sampled from the conditioned  distributions pass exactly
-through the observations on the center and rightmost panels.
+Figure\nbsp{}[[fig:radial-basis-kernels]],   the   covariance   between   inputs
+decreases as  the distance  between inputs  increases, approaching  zero.  Using
+different  kernels we  can  control  properties of  sampled  functions, such  as
+smoothness      and       periodicity.       The      center       panel      of
+Figure\nbsp{}[[fig:matern52-50d-fitting]]  shows  samples from  the  conditioned
+posterior after a single  observation $(\mathbf{x}, \mathbf{y})$, computed using
+Equations\nbsp{}\ref{eq:gauss-posterior-dist},    \ref{eq:posterior-mean},   and
+\ref{eq:posterior-cov}.  The right panel shows  samples from the posterior after
+observing two additional observations.  Note that all 300 functions sampled from
+the  conditioned distributions  pass  exactly through  the  observations on  the
+center and rightmost panels.
 
 #+NAME: fig:matern52-50d-fitting
 #+ATTR_LATEX: :width \textwidth :placement [t]
@@ -11559,12 +11561,12 @@ through the observations on the center and rightmost panels.
 Although  in   specific  autotuning  applications  involving   deterministic  or
 extremely  fast processes  we can  observe consistent  measurements and  produce
 useful  models  with  fits  that  assume  noiseless  measurements,  such  as  in
-Figure\nbsp{}[[fig:matern52-50d-fitting]], we  can also  produce a  Gaussian Process
-fit     that    incorporates     the     uncertainty     from    noisy     data.
-Figure\nbsp{}[[fig:matern52-50d-fitting-noisy]] shows 300 prior samples, in the left
-panel, and results of conditioning the  prior distribution to one and then three
-observations, under  the assumption  that the  underlying objective  function is
-subject  to measurement  error $\varepsilon  \sim \mathcal{N}(0,  \sigma^2)$, as
+Figure\nbsp{}[[fig:matern52-50d-fitting]],  we  can   also  produce  a  Gaussian
+Process   fit    that   incorporates   the   uncertainty    from   noisy   data.
+Figure\nbsp{}[[fig:matern52-50d-fitting-noisy]] shows 300  prior samples, in the
+left panel, and  results of conditioning the prior distribution  to one and then
+three observations, under the assumption  that the underlying objective function
+is subject to measurement error  $\varepsilon \sim \mathcal{N}(0, \sigma^2)$, as
 described in  Equation\nbsp{}\ref{eq:model-noisy}.  In  this scenario,  we write
 the        mean       vector        and       covariance        matrix       for
 Equation\nbsp{}\ref{eq:gauss-posterior-dist} as
@@ -11609,11 +11611,11 @@ perform   we   can   use   space-filling    designs,   which   we   discuss   on
 Chapter\nbsp{}\ref{chap:ed},  to decrease  or sometimes  remove the  need for  a
 model trend.
 
-The fits and predictions shown in Figure\nbsp{}[[fig:gp-trends]] were computed using
-the  /DiceKriging/ /R/  package\nbsp{}\cite{roustant2018dicekriging}.  We  refer
-the reader to the detailed descriptions of trend functions and their application
-to  Gaussian Process  Regression presented  in  Section /2.1/  of the  package's
-accompanying paper\nbsp{}\cite{roustant2012dicekriging}.
+The fits  and predictions shown in  Figure\nbsp{}[[fig:gp-trends]] were computed
+using  the /DiceKriging/  /R/ package\nbsp{}\cite{roustant2018dicekriging}.   We
+refer  the reader  to the  detailed descriptions  of trend  functions and  their
+application to  Gaussian Process  Regression presented in  Section /2.1/  of the
+package's accompanying paper\nbsp{}\cite{roustant2012dicekriging}.
 
 #+NAME: fig:gp-trends
 #+ATTR_LATEX: :width 0.5\textwidth :placement [t]
@@ -11646,7 +11648,7 @@ are highlighted.  Panels (b), (c), and (d) show the three surrogates, which used
 model    trends    using    the     basis    function    sets    described    by
 Equations\nbsp{}\ref{eq:hb}, \ref{eq:hc}, and \ref{eq:hd}.  Panels (b), (c), and
 (d)  show the  testing  $MSE_{\hat{f}_{\theta}}$ and  true $MSE_{f}$  prediction
-errors for  each surrogate, described by  Equations\nbsp{}\ref{eq:mse-test} and
+errors for  each surrogate,  described by  Equations\nbsp{}\ref{eq:mse-test} and
 \ref{eq:mse-true}.
 
 We have assumed noisy measurements  when fitting the Gaussian Process surrogates
@@ -11689,28 +11691,28 @@ fits.
 **** Inference: Interpreting Significance with Sobol Indices
 Sobol  indices\nbsp{}\cite{sobol1993sensitivity}  are  a  variance-based  global
 sensitivity analysis method, which computes the relative importance of the input
-factors  $\mathbf{x}_1,\dots,\mathbf{x}_p$  of  an  objective  function  $f$  by
-decomposing the variance observed in measurements of $f$.  The first-order Sobol
-index $S_i$ for each factor $\mathbf{x}_i$ represents the normalized variance of
-the expected value of $f$ given a fixed factor value, written
+factors $x_1,\dots,x_p$ of an objective function $f$ by decomposing the variance
+observed in  measurements of $f$.   The first-order  Sobol index $S_i$  for each
+factor column $\mathbf{x}_i$ represents the  normalized variance of the expected
+value of $f$ given a fixed factor value, written
 #+begin_export latex
 \begin{align}
   S_i = \dfrac{V_{\mathbf{x}_i}\left(
-    E_{\mathbf{X} \setminus \mathbf{x}_i}\left(f(\mathbf{X})
+    E_{\mathbf{X} \setminus \mathbf{x}_i}\left(\mathbf{y}
     \;\vert\;\mathbf{x}_i\right)\right)}
-  {V\left(f(\mathbf{X})\right)}\text{.}
+  {V\left(\mathbf{y}\right)}\text{.}
 \end{align}
 #+end_export
 The variance  of a  function can be  further decomposed to  produce $2^{p}  - 1$
 indexes  that measure  the  sensitivity  of factor  interactions  of  up to  the
-$p^{\text{th}}$  level.  Additionally,  we  can aggregate  the  effects  of  the
+$p^{\text{th}}$  level.   Additionally, we  can  aggregate  the effects  of  the
 interactions of a factor and compute  total-effect indices, in order to decrease
-the total number of  indices to compute.
+the total number of indices to compute.
 
 Sobol sensitivity indices can be estimated using  $N (p + 2)$ evaluations of the
 objective  function, where  $N$ controls  the accuracy  of the  estimate and  is
 typically in the order of thousands. The Monte Carlo method described in Section
-/4.1.6/  of  Saltelli  /et al./\nbsp{}\cite{saltelli2008global}  determines  how  to
+/4.1.6/ of  Saltelli /et al./\nbsp{}\cite{saltelli2008global} determines  how to
 construct  the experiment  matrices  containing all  samples,  and computes  the
 sensitivity  indices  using the  estimators  described  in  the book  and  later
 reviewed and summarized by the authors\nbsp{}\cite{saltelli2010variance}.
@@ -11723,10 +11725,10 @@ to structure outside of observations.  Although  we can attempt to interpret the
 results produced by a Gaussian Process fit  with Sobol indices, it is not always
 possible or viable to collect sufficient data to reach accurate results.  Recent
 work  interprets  Gaussian  Process  fits by  identifying  the  contribution  of
-different  covariance  kernels  to  the  fitted  model.   Such  approaches  help
-constructing  useful models  in  high-dimensional spaces,  and  are valuable  to
-experimental research, such as the studies we present in this thesis.
-#+latex: \todo[inline]{Add reference to PhD thesis from Rasmussen's student}
+different         covariance        kernels         to        the         fitted
+model\nbsp{}\cite{duvenaud2014automatic}.   Such  approaches  help  constructing
+useful  models in  high-dimensional  spaces, and  are  valuable to  experimental
+research, such as the studies we present in this thesis.
 
 *** Summary
 This chapter presented Linear and Gaussian Process Regression, two large classes

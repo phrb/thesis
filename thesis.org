@@ -12919,15 +12919,6 @@ relationships and exploring unknown regions of the search space.
 - UCB
 - Exp3?
 
-*** Reinforcement Learning
-- Markov Decision Processes
-
-- "Deep" RL
-- Actor-critic model
-
-- Main motivation for adding this section  was to contextualize results with GPR
-  and Neural Nets
-
 *** Expected Improvement for Gaussian Process Regression
 - Hybrid online learning?
 - Probability of Improvement
@@ -12936,6 +12927,15 @@ relationships and exploring unknown regions of the search space.
 - (continuous choice, optimize $EI = \max_t R_t$)
 - Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
   Model (LinUCB)
+
+*** Reinforcement Learning
+- Markov Decision Processes
+
+- "Deep" RL
+- Actor-critic model
+
+- Main motivation for adding this section  was to contextualize results with GPR
+  and Neural Nets
 
 *** Summary
 - These  methods seamlessly  mix exploration  and exploitation  but the  overall

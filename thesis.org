@@ -518,7 +518,7 @@ implementation and the justification of optimization heuristics.
 }
 #+end_export
 
-* Final Draft and Work List                                        :noexport:
+* Final Draft and TODO List                                        :noexport:
 ** Introduction
 *** General presentation of the manuscript
 *** Observation: Historical Trends in Hardware Design
@@ -574,8 +574,9 @@ what is possibly "wrong" with current approaches.
 :LOGBOOK:
 - State "TODO"       from              [2021-03-30 Tue 19:20]
 :END:
-**** TODO Statistical Learning: Linear Regression
+**** DONE Statistical Learning: Linear Regression
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-04-05 Mon 16:06]
 - State "TODO"       from              [2021-03-30 Tue 19:20]
 :END:
 - the model
@@ -587,7 +588,7 @@ what is possibly "wrong" with current approaches.
 Limitation: simple model with shape constraits, cannot "fit"
 everything
 
-- [ ] Fix notation for objective function, big X, small x
+- [X] Fix notation for objective function, big X, small x
 
 ***** Fitting the Linear Model to Data
 - [X] paragraph: Computing $\hat{\beta}$: OLS
@@ -745,7 +746,7 @@ value in our space $\mathcal{X}$.
 Super efficient but very limited
 - adapt example from ccgrid
 
-- [ ] Mention Paley construction, Hadamard matrices
+- [X] Mention Paley construction, Hadamard matrices
 - [ ] Add pseudocode for Paley Construction
 **** Optimal designs
 A  "flexible"  screening:  allows  to include  non-linear  terms,  interactions,

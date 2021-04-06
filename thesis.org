@@ -12981,6 +12981,12 @@ relationships and exploring unknown regions of the search space.
 \todo[inline]{TODO: Fill in the sketched section below}
 #+end_export
 
+- Link sampling  strategies and model  checking, discussed previously,  with the
+  concept of exploration
+
+- Link  optimizing mode  accuracy  and  finding best  predicted  value with  the
+  concept of exploitation
+
 *** Independent Bandits
 - simple (discrete choice, optimize $regret = \sum_t R_t$)
 
@@ -12991,13 +12997,14 @@ relationships and exploring unknown regions of the search space.
 - Exp3?
 
 *** Expected Improvement for Gaussian Process Regression
+- Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
+  Model (LinUCB)
+
+- (continuous choice, optimize $EI = \max_t R_t$)
+- RMS minimization, contour finding
 - Hybrid online learning?
 - Probability of Improvement
 - Expected Improvement
-
-- (continuous choice, optimize $EI = \max_t R_t$)
-- Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
-  Model (LinUCB)
 
 *** Reinforcement Learning
 - Markov Decision Processes

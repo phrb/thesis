@@ -13241,16 +13241,16 @@ time of writing.
 #+NAME: tab:zenodo
 #+CAPTION: Projects archived in /Zenodo/, and corresponding thesis chapters
 #+CAPTION: where they are mentioned
-#+ATTR_LATEX: :align rll :booktabs t :placement [t]
-|----------------+-------------------------------------------------------+---------------------------------------|
-| Project        | Archive                                               | Thesis Chapter                        |
-|----------------+-------------------------------------------------------+---------------------------------------|
-| Thesis journal | \cite{bruel2021phd-journal}                           | \ref{chap:method}                     |
-| CCPE paper     | \cite{bruel2021gpu-autotuning}                        | \ref{chap:cuda}                       |
-| ReConFig paper | \cite{bruel2021legup-tuner,bruel2021legup-dockerfile} | \ref{chap:fpga}                       |
-| CCGRID paper   | \cite{bruel2021ccgrid19,bruel2021dlmt,bruel2021dopt}  | \ref{chap:laplacian},\ref{chap:spapt} |
-| DOE package    | \cite{bruel2021experimental}                          | \ref{chap:ed}                         |
-|----------------+-------------------------------------------------------+---------------------------------------|
+#+ATTR_LATEX: :align rlll :booktabs t :placement [t]
+|----------------+-------------------------------------------------------+-------------------------------+---------------------------------------|
+| Project        | Archive                                               | Publication                   | Thesis Chapter                        |
+|----------------+-------------------------------------------------------+-------------------------------+---------------------------------------|
+| CCPE paper     | \cite{bruel2021gpu-autotuning}                        | \cite{bruel2017autotuning}    | \ref{chap:cuda}                       |
+| ReConFig paper | \cite{bruel2021legup-tuner,bruel2021legup-dockerfile} | \cite{bruel2017autotuninghls} | \ref{chap:fpga}                       |
+| CCGRID paper   | \cite{bruel2021ccgrid19,bruel2021dlmt,bruel2021dopt}  | \cite{bruel2019autotuning}    | \ref{chap:laplacian},\ref{chap:spapt} |
+| Thesis journal | \cite{bruel2021phd-journal}                           | --                            | \ref{chap:method}                     |
+| DOE package    | \cite{bruel2021experimental}                          | --                            | \ref{chap:ed}                         |
+|----------------+-------------------------------------------------------+-------------------------------+---------------------------------------|
 
 *** Summary
 :PROPERTIES:

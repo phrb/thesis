@@ -11816,6 +11816,9 @@ Section\nbsp{}\ref{sec:comparing}  compares different  sampling strategies,  and
 Section\nbsp{}\ref{sec:summary-ed} summarizes  the discussion and  concludes the
 chapter.
 
+#+latex: \todo[inline]{Add interaction effects to global comparison tables?}
+#+latex: \todo[inline]{Add "with the same seed"}
+
 *** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
@@ -11871,6 +11874,10 @@ this  scenario,  chances  are  high  that  we wont,  even  if  we  pick  extreme
 points. Heteroscedastic  error can  be produced in  real conditions  by resource
 management overhead, for example,  and the simplest way to try  and deal with it
 in practice is to fit a linear model to the logarithm of the response.
+
+#+latex: \todo[inline]{Remove Figure 6.1, (6.2?)}
+#+latex: \todo[inline]{Add annotation with determinant to  6.3}
+#+latex: \todo[inline]{Add true line, CI to 6.2?}
 
 #+latex: \clearpage
 
@@ -12129,6 +12136,9 @@ constructing orthogonal arrays.
 :PROPERTIES:
 :CUSTOM_ID: sec:screening
 :END:
+
+#+latex: \todo[inline]{add real model, real lines}
+
 Screening designs identify parsimoniously the main effects of 2-level factors in
 the initial  stages of  studying a  problem.  While  interactions are  still not
 considered at this  stage, identifying main effects early enables  focusing on a
@@ -12939,6 +12949,8 @@ extensively   used.   Figure\nbsp{}[[fig:low_discrepancy]]  also   shows   these
 sequences,        implemented       in        the       /randtoolbox/        /R/
 package\nbsp{}\cite{dutang2020randtoolbox},  which  also  implements  a  /Torus/
 low-discrepancy sampler.
+
+#+latex: \todo[inline]{Use less points for LHS?}
 
 #+NAME: fig:low_discrepancy
 #+CAPTION: Comparison of 1000 samples obtained with different sampling methods.

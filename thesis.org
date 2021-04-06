@@ -12055,7 +12055,7 @@ df = data.frame(FrF2(nfactors = 5, resolution = 3)) %>%
 
 names(df) = c("$x_1$", "$x_2$", "$x_3$",
               "$x_4 = x_1x_2$",
-              "$x_5 = x_1x3$", "$y$")
+              "$x_5 = x_1x_3$", "$y$")
 #+end_SRC
 
 #+RESULTS:
@@ -12087,7 +12087,7 @@ print(tab,
 #+RESULTS:
 #+begin_export latex
 % latex table generated in R 4.0.4 by xtable 1.8-4 package
-% Wed Mar 31 14:38:57 2021
+% Tue Apr  6 11:43:55 2021
 \begin{table}[t]
 \centering
 \caption{A 2-level fractional factorial design of resolution 3 for 5 factors, with response $y = f(x_1,x_2,x_3,x_4,x_5) + \varepsilon$. The main effects for $x_4$ and $x_5$ are aliased by, or confounded with, the interaction effects $x_1x_2$ and $x_1x_3$}
@@ -12095,16 +12095,16 @@ print(tab,
 \begingroup\small
 \begin{tabular}{cccccr}
   \toprule
-$x_1$ & $x_2$ & $x_3$ & $x_4 = x_1x_2$ & $x_5 = x_1x3$ & $y$ \\
+$x_1$ & $x_2$ & $x_3$ & $x_4 = x_1x_2$ & $x_5 = x_1x_3$ & $y$ \\
   \midrule
-1 & -1 & 1 & -1 & 1 & 5.10 \\
-  1 & 1 & 1 & 1 & 1 & 4.47 \\
-  1 & -1 & -1 & -1 & -1 & 0.54 \\
-  -1 & -1 & -1 & 1 & 1 & -0.79 \\
-  -1 & -1 & 1 & 1 & -1 & -2.39 \\
-  1 & 1 & -1 & 1 & -1 & -1.70 \\
-  -1 & 1 & -1 & -1 & 1 & -1.78 \\
-  -1 & 1 & 1 & -1 & -1 & -1.97 \\
+-1 & -1 & -1 & 1 & 1 & 1.18 \\
+  1 & 1 & -1 & 1 & -1 & 0.59 \\
+  1 & -1 & 1 & -1 & 1 & -0.26 \\
+  1 & 1 & 1 & 1 & 1 & -0.61 \\
+  -1 & 1 & -1 & -1 & 1 & -1.75 \\
+  -1 & 1 & 1 & -1 & -1 & 0.36 \\
+  -1 & -1 & 1 & 1 & -1 & -2.28 \\
+  1 & -1 & -1 & -1 & -1 & -0.26 \\
    \bottomrule
 \end{tabular}
 \endgroup

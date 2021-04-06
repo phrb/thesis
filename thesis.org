@@ -1,5 +1,5 @@
 #+STARTUP: overview indent inlineimages logdrawer
-#+TITLE: Towards Transparent and Parsimonious
+#+TITLE: Transparent and Parsimonious
 #+TITLE: Methods for Automatic Performance Tuning
 #+AUTHOR:      Pedro Bruel
 

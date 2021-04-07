@@ -9173,8 +9173,10 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 : Using cache found in /home/phrb/.cache/torch/hub/pytorch_vision_v0.6.0
 : /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
 :   warnings.warn("ONNX export mode is set to " + training_mode +
-* Abstracts                                                          :ignore:
-** Abstract                                                         :ignore:
+* Front Matter                                                       :ignore:
+#+latex: \frontmatter
+** Abstracts                                                        :ignore:
+*** Abstract                                                       :ignore:
 #+begin_export latex
 \clearpage
 \phantomsection
@@ -9189,7 +9191,7 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 
 Testing
 
-** Resumo                                                           :ignore:
+*** Resumo                                                         :ignore:
 #+begin_export latex
   \vspace{2cm}
 
@@ -9200,7 +9202,7 @@ Testing
 
 Testando
 
-** Résumé                                                           :ignore:
+*** Résumé                                                         :ignore:
 #+begin_export latex
   \vspace{2cm}
 

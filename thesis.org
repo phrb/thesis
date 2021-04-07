@@ -9186,7 +9186,7 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
   \textbf{\Large\textsc{abstract}}
 
   \vspace{0.4cm}
-
+  \justify
 #+end_export
 
 Testing

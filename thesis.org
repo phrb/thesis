@@ -168,8 +168,10 @@
 #+LATEX_HEADER: \renewcommand\fst@algorithm{\fs@ruled@notop}
 #+LATEX_HEADER: \makeatother
 :end:
-
-
+** Covers
+*** IME
+#+LATEX_HEADER: \input{covers/ime.tex}
+*** UGA
 * Early Drafts                                                     :noexport:
 ** First Draft
 1. Introduction

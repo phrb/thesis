@@ -16479,13 +16479,15 @@ explore in this thesis.
 :UNNUMBERED: nil
 :CUSTOM_ID: chap:conclusion
 :END:
-* References                                                         :ignore:
+* Back Matter Marker                                                 :ignore:
+#+latex: \backmatter
+** References                                                       :ignore:
 #+begin_export latex
 % \bibliographystyle{IEEEtran}
 % \bibliography{bibliography/references}
 \printbibliography[heading=bibintoc]
 #+end_export
-* Lists of Figures, Tables                                  :noexport:ignore:
+** Lists of Figures, Tables                                :noexport:ignore:
 #+TOC: tables
 #+latex: \listoffigures{}
 #+TOC: figures

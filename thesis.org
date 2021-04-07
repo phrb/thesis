@@ -9228,6 +9228,18 @@ improvements  on  different performance  metrics  in  the different  domains  we
 explore,  and  we  demonstrate  how   autotuning  methods  based  on  Design  of
 Experiments can aid in efficient and interpretable code optimization.
 
+**** Some Extra Detailed Points                                :noexport:
+Exploration of  autotuning search  spaces for which  no modeling  hypotheses are
+formulated  is  performed  using  Space-filling designs,  and  attempts  at  the
+exploitation  of  known relationships  between  parameters  and performance  are
+performed using Optimal Design.
+
+We used  Analysis of  Variance (ANOVA)  to check  for significant  parameters in
+linear  model  surrogates, enabling  transparent  decisions  regarding where  to
+perform new measurements and which parameters to include in surrogate models
+
+We used  the Expected Improvement  (EI) acquisition function to  mix exploration
+and exploitation for Gaussian Process regression surrogates
 
 *** Resumo                                                         :ignore:
 #+begin_export latex

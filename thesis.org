@@ -9193,41 +9193,44 @@ The  end  of Moore's  Law  and  the breakdown  of  Dennard's  scaling mean  that
 increasing hardware complexity and optimizing code efficiently are indispensable
 to maintain the exponential performance  improvements of the past decades.  Hand
 optimizing code  is not suited  for the sheer  number of configurations  of many
-code optimization  problems, but  fitting these  problems into  the mathematical
-optimization and  learning conceptual  frameworks enables applying  methods from
-these domains to  automatically optimize code for performance,  a process called
-autotuning.   Commonly  used autotuning  methods  are  either not  conducive  to
-statistical  analysis, such  as  search heuristics  and  genetic algorithms,  or
-reliant  on  restrictive hypotheses  about  the  target  search space,  such  as
-Gradient Descent. In  this thesis we develop and evaluate  the performance of an
-autotuning method based on Design of Experiments, a branch of statistics that is
-not widely  studied or  applied in  autotuning problems, and  which aids  in the
-parsimonious production  of statistically  interpretable and  accurate surrogate
-models.
+code optimization problems, but fitting these problems into the optimization and
+learning frameworks enables applying methods from these domains to automatically
+optimize  code for  performance,  a process  called  autotuning.  Commonly  used
+autotuning methods  are either  not conducive to  statistical analysis,  such as
+genetic algorithms, or reliant on restrictive hypotheses about the target search
+space, such  as Gradient Descent.   In this thesis  we develop and  evaluate the
+performance of an autotuning method based  on Design of Experiments, a branch of
+statistics that  is not widely  studied or  applied in autotuning  problems, and
+which aids  in the  parsimonious production  of statistically  interpretable and
+accurate surrogate models.
 
-The  first  contribution  of  this  thesis  is  a  series  of  descriptions  and
-discussions of various optimization methods, from the perspective of performance
-tuning.    We  describe   methods   from  domains   of  function   minimization,
-surrogate-based  optimization,  Design  of  Experiments,  and  online  learning,
-focusing on  the properties that  are most  relevant for their  applicability to
-autotuning  problems. We  seek  to  point out  that  finding  a balance  between
-exploitation  and exploration  is  left  implicit in  the  sequential Design  of
-Experiments approach, and becomes a key  point when performing optimization on a
-search space for which devising modeling hypotheses is hard.
+We  present a  series of  descriptions and  discussions of  various optimization
+methods, from the  perspective of performance tuning.  We  describe methods from
+domains  of  function  minimization,  surrogate-based  optimization,  Design  of
+Experiments,  and online  learning, focusing  on  the properties  that are  most
+relevant for  their applicability to autotuning  problems. We seek to  point out
+that finding a balance between exploitation  and exploration is left implicit in
+the  sequential  Design  of  Experiments  approach,  and  becomes  central  when
+performing optimization on a search space for which devising modeling hypotheses
+is hard.
 
-Our second contribution  is a series of empirical evaluations  of the methods we
-present  on  autotuning  problems  from  different  High  Performance  Computing
-domains.  We first apply search heuristics  coordinated by a bandit algorithm to
-optimize  parameters of  compilers  for several  GPU and  FPGA  kernels.  A  key
-contribution of this thesis is the development of a transparent and parsimonious
-autotuning approach based  on Design of Experiments, which we  apply to optimize
-parameters  for  configuring GPU  and  CPU  kernels,  and to  produce  optimized
-mixed-precision bit  quantization policies  for neural networks.   Although some
-experimental scenarios  eluded the  detection and  exploitation of  search space
-structure  regardless  the  chosen  autotuning method,  we  produce  significant
-improvements  on  different performance  metrics  in  the different  domains  we
-explore,  and  we  demonstrate  how   autotuning  methods  based  on  Design  of
-Experiments can aid in efficient and interpretable code optimization.
+The key  contribution of  this thesis  is the development  of a  transparent and
+parsimonious autotuning approach based on  Design of Experiments, which we apply
+to diverse problems such as optimizing  the configuration of GPU and CPU kernels
+and finding mixed-precision  bit quantization policies for  neural networks.  We
+also present  a series of empirical  evaluations of other methods  on autotuning
+problems  from different  High  Performance Computing  domains,  such as  search
+heuristics coordinated  by a bandit  algorithm to optimize the  configuration of
+compilers  for  several  GPU  and  FPGA  kernels.   Although  some  experimental
+scenarios  eluded the  detection  and exploitation  of  search space  structure,
+regardless of the chosen method, we  demonstrate how autotuning methods based on
+Design of  Experiments can aid  in interpretable, efficient, and  effective code
+optimization.
+
+#+begin_export latex
+
+\end{center}
+#+end_export
 
 **** Some Extra Detailed Points                                :noexport:
 Exploration of  autotuning search  spaces for which  no modeling  hypotheses are

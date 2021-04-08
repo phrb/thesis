@@ -9197,18 +9197,19 @@ code optimization  problems, but  fitting these  problems into  the mathematical
 optimization and  learning conceptual  frameworks enables applying  methods from
 these domains to  automatically optimize code for performance,  a process called
 autotuning.   Commonly  used autotuning  methods  are  either not  conducive  to
-statistical analysis, such as search  heuristics and neural networks, or reliant
-on  restrictive hypotheses  about  the  target search  space,  such as  Gradient
-Descent. In this thesis we develop and evaluate the performance of an autotuning
-method based on Design of Experiments, a branch of statistics that is not widely
-studied or applied  in autotuning problems, and which aids  in the production of
-statistically interpretable and accurate surrogate models.
+statistical  analysis, such  as  search heuristics  and  genetic algorithms,  or
+reliant  on  restrictive hypotheses  about  the  target  search space,  such  as
+Gradient Descent. In  this thesis we develop and evaluate  the performance of an
+autotuning method based on Design of Experiments, a branch of statistics that is
+not widely  studied or  applied in  autotuning problems, and  which aids  in the
+parsimonious production  of statistically  interpretable and  accurate surrogate
+models.
 
 The  first  contribution  of  this  thesis  is  a  series  of  descriptions  and
 discussions of various optimization methods, from the perspective of performance
 tuning.    We  describe   methods   from  domains   of  function   minimization,
 surrogate-based  optimization,  Design  of  Experiments,  and  online  learning,
-focusing  on  the properties  that  most  relevant  for their  applicability  to
+focusing on  the properties that  are most  relevant for their  applicability to
 autotuning  problems. We  seek  to  point out  that  finding  a balance  between
 exploitation  and exploration  is  left  implicit in  the  sequential Design  of
 Experiments approach, and becomes a key  point when performing optimization on a

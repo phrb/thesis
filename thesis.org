@@ -9275,8 +9275,8 @@ modèles précis.
 Nous présentons une série de descriptions et de discussions de diverses méthodes
 d'optimisation,  du  point de  vue  de  l'optimisation des  performances.   Nous
 décrivons des  méthodes dans les  domaines de  la minimisation de  fonctions, de
-l'optimisation par substitution (surrogate optimization?), du plan d'expériences
-et de l'apprentissage en ligne, en  nous concentrant sur les propriétés les plus
+l'optimisation  par  modèles  de  substitution,  du  plan  d'expériences  et  de
+l'apprentissage  en ligne,  en  nous  concentrant sur  les  propriétés les  plus
 importantes pour leur applicabilité aux problèmes d'autotuning. Nous cherchons à
 souligner que la recherche d'un  équilibre entre l'exploitation et l'exploration
 est implicite  dans l'approche  séquentielle du  plan d'expériences,  et devient

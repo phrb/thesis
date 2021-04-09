@@ -73,7 +73,7 @@
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{adjustbox}
 
-#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage[brazilian,french,english]{babel}
 #+LATEX_HEADER: \usepackage[scale=2]{ccicons}
 
 #+LATEX_HEADER: \usepackage{newpxtext}

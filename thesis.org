@@ -9301,6 +9301,64 @@ effective.
 #+begin_export latex
 
 \end{center}
+\selectlanguage{english}
+#+end_export
+
+*** Resumo                                                         :ignore:
+#+begin_export latex
+\clearpage
+\begin{center}
+  \selectlanguage{brazilian}
+  \textbf{\Large\textsc{resumo}}
+
+  \vspace{0.4cm}
+  \justify
+#+end_export
+
+O  fim da  lei de  Moore e  a  quebra da  lei exponencial  descrita por  Dennard
+significam que  o aumento da complexidade  de hardware e a  otimização de código
+são indispensáveis  para sustentar as  melhorias exponenciais de  desempenho das
+últimas décadas.   A otimização manual  de código não  é adequada para  o grande
+número de  configurações encontrado em  muitos problemas, mas  interpretar esses
+problemas segundo os arcabouços da otimização e aprendizagem permite a aplicação
+de métodos desses  domínios para de otimização automática de  código orientada a
+melhorar  seu desempenho,  um processo  chamado  de autotuning.   Os métodos  de
+autotuning comumente  usados nem sempre  são propícios a  análises estatísticas,
+como os algoritmos genéticos, ou então dependem de hipóteses restritivas sobre o
+espaço de  busca alvo, como o  método do gradiente.  Nesta  tese desenvolvemos e
+avaliamos  o  desempenho de  um  método  de  autotuning  baseado no  Desenho  de
+Experimentos, um ramo da estatística que não é amplamente estudado ou aplicado a
+problemas  de autotuning,  e que  auxilia  na produção  parcimoniosa de  modelos
+precisos e interpretáveis.
+
+Apresentamos  uma  série  de  descrições  e  discussões  de  vários  métodos  de
+otimização,  a partir  da perspectiva  do autotuning.   Descrevemos métodos  dos
+domínios de minimização  de funções, otimização baseada  em modelos substitutos,
+Desenho de Experimentos e aprendizagem online, nos concentrando nas propriedades
+mais relevantes  para a  aplicabilidade a  problemas de  autotuning.  Procuramos
+ressaltar que  a busca por  um equilíbrio  entre explorar novas  configurações e
+aproveitar  relações já  conhecidas está  implícita na  abordagem sequencial  de
+Desenho  de Experimentos,  e se  torna central  ao realizar  a otimização  em um
+espaço de busca para o qual a elaboração de hipóteses de modelagem é difícil.
+
+A  contribuição  principal desta  tese  é  o  desenvolvimento de  uma  abordagem
+transparente e parcimoniosa para autotuning, baseada no Desenho de Experimentos,
+que aplicamos  a diversos problemas, tais  como a otimização da  configuração de
+programas para  GPU e CPU,  e a  busca por políticas  de quantização de  bits de
+precisão mista para redes neurais.   Também apresentamos uma série de avaliações
+empíricas de outros métodos a problemas  de autotuning em diferentes domínios da
+computação  de alto  desempenho, como  heurísticas de  busca coordenadas  por um
+algoritmo do  bandido para otimizar  a configuração de compiladores  para vários
+programas para GPU e FPGA.  Embora alguns cenários experimentais tenham escapado
+à detecção e  exploração de estruturas do espaço de  busca, independentemente do
+método escolhido, demonstramos nesta tese como métodos de autotuning baseados no
+Desenho  de  Experimentos   podem  contribuir  com  uma   otimização  de  código
+interpretável, eficiente, e eficaz.
+
+#+begin_export latex
+
+\end{center}
+\selectlanguage{english}
 #+end_export
 
 ** Table of Contents                                                :ignore:

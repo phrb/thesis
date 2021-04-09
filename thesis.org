@@ -9243,27 +9243,11 @@ include in  surrogate models We  used the Expected Improvement  (EI) acquisition
 function to  mix exploration  and exploitation  for Gaussian  Process regression
 surrogates
 
-*** Resumo                                                         :ignore:
-#+begin_export latex
-\clearpage
-\begin{center}
-  \textbf{\Large\textsc{resumo}}
-
-  \vspace{0.4cm}
-  \justify
-#+end_export
-
-Testando
-
-#+begin_export latex
-
-\end{center}
-#+end_export
-
 *** Résumé                                                         :ignore:
 #+begin_export latex
 \clearpage
 \begin{center}
+  \selectlanguage{french}
   \textbf{\Large\textsc{résumé}}
 
   \vspace{0.4cm}

@@ -10077,27 +10077,146 @@ structure of this document.
   contributions}
 #+end_export
 
-*** Text Structure                                               :noexport:
-The remainder of  this thesis is organized  as follows.  Chapter\nbsp{}[[Efforts
-for Reproducible Science]]  describes the efforts made over the  duration of the
-work on this thesis to establish  a workflow that promotes reproducible science,
-using computational  documents and versioning  for code, results,  and analyses.
-Chapter\nbsp{}[[Methods for Function Minimization]]  presents background for the
-derived  from  search  heuristics, mathematical  optimization,  and  statistical
-learning, and  Chapter\nbsp{}[[Application of  Function Minimization  Methods to
-Autotuning]]   to   autotuning.    Chapter\nbsp{}[[A   Design   of   Experiments
-Methodology]] describes the  DoE methodology, and its  application to autotuning
-problems,   and  the   method  limitations   encountered  during   this  thesis.
-Chapter\nbsp{}[[Gaussian Process Regression: A  more Flexible Method]] describes
-the  Gaussian  Process Regression  method,  and  its application  to  autotuning
-problems.   Chapter\nbsp{}[[Conclusion]] resumes  and  concludes the  high-level
-discussions of this chapter, in light of the results of the excursions performed
-in this thesis.
+*** Structure of This Thesis
+This  thesis is  organized in  two parts.   Part\nbsp{}\ref{part:optim} presents
+high-level   descriptions  of   different  optimization   methods,  highlighting
+meaningful     features     for      their     application     to     autotuning
+problems. Part\nbsp{}\ref{part:app}  presents five separate studies  where apply
+distinct optimization methods to a  series of autotuning problems from different
+domains. The remainder  of this section presents the structure  of the two parts
+in further detail and discusses the contributions of this thesis.
+
+Chapter\nbsp{}\ref{chap:notation} opens  Part\nbsp{}\ref{part:optim} describing,
+from the point of view of autotuning problems, the mathematical notation we used
+in the method expositions of later chapters, and presenting fundamental concepts
+of search  spaces.  Chapter\nbsp{}\ref{chap:funcmin}  presents some  methods for
+function  minimization from  the optimization  domain, from  derivative-based to
+stochastic methods.  Chapter\nbsp{}\ref{chap:learning}  presents two methods for
+surrogate-based  optimization, linear  models and  Gaussian Process  regression,
+which are widely used to learn  relationships between factors and responses, but
+assume   that   the   data   come    from   a   fixed   set   of   observations.
+Chapter\nbsp{}\ref{chap:ed} presents  the Design  of Experiments  methodology, a
+statistical framework for improving the accuracy and quality of fit of surrogate
+models,  while  simultaneously  decreasing   experimental  costs,  by  carefully
+choosing which experiments  should be conducted. Chapter\nbsp{}\ref{chap:online}
+presents Online  Learning methods, which  explicitly model and seek  to optimize
+the  compromise  between   exploring  a  search  space  seeking   to  learn  new
+relationships between factors and  responses, and exploiting known relationships
+to find the  optimal factor configuration. This compromise is  relevant but left
+implicit in all methods discussed in Part\nbsp{}\ref{part:optim}, and we seek to
+demonstrate  how  it  becomes  more relevant  in  higher-dimensional  autotuning
+problems.   Chapter\nbsp{}\ref{chap:overview} closes  this  part presenting,  in
+light of the  previous expositions, the method choices that  compose the path we
+took across the studies done in this thesis.
+
+Part\nbsp{}\ref{part:app} begins with a presentation of our research methodology
+in Chapter\nbsp{}\ref{chap:method},  which describes  the efforts made  over the
+duration  of the  work on  this  thesis to  establish a  workflow that  promotes
+reproducible science,  using computational  documents, versioning,  and archival
+for code, results, and statistical analyses. The other chapters of this part are
+described in the paragraphs below,  and present the autotuning studies conducted
+during this thesis.
+
+Initial work on this thesis, carried out at the University of São Paulo, studied
+the effectiveness of classical and standard search heuristics, such as Simulated
+Annealing, on autotuning  problems.  The first target autotuning  domain was the
+set of  parameters of a compiler  for CUDA programs.  The  search heuristics for
+this     case     study     were     implemented     using     the     OpenTuner
+framework\nbsp\cite{ansel2014opentuner}, and consisted of  an ensemble of search
+heuristics  coordinated  by  a  Multi-Armed  Bandit  algorithm.   The  autotuner
+searched for a set of compilation parameters that optimized 17 heterogeneous GPU
+kernels,  from a  set of  approximately $10^{23}$  possible combinations  of all
+parameters.  With 1.5h autotuning runs we have achieved up to 4 times speedup in
+comparison with  the CUDA compiler's high-level  optimizations.  The compilation
+and execution times  of programs in this autotuning domain  are relatively fast,
+and were in the order of a few seconds to a minute.  Since measurement costs are
+relatively small, search heuristics could  find good optimizations using as many
+measurements  as  needed.  This  work  was  published  in the  /Concurrency  and
+Computation:  Practice  and Experience/  journal\nbsp\cite{bruel2017autotuning},
+and Chapter\nbsp{}\ref{chap:cuda} presents a detailed discussion and extends the
+original work with a study using screening designs.
+
+The  next  case  study  in  this thesis  was  developed  in  collaboration  with
+researchers from  /Hewlett Packard  Enterprise/, and  consisted of  applying the
+heuristics-based   autotuning  approach   from   our  previous   study  to   the
+configuration  of  parameters  involved  in  the  generation  of  FPGA  hardware
+specification from source code in the /C/ language, a process called /High-Level
+Synthesis/  (HLS).   The  main  difference  from  our  work  with  GPU  compiler
+parameters was the time to obtain  the hardware specification, which could be in
+the order  of hours  for a  single kernel.   In this  more complex  scenario, we
+achieved  up  to 2  times  improvements  for  different hardware  metrics  using
+conventional search  algorithms.  These  results were obtained  in a  simple HLS
+benchmark, for which compilation times were in the order of minutes.  The search
+space was composed of approximately $10^{123}$ possible configurations, which is
+much larger than the  search space in our previous work  with GPUs. Search space
+size  and  the  larger  measurement  cost  meant that  we  did  not  expect  the
+heuristics-based approach to have the same  effectiveness as in the GPU compiler
+case study, but we  were still able to optimize multiple  hardware metrics for a
+set of kernels, using a normalized weighted sum user-defined weights.  This work
+was published\nbsp\cite{bruel2017autotuninghls} at  the 2017 /IEEE International
+Conference on ReConFigurable Computing and FPGAs/, and is described in detail in
+Chapter\nbsp{}\ref{chap:fpga}.
+
+Approaches using  classical machine  learning and optimization  techniques would
+not scale  to industrial-level  HLS, where  each compilation  can take  hours to
+complete.  Search space properties also  increase the complexity of the problem,
+in  particular  its  structure  composed of  binary,  factorial  and  continuous
+variables with potentially complex interactions.   Our results on autotuning HLS
+for  FPGAs  corroborate   the  conclusion  that  the   empirical  autotuning  of
+expensive-to-evaluate functions, such as those  that appear on the autotuning of
+HLS, require a more parsimonious  and transparent approach, that can potentially
+be achieved using the Design of Experiments methodology.
+
+In this thesis we present an adaptation of the Design of Experiments methodology
+to autotuning, which  we apply to different problems.  The  method we propose is
+based on linear regression and its extensions, Analysis of Variance (ANOVA), and
+Optimal Design.   The strategy requires  the formulation of  initial assumptions
+about the  target autotuning problem, which  are refined with data  collected by
+efficiently selected experiments.  The objective of this approach is to identify
+and exploit relationships  between factors and response,  suggesting regions for
+further exploration in a transparent way, that is, in a way that is supported by
+statistical tests of significance.  The  effectiveness of the proposed strategy,
+and  its  ability to  explain  the  optimizations  it  finds, are  evaluated  on
+autotuning problems  in the code generation  and source-to-source transformation
+domains.     This   work    was    partially   published    at   the    IEEE/ACM
+CCGrid\nbsp{}\cite{bruel2019autotuning}                              conference.
+Chapter\nbsp{}\ref{chap:laplacian} presents  our first complete study  of DoE to
+an autotuning problem, where we compare our method's results with those of other
+autotuning  methods, demonstrating  how our  method is  capable of  consistently
+finding the global optimum under certain conditions.
+
+Because the  Design of Experiments  methodology requires the specification  of a
+class of initial performance models, our methodology can sometimes achieve worse
+prediction  capabilities  when  there  is considerable  uncertainty  on  initial
+assumptions about  the underlying relationships.   We observed this in  our work
+published at CCGRID, and we  extend this work in Chapter\nbsp{}\ref{chap:spapt},
+attempting to  describe precisely what  can be  learned about the  target search
+spaces from the application of our  method, and to refine the differentiation of
+the approach  for the sometimes  conflicting objectives of model  assessment and
+prediction.
+
+In Chapter\nbsp{}\ref{chap:spapt} we also describe the application to autotuning
+of /Gaussian Process Regression/, an approach that trades some explanatory power
+for a much larger and more flexible class of underlying models.  We evaluate the
+performance   of   this  approach   on   the   code  generation   problem   from
+Chapter\nbsp{}\ref{chap:laplacian}  and, again  in  collaboration with  /Hewlett
+Packard Enterprise/  researchers, on a  larger autotuning problem  regarding the
+mixed-precision   quantization  of   /Convolutional   Neural  Networks/   (CNN),
+unpublished at the time  of the writing of this thesis,  and described in detail
+in Chapter\nbsp{}\ref{chap:quantization}.
+
+Finally,    Chapter\nbsp{}\ref{chap:conclusion}    concludes   this    document,
+summarizing the  discussions of the  previous chapters and the  contributions of
+this thesis.
+
 * Optimization Methods for Autotuning
 :PROPERTIES:
 :CUSTOM_ID: part:optim
 :END:
 ** Notation and Search Spaces
+:PROPERTIES:
+:CUSTOM_ID: chap:notation
+:END:
 The  following chapters  present the  optimization  methods that  we applied  to
 autotuning  problems in  different domains.   Each chapter  presents a  group of
 methods,  briefly discussing  each  method  in the  group  and their  underlying

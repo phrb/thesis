@@ -13111,6 +13111,10 @@ relationships and exploring unknown regions of the search space.
   (where EI is more meaningful)
 
 ** Optimization Methods for Autotuning: An Overview
+:PROPERTIES:
+:CUSTOM_ID: chap:overview
+:END:
+
 In the previous chapters we have presented a subset of optimization methods that
 can be applied to autotuning problems.  We chose to discuss methods and concepts
 that provide  interesting insight to  our perspective, centered  around applying

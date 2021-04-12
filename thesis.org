@@ -10054,16 +10054,17 @@ performance.
 Table\nbsp{}\ref{tab:search-methods} lists some autotuning systems, their target
 domains, and  the employed  method, ordered by  publication date.   Some systems
 that  did not  provide  detailed  search space  descriptions  and  could not  be
-included in Figure\nbsp{}[[fig:search-spaces]], especially some of the earlier work,
-provided enough information to categorize their autotuning methods. In contrast,
-many  more  recent  works,  especially  those using  methods  based  on  Machine
-Learning, did not provide specific  method information. Earlier work often deals
-with  search spaces  small enough  to  exhaustively evaluate,  and using  search
-heuristics to optimize linear algebra programs is the most prominent category of
-earlier work in this sample.  Later  autotuning work target more varied domains,
-with  the  most prominent  domains  in  this  sample being  parallel  computing,
-compiler parameters, and  High-Level Synthesis.  Systems using  methods based on
-Machine Learning become more common on later work than systems using heuristics.
+included in  Figure\nbsp{}[[fig:search-spaces]], especially some of  the earlier
+work, provided  enough information  to categorize  their autotuning  methods. In
+contrast,  many more  recent  works,  especially those  using  methods based  on
+Machine  Learning, did  not provide  specific method  information. Earlier  work
+often deals with search spaces small  enough to exhaustively evaluate, and using
+search  heuristics to  optimize linear  algebra programs  is the  most prominent
+category of  earlier work  in this  sample.  Later  autotuning work  target more
+varied domains,  with the most prominent  domains in this sample  being parallel
+computing, compiler parameters, and High-Level Synthesis.  Systems using methods
+based on  Machine Learning become more  common on later work  than systems using
+heuristics.
 
 Chapter\nbsp{}[[Methods   for  Function   Minimization]]   provides  more   detailed
 definitions and discussions of the applicability, effectiveness, and explanatory

@@ -9199,8 +9199,8 @@ optimize  code for  performance,  a process  called  autotuning.  Commonly  used
 autotuning methods  are either  not conducive to  statistical analysis,  such as
 genetic algorithms, or reliant on restrictive hypotheses about the target search
 space, such  as Gradient Descent.   In this thesis  we develop and  evaluate the
-performance of an autotuning method based  on Design of Experiments, a branch of
-statistics that  is not widely  studied or  applied in autotuning  problems, and
+performance of an autotuning method based on the Design of Experiments, a branch
+of statistics that is not widely  studied or applied in autotuning problems, and
 which aids  in the  parsimonious production  of statistically  interpretable and
 accurate surrogate models.
 
@@ -9215,17 +9215,17 @@ performing optimization on a search space for which devising modeling hypotheses
 is hard.
 
 The key  contribution of  this thesis  is the development  of a  transparent and
-parsimonious autotuning approach based on  Design of Experiments, which we apply
-to diverse problems such as optimizing  the configuration of GPU and CPU kernels
-and finding mixed-precision  bit quantization policies for  neural networks.  We
-also present  a series of empirical  evaluations of other methods  on autotuning
-problems  from different  High  Performance Computing  domains,  such as  search
-heuristics coordinated  by a bandit  algorithm to optimize the  configuration of
-compilers  for  several  GPU  and  FPGA  kernels.   Although  some  experimental
-scenarios  eluded the  detection  and exploitation  of  search space  structure,
-regardless of the chosen method, we  demonstrate how autotuning methods based on
-Design of  Experiments can aid  in interpretable, efficient, and  effective code
-optimization.
+parsimonious autotuning  approach based on  the Design of Experiments,  which we
+apply to  diverse problems such as  optimizing the configuration of  GPU and CPU
+kernels  and  finding  mixed-precision  bit  quantization  policies  for  neural
+networks.  We also present a series of empirical evaluations of other methods on
+autotuning problems from  different High Performance Computing  domains, such as
+search  heuristics   coordinated  by   a  bandit   algorithm  to   optimize  the
+configuration  of compilers  for several  GPU and  FPGA kernels.   Although some
+experimental scenarios  eluded the  detection and  exploitation of  search space
+structure,  regardless  of the  chosen  method,  we demonstrate  how  autotuning
+methods based on the Design of  Experiments can aid in interpretable, efficient,
+and effective code optimization.
 
 #+begin_export latex
 

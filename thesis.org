@@ -9853,7 +9853,7 @@ the target search space by choosing the values to be explored.
 In this  example, the search  space is defined by  the $128^2 =  16384$ possible
 combinations  of  blocking  and  unrolling  values.   The  performance  of  each
 combination    in    the    search     space,    shown    in    /Mflops/s/    in
-Figure\nbsp{}[[fig:search-space]],    was   measured    for   a    sequential   GEMM
+Figure\nbsp{}[[fig:search-space]],   was   measured   for  a   sequential   GEMM
 implementation,        using        square        matrices        of        size
 400\nbsp{}\cite{seymour2008comparison}. We can  represent this autotuning search
 space  as a  /3D landscape/,  since we  have two  configurable parameters  and a

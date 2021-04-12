@@ -9863,16 +9863,16 @@ the  performance   metric  is   transformed  so  that   the  objective   is  its
 /minimization/.
 
 On a first look, there seems to  be no apparent global search space structure in
-the landscape on  Figure\nbsp{}[[fig:search-space]], but local features  jump to the
-eyes, such as  the ``valley'' across all block sizes  for low unrolling factors,
-the ``ramp'' across all unrolling factors for low block sizes, and the series of
-jagged  ``plateaus'' across  the middle  regions, with  ridges for  identical or
-divisible block sizes  and unrolling factors.  A careful look  reveals also that
-there is  a curvature  along the  unrolling factor  axis.  Also  of note  is the
-abundance in this  landscape of /local minima/, that is,  points with relatively
-good performance, surrounded  by points with worse  performance. By exhaustively
-evaluating  all  possibilities, the  original  study  determined that  the  best
-performance  on this  program  was achieved  with  a  block size  of  80 and  an
+the landscape  on Figure\nbsp{}[[fig:search-space]], but local  features jump to
+the  eyes, such  as the  ``valley''  across all  block sizes  for low  unrolling
+factors, the ``ramp'' across all unrolling  factors for low block sizes, and the
+series  of  jagged ``plateaus''  across  the  middle  regions, with  ridges  for
+identical  or divisible  block  sizes  and unrolling  factors.   A careful  look
+reveals also that there is a curvature along the unrolling factor axis.  Also of
+note is the abundance in this landscape  of /local minima/, that is, points with
+relatively good  performance, surrounded  by points  with worse  performance. By
+exhaustively evaluating  all possibilities,  the original study  determined that
+the best performance on this program was achieved with a block size of 80 and an
 unrolling factor of 2.
 
 In this  conceptual example,  all ${\approx}1.64\times10^4$  configurations were

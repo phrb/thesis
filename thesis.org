@@ -9543,22 +9543,22 @@ machine learning-based search  is that, usually, optimization  choices cannot be
 explained, and knowledge  gained during optimization is not  reusable.  The main
 contribution of this  thesis is to study  how to overcome the  reliance on these
 assumptions about search spaces, and the lack of explainable optimizations, from
-the point of view of a  /Design of Experiments/ (DOE), or /Experimental Design/,
+the point of view of a  /Design of Experiments/ (DoE), or /Experimental Design/,
 methodology to autotuning.
 
-One of  the first detailed  descriptions and  mathematical treatment of  DOE was
+One of  the first detailed  descriptions and  mathematical treatment of  DoE was
 presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
 Design of Experiments/, where he  discussed principles of experimentation, latin
 square  sampling and  factorial  designs.  Later  books such  as  the ones  from
 Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
 /et   al./\nbsp\cite{box2005statistics}  present   comprehensive  and   detailed
-foundations.   Techniques based  on DOE  are /parsimonious/  because they  allow
+foundations.   Techniques based  on DoE  are /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
 relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
 statistical tests.
 
-In DOE terminology, a /design/ is a  plan for executing a series of measurements,
+In DoE terminology, a /design/ is a  plan for executing a series of measurements,
 or /experiments/, whose objective is to identify relationships between /factors/
 and /responses/.   While factors and  responses can refer to  different concrete
 entities in other domains, in  computer experiments factors can be configuration
@@ -9567,12 +9567,12 @@ execution time or memory consumption of a program.
 
 Designs  can  serve diverse  purposes,  from  identifying the  most  significant
 factors  for  performance, to  fitting  analytical  performance models  for  the
-response.  The  field of DOE  encompasses the mathematical formalization  of the
+response.  The  field of DoE  encompasses the mathematical formalization  of the
 construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
 The contributions of  this thesis are strategies to apply  to program autotuning
-the         DOE        methodology,         and        /Gaussian         Process
+the         DoE        methodology,         and        /Gaussian         Process
 Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
 and  a high-level  view  of  the theoretical  foundations  of  each method,  and
 detailed  discussions of  the challenges  involved in  specializing the  general
@@ -11946,8 +11946,8 @@ improving model fits, or minimizing the objective function.
 :CUSTOM_ID: chap:ed
 :END:
 
-This  chapter   presents  some   elements  of   Design  of   Experiments  (DOE).
-Complementing the  learning methods  we discussed in  the previous  chapter, DOE
+This  chapter   presents  some   elements  of   Design  of   Experiments  (DoE).
+Complementing the  learning methods  we discussed in  the previous  chapter, DoE
 methods  enable  choosing  the  experiments  on  a  design  matrix  $\mathbf{X}$
 according to  different needs and  criteria.  A well-constructed  design enables
 testing hypotheses  about the  objective function,  which can  lead either  to a
@@ -12650,7 +12650,7 @@ and continue the optimization of our example.
 :PROPERTIES:
 :CUSTOM_ID: sec:optimal
 :END:
-The  application of  DOE  to autotuning  problems  requires design  construction
+The  application of  DoE  to autotuning  problems  requires design  construction
 techniques  that  support factors  of  arbitrary  types  and number  of  levels.
 Autotuning problems typically combine factors  such as binary flags, integer and
 floating point numerical values, and  unordered enumerations of abstract values.
@@ -12885,7 +12885,7 @@ consider that $x_8^{2}$ is significant  we also include the corresponding linear
 term.  We  can then fit this  model using the  results of the optimal  design we
 constructed.   Table\nbsp{}\ref{tab:dopt_fit} show  how  close the  coefficients
 estimated  by  this  model  fit  are   to  the  true  model  coefficients,  from
-Equation\nbsp{}\ref{eq:real_model}.   This  example  illustrates  that  the  DOE
+Equation\nbsp{}\ref{eq:real_model}.   This  example  illustrates  that  the  DoE
 methodology  can help  experimenters  produce accurate  models  while using  few
 measurements, provided the modeling hypotheses are correct.
 
@@ -13159,7 +13159,7 @@ linear  model and  its  hypotheses,  and are  transparent  and parsimonious  for
 estimating factor effects and significance,  provided we use good starting model
 hypotheses.
 
-We  presented  examples of  the  DOE  methodology, highlighting  the  separation
+We  presented  examples of  the  DoE  methodology, highlighting  the  separation
 between  the  stages of  sampling  search  spaces,  fitting linear  models,  and
 interpreting results, with the objectives  of reducing dimension and restricting
 further experimentation to promising regions of the search space.
@@ -13281,7 +13281,7 @@ with strong interactions between optimization choices.
 In this  thesis we built, applied,  and evaluated optimization methods  based on
 Design of Experiments  in different autotuning contexts, described  in detail in
 the next chapters, and compared our methods to others that are commonly applied.
-The inner  workings and the  interpretation of the  results produced by  our DOE
+The inner  workings and the  interpretation of the  results produced by  our DoE
 approach are transparent  to statistical analysis and user  intervention, and we
 strive     to     be      parsimonious     regarding     experimental     costs.
 Figure\nbsp{}\ref{fig:tree}   attempts   to   represent   the   hypotheses   and
@@ -13453,7 +13453,7 @@ time of writing.
 | ReConFig paper | \cite{bruel2021legup-tuner,bruel2021legup-dockerfile} | \cite{bruel2017autotuninghls} | \ref{chap:fpga}                       |
 | CCGRID paper   | \cite{bruel2021ccgrid19,bruel2021dlmt,bruel2021dopt}  | \cite{bruel2019autotuning}    | \ref{chap:laplacian},\ref{chap:spapt} |
 | Thesis journal | \cite{bruel2021phd-journal}                           | --                            | \ref{chap:method}                     |
-| DOE package    | \cite{bruel2021experimental}                          | --                            | \ref{chap:ed}                         |
+| DoE package    | \cite{bruel2021experimental}                          | --                            | \ref{chap:ed}                         |
 |----------------+-------------------------------------------------------+-------------------------------+---------------------------------------|
 
 *** Summary
@@ -13468,7 +13468,7 @@ future-proof and  do not guarantee reproducibility,  but we believe they  are of
 great value  and help, and  have ourselves  benefited from keeping  such records
 when we  had to revisit past  work.  Section\nbsp{}\ref{sec:gpu-screening} gives
 an example of one such occasion, where  we expanded work done in 2015 by running
-new  experiments  with the  DOE  methodology.  The  next chapters  will  discuss
+new  experiments  with the  DoE  methodology.  The  next chapters  will  discuss
 applications of  the methods  we presented in  the previous  chapters, performed
 during this thesis.
 
@@ -15081,7 +15081,7 @@ new problem subspace with the remaining factors.  Informed decisions made by the
 user at each step guide the outcome of each iteration.
 
 #+NAME: fig:doe_anova_strategy
-#+CAPTION: Overview of the DOE approach to autotuning we implemented
+#+CAPTION: Overview of the DoE approach to autotuning we implemented
 #+ATTR_LATEX: :width .6\columnwidth :placement [t]
 [[./img/ccgrid19/doe_anova_strategy.pdf]]
 
@@ -15461,13 +15461,13 @@ Section\nbsp{}\ref{sec:dlmt-summary} summarizes the chapter and discusses future
 work.
 
 *** Choosing a Design of Experiments Method for Autotuning
-Our application of the DOE methodology  requires support for factors of different
+Our application of the DoE methodology  requires support for factors of different
 types and  numbers of levels, such  as binary flags, integer  and floating point
 numerical values and  enumerations of categorical values.  We  also need designs
 that minimize the number of experiments needed for identifying the most relevant
 factors of a  problem, since at this  moment we are not interested  in a precise
 analytical   model.   The   design  construction   techniques  that   fit  these
-requirements  are limited.  The first  DOE  approach we  studied was  /screening/
+requirements  are limited.  The first  DoE  approach we  studied was  /screening/
 which, despite being extremely parsimonious, does not have enough flexibility to
 explore the search spaces which we wished to study.
 
@@ -15637,7 +15637,7 @@ between  parameters   and  performance.  In  /bicgkernel/,   for  example,  DLTM
 identified   a   linear  relationship   for   OpenMP   and  scalar   replacement
 optimizations, and  quadratic relationships  between register and  cache tiling,
 and loop unrolling.  This is an example of the  transparency in the optimization
-process that can be achieved with a DOE approach.
+process that can be achieved with a DoE approach.
 
 Our approach used a generic initial performance model for all kernels, but since
 it iteratively eliminates  factors and model terms based on  ANOVA tests, it was

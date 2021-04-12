@@ -10072,11 +10072,6 @@ power  of  stochastic  autotuning  methods  based  on  search  heuristics.   The
 remainder  of this  chapter details  the contributions  of this  thesis and  the
 structure of this document.
 
-#+begin_export latex
-\todo[inline]{Third Chapter, or  next Section: Proposal of this  thesis, list of
-  contributions}
-#+end_export
-
 *** Structure of This Thesis
 This  thesis is  organized in  two parts.   Part\nbsp{}\ref{part:optim} presents
 high-level   descriptions  of   different  optimization   methods,  highlighting

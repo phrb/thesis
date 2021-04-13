@@ -7881,8 +7881,11 @@ write.csv(predictions,
 library(ggplot2)
 library(latex2exp)
 library(paletteer)
+library(dplyr)
 
-p_palette = "pals::polychrome"
+#p_palette = "pals::polychrome"
+p_palette = "palettesForR::Grays"
+colors = paletteer_d(palette = "RColorBrewer::Set1", n = 4)
 
 update_factors <- function(df) {
     return(df %>%
@@ -8069,6 +8072,10 @@ write.csv(predictions, "data/linear_effects/confidence_predictions.csv", row.nam
 #+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/confidence_lin_effects.pdf" :width 20 :height 30 :eval no-export :tangle confidence_lin_effects_plot.R
 library(ggplot2)
 library(latex2exp)
+library(dplyr)
+library(paletteer)
+
+colors = paletteer_d(palette = "RColorBrewer::Set1", n = 4)
 
 update_factors <- function(df) {
     return(df %>%

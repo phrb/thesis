@@ -12030,7 +12030,7 @@ for  linear  model  terms in  settings  with  high  levels  of error  or  noise,
 heteroscedasticity, and interactions between factors.
 
 **** 2-Level Factorial Designs
-Figure\nbsp{}[[fig:lineffect]] shows measurements of an objective function whose
+Figure\nbsp{}[[fig:vareffect]] shows measurements of an objective function whose
 input is  a single real number  factor $x_1 \in  [0,1]$. Each of the  six panels
 represents an experiment  where we fit a linear model  to a limited experimental
 budget of two observations of $f$, represented by blue points.  Hollow points in
@@ -12046,9 +12046,9 @@ confidence intervals  for the predictions  of our linear  model. We did  this in
 this example so  we can discuss the impact  of the choice of design  points in a
 single prediction, and we later look at an experiment with more measurements.
 
-The first  row of  Figure\nbsp{}[[fig:lineffect]] shows measurements  subject to
+The first  row of  Figure\nbsp{}[[fig:vareffect]] shows measurements  subject to
 small measurement error.   In these conditions we can produce  a fairly good fit
-regardless of how close we pick  our two experiments. This experiment with small
+regardless of how close we pick our two experiments.  This experiment with small
 noise reveals that the ``true'' shape of $f$ is linear, minimized by $x_1 = 0$.
 
 The  experiments in  the  second  row have  larger  measurement  error. In  real
@@ -12072,12 +12072,12 @@ in practice is to fit a linear model to the logarithm of the response.
 
 #+latex: \clearpage
 
-#+NAME: fig:lineffect
-#+CAPTION: Fitting linear models using only two measurements,
-#+CAPTION: in experimental settings with different properties
-#+CAPTION: of the error $\varepsilon$
-#+ATTR_LATEX: :placement [h] :width .9\textwidth
-[[./img/experimental_design/lin_effects.pdf]]
+# #+NAME: fig:lineffect
+# #+CAPTION: Fitting linear models using only two measurements,
+# #+CAPTION: in experimental settings with different properties
+# #+CAPTION: of the error $\varepsilon$
+# #+ATTR_LATEX: :placement [h] :width .9\textwidth
+# [[./img/experimental_design/lin_effects.pdf]]
 
 #+NAME: fig:vareffect
 #+CAPTION: Fitting linear models using 30 distinct random sets of

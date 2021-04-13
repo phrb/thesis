@@ -9298,49 +9298,47 @@ surrogates
   \justify
 #+end_export
 
-La fin de  la loi de Moore et  l'effondrement de la mise à  l'échelle de Dennard
-signifient  que l'augmentation  de  la complexité  du  matériel informatique  et
-l'optimisation  efficace   de  code  sont  indispensables   pour  maintenir  les
-améliorations   exponentielles  des   performances   des  dernières   décennies.
-L'optimisation  manuelle de  code n'est  pas adaptée  au nombre  considérable de
-configurations de nombreux problèmes d'optimisation de code, mais en plaçant ces
-problèmes dans  les cadres  d'optimisation et  d'apprentissage, il  est possible
-d'appliquer des méthodes  issues de ces domaines  pour optimiser automatiquement
-les  performances  des codes,  un  processus  appelé autotuning.   Les  méthodes
-d'autotuning   couramment  utilisées   sont  soit   peu  propices   à  l'analyse
-statistique,  comme les  algorithmes génétiques,  soit dépendantes  d'hypothèses
-restrictives sur  l'espace de  recherche cible, comme  la Descente  de Gradient.
-Dans  cette thèse,  nous développons  et évaluons  la performance  d'une méthode
-d'autotuning basée sur  le plan d'expériences, une branche  des statistiques qui
-n'est  pas  largement  étudiée  ou  appliquée dans  le  contexte  des  problèmes
-d'autotuning,  et qui  aide à  la production  parcimonieuse et  interprétable de
-modèles précis.
+La fin de la loi de Moore et de la loi de Dennard entrainent une augmentation de
+la complexité du matériel informatique qui implique d'adapter et d'optimiser les
+codes scientifiques très régulièrement. Une  optimisation manuelle de code n'est
+pas  adaptée en  raison du  nombre considérable  de configurations,  mais en  se
+plaçant dans le  cadre de l'optimisation mathématique et  de l'apprentissage, il
+est  possible d'appliquer  des méthodes  issues de  ces domaines  pour optimiser
+automatiquement les  performances des  codes scientifiques, un  processus appelé
+autotuning.   Cependant, les  méthodes  d'autotuning  couramment utilisées  sont
+souvent peu propices à l'analyse  statistique, comme les algorithmes génétiques,
+ce qui rend  leur résultat difficile à interpréter,  ou dépendantes d'hypothèses
+restrictives sur  l'espace de recherche, comme  la descente de gradient,  ce qui
+peut conduire à des solutions sous-optimales. Dans cette thèse, nous développons
+et  évaluons  la performance  d'une  méthode  d'autotuning utilisant  des  plans
+d'expériences, une branche  des statistiques qui a encore été  peu utilisée dans
+ce contexte,  et qui a pour  objectif de produire des  modèles interprétables et
+précis tout en restant parcimonieux sur le plan expérimental.
 
-Nous présentons une série de descriptions et de discussions de diverses méthodes
-d'optimisation,  du  point de  vue  de  l'optimisation des  performances.   Nous
-décrivons des  méthodes dans les  domaines de  la minimisation de  fonctions, de
-l'optimisation  par  modèles  de  substitution,  du  plan  d'expériences  et  de
-l'apprentissage  en ligne,  en  nous  concentrant sur  les  propriétés les  plus
-importantes pour leur applicabilité aux problèmes d'autotuning. Nous cherchons à
-souligner que la recherche d'un  équilibre entre l'exploitation et l'exploration
-est implicite  dans l'approche  séquentielle du  plan d'expériences,  et devient
-centrale lors  de l'optimisation  d'un espace  de recherche  pour lequel  il est
-difficile de formuler des hypothèses.
+Cette   thése   commence  par   une   présentation   des  principales   méthodes
+d'optimisation et d'apprentissage. Nous décrivons en particulier les principales
+heuristiques issues de l'optimisation mathématique, les méthodes de modélisation
+statistique paramétriques  et non  paramétriques ainsi  que comment  ces modèles
+peuvent  être   utilisés  pour   minimiser  une  fonction   inconnue  (surrogate
+optimization), puis nous expliquons en quoi les techniques de plan d'expériences
+permettent de contrôler le compromis entre  le budget expérimental et la qualité
+du modèle, et enfin, nous faisons le lien avec les techniques d'apprentissage en
+ligne, en nous concentrant sur  les propriétés les plus importantes (parcimonie,
+incrémentalité,  confiance,   robustesse,  ...)  pour  leur   applicabilité  aux
+problèmes d'autotuning.
 
 La principale  contribution de cette  thèse est le développement  d'une approche
-d'autotuning transparente et parcimonieuse basée  sur le plan d'expériences, que
-nous appliquons à  divers problèmes tels que l'optimisation  de la configuration
-des noyaux  GPU et CPU  et la  quantization de bits  à précision mixte  pour les
-réseaux  neuronaux.  Nous  présentons aussi  une série  d'évaluations empiriques
-d'autres méthodes, sur  des problèmes d'autotuning issus  de différents domaines
-du calcul  haute performance,  comme par exemple  des heuristiques  de recherche
-coordonnées  par un  algorithme de  bandit  pour optimiser  la configuration  de
-compilateurs  pour plusieurs  noyaux  GPU  et FPGA.   Bien  que  il n'était  pas
-possible de détecter  et d'exploiter la structure de l'espace  de recherche dans
-certains  scénarios expérimentaux,  quelle  que soit  la  méthode choisie,  nous
-démontrons comment  les méthodes d'autotuning  basées sur le  plan d'expériences
-peuvent  contribuer  à  une  optimisation de  code  interprétable,  efficace  et
-effective.
+d'autotuning  transparente et  parcimonieuse basée  sur les  plan d'expériences.
+Nous appliquons cette approche à différents problèmes comme l'optimisation de la
+configuration  de noyaux  GPU  et  CPU, et  la  discrétisation  de la  précision
+numérique dans  des réseaux de  neurones. Nous évaluons  également empiriquement
+d'autres méthodes (par exemple des  heuristiques de recherche coordonnées par un
+algorithme  de bandit)  sur  des problèmes  d'optimisation  de configuration  de
+compilateurs pour des noyaux de calcul sur GPU et sur FPGA.  Même s'il n'est pas
+possible de  détecter et d'exploiter  la structure  de l'espace de  recherche en
+toute généralité, nous montrons comment les méthodes d'autotuning basées sur des
+plans d'expériences peuvent permettre de réaliser  une optimisation de code à la
+fois interprétable, efficace et peu coûteuse sur le plan expérimental.
 
 #+begin_export latex
 

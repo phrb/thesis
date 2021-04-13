@@ -12064,7 +12064,6 @@ points. Heteroscedastic  error can  be produced in  real conditions  by resource
 management overhead, for example,  and the simplest way to try  and deal with it
 in practice is to fit a linear model to the logarithm of the response.
 
-#+latex: \todo[inline]{Remove Figure 6.1, (6.2?)}
 #+latex: \todo[inline]{Add annotation with determinant to  6.3}
 #+latex: \todo[inline]{Add true line, CI to 6.2?}
 
@@ -16677,6 +16676,8 @@ of existing  relationships between program  parameters and performance.   We can
 derive autotuning methods from well-established  statistics, although, as is the
 case for Design of  Experiments methods, their usage is not  always common in or
 standardized for autotuning domains.
+
+#+latex: \todo[inline]{make collaboration contexts more clear}
 
 We  introduced   the  autotuning  problem   in  Chapter\nbsp{}\ref{chap:trends},
 presenting an overview of recent work from the point of view of the dimension of

@@ -11989,17 +11989,17 @@ improving model fits, or minimizing the objective function.
 
 This  chapter   presents  some   elements  of   Design  of   Experiments  (DoE).
 Complementing the  learning methods  we discussed in  the previous  chapter, DoE
-methods  enable  choosing  the  experiments  on  a  design  matrix  $\mathbf{X}$
+methods enable choosing the experiments included on a design matrix $\mathbf{X}$
 according to  different needs and  criteria.  A well-constructed  design enables
 testing hypotheses  about the  objective function,  which can  lead either  to a
 useful model or to a set of questions to ask and hypotheses to test.
 
 This  chapter   is  organized  as   follows.   Section\nbsp{}\ref{sec:factorial}
-introduces  key  concepts and  presents  2-level  Full and  Fractional  designs.
-Section\nbsp{}\ref{sec:screening} presents  Screening designs, an  efficient way
-to  detect linear  effects.   Section\nbsp{}\ref{sec:optimal} discusses  Optimal
-Designs,  which   enable  constructing   efficient  designs  for   more  complex
-hypotheses.   Section\nbsp{}\ref{sec:filling}  presents  Space-filling  designs,
+introduces  key  concepts and  presents  2-level  full and  fractional  designs.
+Section\nbsp{}\ref{sec:screening} presents  screening designs, an  efficient way
+to  detect  linear  effects.  Section\nbsp{}\ref{sec:optimal}  presents  Optimal
+Design,  which   enables  constructing   efficient  designs  for   more  complex
+hypotheses.   Section\nbsp{}\ref{sec:filling}  presents  space-filling  designs,
 useful  for  search  space  exploration   and  more  complex  learning  methods.
 Section\nbsp{}\ref{sec:comparing}  compares different  sampling strategies,  and
 Section\nbsp{}\ref{sec:summary-ed} summarizes  the discussion and  concludes the

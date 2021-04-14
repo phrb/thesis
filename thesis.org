@@ -12095,7 +12095,7 @@ In general, picking  far-apart points will help estimating  linear effects. This
 principle keeps working in higher-dimension search spaces, and is the motivation
 for 2-level full factorial designs. The first step to construct such a design is
 to choose extreme /levels/  for each of the $p$ factors, as we  did in the right
-column  of  Figure\nbsp{}[[fig:lineffect]],  and  then  /encode/  these  levels,
+column  of  Figure\nbsp{}[[fig:vareffect]],  and  then  /encode/  these  levels,
 mapping their original values to the $[-1, 1]$ interval.  The design is produced
 by listing all $2^{p}$ combinations of factor levels.
 

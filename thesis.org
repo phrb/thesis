@@ -13279,6 +13279,10 @@ the chapter.
   and Neural Nets
 
 *** Expected Improvement for Gaussian Process Regression
+:PROPERTIES:
+:CUSTOM_ID: sec:expected
+:END:
+
 - Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
   Model (LinUCB)
 

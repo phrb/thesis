@@ -9236,27 +9236,27 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 The  end  of Moore's  Law  and  the breakdown  of  Dennard's  scaling mean  that
 increasing hardware complexity and optimizing code efficiently are indispensable
 to maintain the exponential performance  improvements of the past decades.  Hand
-optimizing code  is not suited  for the sheer  number of configurations  of many
-code optimization  problems, but  fitting these  problems into  the mathematical
+optimizing code is not suited to the sheer number of configurations of many code
+optimization  problems,  but  fitting   these  problems  into  the  mathematical
 optimization and learning frameworks enables applying methods from these domains
 to automatically  optimize code  for performance,  a process  called autotuning.
 Commonly  used  autotuning  methods  are either  not  conducive  to  statistical
 analysis, such as genetic algorithms, or reliant on restrictive hypotheses about
-the target  search space, such as  Gradient Descent.  In this  thesis we develop
+the target  search space, such as  gradient descent.  In this  thesis we develop
 and evaluate  the performance  of an  autotuning method based  on the  Design of
 Experiments, a  branch of statistics  that is not  widely studied or  applied in
 autotuning  problems,  and   which  aids  in  the   parsimonious  production  of
 statistically interpretable and accurate surrogate models.
 
 We  present a  series of  descriptions and  discussions of  various optimization
-methods, from the  perspective of performance tuning.  We  describe methods from
-domains  of  function  minimization,  surrogate-based  optimization,  Design  of
-Experiments,  and online  learning, focusing  on  the properties  that are  most
-relevant for  their applicability to autotuning  problems. We seek to  point out
-that finding a balance between exploitation  and exploration is left implicit in
-the  sequential  Design  of  Experiments  approach,  and  becomes  central  when
-performing optimization on a search space for which devising modeling hypotheses
-is hard.
+methods, from  the perspective  of performance  tuning.  We  describe heuristics
+from  mathematical optimization,  and parametric  and nonparametric  statistical
+modeling methods, describing how these surrogate  models can be used to minimize
+an unknown  function.  We  then discuss  how the  Design of  Experiments enables
+managing  the   compromise  between  experimental  budget   and  model  quality,
+establishing  a  link  with  Online Learning  methods,  focusing  on  parsimony,
+progressive model improvement, uncertainty,  and robustness, the properties that
+are most relevant for a method's applicability to autotuning problems.
 
 The key  contribution of  this thesis  is the development  of a  transparent and
 parsimonious autotuning  approach based on  the Design of Experiments,  which we

@@ -13265,6 +13265,19 @@ the chapter.
 - UCB
 - Exp3?
 
+*** Reinforcement Learning
+:PROPERTIES:
+:CUSTOM_ID: sec:reinforcement
+:END:
+
+- Markov Decision Processes
+
+- "Deep" RL
+- Actor-critic model
+
+- Main motivation for adding this section  was to contextualize results with GPR
+  and Neural Nets
+
 *** Expected Improvement for Gaussian Process Regression
 - Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
   Model (LinUCB)

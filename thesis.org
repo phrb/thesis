@@ -13277,8 +13277,8 @@ obtained  rewards  over time.   In  this  section  we  assume that  rewards  are
 independent and static  over time, although general MAB solutions  can deal with
 dynamic rewards\nbsp{}\cite{auer2019adaptively}.
 
-/Bernoulli/ bandits are a special MAB case when rewards for each of the $k$ arms
-are independent Bernoulli  random variables, giving a reward $R_{t,i}  = 1$ with
+Bernoulli bandits are a  special case when rewards for each of  the $k$ arms are
+independent  Bernoulli random  variables, giving  a  reward $R_{t,i}  = 1$  with
 unknown  probabilities   $P  =   {p_1,\dots,p_k}$,  and   $R_{t,i}  =   0$  with
 complementary probabilities.  In this problem the  best reward sum we can expect
 over a period  with $T$ instants is $p_{\ast}T$, corresponding  to always making
@@ -13305,8 +13305,8 @@ $1 - \epsilon$ and a random action  with probability $\epsilon$. The regret as a
 function of time, as described in Equation\nbsp{}\ref{eq:regret}, grows linearly
 for these policies.
 
-These approaches typically do not explore enough, in the sense that they tend to
-always  favor the  action  with  the highest  observed  mean  reward. The  Upper
+These approaches  are not guaranteed to  explore enough, in the  sense that they
+tend to always favor the action with the highest observed mean reward. The Upper
 Confidence Bound (UCB) algorithm\nbsp{}\cite{auer2002using,auer2010ucb} includes
 the confidence interval of the observed reward for each action as a component to
 decide which choice to make.  At each interval, the algorithm chooses the action
@@ -13316,6 +13316,14 @@ allowing for more exploration at the  initial stages of optimization, when there
 is little knowledge  about the underlying reward distributions,  and pushing for
 more exploitation of the best actions later on, when confidence intervals should
 be narrower.
+
+Algorithms for the MAB problem model  choices over time and balance exploitation
+and  exploration  directly.   Although  they   have  been  used  to  manage  the
+distribution  of the  experimental budget  between optimization  methods in  the
+OpenTuner  framework,  they  are  not   necessarily  the  best  fit  for  direct
+application  to autotuning  problems, since  the best  factor level  choices are
+typically interdependent, and  must be done at the same  time, before running an
+experiment.
 
 *** Reinforcement Learning
 :PROPERTIES:

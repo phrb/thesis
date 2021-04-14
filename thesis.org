@@ -13254,6 +13254,9 @@ Section\nbsp{}\ref{sec:online-summary} summarizes  the discussion  and concludes
 the chapter.
 
 *** Independent Bandits
+:PROPERTIES:
+:CUSTOM_ID: sec:bandits
+:END:
 - simple (discrete choice, optimize $regret = \sum_t R_t$)
 
 - Bernoulli bandits

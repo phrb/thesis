@@ -9374,14 +9374,15 @@ problemas  de autotuning,  e que  auxilia  na produção  parcimoniosa de  model
 precisos e interpretáveis.
 
 Apresentamos  uma  série  de  descrições  e  discussões  de  vários  métodos  de
-otimização,  a partir  da perspectiva  do autotuning.   Descrevemos métodos  dos
-domínios de minimização  de funções, otimização baseada  em modelos substitutos,
-Desenho de Experimentos e aprendizagem online, nos concentrando nas propriedades
-mais relevantes  para a  aplicabilidade a  problemas de  autotuning.  Procuramos
-ressaltar que  a busca por  um equilíbrio  entre explorar novas  configurações e
-aproveitar  relações já  conhecidas está  implícita na  abordagem sequencial  de
-Desenho  de Experimentos,  e se  torna central  ao realizar  a otimização  em um
-espaço de busca para o qual a elaboração de hipóteses de modelagem é difícil.
+otimização,  a partir  da  perspectiva do  autotuning.  Descrevemos  heurísticas
+provenientes do  campo da  otimização matemática, e  métodos paramétricos  e não
+paramétricos para  modelagem estatística,  descrevendo como esses  modelos podem
+ser usados  para otimizar uma  função não conhecida  (/surrogate optimization/).
+Discutimos  também  como  a  metodologia  do  Desenho  de  Experimentos  permite
+balancear o  compromisso entre custo  experimental e  qualidade de um  modelo, e
+estabelecemos uma ligação com métodos de aprendizagem /online/, nos concentrando
+nos  conceitos  de  parcimônia,  incrementalidade, incerteza,  e  robusteza,  as
+propriedades mais relevantes para a aplicabilidade a problemas de autotuning.
 
 A  contribuição  principal desta  tese  é  o  desenvolvimento de  uma  abordagem
 transparente e parcimoniosa para autotuning, baseada no Desenho de Experimentos,

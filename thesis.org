@@ -9298,7 +9298,7 @@ surrogates
   \justify
 #+end_export
 
-La fin de la loi de Moore et de la loi de Dennard entrainent une augmentation de
+La fin de la loi de Moore et de la loi de Dennard entraînent une augmentation de
 la complexité du matériel informatique qui implique d'adapter et d'optimiser les
 codes scientifiques très régulièrement. Une  optimisation manuelle de code n'est
 pas  adaptée en  raison du  nombre considérable  de configurations,  mais en  se
@@ -9315,17 +9315,17 @@ d'expériences, une branche  des statistiques qui a encore été  peu utilisée 
 ce contexte,  et qui a pour  objectif de produire des  modèles interprétables et
 précis tout en restant parcimonieux sur le plan expérimental.
 
-Cette   thése   commence  par   une   présentation   des  principales   méthodes
+Cette   thèse   commence  par   une   présentation   des  principales   méthodes
 d'optimisation et d'apprentissage. Nous décrivons en particulier les principales
 heuristiques issues de l'optimisation mathématique, les méthodes de modélisation
 statistique paramétriques  et non  paramétriques ainsi  que comment  ces modèles
-peuvent  être   utilisés  pour   minimiser  une  fonction   inconnue  (surrogate
-optimization), puis nous expliquons en quoi les techniques de plan d'expériences
-permettent de contrôler le compromis entre  le budget expérimental et la qualité
-du modèle, et enfin, nous faisons le lien avec les techniques d'apprentissage en
-ligne, en nous concentrant sur  les propriétés les plus importantes (parcimonie,
-incrémentalité,  confiance,   robustesse,  ...)  pour  leur   applicabilité  aux
-problèmes d'autotuning.
+peuvent  être   utilisés  pour  minimiser  une   fonction  inconnue  (/surrogate
+optimization/),  puis   nous  expliquons   en  quoi   les  techniques   de  plan
+d'expériences permettent de contrôler le  compromis entre le budget expérimental
+et la  qualité du  modèle, et enfin,  nous faisons le  lien avec  les techniques
+d'apprentissage  en ligne,  en  nous  concentrant sur  les  propriétés les  plus
+importantes  (parcimonie, transparence,  incrémentalité, confiance,  robustesse)
+pour leur applicabilité aux problèmes d'autotuning.
 
 La principale  contribution de cette  thèse est le développement  d'une approche
 d'autotuning  transparente et  parcimonieuse basée  sur les  plan d'expériences.
@@ -9338,7 +9338,7 @@ compilateurs pour des noyaux de calcul sur GPU et sur FPGA.  Même s'il n'est pa
 possible de  détecter et d'exploiter  la structure  de l'espace de  recherche en
 toute généralité, nous montrons comment les méthodes d'autotuning basées sur des
 plans d'expériences peuvent permettre de réaliser  une optimisation de code à la
-fois interprétable, efficace et peu coûteuse sur le plan expérimental.
+fois interprétable, efficace, et peu coûteuse sur le plan expérimental.
 
 #+begin_export latex
 

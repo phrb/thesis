@@ -13222,15 +13222,36 @@ relationships and exploring unknown regions of the search space.
 :PROPERTIES:
 :CUSTOM_ID: chap:online
 :END:
-#+begin_export latex
-\todo[inline]{TODO: Fill in the sketched section below}
-#+end_export
 
-- Link sampling  strategies and model  checking, discussed previously,  with the
-  concept of exploration
+The methods described in the previous  chapters assumed either that the data was
+a fixed  and given  experimental set  $\mathbf{X}$, or  that we  could carefully
+design  $\mathbf{X}$, and  then run  all experiments,  in order  to improve  the
+quality  of fit  of our  models. For  the purposes  of the  expositions on  this
+thesis,  /Online   Learning/  methods  can   be  understood  as   strategies  to
+progressively  decide  which experiments  should  be  performed next,  based  on
+uncertainty  regarding the  search  space, modeled  using previous  experimental
+data.
 
-- Link  optimizing mode  accuracy  and  finding best  predicted  value with  the
-  concept of exploitation
+The different  sampling strategies  we discussed  in Chapter\nbsp{}\ref{chap:ed}
+can be effectively  used for improving the  quality of fit of  linear models and
+other surrogates,  by efficiently covering  the search space  with space-filling
+designs or targeted sampling to check  the significance of a modeling hypothesis
+with optimal design.  These approaches  /explore/ search spaces, seeking to find
+out significant  relationships between factors and  response, building surrogate
+models that  can aid  in optimization.   In our  DoE approach,  this exploration
+stage  is  clearly separated  from  the  subsequent  attempts to  /exploit/  the
+identified relationships, where we are  concerned about improving model accuracy
+by  fitting  a  smaller  model   with  significant  factors,  finding  the  best
+prediction, and restricting the search space of interest.
+
+This chapter will present three approaches that explicitly model uncertainty and
+attempt to mix  and balance the exploration and exploitation  steps. The chapter
+is organized  as follows.  Section\nbsp{}\ref{sec:bandits}  presents independent
+bandit algorithms, Section\nbsp{}\ref{sec:reinforcement}, presents Reinforcement
+Learning, and Section\nbsp{}\ref{sec:expected} presents Expected Improvement, an
+acquisition     function    used     with    Gaussian     Process    regression.
+Section\nbsp{}\ref{sec:online-summary} summarizes  the discussion  and concludes
+the chapter.
 
 *** Independent Bandits
 - simple (discrete choice, optimize $regret = \sum_t R_t$)

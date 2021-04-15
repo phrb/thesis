@@ -13259,71 +13259,101 @@ the chapter.
 :END:
 
 The multi-armed bandit (MAB) problem consists  of choosing a sequence of actions
-that  maximizes  the sum  of  the  rewards obtained  over  a  time period.   The
+that  maximizes the  cumulative rewards  obtained over  a period  of time.   The
 OpenTuner\nbsp{}\cite{ansel2014opentuner} framework  provides an example  in the
 autotuning context, where actions are choices  of search heuristics to run for a
 small number of iterations, and the rewards  are computed as the number of times
-a configuration  that improves  performance was found  by the  chosen heuristic.
+a configuration that improves performance was  found by the chosen heuristic, in
+a sliding time window.
+
+In this  section we assume  that rewards are  independent and static  over time,
+although     general     MAB     solutions     can     deal     with     dynamic
+rewards\nbsp{}\cite{auer2019adaptively,auer2002nonstochastic,seldin2013evaluation}.
+This  assumption is  arguably  violated in  the  OpenTuner application  because,
+although the optimizations  performed by each heuristic could  be independent if
+there was  no communication  between them,  the results  an heuristic  finds are
+typically  dependent  on the  previous  regions  of  the  search space  that  it
+explored.  Additionally, the default configuration of the framework implements a
+centralized  manager that  shares  results between  heuristics  and maintains  a
+shared  global  best configuration.   Despite  that,  it  is still  possible  to
+implement and use a different strategy to share resources between heuristics.
+
 Choices made in expectation  of a reward can be compared  to pulling the levers,
 or arms, of slot machines in a casino, which was likely the analogy that lead to
-the MAB name.
-
-In a  discrete time  period with  $T$ instants,  a solution  to the  MAB problem
-provides at each  instant $t \in {1, \dots,  T}$ a choice $I_i$ from  a set with
-$k$ possible actions  $I_1,\dots,I_k$, leading to sequence  of rewards $R_{t,i}.
-A sequence of  actions for each instant can  be called a policy, and  we wish to
-find  policies, or  strategies  to  construct them,  that  maximize  the sum  of
-obtained  rewards  over time.   In  this  section  we  assume that  rewards  are
-independent and static  over time, although general MAB solutions  can deal with
-dynamic rewards\nbsp{}\cite{auer2019adaptively}.
+the MAB name.   In a discrete time  period with $T$ instants, a  solution to the
+MAB problem provides at each instant $t \in \{1, \dots, T\}$ a choice $I_i$ from
+a set with $k$ possible actions  $A_1,\dots,A_k$, leading to sequence of rewards
+$R_{t,I_i}$.  A sequence of actions for each instant can be called a policy, and
+we wish to find policies, or strategies to construct them, that maximize the sum
+of obtained rewards over time.
 
 Bernoulli bandits are a  special case when rewards for each of  the $k$ arms are
-independent  Bernoulli random  variables, giving  a  reward $R_{t,i}  = 1$  with
-unknown  probabilities   $P  =   {p_1,\dots,p_k}$,  and   $R_{t,i}  =   0$  with
-complementary probabilities.  In this problem the  best reward sum we can expect
-over a period  with $T$ instants is $p_{\ast}T$, corresponding  to always making
-the  choice that  gives  a reward  with the  highest  probability $p_{\ast}$  in
-$P$. In this context, we can write the expected regret of a policy as
+independent Bernoulli random variables with parameters $p_1,\dots,p_k$, giving a
+reward $R_{t,I_i}  = 1$ with  unknown probabilities  $p_i$, and $R_{t,I_i}  = 0$
+with complementary  probabilities.  In  this problem, if  we denote  $p^{\ast} =
+\text{max}_i\;p_i$, the best cumulative reward we  can expect over a period with
+$T$  instants is  $p^{\ast}T$, corresponding  to always  making the  choice that
+gives a reward with the highest  probability $p^{\ast}$ in $P$. In this context,
+we can write the expected regret of a policy as
 #+begin_export latex
 \begin{align}
   \label{eq:regret}
-  \text{Regret}(\mathcal{I}) = \mathbb{E}\left[p_{\ast}T -
+  \text{Regret}(\mathcal{I}) = \mathbb{E}\left[p^{\ast}T -
     \sum_{t = 1}^{T}R_{t,I_t}\right]\text{,}
 \end{align}
 #+end_export
-where $\mathcal{I}  = {I_1,\dots,I_T}$ is the  sequence of choices made  at each
+where $\mathcal{I}  = (I_1,\dots,I_T)$ is the  sequence of choices made  at each
 instant, and $R_{t,I_t}$ the reward  associated with each action. Minimizing the
 regret is similar to maximizing the sum of rewards, but incorporates information
 about the  best possible  policy.  Beyond problems  with Bernoulli  rewards, MAB
 solutions seek to minimize regret for any unknown reward distribution.
 
-Three simple  policies for choosing  an action at  instant $t$ are  exploring by
-uniformly choosing  a random action for  instant $t$, exploiting by  picking the
-action for which we observed the best  mean reward up to instant $t$, and mixing
-exploitation and exploration, by picking the best action so far with probability
-$1 - \epsilon$ and a random action  with probability $\epsilon$. The regret as a
-function of time, as described in Equation\nbsp{}\ref{eq:regret}, grows linearly
-for these policies.
+Three simple policies for choosing an action at instant $t$, with linear-growing
+regret as  a function of  time, as described  in Equation\nbsp{}\ref{eq:regret},
+are:
+
+1. *Exploring* by uniformly choosing a random action for instant $t$
+2. *Exploiting* by picking the action for which we observed the best mean reward
+   up to  instant $t$
+3. *Mixing exploitation and exploration*, by picking the best action so far with
+   probability $1 -  \epsilon$ and a random action  with probability $\epsilon$
 
 These approaches  are not guaranteed to  explore enough, in the  sense that they
-tend to always favor the action with the highest observed mean reward. The Upper
-Confidence Bound (UCB) algorithm\nbsp{}\cite{auer2002using,auer2010ucb} includes
-the confidence interval of the observed reward for each action as a component to
-decide which choice to make.  At each interval, the algorithm chooses the action
-for which the upper  bound of a confidence interval of a  specified level is the
-highest.  The confidence levels required should  increase as a function of time,
-allowing for more exploration at the  initial stages of optimization, when there
-is little knowledge  about the underlying reward distributions,  and pushing for
-more exploitation of the best actions later on, when confidence intervals should
-be narrower.
+tend to  always favor the  action with the  highest observed mean  reward, which
+could  lead to  suboptimal policies,  with strictly  positive probability.   The
+Upper  Confidence  Bound (UCB)  algorithm\nbsp{}\cite{auer2002using,auer2010ucb}
+includes the  confidence interval of  the observed reward  for each action  as a
+component  to decide  which choice  to make.   At each  interval, the  algorithm
+chooses the  action for  which the  upper bound  of a  confidence interval  of a
+specified level is the highest.   The confidence levels required should increase
+as a function  of time, resulting in  a greedy strategy which  exploits the best
+observed mean rewards  and explores, enforced by  increased thresholds, ensuring
+that   we  balance   exploitation   and  exploration   and  preventing   missing
+opportunities by concentrating on a suboptimal arm that produced good results by
+chance in the past.
 
 Algorithms for the MAB problem model  choices over time and balance exploitation
 and  exploration  directly.   Although  they   have  been  used  to  manage  the
 distribution  of the  experimental budget  between optimization  methods in  the
 OpenTuner  framework,  they  are  not   necessarily  the  best  fit  for  direct
-application  to autotuning  problems, since  the best  factor level  choices are
-typically interdependent, and  must be done at the same  time, before running an
-experiment.
+application to autotuning problems.
+
+One way to model an autotuning problem as a set of choices with distinct rewards
+would  require  including each  possible  configuration  as  an action,  with  a
+corresponding performance metric as a reward. It is not obvious how to model the
+regret, since the  global optimum is seldom known in  autotuning problems, but a
+reasonable baseline could  be used. In this  setting, we would have  to run many
+tests with  each configuration in order  to build a confidence  interval that we
+could leverage  Still, many configurations  would have to remain  unevaluated in
+high dimensional  search spaces,  but previous knowledge  of the  target problem
+could be used to reduce the number of configurations.
+
+Alternatively, a policy could consist in picking each factor level sequentially,
+considering  the levels  picked  for other  factors. This  lies  outside of  the
+hypothesis we have made for the MAB  problems in this section, since choices are
+not  independent.  This  model was  implemented using  a Reinforcement  Learning
+algorithm  in Wang  /et al./\nbsp{}\cite{wang2019haq},  where bit  precision was
+chosen for each of the sequentially connected layers of a neural network.
 
 *** Reinforcement Learning
 :PROPERTIES:

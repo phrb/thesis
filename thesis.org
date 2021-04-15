@@ -16494,8 +16494,8 @@ configuration in the backlog.
 **** Reinforcement Learning: The Baseline Method
 We reused  the Reinforcement Learning  (RL) /Python/ implementation  provided by
 the authors of the /HAQ/ paper\nbsp{}\cite{wang2019haq}.  Reinforcement Learning
-using  the /actor-critic/  model  was  discussed in  Section\nbsp{}[[Reinforcement
-Learning]],  and  the implementation  in  /HAQ/  employed additionally  the  /Deep
+using the  /actor-critic/ model  was discussed  in Section\nbsp{}[[Reinforcement
+Learning]],  and the  implementation in  /HAQ/ employed  additionally the  /Deep
 Deterministic     Policy     Gradient/     method     from     Lillicrap     /et
 al./\nbsp{}\cite{lillicrap2015continuous}.  The cumulative regret to minimize is
 the  distance  of  the  quantized   accuracy  from  the  initial  8-bit  uniform

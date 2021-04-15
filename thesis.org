@@ -13360,14 +13360,6 @@ chosen for each of the sequentially connected layers of a neural network.
 :CUSTOM_ID: sec:reinforcement
 :END:
 
-- Markov Decision Processes
-
-- "Deep" RL
-- Actor-critic model
-
-- Main motivation for adding this section  was to contextualize results with GPR
-  and Neural Nets
-
 *** Expected Improvement for Gaussian Process Regression
 :PROPERTIES:
 :CUSTOM_ID: sec:expected

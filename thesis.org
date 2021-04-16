@@ -13631,15 +13631,15 @@ Completing the specification of an MDP, the third function is the policy $\pi: S
 Figure\nbsp{}\ref{fig:mdp} shows an  example of an MDP with two  states and four
 actions.
 
-Regret can be modeled similarly to the  MAB example of the previous section, and
-the strategies we  briefly described for balancing  exploitation and exploration
-could in principle be applied to optimizing MDP policies. Optimal policies exist
-for  special   cases  when   an  MDP   has  a  finite   number  of   states  and
-actions\nbsp{}\cite{burnetas1997optimal}.   Other approaches  exist for  general
-cases which  adapt, among others,  the gradient-based and  function minimization
-methods we discuss in  Chapter\nbsp{}\ref{chap:funcmin} to an objective function
-that receives  a policy  and computes  the regret.   One of  these is  the /Deep
-Deterministic               Policy                Gradient/               (DDPG)
+Regret for RL algorithms can be modeled  in a similar fashion to the MAB example
+of the previous  section, and the strategies we briefly  described for balancing
+exploitation and  exploration could  in principle be  applied to  optimizing MDP
+policies. Optimal  policies exist  for special  cases when an  MDP has  a finite
+number of states and actions\nbsp{}\cite{burnetas1997optimal}.  Other approaches
+exist  for general  cases  which  adapt, among  others,  the gradient-based  and
+function minimization methods we  discuss in Chapter\nbsp{}\ref{chap:funcmin} to
+an objective  function that receives a  policy and computes the  regret.  One of
+these    is     the    /Deep     Deterministic    Policy     Gradient/    (DDPG)
 method\nbsp{}\cite{lillicrap2015continuous} used  in the  Reinforcement Learning
 method we use as a baseline in Chapter\nbsp{}\ref{chap:quantization}.
 

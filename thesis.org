@@ -13344,7 +13344,7 @@ corresponding performance metric as a reward. It is not obvious how to model the
 regret, since the  global optimum is seldom known in  autotuning problems, but a
 reasonable baseline could  be used. In this  setting, we would have  to run many
 tests with  each configuration in order  to build a confidence  interval that we
-could leverage  Still, many configurations  would have to remain  unevaluated in
+could leverage.  Still, many configurations  would have to remain unevaluated in
 high dimensional  search spaces,  but previous knowledge  of the  target problem
 could be used to reduce the number of configurations.
 
@@ -13395,11 +13395,11 @@ Regret can be modeled similarly to the  MAB example of the previous section, and
 the strategies we  briefly described for balancing  exploitation and exploration
 could in principle be applied to optimizing MDP policies. Optimal policies exist
 for  special   cases  when   an  MDP   has  a  finite   number  of   states  and
-actions\nbsp{}\cite{burnetas1997optimal},  general  other  approaches  exist  to
-optimize policies for  general cases that adapt the  gradient-based and function
-minimization  methods  we  discuss  in  Chapter\nbsp{}\ref{chap:funcmin}  to  an
-objective function that receives a policy and computes the regret.  One of these
-approaches    is   the    /Deep    Deterministic    Policy   Gradient/    (DDPG)
+actions\nbsp{}\cite{burnetas1997optimal}.   Other approaches  exist for  general
+cases which  adapt, among others,  the gradient-based and  function minimization
+methods we discuss in  Chapter\nbsp{}\ref{chap:funcmin} to an objective function
+that receives  a policy  and computes  the regret.   One of  these is  the /Deep
+Deterministic               Policy                Gradient/               (DDPG)
 method\nbsp{}\cite{lillicrap2015continuous} used  in the  Reinforcement Learning
 method we use as a baseline in Chapter\nbsp{}\ref{chap:quantization}.
 

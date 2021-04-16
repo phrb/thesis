@@ -6151,240 +6151,6 @@ p1 | p2 | p3
 #+RESULTS:
 [[file:./img/matern52_50d_fitting_noisy.pdf]]
 
-****** Probability of Improvement, EI
-******* Generating f(x)
-#+begin_SRC R :results output :session *R* :eval no-export :exports none
-library(dplyr)
-
-y <- function(x) {
-    (1.2 * sin(x)) + (1.3 * sin(x / 2)) +
-        (1.5 * sin(x / 4)) + (1.7 * sin(2 * x)) +
-        (0.08 * x ^ 2)
-}
-
-xs = seq(from = -10, to = 10, length.out = 300)
-df = data.frame(x = xs,
-                y = y(xs))
-
-write.csv(df, "data/online_learning/true_function.csv", row.names = FALSE)
-#+end_SRC
-
-#+RESULTS:
-
-******** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/online_learning/ei/true_function_test.pdf" :width 10 :height 10 :eval no-export
-library(ggplot2)
-library(dplyr)
-
-plot_df = read.csv("data/online_learning/true_function.csv")
-
-ggplot() +
-    geom_line(data = df,
-              aes(x = x,
-                  y = y))
-#+end_SRC
-
-#+RESULTS:
-[[file:./img/online_learning/ei/true_function_test.pdf]]
-
-******* Fitting a GP
-#+begin_SRC R :results output :session *R* :eval no-export :exports none
-library(ggplot2)
-library(dplyr)
-library(DiceKriging)
-library(DiceOptim)
-
-df = read.csv("data/online_learning/true_function.csv")
-
-gpr_data = df %>% sample_n(size = 4)
-
-reg = km(design = gpr_data %>% select(-y),
-          response = gpr_data$y)
-
-pred = predict(reg, newdata = df$x, "UK")
-
-pred_df = df
-
-pred_df$true_y = df$y
-pred_df$y = pred$mean
-pred_df$ymin = pred$lower95
-pred_df$ymax = pred$upper95
-pred_df$ei = apply(df %>% select(x), 1, EI, reg)
-
-write.csv(gpr_data, "data/online_learning/gp_design.csv", row.names = FALSE)
-write.csv(pred_df, "data/online_learning/gp_pred_ei.csv", row.names = FALSE)
-#+end_SRC
-
-#+RESULTS:
-#+begin_example
-
-optimisation start
-------------------
-,* estimation method   : MLE
-,* optimisation method : BFGS
-,* analytical gradient : used
-,* trend model : ~1
-,* covariance model :
-  - type :  matern5_2
-  - nugget : NO
-  - parameters lower bounds :  1e-10
-  - parameters upper bounds :  26.88963
-  - best initial criterion value(s) :  -10.40504
-
-N = 1, M = 5 machine precision = 2.22045e-16
-At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       10.405  |proj g|=     0.018836
-At iterate     1  f =       10.405  |proj g|=      0.015709
-At iterate     2  f =       10.404  |proj g|=    0.00079995
-At iterate     3  f =       10.404  |proj g|=    2.6014e-05
-At iterate     4  f =       10.404  |proj g|=    3.4573e-08
-
-iterations 4
-function evaluations 5
-segments explored during Cauchy searches 4
-BFGS updates skipped 0
-active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 3.45733e-08
-final function value 10.404
-
-F = 10.404
-final  value 10.404000
-converged
-Warning message:
-In checkNames(X1 = X, X2 = newdata, X1.name = "the design", X2.name = "newdata") :
-  newdata not named: newdata's variables are inherited from the design
-#+end_example
-
-******* Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/online_learning/ei/gp_ei.pdf" :width 15 :height 9 :eval no-export :exports none
-library(ggplot2)
-library(dplyr)
-library(paletteer)
-library(latex2exp)
-
-colors = paletteer_d(palette = "RColorBrewer::Set1", n = 5)
-
-gpr_data = read.csv("data/online_learning/gp_design.csv")
-pred_df = read.csv("data/online_learning/gp_pred_ei.csv")
-
-dashed_vline_size = 1.4
-label_size = 9.4
-label_vjust = -0.3
-label_hjust = 1
-label_y = 16
-
-true_color = 1
-mu_color = 2
-ei_color = 5
-sd_color = 4
-d_color = 3
-
-ggplot(data = gpr_data,
-       aes(x = x,
-           y = y)) +
-    geom_line(data = pred_df,
-              size = 2,
-              color = colors[[true_color]],
-              aes(x = x,
-                  y = true_y)) +
-    geom_ribbon(data = pred_df,
-                fill = colors[[sd_color]],
-                linetype = 1,
-                aes(x = x,
-                    ymin = ymin,
-                    ymax = ymax),
-                alpha = 0.18) +
-    geom_line(data = pred_df,
-              size = 2.3,
-              color = colors[[mu_color]]) +
-    geom_point(stroke = 3,
-               shape = 16,
-               size = 6,
-               color = colors[[d_color]]) +
-    geom_vline(data = filter(pred_df,
-                             ei == max(ei)),
-               size = dashed_vline_size,
-               linetype = 2,
-               color = colors[[ei_color]],
-               aes(xintercept = x)) +
-    geom_text(data = filter(pred_df,
-                            ei == max(ei)),
-              aes(y = label_y),
-              size = label_size,
-              angle = 90,
-              color = colors[[ei_color]],
-              vjust = label_vjust,
-              hjust = label_hjust,
-              label = TeX("$min_{\\mathbf{x}}\\,EI(\\mathbf{x})$")) +
-    geom_vline(data = filter(pred_df,
-                             ymin == min(ymin)),
-               size = dashed_vline_size,
-               linetype = 2,
-               color = colors[[sd_color]],
-               aes(xintercept = x - 0.3)) +
-    geom_text(data = filter(pred_df,
-                             ymin == min(ymin)),
-              aes(y = label_y,
-                  x = x - 0.3),
-              size = label_size,
-              angle = 90,
-              color = colors[[sd_color]],
-              vjust = label_vjust,
-              hjust = label_hjust,
-              label = TeX(paste("$min_{\\mathbf{x}}\\,",
-                                "\\hat{\\mu}(\\mathbf{x}) - \\alpha",
-                                "\\hat{\\sigma}(\\mathbf{x})$",
-                                sep = ""))) +
-    geom_vline(data = filter(pred_df,
-                             y == min(y)),
-               size = dashed_vline_size,
-               linetype = 2,
-               color = colors[[mu_color]],
-               aes(xintercept = x)) +
-    geom_text(data = filter(pred_df,
-                             y == min(y)),
-              aes(y = label_y),
-              size = label_size,
-              angle = 90,
-              color = colors[[mu_color]],
-              vjust = label_vjust,
-              hjust = label_hjust,
-              label = TeX(paste("$min_{\\mathbf{x}}\\,",
-                                "\\hat{\\mu}(\\mathbf{x})$",
-                                sep = ""))) +
-    geom_vline(data = filter(pred_df,
-                             true_y == min(true_y)),
-               size = dashed_vline_size,
-               linetype = 2,
-               color = colors[[true_color]],
-               aes(xintercept = x)) +
-    geom_text(data = filter(pred_df,
-                             true_y == min(true_y)),
-              aes(y = label_y),
-              size = label_size,
-              angle = 90,
-              color = colors[[true_color]],
-              vjust = label_vjust,
-              hjust = label_hjust,
-              label = TeX(paste("$min_{\\mathbf{x}}\\,",
-                                "f(\\mathbf{x})$",
-                                sep = ""))) +
-    xlab(TeX("$\\mathbf{x}$")) +
-    ylab(TeX("$f(\\mathbf{x}$)")) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0.02, 0.02)) +
-    theme_bw(base_size = 28) +
-    theme(legend.title = element_blank(),
-          axis.ticks = element_blank(),
-          axis.text = element_blank(),
-          legend.background = element_rect(fill = "transparent"),
-          legend.position = c(0.22, 0.82),
-          panel.grid = element_blank())
-#+end_SRC
-
-#+RESULTS:
-[[file:./img/online_learning/ei/gp_ei.pdf]]
-
 ****** Old
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
@@ -8986,6 +8752,241 @@ p_noise
 
 #+RESULTS:
 [[file:./img/experimental_design/booth_descent_gradient_sampling.pdf]]
+
+*** Online Learning
+**** Probability of Improvement, EI
+***** Generating f(x)
+#+begin_SRC R :results output :session *R* :eval no-export :exports none
+library(dplyr)
+
+y <- function(x) {
+    (1.2 * sin(x)) + (1.3 * sin(x / 2)) +
+        (1.5 * sin(x / 4)) + (1.7 * sin(2 * x)) +
+        (0.08 * x ^ 2)
+}
+
+xs = seq(from = -10, to = 10, length.out = 300)
+df = data.frame(x = xs,
+                y = y(xs))
+
+write.csv(df, "data/online_learning/true_function.csv", row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+
+****** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/online_learning/ei/true_function_test.pdf" :width 10 :height 10 :eval no-export
+library(ggplot2)
+library(dplyr)
+
+plot_df = read.csv("data/online_learning/true_function.csv")
+
+ggplot() +
+    geom_line(data = df,
+              aes(x = x,
+                  y = y))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/online_learning/ei/true_function_test.pdf]]
+
+***** Fitting a GP
+#+begin_SRC R :results output :session *R* :eval no-export :exports none
+library(ggplot2)
+library(dplyr)
+library(DiceKriging)
+library(DiceOptim)
+
+df = read.csv("data/online_learning/true_function.csv")
+
+gpr_data = df %>% sample_n(size = 4)
+
+reg = km(design = gpr_data %>% select(-y),
+          response = gpr_data$y)
+
+pred = predict(reg, newdata = df$x, "UK")
+
+pred_df = df
+
+pred_df$true_y = df$y
+pred_df$y = pred$mean
+pred_df$ymin = pred$lower95
+pred_df$ymax = pred$upper95
+pred_df$ei = apply(df %>% select(x), 1, EI, reg)
+
+write.csv(gpr_data, "data/online_learning/gp_design.csv", row.names = FALSE)
+write.csv(pred_df, "data/online_learning/gp_pred_ei.csv", row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : NO
+  - parameters lower bounds :  1e-10
+  - parameters upper bounds :  26.88963
+  - best initial criterion value(s) :  -10.40504
+
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       10.405  |proj g|=     0.018836
+At iterate     1  f =       10.405  |proj g|=      0.015709
+At iterate     2  f =       10.404  |proj g|=    0.00079995
+At iterate     3  f =       10.404  |proj g|=    2.6014e-05
+At iterate     4  f =       10.404  |proj g|=    3.4573e-08
+
+iterations 4
+function evaluations 5
+segments explored during Cauchy searches 4
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 3.45733e-08
+final function value 10.404
+
+F = 10.404
+final  value 10.404000
+converged
+Warning message:
+In checkNames(X1 = X, X2 = newdata, X1.name = "the design", X2.name = "newdata") :
+  newdata not named: newdata's variables are inherited from the design
+#+end_example
+
+***** Plot
+#+begin_SRC R :results graphics output :session *R* :file "./img/online_learning/ei/gp_ei.pdf" :width 15 :height 9 :eval no-export :exports none
+library(ggplot2)
+library(dplyr)
+library(paletteer)
+library(latex2exp)
+
+colors = paletteer_d(palette = "RColorBrewer::Set1", n = 5)
+
+gpr_data = read.csv("data/online_learning/gp_design.csv")
+pred_df = read.csv("data/online_learning/gp_pred_ei.csv")
+
+dashed_vline_size = 1.4
+label_size = 9.4
+label_vjust = -0.3
+label_hjust = 1
+label_y = 16
+
+true_color = 1
+mu_color = 2
+ei_color = 5
+sd_color = 4
+d_color = 3
+
+ggplot(data = gpr_data,
+       aes(x = x,
+           y = y)) +
+    geom_line(data = pred_df,
+              size = 2,
+              color = colors[[true_color]],
+              aes(x = x,
+                  y = true_y)) +
+    geom_ribbon(data = pred_df,
+                fill = colors[[sd_color]],
+                linetype = 1,
+                aes(x = x,
+                    ymin = ymin,
+                    ymax = ymax),
+                alpha = 0.18) +
+    geom_line(data = pred_df,
+              size = 2.3,
+              color = colors[[mu_color]]) +
+    geom_point(stroke = 3,
+               shape = 16,
+               size = 6,
+               color = colors[[d_color]]) +
+    geom_vline(data = filter(pred_df,
+                             ei == max(ei)),
+               size = dashed_vline_size,
+               linetype = 2,
+               color = colors[[ei_color]],
+               aes(xintercept = x)) +
+    geom_text(data = filter(pred_df,
+                            ei == max(ei)),
+              aes(y = label_y),
+              size = label_size,
+              angle = 90,
+              color = colors[[ei_color]],
+              vjust = label_vjust,
+              hjust = label_hjust,
+              label = TeX("$max_{\\mathbf{x}}\\,EI(\\mathbf{x})$")) +
+    geom_vline(data = filter(pred_df,
+                             ymin == min(ymin)),
+               size = dashed_vline_size,
+               linetype = 2,
+               color = colors[[sd_color]],
+               aes(xintercept = x - 0.3)) +
+    geom_text(data = filter(pred_df,
+                             ymin == min(ymin)),
+              aes(y = label_y,
+                  x = x - 0.3),
+              size = label_size,
+              angle = 90,
+              color = colors[[sd_color]],
+              vjust = label_vjust,
+              hjust = label_hjust,
+              label = TeX(paste("$min_{\\mathbf{x}}\\,",
+                                "\\hat{\\mu}(\\mathbf{x}) - \\alpha",
+                                "\\hat{\\sigma}(\\mathbf{x})$",
+                                sep = ""))) +
+    geom_vline(data = filter(pred_df,
+                             y == min(y)),
+               size = dashed_vline_size,
+               linetype = 2,
+               color = colors[[mu_color]],
+               aes(xintercept = x)) +
+    geom_text(data = filter(pred_df,
+                             y == min(y)),
+              aes(y = label_y),
+              size = label_size,
+              angle = 90,
+              color = colors[[mu_color]],
+              vjust = label_vjust,
+              hjust = label_hjust,
+              label = TeX(paste("$min_{\\mathbf{x}}\\,",
+                                "\\hat{\\mu}(\\mathbf{x})$",
+                                sep = ""))) +
+    geom_vline(data = filter(pred_df,
+                             true_y == min(true_y)),
+               size = dashed_vline_size,
+               linetype = 2,
+               color = colors[[true_color]],
+               aes(xintercept = x)) +
+    geom_text(data = filter(pred_df,
+                             true_y == min(true_y)),
+              aes(y = label_y),
+              size = label_size,
+              angle = 90,
+              color = colors[[true_color]],
+              vjust = label_vjust,
+              hjust = label_hjust,
+              label = TeX(paste("$min_{\\mathbf{x}}\\,",
+                                "f(\\mathbf{x})$",
+                                sep = ""))) +
+    xlab(TeX("$\\mathbf{x}$")) +
+    ylab(TeX("$f(\\mathbf{x}$)")) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0.02, 0.02)) +
+    theme_bw(base_size = 28) +
+    theme(legend.title = element_blank(),
+          axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position = c(0.22, 0.82),
+          panel.grid = element_blank())
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/online_learning/ei/gp_ei.pdf]]
 
 *** Overview
 **** Complete Classification Tree for Function Minimization Methods

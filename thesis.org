@@ -6187,6 +6187,74 @@ ggplot() +
 #+RESULTS:
 [[file:./img/online_learning/ei/true_function_test.pdf]]
 
+******* Fitting a GP
+#+begin_SRC R :results output :session *R* :eval no-export :exports none
+library(ggplot2)
+library(dplyr)
+library(DiceKriging)
+library(DiceOptim)
+
+df = read.csv("data/online_learning/true_function.csv")
+
+gpr_data = df %>% sample_n(size = 4)
+
+reg = km(design = gpr_data %>% select(-y),
+          response = gpr_data$y)
+
+pred = predict(reg, newdata = df$x, "UK")
+
+pred_df = df
+
+pred_df$true_y = df$y
+pred_df$y = pred$mean
+pred_df$ymin = pred$lower95
+pred_df$ymax = pred$upper95
+pred_df$ei = apply(df %>% select(x), 1, EI, reg)
+
+write.csv(gpr_data, "data/online_learning/gp_design.csv", row.names = FALSE)
+write.csv(pred_df, "data/online_learning/gp_pred_ei.csv", row.names = FALSE)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : NO
+  - parameters lower bounds :  1e-10
+  - parameters upper bounds :  26.88963
+  - best initial criterion value(s) :  -10.40504
+
+N = 1, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       10.405  |proj g|=     0.018836
+At iterate     1  f =       10.405  |proj g|=      0.015709
+At iterate     2  f =       10.404  |proj g|=    0.00079995
+At iterate     3  f =       10.404  |proj g|=    2.6014e-05
+At iterate     4  f =       10.404  |proj g|=    3.4573e-08
+
+iterations 4
+function evaluations 5
+segments explored during Cauchy searches 4
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 3.45733e-08
+final function value 10.404
+
+F = 10.404
+final  value 10.404000
+converged
+Warning message:
+In checkNames(X1 = X, X2 = newdata, X1.name = "the design", X2.name = "newdata") :
+  newdata not named: newdata's variables are inherited from the design
+#+end_example
+
 ****** Old
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports results

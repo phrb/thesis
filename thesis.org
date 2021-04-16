@@ -11745,6 +11745,10 @@ Regression,  a  nonparametric approach  that  fits  a  model by  conditioning  a
 probability distribution over functions.
 
 *** Gaussian Process Regression
+:PROPERTIES:
+:CUSTOM_ID: sec:gpr
+:END:
+
 Similarly to the  surrogate model we built using linear  models, in this section
 we  will fit  a surrogate  $\hat{f}_{\theta}: \mathcal{X}  \to \mathbb{R}$  to a
 fixed experimental  design $\mathbf{X}$ and observations  $\mathbf{y}$.  We make

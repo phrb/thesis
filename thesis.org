@@ -13648,30 +13648,103 @@ method we use as a baseline in Chapter\nbsp{}\ref{chap:quantization}.
 :CUSTOM_ID: sec:expected
 :END:
 
-- Also mention GP-UCB and contrast with  EGO. There are also variants for Linear
-  Model (LinUCB)
+We end  this chapter with  a discussion on how  we can balance  exploitation and
+exploration in  Gaussian Process Regression,  deciding where to measure  next by
+computing the  /Expected Improvement/  (EI) of unobserved  points in  the search
+space.
 
-- (continuous choice, optimize $EI = \max_t R_t$)
-- RMS minimization, contour finding
-- Hybrid online learning?
-- Probability of Improvement
-- Expected Improvement
+Suppose  we have  fitted a  GP  surrogate model  to  a set  $\mathbf{X}$ with  4
+observations of  an objective function  $f$. Each experiment  is marked as  by a
+green point in Figure\nbsp{}[[fig:ei-gp]], with the  true $f$ marked in red.  As
+we  described in  Section\nbsp{}\ref{sec:gpr}, the  fitted surrogate  provides a
+vector  $\hat{\boldsymbol{\mu}}$ of  predicted means  for each  $f(\mathbf{x})$,
+represented   by    the   blue   line,   with    associated   variances   vector
+$\hat{\boldsymbol{\sigma}}^{2}$.   Prediction variances  are represented  by the
+shaded areas, and go to zero at each observation. To decide where to spend the
+next measurement, we could:
 
+1. *Explore* by choosing the $\mathbf{x}$ with the smallest lower bound of a 95%
+   confidence    interval    constructed     using    the    mean    predictions
+   $\hat{\boldsymbol{\mu}}$ and the variances $\hat{\boldsymbol{\sigma}}^{2}$
+2. *Exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
+   $\hat{\boldsymbol{\mu}}$
+3. *Mix exploitation and exploration* by either using a strategy like the UCB we
+   discussed  for MAB  problems, or  picking the  $\mathbf{x}$ with  the largest
+   Expected Improvement
 
 #+NAME: fig:ei-gp
 #+CAPTION: A Markov Decision Process with state set $S = \{S_1, S_2\}$,
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/online_learning/ei/gp_ei.pdf]]
 
+Figure\nbsp{}\ref{fig:ei-gp}  shows the  points  that would  be  picked by  each
+approach.   We see  that focusing  on  exploration is  the worst  choice in  our
+example, but it  is often the case for GP  surrogates, since predicted variances
+grow quickly the farther from the  observations we look. Exploiting by following
+the mean would produce the best point  in this example, but notice that we would
+measure a point  right next to a  previous observation, and we  would likely get
+trapped  in  a  nearby  local  minimum  if we  continued  betting  on  the  mean
+predictions.   The point  we would  evaluate by  following the  highest expected
+improvement  might  not  be  an   immediate  improvement  on  the  current  best
+observation, but it is the choice that will dynamically balance exploitation and
+exploration in the long run.
+
+The improvement brought by a new observation $f(\mathbf{x})$, in relation to our
+current best observation $y^{\ast} = min(\mathbf{y})$ is written
+#+begin_export latex
+\begin{align}
+  \label{eq:imp}
+  I(\mathbf{x}) = \begin{cases}
+    y^{\ast} - f(\mathbf{x}), & \text{if } f(\mathbf{x}) < y^{\ast} \\
+    0, & \text{otherwise}
+  \end{cases}\text{.}
+\end{align}
+#+end_export
+Before  committing  to  actually  measuring  $f(\mathbf{x})$,  we  can  use  the
+prediction vectors from  our surrogate model to compute EI  for every unobserved
+$\mathbf{x}$, that is, the expected value of $I(\mathbf{x})$, written
+#+begin_export latex
+\begin{align}
+  \label{eq:ei}
+  \mathbb{E}[I(\mathbf{x})] = \left(y^{\ast} -
+  \hat{\boldsymbol{\mu}}(\mathbf{x})\right)
+  \,\Phi\left(\dfrac{y^{\ast} -
+    \hat{\boldsymbol{\mu}}(\mathbf{x})}{\hat{\boldsymbol{\sigma}}(\mathbf{x})}\right) +
+  \hat{\boldsymbol{\sigma}}(\mathbf{x})
+  \,\phi\left(\dfrac{y^{\ast} -
+    \hat{\boldsymbol{\mu}}(\mathbf{x})}{\hat{\boldsymbol{\sigma}}
+    (\mathbf{x})}\right)\text{,}
+\end{align}
+#+end_export
+where $\Phi$ and  $\phi$ denote the standard normal  cumulative distribution and
+probability density functions.
+
+The EI computation was used by Jones /et al./\nbsp{}\cite{jones1998efficient} in
+their /Efficient Global  Optimization/ (EGO) algorithm, and we  refer the reader
+to   their  original   paper   and   to  Chapter   /16/   of  Kochenderfer   and
+Wheeler\nbsp{}\cite{kochenderfer2019algorithms}   for    further   details   and
+derivations of Equation\nbsp{}\ref{eq:ei}.
+
 *** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:online-summary
 :END:
 
-- These  methods seamlessly  mix exploration  and exploitation  but the  overall
-  objective  function  is  generally  the   regret,  which  makes  sense  for  a
-  self-optimizing  system (e.g.   facebook)  but not  in  an autotuning  context
-  (where EI is more meaningful)
+In this chapter  we presented methods for determining  which measurements should
+be  made  at each  instant  during  the  optimization  of an  unknown  objective
+function. We  presented strategies  to mix exploration  and exploitation  in the
+context  of Multi-Armed  Bandit problems,  Reinforcement Learning,  and Gaussian
+Process Regression.
+
+A model of regret over time was used in the first two sections, and we discussed
+how it  is not necessarily applicable  to autotuning problems. For  the problems
+studied in  the context  of this  thesis, the Expected  Improvement is  a better
+suited metric for balancing exploitation and exploration, which can in principle
+be applied to all methods relying in statistical models.
+
+The next chapter closes Part\nbsp{}\ref{part:optim}, summarizing the discussions
+of the previous chapters and presenting  an overview of the optimization methods
+we apply to autotuning problems in this thesis.
 
 ** Optimization Methods for Autotuning: An Overview
 :PROPERTIES:

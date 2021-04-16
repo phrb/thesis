@@ -13652,6 +13652,12 @@ method we use as a baseline in Chapter\nbsp{}\ref{chap:quantization}.
 - Probability of Improvement
 - Expected Improvement
 
+
+#+NAME: fig:ei-gp
+#+CAPTION: A Markov Decision Process with state set $S = \{S_1, S_2\}$,
+#+ATTR_LATEX: :placement [t] :width \textwidth
+[[./img/online_learning/ei/gp_ei.pdf]]
+
 *** Summary
 :PROPERTIES:
 :CUSTOM_ID: sec:online-summary

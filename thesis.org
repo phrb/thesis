@@ -13302,7 +13302,8 @@ for observed data, or identify global search space structure.
   \begin{adjustbox}{width=0.91\textwidth,center,valign=M}
     \includegraphics{./img/optimization_methods/annotated_tree.pdf}
   \end{adjustbox}
-  \caption{Some autotuning methods}
+  \caption{Optimization methods for autotuning that we discuss and
+    apply in this thesis}
   \label{fig:tree}
 \end{sidewaysfigure}
 #+end_export

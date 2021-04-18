@@ -1030,16 +1030,12 @@ names(df)
 ****** Achieved and Theoretical Performance
 #+begin_SRC R :results graphics output :session *R* :file "./img/top500_rmax_rpeak.pdf" :width 10 :height 5 :exports both :eval no-export
 library(ggplot2)
-library(extrafont)
 library(scales)
-
-loadfonts(device = "postscript")
 
 point_size = 2.8
 shapes = c(0, 1, 2, 5)
 
-plot_df <- df %>%
-    filter(Rank <= 1) %>%
+plot_df = df %>%
     mutate(RMaxT = coalesce(RMax / 1e3, Rmax..TFlop.s.),
            RPeakT = coalesce(RPeak / 1e3, Rpeak..TFlop.s.),
            Power = coalesce(Power, Power..kW.)) %>%
@@ -1052,19 +1048,38 @@ plot_df <- df %>%
     mutate(Ratio = RMaxT / RPeakT) %>%
     filter(is.finite(Ratio) & Ratio <= 1.0)
 
+best_df = plot_df %>%
+    filter(Rank <= 1)
+
+others_df = plot_df %>%
+    filter(Rank > 1,
+           Rank <= 30)
+
 ggplot() +
-    geom_point(data = plot_df,
+    geom_jitter(data = others_df,
+               size = point_size - 0.8,
+               alpha = 0.6,
+               height = 0.0,
+               width = 0.2,
+               color = "gray70",
+               aes(x = Year,
+                   y = RMaxT)) +
+    geom_point(data = best_df,
                size = point_size,
                aes(x = Year,
                    y = RMaxT,
-                   shape = "RMax",
-                   color = "RMax")) +
-    geom_point(data = plot_df,
+                   color = "Best RMax")) +
+    geom_point(data = best_df,
                size = point_size,
                aes(x = Year,
                    y = RPeakT,
-                   shape = "RPeak",
-                   color = "RPeak")) +
+                   color = "Best RPeak")) +
+    # geom_point(data = others_df,
+    #            size = point_size,
+    #            alpha = 0.2,
+    #            aes(x = Year,
+    #                y = RPeakT,
+    #                color = "RPeak")) +
     # geom_point(data = plot_df,
     #            size = point_size,
     #            aes(x = Year,
@@ -1084,14 +1099,13 @@ ggplot() +
                   labels = trans_format("log10",
                                         math_format(10 ^ .x))) +
     theme_bw(base_size = 20) +
-    theme(legend.position = c(0.06, 0.86),
+    theme(legend.position = c(0.09, 0.86),
           legend.direction = "horizontal",
           legend.background = element_rect(fill = "transparent", color = NA),
-          legend.text = element_text(size = 16),
-          text = element_text(family = "Liberation Sans")) +
+          legend.text = element_text(size = 16)) +
     guides(color = guide_legend(nrow = 4,
                                 override.aes = list(alpha = 1.0,
-                                                    size = 2)))
+                                                    size = point_size)))
 #+end_SRC
 
 #+RESULTS:
@@ -1100,17 +1114,13 @@ ggplot() +
 ****** Accelerator Core Count
 #+begin_SRC R :results graphics output :session *R* :file "./img/top500_accelerator_cores.pdf" :width 10 :height 5 :exports both :eval no-export
 library(ggplot2)
-library(extrafont)
 library(scales)
 library(tidyr)
-
-loadfonts(device = "postscript")
 
 point_size = 2.8
 shapes = c(0, 1, 2, 5)
 
 plot_df <- df %>%
-    filter(Rank <= 1) %>%
     mutate(Accelerators = na_if(Accelerator.Co.Processor.Cores, 0),
            Cores = coalesce(Processors, Total.Cores) -
                replace_na(Accelerator.Co.Processor.Cores, 0)) %>%
@@ -1120,19 +1130,32 @@ plot_df <- df %>%
            Cores) %>%
     distinct(Rank, Year, .keep_all = TRUE)
 
+best_df = plot_df %>%
+    filter(Rank <= 1)
+
+others_df = plot_df %>%
+    filter(Rank > 1,
+           Rank <= 30)
+
 ggplot() +
-    geom_point(data = plot_df,
+    geom_jitter(data = others_df,
+               size = point_size - 0.8,
+               alpha = 0.7,
+               height = 0.0,
+               width = 0.2,
+               color = "gray70",
+               aes(x = Year,
+                   y = Cores)) +
+    geom_point(data = best_df,
                size = point_size,
                aes(x = Year,
                    y = Cores,
-                   shape = "Processor",
-                   color = "Processor")) +
-    geom_point(data = plot_df,
+                   color = "Processors in Top Ranked")) +
+    geom_point(data = best_df,
                size = point_size,
                aes(x = Year,
                    y = Accelerators,
-                   shape = "Accelerator",
-                   color = "Accelerator")) +
+                   color = "Accelerators in Top Ranked")) +
     scale_x_continuous(breaks = function(x) { seq(floor(min(x)),
                                                   ceiling(max(x)),
                                                   4) }) +
@@ -1146,14 +1169,13 @@ ggplot() +
                   labels = trans_format("log10",
                                         math_format(10 ^ .x))) +
     theme_bw(base_size = 20) +
-    theme(legend.position = c(0.09, 0.86),
+    theme(legend.position = c(0.18, 0.86),
           legend.direction = "horizontal",
           legend.background = element_rect(fill = "transparent", color = NA),
-          legend.text = element_text(size = 16),
-          text = element_text(family = "Liberation Sans")) +
+          legend.text = element_text(size = 16)) +
     guides(color = guide_legend(nrow = 4,
                                 override.aes = list(alpha = 1.0,
-                                                    size = 2)))
+                                                    size = point_size)))
 #+end_SRC
 
 #+RESULTS:

@@ -15223,13 +15223,13 @@ groups.
 #+latex: \clearpage
 
 *** Evaluation of Optimization Methods
-This  section presents  a performance  evaluation of  the approach  described in
-Section\nbsp{}[[A  Transparent and  Parsimonious  Approach  to Autotuning  using
-Optimal Design]], comparing  this approach to eight  other optimization methods.
-The  performance  model described  in  the  previous  section  was used  by  the
-Iterative Linear Model (LM) and the Quantile Regression (QR) methods, as well as
-by   our   approach,  named   /D-Optimal   Designs,   with  Linear   Model   and
-heteroscedasticity  correction  Transform/  (DLMT).   The LM  method  is  almost
+This section  presents a  more thorough performance  evaluation of  the approach
+described  in   Section\nbsp{}[[A  Transparent  and  Parsimonious   Approach  to
+Autotuning  using  Optimal Design]],  comparing  this  approach to  eight  other
+optimization methods.  The  performance model described in  the previous section
+was used  by the Iterative  Linear Model (LM)  and the Quantile  Regression (QR)
+methods, as well as by our approach, named /D-Optimal Designs, with Linear Model
+and heteroscedasticity  correction Transform/ (DLMT).   The LM method  is almost
 identical to our approach,  described in Chapter\nbsp{}\ref{chap:laplacian}, but
 it uses  a fixed-size random  sample of the  search space instead  of generating
 D-Optimal  designs. Likewise,  the QR  method used  random samples  and Quantile

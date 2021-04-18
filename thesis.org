@@ -16673,6 +16673,58 @@ custom architecture  will play an  important role in  computing in the  years to
 come, and since this  was an under-explored problem in this  thesis, it could be
 approached fruitfully using the methods discussed in this thesis.
 
+** Appendices Begin Marker                                          :ignore:
+#+latex: \begin{appendices}
+** List of Collaborations
+:PROPERTIES:
+:UNNUMBERED: nil
+:CUSTOM_ID: app:contrib
+:END:
+
+Below we list the people who we have collaborated with during this thesis,
+and a short summary of the collaboration.
+
+*** At the University of São Paulo (USP)
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+- Marcos Amarís Gonzales
+- Dejan Milojicic and Sai Rahul Chalamalasetti
+
+*** At the University of Grenoble Alpes (UGA)
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+- Steven Quinito Masnada, Brice Videau, Jean-Marc Vincent
+
+*** At the Hewlett Packard Enterprise (HPE) Palo Alto Labs
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+- Sitao Huang, Dejan Milojicic, Sai Rahul Chalamalasetti, and Xu Cong
+
+*** At HPE Fort Collins Labs (Remote Collaboration)
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+- Daniel Dawue, Darel Emmot, Vipin Kumar Kukkala, and Ryan Menhusen
+
+*** Design of Experiments Project at USP/HPE
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+- Emanuel Lima de Souza
+
+- Giuliano Augusto Faulin Belinassi
+- Alan Barzilay
+- Vinícius Bitencourt Matos
+- Luciano Antonio Siqueira
+- Carlos Enrique Paucar Farfán
+
+- Nathan Benedetto Proença
+
+** Appendices End Marker                                            :ignore:
+#+latex: \end{appendices}
 * Back Matter Marker                                                 :ignore:
 #+latex: \backmatter
 ** References                                                       :ignore:

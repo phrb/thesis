@@ -11711,9 +11711,6 @@ Section\nbsp{}\ref{sec:comparing}  compares different  sampling strategies,  and
 Section\nbsp{}\ref{sec:summary-ed} summarizes  the discussion and  concludes the
 chapter.
 
-#+latex: \todo[inline]{Add interaction effects to global comparison tables?}
-#+latex: \todo[inline]{Add "with the same seed"}
-
 *** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
@@ -11770,22 +11767,14 @@ points. Heteroscedastic  error can  be produced in  real conditions  by resource
 management overhead, for example,  and the simplest way to try  and deal with it
 in practice is to fit a linear model to the logarithm of the response.
 
-#+latex: \todo[inline]{Add annotation with determinant to  6.3}
-#+latex: \todo[inline]{Add true line, CI to 6.2?}
-
 #+latex: \clearpage
-
-# #+NAME: fig:lineffect
-# #+CAPTION: Fitting linear models using only two measurements,
-# #+CAPTION: in experimental settings with different properties
-# #+CAPTION: of the error $\varepsilon$
-# #+ATTR_LATEX: :placement [h] :width .9\textwidth
-# [[./img/experimental_design/lin_effects.pdf]]
 
 #+NAME: fig:vareffect
 #+CAPTION: Fitting linear models using 30 distinct random sets of
 #+CAPTION: two measurements, in experimental settings with different
-#+CAPTION: properties of the error $\varepsilon$
+#+CAPTION: properties of the error $\varepsilon$.
+#+CAPTION: One arbitrary model fit is highlighted to show the
+#+CAPTION: distance between the design points
 #+ATTR_LATEX: :placement [b] :width .9\textwidth
 [[./img/experimental_design/model_variances.pdf]]
 
@@ -11894,17 +11883,23 @@ experimental budget  and evaluate  eight additional  points in  each experiment.
 Figure\nbsp{}[[fig:conflineffect]]  shows the  resulting model  fits, this  time
 accompanied  by  95% confidence  intervals  for  predictions. We  observe  great
 improvements in the heteroscedastic scenario due  to the extra samples of $f$ we
-were able  to get,  but we see  the confidence intervals  are very  large.  This
-example allows pointing  out that the /uncertainty/ in our  model fits, which is
-proportional to  the narrowness of the  confidence intervals, is related  to the
-distribution of experiments and to the variance associated with measuring $f$.
+were  able to  get, but  we see  that the  confidence intervals  are not  at all
+capable  of  modeling  the  heteroscedasticity in  the  observations,  producing
+inaccurate uncertainty  estimates.  This  example allows  pointing out  that the
+uncertainty in  our model fits, which  is proportional to the  narrowness of the
+confidence intervals, is  related to the distribution of experiments  and to the
+variance associated with measuring $f$.
 
-The  previous practical  examples  show that  the choice  of  the design  matrix
-$\mathbf{X}$ impacts the variance of the  estimator of $\theta$ in the model fit
-in  Equation\nbsp{}\ref{eq:linmodel-ed}.    We  will  present  a   more  precise
-statement of this interpretation  in Section\nbsp{}\ref{sec:optimal}, and in the
-next section  we will discuss the  impact of interactions on  our estimates, and
-present /fractional/ factorial designs.
+Figure\nbsp{}[[fig:conflineffect]]  also  shows  that the  determinants  of  the
+matrices $\mathbf{X}^{\transp}\mathbf{X}$,  associated with the designs  in each
+panel,  are larger  for designs  with more  distant points.   Combined with  the
+confidence intervals for  predictions, this example illustrates  that the choice
+of  the design  matrix $\mathbf{X}$  impacts the  variance of  the estimator  of
+$\theta$  in  the model  fit  in  Equation\nbsp{}\ref{eq:linmodel-ed}.  We  will
+present    a    more   precise    statement    of    this   interpretation    in
+Section\nbsp{}\ref{sec:optimal}, and  in the  next section  we will  discuss the
+impact  of interactions  on our  estimates, and  present /fractional/  factorial
+designs.
 
 **** Interactions and Fractional Factorial Designs
 Figure\nbsp{}[[fig:interactions]] shows two different objective functions of two
@@ -12030,8 +12025,6 @@ constructing orthogonal arrays.
 :PROPERTIES:
 :CUSTOM_ID: sec:screening
 :END:
-
-#+latex: \todo[inline]{add real model, real lines}
 
 Screening designs identify parsimoniously the main effects of 2-level factors in
 the initial  stages of  studying a  problem.  While  interactions are  still not
@@ -12843,8 +12836,6 @@ extensively   used.   Figure\nbsp{}[[fig:low_discrepancy]]  also   shows   these
 sequences,        implemented       in        the       /randtoolbox/        /R/
 package\nbsp{}\cite{dutang2020randtoolbox},  which  also  implements  a  /Torus/
 low-discrepancy sampler.
-
-#+latex: \todo[inline]{Use less points for LHS?}
 
 #+NAME: fig:low_discrepancy
 #+CAPTION: Comparison of 1000 samples obtained with different sampling methods.

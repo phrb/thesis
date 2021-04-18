@@ -13129,7 +13129,16 @@ next measurement, we could:
    Expected Improvement
 
 #+NAME: fig:ei-gp
-#+CAPTION: A Markov Decision Process with state set $S = \{S_1, S_2\}$,
+#+CAPTION: A surrogate Gaussian Process, whose mean is shown in @@latex: \textcolor{NavyBlue}{\textbf{blue}}@@, fit to four observations,
+#+CAPTION: shown in  @@latex: \textcolor{OliveGreen}{\textbf{green}}@@, of an objective function represented by the @@latex: \textcolor{BrickRed}{\textbf{red}}@@
+#+CAPTION: line.
+#+CAPTION: The dashed vertical lines show which $\mathbf{x}$ would be chosen for
+#+CAPTION: the next observation, if we followed the surrogate's
+#+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@, its
+#+CAPTION: @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@ minus its
+#+CAPTION: @@latex: \textcolor{DarkOrchid}{\textbf{confidence interval}}@@
+#+CAPTION: lower bound, or if we picked the $\mathbf{x}$ that maximizes the
+#+CAPTION: @@latex: \textcolor{BurntOrange}{\textbf{Expected Improvement}}@@
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/online_learning/ei/gp_ei.pdf]]
 

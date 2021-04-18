@@ -36,26 +36,27 @@
 "mnistcnn",2018,11,64000000000000,13,"Neural Networks","Balaprakash, P. et al. (2018)","balaprakash2018deephyper","FALSE",
 "gcn",2018,10,3730000000,9,"Neural Networks","Balaprakash, P. et al. (2018)","balaprakash2018deephyper","FALSE",
 "rnn1",2018,9,4000000000000,12,"Neural Networks","Balaprakash, P. et al. (2018)","balaprakash2018deephyper","FALSE",
-"atax",2019,18,2.6E+017,17,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"gemv",2019,49,3.8E+037,37,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"gemver",2019,24,2.6E+023,23,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"gesummv",2019,11,53000000000,10,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"hessian",2019,9,370000000,8,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"mm",2019,13,12000000000000,13,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"mvt",2019,12,11000000000,10,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"tensor",2019,20,1.2E+020,20,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"trmm",2019,25,3.7E+024,24,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"BiCG",2019,13,3200000000000,12,"Linear Solver","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"lu",2019,14,96000000000000,13,"Linear Solver","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"adi",2019,20,6E+016,16,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"jacobi",2019,11,53000000000,10,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"seidel",2019,15,1300000000000000,15,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"stencil3d",2019,29,9.7E+028,28,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"correlation",2019,21,4.5E+018,18,"Statistical Computing","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE",
-"nvcc",2016,13,2810000,6,"Compiler Parameters","Bruel, P. et al. (2016)","bruel2015autotuning","TRUE",
-"LegUp",2017,65,1E+126,126,"High-Level Synthesis","Bruel, P. et al. (2017)","bruel2017autotuning","TRUE",
-"resnet50_weights",2020,54,5.85E+048,48,"Neural Networks","Bruel, P. (thesis)",,"TRUE",
-"resnet50",2020,108,3.42E+097,97,"Neural Networks","Bruel, P. (thesis)",,"TRUE",
+"atax",2019,18,2.6E+017,17,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"gemv",2019,49,3.8E+037,37,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"gemver",2019,24,2.6E+023,23,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"gesummv",2019,11,53000000000,10,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"hessian",2019,9,370000000,8,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"mm",2019,13,12000000000000,13,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"mvt",2019,12,11000000000,10,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"tensor",2019,20,1.2E+020,20,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"trmm",2019,25,3.7E+024,24,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"BiCG",2019,13,3200000000000,12,"Linear Solver","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"lu",2019,14,96000000000000,13,"Linear Solver","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"adi",2019,20,6E+016,16,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"jacobi",2019,11,53000000000,10,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"seidel",2019,15,1300000000000000,15,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"stencil3d",2019,29,9.7E+028,28,"Stencil Code","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"correlation",2019,21,4.5E+018,18,"Statistical Computing","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 12)"
+"nvcc",2016,13,2810000,6,"Compiler Parameters","Bruel, P. et al. (2016)","bruel2015autotuning","TRUE","(Chapter 9)"
+"LegUp",2017,65,1E+126,126,"High-Level Synthesis","Bruel, P. et al. (2017)","bruel2017autotuning","TRUE","(Chapter 10)"
+"Laplacian",2019,7,2.30E+04,4,"Linear Algebra","Bruel, P. et al. (2019)","bruel2019autotuning","TRUE","(Chapter 11)"
+"resnet50",2020,54,5.85E+048,48,"Neural Networks","Bruel, P. (2021)",,"TRUE","(Chapter 13)"
+"resnet50",2020,108,3.42E+097,97,"Neural Networks","Wang, K. et al. (2019)","wang2019haq","FALSE",
 "FPGA_design",2015,5,10200000,7,"High-Level Synthesis","Mametjanov, A. et al. (2015)","mametjanov2015autotuning","FALSE",
 "DGEMM_GPU",2016,10,10000000,7,"Linear Algebra","Abdelfattah, A. et al. (2016)","abdelfattah2016performance","FALSE",
 "VTR",2017,24,2390000000000000,15,"High-Level Synthesis","Xu, C. et al. (2017)","xu2017parallel","FALSE",

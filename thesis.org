@@ -13611,7 +13611,7 @@ algorithm that aims  to maximize the successes across the  autotuning process. A
 success is  defined as finding  a program  configuration that improves  upon the
 best  performance found  so  far.   The stochastic  method  which  finds such  a
 configuration  gets its  score  increased  for that  tuning  session.  A  bandit
-algorithm, called  /MABAUC/ in the  paper, for  Multi-Armed Bandit Area  Under the
+algorithm, called /MABAUC/  in the paper, for Multi-Armed Bandit  Area Under the
 Curve, considers  a sliding window  covering a  given number of  measurements to
 compute the  scores of methods  in an ensemble, and  to decide which  method, or
 ``arm'',  to  play next.   The  ensemble  of methods  we  used  was composed  by

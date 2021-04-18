@@ -10934,11 +10934,11 @@ discuss Optimal Design on Section\nbsp{}\ref{sec:optimal}.
 #+NAME: fig:regression-projection
 #+ATTR_LATEX: :width 0.48\textwidth :placement [h]
 #+CAPTION: In Linear Regression, the prediction vector $\hat{\mathbf{y}}$
-#+CAPTION: is the orthogonal projection of the observations vector $\mathbf{y}$
+#+CAPTION: is the projection of the observations vector $\mathbf{y}$
 #+CAPTION: into the vector space
 #+CAPTION: spanned by the columns of $\mathbf{X}$.
 #+CAPTION: The vector $\boldsymbol{\varepsilon} = \mathbf{y} - \hat{\mathbf{y}}$
-#+CAPTION: is the model error, and is orthogonal to $\mathbf{X}\theta$
+#+CAPTION: is the model error, and is minimized when we ensure it is orthogonal to $\mathbf{X}\theta$
 [[file:img/linear_regression_projection.pdf]]
 
 An interesting interpretation  of the OLS estimator is that  it approximates the

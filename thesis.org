@@ -13989,13 +13989,12 @@ We attempted to  associate compilation parameters to kernels and  GPUs using the
 relations  for most  kernels we  detected  that the  /ftz=true/ in  MMS and  the
 Compute Capabilities 3.0, 5.0 and 5.2 in GAU caused the speedups observed in the
 GTX  980  for  these  kernels.   Table\nbsp{}\ref{tab:750RodiniaClusters}  shows
-clusters obtained with  the K-means WEKA algorithm for  autotuned parameter sets
-for the Rodinia  Benchmark in the GTX  750.  Unlike most clusters  found for all
-GPUs and problems, these clusters did  not contain an equal number of instances.
-Analysis  of   the  unstructured   explorations  performed  by   the  heuristics
-implemented in OpenTuner  did not permit finding  relationships between compiler
-optimizations, kernels, and GPUs, and motivated the application of the screening
-method described in the next section.
+clusters obtained for autotuned parameter sets  for the Rodinia Benchmark in the
+GTX 750.  Unlike  most clusters found for all GPUs  and problems, these clusters
+did not  contain an  equal number  of instances.   Analysis of  the unstructured
+explorations performed by the heuristics implemented in OpenTuner did not permit
+finding  relationships between  compiler optimizations,  kernels, and  GPUs, and
+motivated the application of the screening method described in the next section.
 
 *** Assessing Parameter Significance with Screening
 :PROPERTIES:
@@ -14114,8 +14113,8 @@ Figure\nbsp{}[[fig:speedup-gpu-screening]].
 #+CAPTION: Quadro M1200 GPUs. Circles mark each  of the 20  measurements
 #+CAPTION: of each flag  configuration, filled dots  and whiskers
 #+CAPTION: mark the  mean  and 95%  confidence intervals.
-#+CAPTION: The /OT/ experiments were made with OpenTuner using the same number of
-#+CAPTION: measurements used in screening, and the /OT:200/ experiments used 200
+#+CAPTION: The experiments marked /OT/ were made with OpenTuner using the same number of
+#+CAPTION: measurements used in screening, and experiments marked /OT:200/ used 200
 #+CAPTION: measurements
 [[file:img/gpu-screening/timing_gpu_screening.pdf]]
 

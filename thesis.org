@@ -14394,21 +14394,25 @@ Time/  $wct$ is  computed  by  $wct =  \text{\textit{Cycles}}  \times (\alpha  /
 The objective function used by the  autotuner to evaluate sets of HLS parameters
 is written
 #+begin_export latex
-\begin{align} \label{eq:wnsm}
-  f\left(\textbf{m}, \textbf{w}\right) =
-  \dfrac{\sum\limits_{\substack{m \in \textbf{m} \\ w \in \textbf{w}}}
-    {w\left(\dfrac{m}{m^{0}}\right)}}
-       {\sum\limits_{w \in \textbf{w}}{w}}\text{,}
+\begin{align}
+  \label{eq:wnsm}
+  f\left(\mathbf{m}^{0},\mathbf{m}, \mathbf{w}\right) =
+  \dfrac{\displaystyle\sum\limits_{i = 1}^{8}
+    {\dfrac{w_im_i}{m^{0}_i}}}
+       {\displaystyle\sum\limits_{i = 1}^{8}{w_i}}\text{,}
 \end{align}
 #+end_export
-and computes a /Weighted Normalized Sum/  (/WNS/) of the measured metrics $m \in
-\textbf{m}$, where $\textbf{m}$ is a vector  with measurements of the 8 hardware
-metrics described previously.  Each weight $w \in \textbf{w}$ corresponds to one
-of the  scenarios in Table\nbsp{}\ref{tab:scenarios}.   A value is  computed for
-each metric  $m$ in relation to  an initial default value  $m^{0}$, measured for
-each metric in a given kernel, using LegUp's default configuration.  For a given
-set  measurement vector  $\textbf{x}$, $f(\textbf{x},  \textbf{w}) =  1.0$ means
-that there was no improvement relative to the default HLS configuration.
+and  computes  a /Weighted  Normalized  Sum/  (/WNS/)  of the  measured  metrics
+$m_{1,\dots,8} \in \mathbf{m}$, where $\mathbf{m}$ is a vector with measurements
+of  the 8  hardware  metrics  described previously,  corresponding  to a  single
+experiment.  Each  weight $w_{1,\dots,8} \in  \mathbf{w}$ corresponds to  one of
+the scenarios in Table\nbsp{}\ref{tab:scenarios}.  A  value is computed for each
+metric  $m_i$   in  relation  to   an  initial  default  value   $m^{0}_{i}  \in
+\mathbf{m}^{0}$,  measured for  each metric  in  a given  kernel, using  LegUp's
+default configuration.   For a  given measurement  vector $\mathbf{m}_j$,  in an
+optimization  scenario  $k$  described  by  the  weight  vector  $\mathbf{w}_k$,
+observing $f(\mathbf{m}^{0}, \mathbf{m}_j, \mathbf{w}_k) = 1.0$ means that there
+was no improvement relative to the default HLS configuration.
 
 *** Target Optimization Scenarios and HLS Kernels
 This section describes the optimization  scenarios, the CHStone kernels, and the

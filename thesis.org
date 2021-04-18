@@ -11250,7 +11250,10 @@ a prior probability distribution
 #+end_export
 where the mean vector $\boldsymbol{\mu}_0$ is  usually a vector of $n$ zeros and
 the covariance  matrix $\boldsymbol{\Sigma}_0$  is computed  using a  kernel and
-depends on $\mathbf{X}$.
+depends on  $\mathbf{X}$.  Note that by  interpreting our hypothesis like  so we
+move practically all  of the information describing the prior  to the covariance
+matrix $\boldsymbol{\Sigma}$, which is illustrated  by the different matrices in
+Figure\nbsp{}\ref{fig:2d-gaussian}.
 
 This   prior   is  more   general   than   the   linear  model   hypothesis   in
 Equation\nbsp{}\ref{eq:lin-mod-prob},  but  it  generalizes  even  further.   In

@@ -7413,7 +7413,15 @@ update_factors <- function(df) {
 }
 
 df = update_factors(read.csv("data/linear_effects/confidence_sample.csv"))
-design = update_factors(read.csv("data/linear_effects/confidence_design.csv"))
+
+design = update_factors(read.csv("data/linear_effects/confidence_design.csv")) %>%
+    group_by(id, model_id) %>%
+    mutate(determinant = t(x) %*% x,
+           det_x = 0.3,
+           det_y = 3.1) %>%
+    mutate(det_label = paste("$det(\\mathbf{X}^{T}\\mathbf{X}) =$",
+                             round(determinant, digits = 1)))
+
 predictions = update_factors(read.csv("data/linear_effects/confidence_predictions.csv"))
 
 ggplot() +
@@ -7422,6 +7430,13 @@ ggplot() +
                 aes(ymin = lwr,
                     ymax = upr,
                     x = x)) +
+    geom_text(data = design,
+              aes(x = det_x,
+                  y = det_y,
+                  label = TeX(det_label, output = "character")),
+              parse = TRUE,
+              size = 11.8,
+              stat = "unique") +
     geom_point(data = df,
                aes(x = x,
                    y = y),
@@ -7451,7 +7466,7 @@ ggplot() +
                   filter(as.numeric(id) == 1,
                          as.numeric(model_id) == 1),
               aes(x = x,
-                  y = 1.85,
+                  y = 1.5,
                   label = "Best predicted x"),
               angle = 90,
               size = 13,

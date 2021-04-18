@@ -11,167 +11,6 @@
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
 #+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w@) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
-* Headers and Configuration                                 :noexport:ignore:
-** Emacs Optional Configuration
-#+begin_src emacs-lisp :exports none :eval no-export
-;; Pour configurer les subdivisions de la classe book (indiquer : #+LaTeX_CLASS: book)
-(with-eval-after-load "ox-latex"
-(add-to-list 'org-latex-classes
-             '("book"
-               "\\documentclass{book}"
-               ("\\part{%s}" . "\\part*{%s}")
-               ("\\chapter{%s}" . "\\chapter*{%s}")
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-#+end_src
-
-#+RESULTS:
-| book    | \documentclass{book}                 | (\part{%s} . \part*{%s})       | (\chapter{%s} . \chapter*{%s})       | (\section{%s} . \section*{%s})             | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
-| beamer  | \documentclass[presentation]{beamer} | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |                                      |                                            |
-| article | \documentclass{article}              |                                |                                      |                                            |                                      |                                            |
-** Latex
-#+LATEX_CLASS: book
-#+LATEX_CLASS_OPTIONS: [11pt,twoside,openany,a4paper]
-
-:latex_headers:
-#+LATEX_HEADER: \usepackage[a4paper]{geometry}
-#+LATEX_HEADER: \geometry{
-#+LATEX_HEADER:   top=32mm,
-#+LATEX_HEADER:   bottom=28mm,
-#+LATEX_HEADER:   left=24mm,
-#+LATEX_HEADER:   right=29mm,
-#+LATEX_HEADER:   textwidth=157mm, % 210-24-34
-#+LATEX_HEADER:   textheight=245mm, % 297-32-28
-#+LATEX_HEADER:   vmarginratio=8:7, % 32:28
-#+LATEX_HEADER:   hmarginratio=12:17, % 24:34
-#+LATEX_HEADER:   % Com geometry, esta medida não é tão relevante; basta garantir que ela
-#+LATEX_HEADER:   % seja menor que "top" e que o texto do cabeçalho caiba nela.
-#+LATEX_HEADER:   headheight=25.4mm,
-#+LATEX_HEADER:   % distância entre o início do texto principal e a base do cabeçalho;
-#+LATEX_HEADER:   % ou seja, o cabeçalho "invade" a margem superior nessa medida. Essa
-#+LATEX_HEADER:   % é a medida que determina a posição do cabeçalho
-#+LATEX_HEADER:   headsep=11mm,
-#+LATEX_HEADER:   footskip=10mm,
-#+LATEX_HEADER:   marginpar=20mm,
-#+LATEX_HEADER:   marginparsep=5mm,
-#+LATEX_HEADER: }
-
-#+LATEX_HEADER: \widowpenalty=10000
-#+LATEX_HEADER: \clubpenalty=10000
-
-#+LATEX_HEADER: \usepackage{tocbibind}
-
-#+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex]{biblatex}
-#+LATEX_HEADER: \addbibresource{bibliography/references.bib}
-
-#+LATEX_HEADER: \usepackage{indentfirst}
-#+LATEX_HEADER: \usepackage{tabularx}
-#+LATEX:HEADER: \usepackage[inline]{enumitem}
-#+LATEX_HEADER: \usepackage{setspace}
-#+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
-#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
-#+LATEX_HEADER: \usepackage{adjustbox}
-
-#+LATEX_HEADER: \usepackage[brazilian,french,english]{babel}
-#+LATEX_HEADER: \usepackage[scale=2]{ccicons}
-
-#+LATEX_HEADER: \usepackage{newpxtext}
-#+LATEX_HEADER: \usepackage{newpxmath}
-#+LATEX_HEADER: \usepackage{DejaVuSansMono}
-
-#+LATEX_HEADER: \usepackage{forest}
-#+LATEX_HEADER: \usepackage{titling}
-#+LATEX_HEADER: \usepackage{rotating}
-
-#+LATEX_HEADER: \usepackage{booktabs}
-#+LATEX_HEADER: \usepackage{multirow}
-#+LATEX_HEADER: \usepackage{array}
-#+LATEX_HEADER: \usepackage{colortbl}
-#+LATEX_HEADER: \usepackage{listings}
-
-#+LATEX_HEADER: \usepackage{tikz}
-#+LATEX_HEADER: \usepackage{tikz-qtree}
-#+LATEX_HEADER: \usepackage{algpseudocode}
-#+LATEX_HEADER: \usepackage{algorithm}
-
-#+LATEX_HEADER: \usepackage{graphicx}
-#+LATEX_HEADER: \usepackage{subcaption}
-
-#+LATEX_HEADER: \usepackage{hyperref}
-#+LATEX_HEADER: \usepackage{relsize}
-
-#+LATEX_HEADER: \usepackage{bm}
-#+LATEX_HEADER: \usepackage{wasysym}
-#+LATEX_HEADER: \usepackage{float}
-#+LATEX_HEADER: \usepackage{ragged2e}
-#+LATEX_HEADER: \usepackage{textcomp}
-#+LATEX_HEADER: \usepackage{pgfplots}
-
-#+LATEX_HEADER: \usepackage{todonotes}
-#+LATEX_HEADER: \usepgfplotslibrary{dateplot}
-
-#+LATEX_HEADER: \lstset{ %
-#+LATEX_HEADER:   backgroundcolor={},
-#+LATEX_HEADER:   basicstyle=\ttfamily\tiny,
-#+LATEX_HEADER:   breakatwhitespace=true,
-#+LATEX_HEADER:   breaklines=true,
-#+LATEX_HEADER:   captionpos=b,
-#+LATEX_HEADER:   extendedchars=true,
-#+LATEX_HEADER:   frame=n,
-#+LATEX_HEADER:   numbers=left,
-#+LATEX_HEADER:   rulecolor=\color{black},
-#+LATEX_HEADER:   showspaces=false,
-#+LATEX_HEADER:   showstringspaces=false,
-#+LATEX_HEADER:   showtabs=false,
-#+LATEX_HEADER:   stepnumber=1,
-#+LATEX_HEADER:   stringstyle=\color{gray},
-#+LATEX_HEADER:   tabsize=2,
-#+LATEX_HEADER: }
-
-#+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
-#+LATEX_HEADER: \onehalfspacing
-
-#+LATEX_HEADER: \setlength{\parskip}{0.5em}
-#+LATEX_HEADER: \usepackage[pagestyles,raggedright]{titlesec}
-# #+LATEX_HEADER: \titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\huge}
-
-#+LATEX_HEADER: \usepackage[fit]{truncate}
-#+LATEX_HEADER: \usepackage{fancyhdr}
-#+LATEX_HEADER: \fancyhf{}
-
-#+LATEX_HEADER: \fancypagestyle{plain}{%
-#+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt}
-#+LATEX_HEADER: \fancyfoot[RO,LE]{\thepage}
-#+LATEX_HEADER: \fancyhead[RO]{\nouppercase{\truncate{\headwidth}{\rightmark}}}
-#+LATEX_HEADER: \fancyhead[LE]{\nouppercase{\truncate{\headwidth}{\leftmark}}}
-#+LATEX_HEADER: }
-
-#+LATEX_HEADER: \pagestyle{plain}
-
-#+LATEX_HEADER: \hypersetup{
-#+LATEX_HEADER:     colorlinks=true,
-#+LATEX_HEADER:     linkcolor={red!50!black},
-#+LATEX_HEADER:     citecolor={blue!50!black},
-#+LATEX_HEADER:     urlcolor={blue!80!black}
-#+LATEX_HEADER: }
-#+LATEX_HEADER: \makeatletter
-
-#+LATEX_HEADER: \newcommand\fs@ruled@notop{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
-#+LATEX_HEADER:   %\def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}% <----removed
-#+LATEX_HEADER:   \def\@fs@pre{}%
-#+LATEX_HEADER:   %\def\@fs@post{\kern2pt\hrule\relax}%
-#+LATEX_HEADER:   \def\@fs@post{}%
-#+LATEX_HEADER:   %\def\@fs@mid{\kern2pt\hrule\kern2pt}%
-#+LATEX_HEADER:   \def\@fs@mid{}%
-#+LATEX_HEADER:   \let\@fs@iftopcapt\iftrue}
-#+LATEX_HEADER: \renewcommand\fst@algorithm{\fs@ruled@notop}
-#+LATEX_HEADER: \makeatother
-:end:
-** Covers
-*** IME
-#+LATEX_HEADER: \input{covers/ime.tex}
-*** UGA
 * Early Drafts                                                     :noexport:
 ** First Draft
 1. Introduction
@@ -9453,6 +9292,163 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 : Using cache found in /home/phrb/.cache/torch/hub/pytorch_vision_v0.6.0
 : /usr/lib/python3.9/site-packages/torch/onnx/symbolic_helper.py:677: UserWarning: ONNX export mode is set to inference mode, but operator batch_norm is set to training  mode. The model will be exported in inference, as specified by the export mode.
 :   warnings.warn("ONNX export mode is set to " + training_mode +
+* Headers and Configuration                                 :noexport:ignore:
+** Emacs Optional Configuration
+#+begin_src emacs-lisp :exports none :eval no-export
+;; Pour configurer les subdivisions de la classe book (indiquer : #+LaTeX_CLASS: book)
+(with-eval-after-load "ox-latex"
+(add-to-list 'org-latex-classes
+             '("book"
+               "\\documentclass{book}"
+               ("\\part{%s}" . "\\part*{%s}")
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+#+end_src
+
+#+RESULTS:
+| book    | \documentclass{book}                 | (\part{%s} . \part*{%s})       | (\chapter{%s} . \chapter*{%s})       | (\section{%s} . \section*{%s})             | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| beamer  | \documentclass[presentation]{beamer} | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |                                      |                                            |
+| article | \documentclass{article}              |                                |                                      |                                            |                                      |                                            |
+** Latex
+#+LATEX_CLASS: book
+#+LATEX_CLASS_OPTIONS: [11pt,twoside,openany,a4paper]
+
+:latex_headers:
+#+LATEX_HEADER: \usepackage[a4paper]{geometry}
+#+LATEX_HEADER: \geometry{
+#+LATEX_HEADER:   top=32mm,
+#+LATEX_HEADER:   bottom=28mm,
+#+LATEX_HEADER:   left=24mm,
+#+LATEX_HEADER:   right=29mm,
+#+LATEX_HEADER:   textwidth=157mm, % 210-24-34
+#+LATEX_HEADER:   textheight=245mm, % 297-32-28
+#+LATEX_HEADER:   vmarginratio=8:7, % 32:28
+#+LATEX_HEADER:   hmarginratio=12:17, % 24:34
+#+LATEX_HEADER:   headheight=25.4mm,
+#+LATEX_HEADER:   headsep=11mm,
+#+LATEX_HEADER:   footskip=10mm,
+#+LATEX_HEADER:   marginpar=20mm,
+#+LATEX_HEADER:   marginparsep=5mm,
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \widowpenalty=10000
+#+LATEX_HEADER: \clubpenalty=10000
+
+#+LATEX_HEADER: \usepackage{tocbibind}
+#+LATEX_HEADER: \usepackage[title,titletoc,header]{appendix}
+
+#+LATEX_HEADER: \usepackage[style=numeric,backend=bibtex]{biblatex}
+#+LATEX_HEADER: \addbibresource{bibliography/references.bib}
+
+#+LATEX_HEADER: \usepackage{indentfirst}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX:HEADER: \usepackage[inline]{enumitem}
+#+LATEX_HEADER: \usepackage{setspace}
+#+LATEX_HEADER: \usepackage{amsmath,amsfonts,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
+#+LATEX_HEADER: \usepackage{adjustbox}
+
+#+LATEX_HEADER: \usepackage[brazilian,french,english]{babel}
+#+LATEX_HEADER: \usepackage[scale=2]{ccicons}
+
+#+LATEX_HEADER: \usepackage{newpxtext}
+#+LATEX_HEADER: \usepackage{newpxmath}
+#+LATEX_HEADER: \usepackage{DejaVuSansMono}
+
+#+LATEX_HEADER: \usepackage{forest}
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: \usepackage{rotating}
+
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{colortbl}
+#+LATEX_HEADER: \usepackage{listings}
+
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{tikz-qtree}
+#+LATEX_HEADER: \usepackage{algpseudocode}
+#+LATEX_HEADER: \usepackage{algorithm}
+
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{subcaption}
+
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage{relsize}
+
+#+LATEX_HEADER: \usepackage{bm}
+#+LATEX_HEADER: \usepackage{wasysym}
+#+LATEX_HEADER: \usepackage{float}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{textcomp}
+#+LATEX_HEADER: \usepackage{pgfplots}
+
+#+LATEX_HEADER: \usepackage{todonotes}
+#+LATEX_HEADER: \usepgfplotslibrary{dateplot}
+
+#+LATEX_HEADER: \lstset{ %
+#+LATEX_HEADER:   backgroundcolor={},
+#+LATEX_HEADER:   basicstyle=\ttfamily\tiny,
+#+LATEX_HEADER:   breakatwhitespace=true,
+#+LATEX_HEADER:   breaklines=true,
+#+LATEX_HEADER:   captionpos=b,
+#+LATEX_HEADER:   extendedchars=true,
+#+LATEX_HEADER:   frame=n,
+#+LATEX_HEADER:   numbers=left,
+#+LATEX_HEADER:   rulecolor=\color{black},
+#+LATEX_HEADER:   showspaces=false,
+#+LATEX_HEADER:   showstringspaces=false,
+#+LATEX_HEADER:   showtabs=false,
+#+LATEX_HEADER:   stepnumber=1,
+#+LATEX_HEADER:   stringstyle=\color{gray},
+#+LATEX_HEADER:   tabsize=2,
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
+#+LATEX_HEADER: \onehalfspacing
+
+#+LATEX_HEADER: \setlength{\parskip}{0.5em}
+#+LATEX_HEADER: \usepackage[pagestyles,raggedright]{titlesec}
+# #+LATEX_HEADER: \titleformat{\chapter}[display]{\normalfont\bfseries}{}{0pt}{\huge}
+
+#+LATEX_HEADER: \usepackage[fit]{truncate}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \fancyhf{}
+
+#+LATEX_HEADER: \fancypagestyle{plain}{%
+#+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt}
+#+LATEX_HEADER: \fancyfoot[RO,LE]{\thepage}
+#+LATEX_HEADER: \fancyhead[RO]{\nouppercase{\truncate{\headwidth}{\rightmark}}}
+#+LATEX_HEADER: \fancyhead[LE]{\nouppercase{\truncate{\headwidth}{\leftmark}}}
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \pagestyle{plain}
+
+#+LATEX_HEADER: \hypersetup{
+#+LATEX_HEADER:     colorlinks=true,
+#+LATEX_HEADER:     linkcolor={red!50!black},
+#+LATEX_HEADER:     citecolor={blue!50!black},
+#+LATEX_HEADER:     urlcolor={blue!80!black}
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \makeatletter
+
+#+LATEX_HEADER: \newcommand\fs@ruled@notop{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
+#+LATEX_HEADER:   %\def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}% <----removed
+#+LATEX_HEADER:   \def\@fs@pre{}%
+#+LATEX_HEADER:   %\def\@fs@post{\kern2pt\hrule\relax}%
+#+LATEX_HEADER:   \def\@fs@post{}%
+#+LATEX_HEADER:   %\def\@fs@mid{\kern2pt\hrule\kern2pt}%
+#+LATEX_HEADER:   \def\@fs@mid{}%
+#+LATEX_HEADER:   \let\@fs@iftopcapt\iftrue}
+#+LATEX_HEADER: \renewcommand\fst@algorithm{\fs@ruled@notop}
+#+LATEX_HEADER: \makeatother
+:end:
+** Covers
+*** IME
+#+LATEX_HEADER: \input{covers/ime.tex}
+*** UGA
 * Front Matter                                                       :ignore:
 #+latex: \frontmatter
 ** Abstracts                                                        :ignore:

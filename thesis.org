@@ -9649,7 +9649,7 @@ works that provided it.
 #+NAME: fig:search-spaces
 #+ATTR_LATEX: :width \textwidth :placement [t]
 #+CAPTION: Dimension and search space size for autotuning problems from 14 domains
-#+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
+#+CAPTION: \nbsp{}\cite{balaprakash2012spapt,ansel2014opentuner,byun2012autotuning,petrovivc2020benchmark,balaprakash2018deephyper,bruel2019autotuning,bruel2015autotuning,bruel2017autotuning,wang2019haq,mametjanov2015autotuning,abdelfattah2016performance,xu2017parallel,tiwari2009scalable,hutter2009paramils,chu2020improving,tuzov2018tuning,ziegler2019syntunsys,gerndt2018multi,kwon2019learning,wang2019funcytuner,olha2019exploiting,seymour2008comparison}
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
 

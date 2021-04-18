@@ -7678,7 +7678,8 @@ sample_runif <- function(df, budget) {
 sample_lhs <- function(df, budget) {
     print("sample_lhs")
     output = lhsDesign(budget, 2)$design %>%
-                                discrepSA_LHS(it = 1000)
+                                discrepSA_LHS(it = 20000)
+                                #discrepSA_LHS(it = 2000) # ~1min
 
     sample =  output$design %>%
         data.frame() %>%
@@ -9276,19 +9277,24 @@ of  core  count in  top-ranked  supercomputers,  even considering  accelerators,
 highlights the crucial impact software optimization has on performance.
 
 #+NAME: fig:rmax-rpeak
-#+CAPTION: Sustained exponential increase of theoretical \textit{RPeak} and
-#+CAPTION: achieved \textit{RMax} performance for
-#+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list}
+#+CAPTION: Sustained exponential increase of
+#+CAPTION: theoretical @@latex: \textcolor{NavyBlue}{\textit{\textbf{RPeak}}}@@ and
+#+CAPTION: achieved @@latex: \textcolor{BrickRed}{\textit{\textbf{RMax}}}@@ performance, highlighted  for
+#+CAPTION: the supercomputer ranked 1^{st} on TOP500\nbsp{}\cite{top5002020list},
+#+CAPTION: and shown in gray for the other 30 ranks
+#+CAPTION:
 #+ATTR_LATEX: :width \textwidth :placement [t]
 [[file:./img/top500_rmax_rpeak.pdf]]
 
 #+NAME: fig:acc-cores
-#+CAPTION: Processor and accelerator core count
-#+CAPTION: in supercomputers ranked 1^{st} on
-#+CAPTION: TOP500\nbsp{}\cite{top5002020list}.
+#+CAPTION: @@latex: \textcolor{NavyBlue}{\textit{\textbf{Processor}}}@@ and
+#+CAPTION: @@latex: \textcolor{BrickRed}{\textit{\textbf{accelerator}}}@@ core count
+#+CAPTION: highlighted for the supercomputer ranked 1^{st} on
+#+CAPTION: TOP500\nbsp{}\cite{top5002020list},
+#+CAPTION: and shown in gray for the other 30 ranks.
 #+CAPTION: Core  count trends for supercomputers are not
 #+CAPTION: necessarily bound to processor trends observed on
-#+CAPTION: Figure\nbsp{}\ref{fig:trends}.
+#+CAPTION: Figure\nbsp{}\ref{fig:trends}
 #+ATTR_LATEX: :width \textwidth :placement [h!]
 [[file:./img/top500_accelerator_cores.pdf]]
 
@@ -9324,20 +9330,22 @@ motivated example, that we will use to introduce the autotuning problem.
 One way to improve the performance of such linear algebra programs is to exploit
 cache locality by  reordering and organizing loop iterations,  using source code
 transformation methods  such as loop  /tiling/, or /blocking/,  and /unrolling/.
-We  will now  briefly describe  loop tiling  and unrolling  for a  simple linear
-algebra problem. After, we will discuss  an autotuning search space for blocking
-and  unrolling  applied  to  GEMM,  and how  these  transformations  generate  a
-relatively large and complex search space, which we can explore using autotuning
-methods.
+We will  now briefly  describe loop  tiling and unrolling  for a  simple problem
+involving  transposing  and  adding  matrices, illustrating  how  memory  access
+patterns  open up  possibilities  for performance  tuning.   After this  initial
+example, we will  discuss an autotuning search space for  blocking and unrolling
+applied  to   General  Matrix   Multiplication  (GEMM),   and  how   these  code
+transformations generate a  relatively large and complex search  space, which we
+can explore using autotuning methods.
 
 Figure\nbsp{}\ref{fig:transpose-c}  shows  three versions  of  code  in the  /C/
 language that, given three square matrices $A$,  $B$, and $C$, computes $C = C +
-A +  B^{\transp}$. The first  optimization we can make  is to preemptively  load to
+A + B^{\transp}$. The first optimization we  can make is to preemptively load to
 cache, or /prefetch/, as many as possible of the elements we know will be needed
 at       any       given       iteration,       as       is       shown       in
 Figure\nbsp{}\ref{fig:transpose-regular-access}. The shaded  elements on the top
-row of Figure\nbsp{}[[fig:blocking-unrolling]] represent  the elements that could be
-prefetched in iterations of Figure\nbsp{}\ref{fig:transpose-regular-access}.
+row of Figure\nbsp{}[[fig:blocking-unrolling]] represent the elements that could
+be prefetched in iterations of Figure\nbsp{}\ref{fig:transpose-regular-access}.
 
 Since /C/ matrices are stored in /row-major order/, each access of an element of
 $B$  forces loading  the next  row elements,  even if  we explicitly  prefetch a

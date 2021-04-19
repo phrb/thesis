@@ -16833,21 +16833,25 @@ spaces using  virtualized environments,  and helped  students to  specify search
 spaces and  construct designs  and performance  models for  different autotuning
 problems.   Students  brought their  own  problems  from  the context  of  their
 research  projects at  the time,  and we  conducted weekly  group meetings  that
-helped devise the best exploration and modeling strategies for each case.  Below
-are the students'  names and the title of  the work they did in  the context our
-this    project.    We   maintained    a    project    page   with    additional
-information\nbsp{}\cite{many2021argusp}.
+helped devise  the best exploration and  modeling strategies for each  case.  We
+applied Optimal Design and screening,  to problems such as optimizing parameters
+of the Rust compiler  and of the PETSc library\nbsp{}\cite{satish1997efficient},
+and  optimizing  hyperparameters  and  feature  selection  of  machine  learning
+algorithms    from   the    /Scikit-learn/\nbsp{}\cite{pedregosa2011scikitlearn}
+/Python/   library.    We   maintained    a   project   page   with   additional
+information\nbsp{}\cite{many2021argusp}.   The  students  we  advised,  and  the
+titles of the works they did in the context of this project, were:
 
 - *Luciano  Antonio Siqueira*:  Configuring the  PETSc Library  for Heterogeneous
-  Computing (submitted to iWAPT)
-- *Giuliano Augusto Faulin Belinassi*: Parallelized Compile Time Modeling for GCC
+  Computing, submitted to iWAPT;
+- *Giuliano Augusto Faulin Belinassi*: Parallelized Compile Time Modeling for GCC;
 - *Carlos  Enrique  Paucar Farfán*:  Hyperparameter  Tuning  for Cognitive  State
-  Classification (submitted to iWAPT)
-- *Nathan Benedetto Proença*: Design Space Exploration as a Service: a Prototype
-- *Emanuel Lima de Souza*: LLVM Pass Selection for Rust Programs
-- *Alan Barzilay*: Optimizing Clustering Algorithms for Staying Point Extraction
+  Classification, submitted to iWAPT;
+- *Nathan Benedetto Proença*: Design Space Exploration as a Service: a Prototype;
+- *Emanuel Lima de Souza*: LLVM Pass Selection for Rust Programs;
+- *Alan Barzilay*: Optimizing Clustering Algorithms for Staying Point Extraction; and
 - *Vinícius  Bitencourt Matos*:  Optimizing Remainder  and Kernel  Computation in
-  Ontologies
+  Ontologies.
 
 ** Appendices End Marker                                            :ignore:
 #+latex: \end{appendices}

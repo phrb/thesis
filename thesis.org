@@ -16644,57 +16644,101 @@ century,  despite   current  physical  limits  on   hardware  design.   Software
 optimization  has  performed an  increasingly  substantial  role on  performance
 improvement over the last 15 years, requiring the exploration of larger and more
 complex search spaces than ever before.   Autotuning methods are one approach to
-tackle performance optimization of  complex search spaces, enabling exploitation
-of existing  relationships between program  parameters and performance.   We can
-derive autotuning methods from well-established  statistics, although, as is the
-case for Design of  Experiments methods, their usage is not  always common in or
-standardized for autotuning domains.
-
-#+latex: \todo[inline]{make collaboration contexts more clear}
+tackle  the   performance  optimization  of  complex   search  spaces,  enabling
+exploitation   of  existing   relationships  between   program  parameters   and
+performance.  We  can adapt autotuning methods  from well-established statistics
+and  mathematical optimization,  although,  as is  the case  for  the Design  of
+Experiments, their usage is not always common in autotuning research.
 
 We  introduced   the  autotuning  problem   in  Chapter\nbsp{}\ref{chap:trends},
 presenting an overview of recent work from the point of view of the dimension of
 the search spaces  involved. We then presented a subset  of optimization methods
 and    discussed     their    application    to    autotuning     problems    in
-Part\nbsp{}\ref{part:optim},  where  we aimed  to  present  the balance  of  the
-trade-off between exploration and exploitation of autotuning search spaces as an
-important     concern     for      successful     surrogate     building     and
-optimization. Part\nbsp{}\ref{part:app} presented our efforts to apply different
-optimization methods to  different autotuning problems, and  the development and
-application  of  our  main  contribution, a  transparent  and  parsimonious  DoE
-approach to autotuning.
+Part\nbsp{}\ref{part:optim},  where  we aimed  to  show  that the  methods  most
+commonly applied to autotuning are  not transparent to statistical analysis, due
+to the unbalanced way in which  they explore search spaces, and not parsimonious
+regarding the experimental  budget, assuming that measurements  of the objective
+function are  cheap, which is  often not the  case for autotuning  problems.  We
+then  presented how  the  Design  of Experiments  can  effectively address  both
+problems by parsimoniously determining a balanced  set of experiments to run and
+transparently  analysing the  results  to identify  significant and  exploitable
+relationships.   We  also  presented  Online Learning  methods,  which  are  not
+necessarily directly  applicable to autotuning problems,  but provide strategies
+to balance exploitation and exploration, such as the Expected Improvement, which
+help in the  optimization of high-dimensional search spaces and  of problems for
+which it is unclear how to formulate modeling hypotheses.
 
-It is of great interest to revisit the screening methodology applied to compiler
-parameters  for  other  architectures,  a  beginning  of  which  we  present  in
-Chapter\nbsp{}\ref{chap:cuda}, since  compilers expose many binary  factors that
-could be efficiently  studied with Plackett-Burman designs. We  could also apply
-our  DoE approach  to autotuning  problems  in different  domains, perhaps  with
-simpler low-level parameterized linear algebra kernels.  During the last year of
-this thesis we had the opportunity to help manage a small-scale research project
-and advise six masters and one undergraduate student, funded by /Hewlett Packard
-Enterprise/.   This project  funded the  development our  Design of  Experiments
-library  in  Julia\nbsp{}\cite{bruel2021experimental},   which  was  applied  to
-autotuning problems brought  by each participating student.   We applied Optimal
-Design and  screening, to  problems such  as optimizing  parameters of  the Rust
-compiler   and  of   the  PETSc   library\nbsp{}\cite{satish1997efficient},  and
-optimizing hyperparameters and feature  selection of machine learning algorithms
-from the  /Scikit-learn/\nbsp{}\cite{pedregosa2011scikitlearn} /Python/ library.
-We have  not yet published  the work  done during this  project, and we  did not
-include it in this thesis due to  time and space constraints, but the experience
-with applying DoE methods to problems  of interest to other researchers aided in
-the consolidation of our understanding, in  the writing of this document, and in
-demonstrating  the potential  of  DoE  methods on  domains  we  did not  explore
-directly during this thesis.
+Part\nbsp{}\ref{part:app} presented our efforts  to apply different optimization
+methods to  different autotuning problems,  and highlighted the  development and
+application of our main contribution,  a transparent and parsimonious autotuning
+approach based on the  Design of Experiments. Chapter\nbsp{}\ref{chap:laplacian}
+introduced  our  approach  and  demonstrated its  transparent  and  parsimonious
+operation using  optimal designs  and ANOVA. We  performed a  more comprehensive
+study in Chapter\nbsp{}\ref{chap:spapt}, in which  we could still refine initial
+models based  on factor significance  but we  could not practically  exploit the
+relationships  we  identified.   We  performed  a  small-scale  screening  study
+expanding  upon the  previous  results  of Chapter\nbsp{}\ref{chap:cuda},  which
+motivates applying  the screening methodology  to compiler parameter  tuning for
+other architectures,  since compilers expose  many binary factors that  could be
+efficiently  studied  with  Plackett-Burman  designs.   We  effectively  applied
+Gaussian Process Regression with  space-filling designs and Expected Improvement
+to  mixed-precision  bit  quantization  of neural  networks,  and  although  the
+quantizations  we found  were consistent,  identifying significant  factors with
+Sobol indices  was inconclusive. Applying DoE  methods to this problem  could be
+fruitful.
 
-Applying the  DoE approach  to neural network  construction and  optimization is
-also of interest, since we do  not know whether relationships could be exploited
-in other  related domains, such  as Neural  Architecture Search.  We  could also
-employ space-filling designs and nonparametric methods to optimizing other kinds
-of  hyperparameters,  such  as  we  did for  our  work  on  mixed-precision  bit
-quantization. Finally, we  believe that High-Level Synthesis for  FPGAs or other
-custom architecture  will play an  important role in  computing in the  years to
-come, and since this  was an under-explored problem in this  thesis, it could be
-approached fruitfully using the methods discussed in this thesis.
+We did  not include some  of the projects in  which we participated  during this
+thesis,  notably  the  ones where  we  helped  others  to  apply the  Design  of
+Experiments to  their own autotuning  problems.  These and  other collaborations
+were  omitted from  this  thesis due  to  time and  space  constraints, but  the
+experience  with  applying  DoE  methods   to  problems  of  interest  to  other
+researchers aided in  the consolidation of our understanding, in  the writing of
+this document, and  in demonstrating the potential of DoE  methods on domains we
+did  not  explore  directly  during  this   thesis.   A  complete  list  of  our
+collaborations is presented in Appendix\nbsp{}\ref{app:contrib}.
+
+*** Future Work
+The autotuning method that best fit each of the studies presented in this thesis
+was different, and so were the  magnitude of the optimizations that we produced.
+It was necessary to construct  different experimental and analysis workflows for
+each problem we studied, because each one targeted different hardware, worked on
+a different level of the  hardware-software stack, and had different constraints
+and experimental budgets.  Finding a  reasonable baseline of comparison was done
+differently for  each problem and, with  the exception of the  work presented in
+Chapter\nbsp{}\ref{chap:laplacian},  relied on  consensus established  among the
+users of a program.
+
+By addressing common issues, these differences expose a set of common steps that
+must be taken  for studying most autotuning problems, which  could be abstracted
+to produce a standard for  autotuning research. Efforts toward establishing such
+a standard\nbsp{}\cite{fursin2021collective}  and using  collective explorations
+of     a     search     space     to     aid     further     optimization     by
+others\nbsp{}\cite{fursincollective} have  been performed by Grigori  Fursin and
+others, and are highly motivating.
+
+Producing an  extensive set  of representative, parameterized,  and exhaustively
+measured programs for specific hardware would enable comparing the optimizations
+produced by  different methods with  known global optima, subject  to controlled
+budgets and  software and  hardware environments. Elaborating  such a  set would
+present a  considerable challenge for  a single  research project, but  it would
+favourably  impact the  reproducibility of  autotuning research.  Still, due  to
+characteristics  intrinsic to  the  evolution of  hardware  design that  require
+constant increases in complexity, we believe this to be a recurring effort, that
+would benefit social and collective approaches.
+
+Future  work on  the directions  we  believe this  thesis has  pointed to  would
+involve  contributing  to  devise  and   improve  collective  solutions  to  the
+exploration of search spaces, guided  by statistics well-studied and established
+in other  domains. Additionally,  it was  not always  clear to  us that  we were
+manipulating  program parameters  at  the most  effective  abstraction level  to
+achieve performance improvement.  Thus, we believe that studies of the impact of
+parameters  from  different abstraction  levels  should  also be  considered  in
+autotuning problems.
+
+We believe  that well specified  sets of exhaustively and  collectively measured
+search  spaces,  targeting an  evolving  array  of hardware  architectures,  and
+striving  for reproducible  workflows  and results,  would  provide support  for
+further advancing the research on automated performance tuning.
 
 ** Appendices Begin Marker                                          :ignore:
 #+latex: \begin{appendices}

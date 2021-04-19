@@ -8908,8 +8908,34 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 *** IME
 #+LATEX_HEADER: \input{covers/ime.tex}
 *** UGA
+# #+LATEX_HEADER: \usepackage[a4paper]{covers/uga}
+# #+LATEX_HEADER: \usepackage[french,english]{isodate}
+#
+# #+LATEX_HEADER: \input{covers/uga.tex}
 * Front Matter                                                       :ignore:
 #+latex: \frontmatter
+
+** Acknowledgement                                                  :ignore:
+#+begin_export latex
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Acknowledgment}
+
+\begin{center}
+  \textbf{\Large\textsc{acknowledgment}}
+
+  \vspace{0.4cm}
+  \justify
+#+end_export
+
+Simple test
+
+#+begin_export latex
+
+\end{center}
+\clearpage{\pagestyle{empty}\cleardoublepage}
+#+end_export
+
 ** Abstracts                                                        :ignore:
 *** Abstract                                                       :ignore:
 #+begin_export latex
@@ -9093,6 +9119,7 @@ interpretável, eficiente, e eficaz.
 
 \end{center}
 \selectlanguage{english}
+\clearpage{\pagestyle{empty}\cleardoublepage}
 #+end_export
 
 ** Table of Contents                                                :ignore:

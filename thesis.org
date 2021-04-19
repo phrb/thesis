@@ -13032,11 +13032,11 @@ Three simple policies for choosing an action at instant $t$, with linear-growing
 regret as  a function of  time, as described  in Equation\nbsp{}\ref{eq:regret},
 are:
 
-1. *Exploring* by uniformly choosing a random action for instant $t$
-2. *Exploiting* by picking the action for which we observed the best mean reward
-   up to  instant $t$
-3. *Mixing exploitation and exploration*, by picking the best action so far with
-   probability $1 -  \epsilon$ and a random action  with probability $\epsilon$
+1. *exploring* by uniformly choosing a random action for instant $t$;
+2. *exploiting* by picking the action for which we observed the best mean reward
+   up to  instant $t$; and
+3. *mixing exploitation and exploration*, by picking the best action so far with
+   probability $1 -  \epsilon$ and a random action  with probability $\epsilon$.
 
 These approaches  are not guaranteed to  explore enough, in the  sense that they
 tend to  always favor the  action with the  highest observed mean  reward, which
@@ -13143,14 +13143,14 @@ $\hat{\boldsymbol{\sigma}}^{2}$.   Prediction variances  are represented  by the
 shaded areas, and go to zero at each observation. To decide where to spend the
 next measurement, we could:
 
-1. *Explore* by choosing the $\mathbf{x}$ with the smallest lower bound of a 95%
+1. *explore* by choosing the $\mathbf{x}$ with the smallest lower bound of a 95%
    confidence    interval    constructed     using    the    mean    predictions
-   $\hat{\boldsymbol{\mu}}$ and the variances $\hat{\boldsymbol{\sigma}}^{2}$
-2. *Exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
-   $\hat{\boldsymbol{\mu}}$
-3. *Mix exploitation and exploration* by either using a strategy like the UCB we
+   $\hat{\boldsymbol{\mu}}$ and the variances $\hat{\boldsymbol{\sigma}}^{2}$;
+2. *exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
+   $\hat{\boldsymbol{\mu}}$; or
+3. *mix exploitation and exploration* by either using a strategy like the UCB we
    discussed  for MAB  problems, or  picking the  $\mathbf{x}$ with  the largest
-   Expected Improvement
+   Expected Improvement.
 
 #+NAME: fig:ei-gp
 #+CAPTION: A surrogate Gaussian Process, whose mean is shown in @@latex: \textcolor{NavyBlue}{\textbf{blue}}@@, fit to four observations,

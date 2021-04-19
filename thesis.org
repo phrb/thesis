@@ -9865,12 +9865,9 @@ choosing which experiments  should be conducted. Chapter\nbsp{}\ref{chap:online}
 presents Online  Learning methods, which  explicitly model and seek  to optimize
 the  compromise  between   exploring  a  search  space  seeking   to  learn  new
 relationships between factors and  responses, and exploiting known relationships
-to find the  optimal factor configuration. This compromise is  relevant but left
-implicit in all methods discussed in Part\nbsp{}\ref{part:optim}, and we seek to
-demonstrate  how  it  becomes  more relevant  in  higher-dimensional  autotuning
-problems.   Chapter\nbsp{}\ref{chap:overview} closes  this  part presenting,  in
-light of the  previous expositions, the method choices that  compose the path we
-took across the studies done in this thesis.
+to  find  the  optimal factor  configuration.  Chapter\nbsp{}\ref{chap:overview}
+closes this  part presenting, in light  of the previous expositions,  the method
+choices that compose the path we took across the studies done in this thesis.
 
 Part\nbsp{}\ref{part:app} begins with a presentation of our research methodology
 in Chapter\nbsp{}\ref{chap:method},  which describes  the efforts made  over the

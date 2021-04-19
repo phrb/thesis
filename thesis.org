@@ -13281,16 +13281,15 @@ building surrogate models, while simultaneously decreasing variance of estimates
 and increasing accuracy.
 
 Chapter\nbsp{}\ref{chap:online}    presents     methods    to     balance    the
-exploitation-exploration    trade-off,    which     is    left    implicit    in
-Chapters\nbsp{}\ref{chap:learning} and  \ref{chap:ed}.  Online  learning methods
-are not easy to  directly adapt to our context, since  the autotuning problem is
-more easily  stated in terms of  a batch of  observations to be modeled  and the
-target problem  and machine are  static for each  tuning run.  Despite  that, we
-discussed  how  Multi-armed Bandit  algorithms  helped  deciding which  function
-minimization  method  to  use  during   an  autotuning  run,  how  the  Expected
-Improvement metric helps mixing exploration and exploitation in Gaussian Process
-regression, and how Reinforcement Learning methods can be used to model problems
-with strong interactions between optimization choices.
+exploitation-exploration  trade-off.  Online  learning methods  are not  easy to
+directly  adapt to  our context,  since the  autotuning problem  is more  easily
+stated in terms of a batch of  observations to be modeled and the target problem
+and machine  are static  for each  tuning run.  Despite  that, we  discussed how
+Multi-armed Bandit algorithms helped deciding which function minimization method
+to  use during  an autotuning  run, how  the Expected  Improvement metric  helps
+mixing  exploration and  exploitation in  Gaussian Process  regression, and  how
+Reinforcement  Learning  methods can  be  used  to  model problems  with  strong
+interactions between optimization choices.
 
 In this  thesis we built, applied,  and evaluated optimization methods  based on
 Design of Experiments  in different autotuning contexts, described  in detail in

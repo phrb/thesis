@@ -13227,7 +13227,12 @@ The EI computation was used by Jones /et al./\nbsp{}\cite{jones1998efficient} in
 their /Efficient Global  Optimization/ (EGO) algorithm, and we  refer the reader
 to   their  original   paper   and   to  Chapter   /16/   of  Kochenderfer   and
 Wheeler\nbsp{}\cite{kochenderfer2019algorithms}   for    further   details   and
-derivations of Equation\nbsp{}\ref{eq:ei}.
+derivations of Equation\nbsp{}\ref{eq:ei}.  In  contrast to the regret discussed
+in  the previous  sections, the  Expected  Improvement strategy  arguably has  a
+stronger focus  on exploring the  underlying search space  structure, especially
+when coupled with Gaussian Processes, since these surrogate models make specific
+hypotheses regarding covariance structures encoded  in the kernels and objective
+function continuity and smoothness.
 
 *** Summary
 :PROPERTIES:

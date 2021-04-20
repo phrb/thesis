@@ -16736,10 +16736,10 @@ measured programs for specific hardware would enable comparing the optimizations
 produced by  different methods with  known global optima, subject  to controlled
 budgets and  software and  hardware environments. Elaborating  such a  set would
 present a  considerable challenge for  a single  research project, but  it would
-favourably  impact the  reproducibility of  autotuning research.  Still, due  to
+favourably impact  the reproducibility  of autotuning  research.  Still,  due to
 characteristics  intrinsic to  the  evolution of  hardware  design that  require
 constant increases in complexity, we believe this to be a recurring effort, that
-would benefit social and collective approaches.
+would benefit from social and collective approaches.
 
 Future  work on  the directions  we  believe this  thesis has  pointed to  would
 involve  contributing  to  devise  and   improve  collective  solutions  to  the

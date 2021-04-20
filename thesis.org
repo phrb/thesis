@@ -16793,8 +16793,10 @@ programming and autotuning to a larger community inside USP, at:
 
 - /Introduction to GPU Programming/ (INFIERI, 2017);
 - /Autotuning  NVCC Parameters  in  the Julia  Language/  (NVIDIA GPU  Workshop,
-  2017); and
-- /Introdução à Programação de GPUs com a plataforma CUDA/ (ERAD-SP, 2016).
+  2017);
+- /Introdução à Programação de GPUs com a plataforma CUDA/ (ERAD-SP, 2016); and
+- /Ciência Reprodutível para Experimentos em  Computação de Alto Desempenho/, in
+  collaboration with *Lucas Schnorr* from UFRGS (ERAD-SP, 2021, remote).
 
 *** At UGA
 :PROPERTIES:

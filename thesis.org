@@ -16713,8 +16713,8 @@ must be taken  for studying most autotuning problems, which  could be abstracted
 to produce a standard for  autotuning research. Efforts toward establishing such
 a standard\nbsp{}\cite{fursin2021collective}  and using  collective explorations
 of     a     search     space     to     aid     further     optimization     by
-others\nbsp{}\cite{fursincollective} have  been performed by Grigori  Fursin and
-others, and are highly motivating.
+others\nbsp{}\cite{fursin2014collective} have  been performed by  Grigori Fursin
+and others, and are highly motivating.
 
 Producing an  extensive set  of representative, parameterized,  and exhaustively
 measured programs for specific hardware would enable comparing the optimizations
@@ -16778,6 +16778,23 @@ published\nbsp{}\cite{bruel2017autotuninghls},     and    is     presented    in
 Chapter\nbsp{}\ref{chap:fpga}.   We also  collaborated  with a  larger group  of
 researchers     from     different      universities,     resulting     in     a
 publication\nbsp{}\cite{bruel2017generalize}.
+
+We participated in three graduate and undergraduate courses as a TA at USP, with
+Professor *Alfredo Goldman*, namely:
+
+- /Introduction to Concurrent, Parallel, and Distributed Programming/ (2017);
+- /Introduction  to Programming/  (2019), where  we collaborated  with *Anderson
+  Andrei da Silva*; and
+- /Introduction to Concurrent, Parallel, and Distributed Programming/, also with
+  *Anderson Andrei da Silva* (2020, remote).
+
+Also with *Alfredo Goldman*, we gave  small-scale technical short courses on GPU
+programming and autotuning to a larger community inside USP, at:
+
+- /Introduction to GPU Programming/ (INFIERI, 2017);
+- /Autotuning  NVCC Parameters  in  the Julia  Language/  (NVIDIA GPU  Workshop,
+  2017); and
+- /Introdução à Programação de GPUs com a plataforma CUDA/ (ERAD-SP, 2016).
 
 *** At UGA
 :PROPERTIES:

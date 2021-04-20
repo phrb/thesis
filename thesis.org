@@ -12978,34 +12978,19 @@ the chapter.
 :CUSTOM_ID: sec:bandits
 :END:
 
-The multi-armed bandit (MAB) problem consists  of choosing a sequence of actions
-that  maximizes the  cumulative rewards  obtained over  a period  of time.   The
-OpenTuner\nbsp{}\cite{ansel2014opentuner} framework  provides an example  in the
-autotuning context, where actions are choices  of search heuristics to run for a
-small number of iterations, and the rewards  are computed as the number of times
-a configuration that improves performance was  found by the chosen heuristic, in
-a sliding time window.
-
-In this  section we assume  that rewards are  independent and static  over time,
-although     general     MAB     solutions     can     deal     with     dynamic
-rewards\nbsp{}\cite{auer2019adaptively,auer2002nonstochastic,seldin2013evaluation}.
-This  assumption is  arguably  violated in  the  OpenTuner application  because,
-although the optimizations  performed by each heuristic could  be independent if
-there was  no communication  between them,  the results  an heuristic  finds are
-typically  dependent  on the  previous  regions  of  the  search space  that  it
-explored.  Additionally, the default configuration of the framework implements a
-centralized  manager that  shares  results between  heuristics  and maintains  a
-shared  global  best configuration.   Despite  that,  it  is still  possible  to
-implement and use a different strategy to share resources between heuristics.
-
-Choices made in expectation  of a reward can be compared  to pulling the levers,
-or arms, of slot machines in a casino, which was likely the analogy that lead to
-the MAB name.   In a discrete time  period with $T$ instants, a  solution to the
-MAB problem provides at each instant $t \in \{1, \dots, T\}$ a choice $I_i$ from
-a set with $k$ possible actions  $A_1,\dots,A_k$, leading to sequence of rewards
+The Multi-Armed Bandit (MAB) problem consists  of choosing a sequence of actions
+that maximizes the  cumulative rewards obtained over a period  of time.  Choices
+made in expectation of a reward can  be compared to pulling the levers, or arms,
+of slot machines in  a casino, which is the analogy that  inspired the MAB name.
+In a  discrete time  period with  $T$ instants,  a solution  to the  MAB problem
+provides at each instant $t \in \{1, \dots,  T\}$ a choice $I_i$ from a set with
+$k$   possible  actions   $A_1,\dots,A_k$,  leading   to  sequence   of  rewards
 $R_{t,I_i}$.  A sequence of actions for each instant can be called a policy, and
 we wish to find policies, or strategies to construct them, that maximize the sum
-of obtained rewards over time.
+of  obtained rewards  over time.   In this  section we  assume that  rewards are
+independent and static  over time, although general MAB solutions  can deal with
+dynamic
+rewards\nbsp{}\cite{auer2019adaptively,auer2002nonstochastic,seldin2013evaluation}.
 
 Bernoulli bandits are a  special case when rewards for each of  the $k$ arms are
 independent Bernoulli random variables with parameters $p_1,\dots,p_k$, giving a
@@ -13038,19 +13023,33 @@ are:
 3. *mixing exploitation and exploration*, by picking the best action so far with
    probability $1 -  \epsilon$ and a random action  with probability $\epsilon$.
 
-These approaches  are not guaranteed to  explore enough, in the  sense that they
-tend to  always favor the  action with the  highest observed mean  reward, which
-could  lead to  suboptimal policies,  with strictly  positive probability.   The
-Upper  Confidence  Bound (UCB)  algorithm\nbsp{}\cite{auer2002using,auer2010ucb}
-includes the  confidence interval of  the observed reward  for each action  as a
-component  to decide  which choice  to make.   At each  interval, the  algorithm
-chooses the  action for  which the  upper bound  of a  confidence interval  of a
-specified level is the highest.   The confidence levels required should increase
-as a function  of time, resulting in  a greedy strategy which  exploits the best
-observed mean rewards  and explores, enforced by  increased thresholds, ensuring
-that   we  balance   exploitation   and  exploration   and  preventing   missing
-opportunities by concentrating on a suboptimal arm that produced good results by
-chance in the past.
+Approaches /2/ and /3/ above are not  guaranteed to explore enough, in the sense
+that they tend to always favor the action with the highest observed mean reward,
+which could  lead to  suboptimal policies,  with strictly  positive probability.
+The             Upper             Confidence             Bound             (UCB)
+algorithm\nbsp{}\cite{auer2002using,auer2010ucb}    includes   the    confidence
+interval of the observed  reward for each action as a  component to decide which
+choice to  make.  At each interval,  the algorithm chooses the  action for which
+the upper bound  of a confidence interval  of a specified level  is the highest.
+The confidence levels required should increase  as a function of time, resulting
+in a greedy strategy which exploits the best observed mean rewards and explores,
+enforced  by increased  thresholds, ensuring  that we  balance exploitation  and
+exploration  and   preventing  missing  opportunities  by   concentrating  on  a
+suboptimal arm that produced good results by chance in the past.
+
+The OpenTuner\nbsp{}\cite{ansel2014opentuner}  framework provides an  example in
+the autotuning  context, where actions are  choices of search heuristics  to run
+for a small number of iterations, and  the rewards are computed as the number of
+times  a  configuration  that  improves  performance was  found  by  the  chosen
+heuristic, in a sliding time window.   The hypothesis of static and independence
+rewards is arguably violated in  the OpenTuner application because, although the
+optimizations performed by  each heuristic could be independent if  there was no
+communication  between  them,  the  results an  heuristic  finds  are  typically
+dependent  on  the previous  regions  of  the  search  space that  it  explored.
+Additionally,  the   default  configuration   of  the  framework   implements  a
+centralized  manager that  shares  results between  heuristics  and maintains  a
+shared global best  configuration.  It is still possible to  implement and use a
+different strategy to share resources between heuristics in the framework.
 
 Algorithms for the MAB problem model  choices over time and balance exploitation
 and  exploration  directly.   Although  they   have  been  used  to  manage  the
@@ -13060,13 +13059,11 @@ application to autotuning problems.
 
 One way to model an autotuning problem as a set of choices with distinct rewards
 would  require  including each  possible  configuration  as  an action,  with  a
-corresponding performance metric as a reward. It is not obvious how to model the
-regret, since the  global optimum is seldom known in  autotuning problems, but a
-reasonable baseline could  be used. In this  setting, we would have  to run many
-tests with  each configuration in order  to build a confidence  interval that we
-could leverage.  Still, many configurations  would have to remain unevaluated in
-high dimensional  search spaces,  but previous knowledge  of the  target problem
-could be used to reduce the number of configurations.
+corresponding performance metric as a reward.  In this setting, we would have to
+run many tests  with each configuration in order to  build a confidence interval
+that  we  could leverage.   Still,  many  configurations  would have  to  remain
+unevaluated in  high dimensional  search spaces, but  previous knowledge  of the
+target problem could be used to reduce the number of configurations.
 
 Alternatively, a policy could consist in picking each factor level sequentially,
 considering  the levels  picked  for other  factors. This  lies  outside of  the
@@ -13107,21 +13104,39 @@ function $P(a, s, s^{\prime})$ gives the  probability that, when in state $s$ at
 instant $t$, taking action  $a$ leads to state $s^{\prime}$ at  instant $t + 1$,
 and  the  function  $R(a,  s,   s^{\prime})$  gives  the  corresponding  reward.
 Completing the specification of an MDP, the third function is the policy $\pi: S
-\to   A$,  determining   which   action   should  be   taken   at  each   state.
-Figure\nbsp{}\ref{fig:mdp} shows an  example of an MDP with two  states and four
-actions.
+\to A$, determining  which action should be taken at  each state.  Reinforcement
+Learning  algorithms  operate are  used  when  the  functions  $P$ and  $R$  are
+completely or  partially unknown, and seek  to learn these functions  by testing
+different  policies $\pi$.   These algorithms  need to  balance exploitation  of
+known  effective  policies,  aiming  to  maximize  the  cumulative  reward,  and
+exploration of  new policies, aiming to  learn $P$ and $R$.   Policy choices can
+also be different in cases when the maximum duration $T$ is known, in a scenario
+said to have  a /fixed horizon/, and  when $T$ is unknown, when  the best choice
+would  be  optimize for  a  potentially  infinite  duration with  a  /discounted
+reward/.  Figure\nbsp{}\ref{fig:mdp} shows an example  of an MDP with two states
+and four actions, with known $P$ and $R$.
 
 Regret for RL algorithms can be modeled  in a similar fashion to the MAB example
 of the previous  section, and the strategies we briefly  described for balancing
 exploitation and  exploration could  in principle be  applied to  optimizing MDP
-policies. Optimal  policies exist  for special  cases when an  MDP has  a finite
-number of states and actions\nbsp{}\cite{burnetas1997optimal}.  Other approaches
-exist  for general  cases  which  adapt, among  others,  the gradient-based  and
-function minimization methods we  discuss in Chapter\nbsp{}\ref{chap:funcmin} to
-an objective  function that receives a  policy and computes the  regret.  One of
-these    is     the    /Deep     Deterministic    Policy     Gradient/    (DDPG)
-method\nbsp{}\cite{lillicrap2015continuous} used  in the  Reinforcement Learning
-method we use as a baseline in Chapter\nbsp{}\ref{chap:quantization}.
+policies. Policies  are generally  obtained using  dynamic programming  for both
+fixed horizon and  discounted reward cases.  Optimal policies  exist for special
+cases    when    an    MDP    has    a   finite    number    of    states    and
+actions\nbsp{}\cite{burnetas1997optimal}.
+
+Other  approaches  exist  for  general  cases which  adapt,  among  others,  the
+gradient-based    and   function    minimization   methods    we   discuss    in
+Chapter\nbsp{}\ref{chap:funcmin} to an objective function that receives a policy
+and  computes the  regret.   One  of these  is  the  /Deep Deterministic  Policy
+Gradient/   (DDPG)  method\nbsp{}\cite{lillicrap2015continuous}   used  in   the
+Reinforcement    Learning     method    we     use    as    a     baseline    in
+Chapter\nbsp{}\ref{chap:quantization}.   This  method  is  a  variation  of  the
+/Q-learning/ algorithm,  introduced by Watkins\nbsp{}\cite{watkins1989learning},
+where a function $Q: S\times{}A \to  \mathbb{R}$ provides the expected reward of
+a state-action combination, and is updated using dynamic programming, using data
+from observations over time. Finding an optimal policy using the function /Q/ is
+hard  in general,  but using  a  Deep Neural  Network to  represent /Q/  enables
+optimizing for certain scenarios.
 
 *** Expected Improvement for Gaussian Process Regression
 :PROPERTIES:

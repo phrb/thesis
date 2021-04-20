@@ -8928,7 +8928,7 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
   \justify
 #+end_export
 
-Simple test
+
 
 #+begin_export latex
 

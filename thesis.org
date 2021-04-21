@@ -8950,7 +8950,19 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
   \justify
 #+end_export
 
+I have met many kind people during  this thesis. I thank Alfredo, Arnaud, Brice,
+Dejan, and  Sai, who  I consider  friends and  mentors, for  having had  a great
+positive impact in  the way I came  to understand research first as  a human and
+social endeavour, and second as a precise, pragmatic, and reproducible hope.
 
+Many other friends  have given me opportunity to laugh,  complain, travel, work,
+cook, study, talk, and contemplate  life.  With the certainty of incompleteness,
+I thank  Marcos, Flávio, Bodo,  Thilo, Andrei,  Danilo, Salah, Adrien,  Tom, and
+Christian.
+
+I thank my  mother, my brother, my  father, for showing me  how, especially when
+adversity seems overwhelming,  we can find the sparks of  joy, love, and courage
+that reignite our strength to continue.
 
 #+begin_export latex
 
@@ -9782,7 +9794,6 @@ kable(df,
 
 #+RESULTS:
 #+begin_export latex
-
 \begin{table}[!h]
 
 \caption{\label{tab:search-methods}Autotuning methods used by a sample of systems, in different domains, ordered by publishing year. Methods were classified as either Search Heuristics (SH), Machine Learning (ML), or more precisely when the originating work provided detailed information. Earlier work favored employing Search Heuristics, which are less prominent in recent work, which favors methods based on Machine Learning.}

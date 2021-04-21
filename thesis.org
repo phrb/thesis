@@ -16143,7 +16143,7 @@ presents  a  more  detailed  assessment   of  the  GPR  method  we  implemented.
 Section\nbsp{}[[Summary]] summarizes the discussion and concludes the chapter.
 
 *** Autotuning Bit Precision for Convolutional Neural Networks
-A Neural Network is composed of interconnected layers of "neurons".  Each neuron
+A Neural Network is composed of interconnected layers of /neurons/.  Each neuron
 can be interpreted as an agent  that receives /weighted/ inputs from connections
 with other neurons, combines them, and  produces an output if the combined input
 crosses an /activation/  threshold.  The process of /quantization/  of a network

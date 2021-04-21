@@ -13107,7 +13107,7 @@ different probabilities,  and can  produce a  reward.
 
 #+NAME: fig:mdp
 #+CAPTION: A Markov Decision Process with state set $S = \{S_1, S_2\}$,
-#+CAPTION: and action set $A = \{a_1, a_2, a_3, a_4\}$. The transition
+#+CAPTION: and action set $A = \{a_1, a_2\}$. The transition
 #+CAPTION: probabilities of each action are shown near the corresponding
 #+CAPTION: dashed @@latex: \textcolor{BrickRed}{\textbf{red}}@@ arrows. Rewards are either
 #+CAPTION: $\color{BrickRed}{\boldsymbol{+}}$, $\color{BrickRed}{\boldsymbol{-}}$,
@@ -13136,7 +13136,7 @@ also be different in cases when the maximum duration $T$ is known, in a scenario
 said to have  a /fixed horizon/, and  when $T$ is unknown, when  the best choice
 would  be  optimize for  a  potentially  infinite  duration with  a  /discounted
 reward/.  Figure\nbsp{}\ref{fig:mdp} shows an example  of an MDP with two states
-and four actions, with known $P$ and $R$.
+and two actions, with known $P$ and $R$.
 
 Regret for RL algorithms can be modeled  in a similar fashion to the MAB example
 of the previous  section, and the strategies we briefly  described for balancing

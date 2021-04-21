@@ -13085,14 +13085,12 @@ corresponding performance metric as a reward.  In this setting, we would have to
 run many tests  with each configuration in order to  build a confidence interval
 that  we  could leverage.   Still,  many  configurations  would have  to  remain
 unevaluated in  high dimensional  search spaces, but  previous knowledge  of the
-target problem could be used to reduce the number of configurations.
-
-Alternatively, a policy could consist in picking each factor level sequentially,
-considering  the levels  picked  for other  factors. This  lies  outside of  the
-hypothesis we have made for the MAB  problems in this section, since choices are
-not  independent.  This  model was  implemented using  a Reinforcement  Learning
-algorithm  in Wang  /et al./\nbsp{}\cite{wang2019haq},  where bit  precision was
-chosen for each of the sequentially connected layers of a neural network.
+target  problem  could   be  used  to  reduce  the   number  of  configurations.
+Alternatively, it is possible  to model rewards for each arm  as a linear model,
+using knowledge about search space structure that can be updated as optimization
+progresses.     The     /LinUCB/    algorithm     introduced    by     Li    /et
+al./\nbsp{}\cite{li2010contextual}  implements  such   contextual  approach  and
+applies it to news recommender systems that adapt to different users.
 
 *** Reinforcement Learning
 :PROPERTIES:
@@ -13150,8 +13148,8 @@ Other  approaches  exist  for  general  cases which  adapt,  among  others,  the
 gradient-based    and   function    minimization   methods    we   discuss    in
 Chapter\nbsp{}\ref{chap:funcmin} to an objective function that receives a policy
 and  computes the  regret.   One  of these  is  the  /Deep Deterministic  Policy
-Gradient/   (DDPG)  method\nbsp{}\cite{lillicrap2015continuous}   used  in   the
-Reinforcement    Learning     method    we     use    as    a     baseline    in
+Gradient/ (DDPG) method\nbsp{}\cite{lillicrap2015continuous}  used in the method
+we       use        as       a        baseline\nbsp{}\cite{wang2019haq}       in
 Chapter\nbsp{}\ref{chap:quantization}.   This  method  is  a  variation  of  the
 /Q-learning/ algorithm,  introduced by Watkins\nbsp{}\cite{watkins1989learning},
 where a function $Q: S\times{}A \to  \mathbb{R}$ provides the expected reward of

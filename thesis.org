@@ -8163,10 +8163,11 @@ library(dplyr)
 library(paletteer)
 library(latex2exp)
 
-colors = paletteer_d(palette = "RColorBrewer::Set1", n = 5)
+colors = paletteer_d(palette = "RColorBrewer::Set1", n = 9)
 
 gpr_data = read.csv("data/online_learning/gp_design.csv")
-pred_df = read.csv("data/online_learning/gp_pred_ei.csv")
+pred_df = read.csv("data/online_learning/gp_pred_ei.csv") %>%
+    filter(x < 7)
 
 dashed_vline_size = 1.4
 label_size = 9.4
@@ -8178,7 +8179,8 @@ true_color = 1
 mu_color = 2
 ei_color = 5
 sd_color = 4
-d_color = 3
+d_color = 7
+sig_color = 3
 
 ggplot(data = gpr_data,
        aes(x = x,
@@ -8217,6 +8219,26 @@ ggplot(data = gpr_data,
               vjust = label_vjust,
               hjust = label_hjust,
               label = TeX("$max_{\\mathbf{x}}\\,EI(\\mathbf{x})$")) +
+    geom_vline(data = pred_df %>%
+                   mutate(ci_l = abs(ymax - ymin)) %>%
+                   filter(ci_l == max(ci_l)),
+               size = dashed_vline_size,
+               linetype = 2,
+               color = colors[[sig_color]],
+               aes(xintercept = x - 0.3)) +
+    geom_text(data = pred_df %>%
+                   mutate(ci_l = abs(ymax - ymin)) %>%
+                   filter(ci_l == max(ci_l)),
+              aes(y = label_y,
+                  x = x - 0.3),
+              size = label_size,
+              angle = 90,
+              color = colors[[sig_color]],
+              vjust = label_vjust,
+              hjust = label_hjust,
+              label = TeX(paste("$max_{\\mathbf{x}}\\,",
+                                "\\hat{\\sigma}(\\mathbf{x})$",
+                                sep = ""))) +
     geom_vline(data = filter(pred_df,
                              ymin == min(ymin)),
                size = dashed_vline_size,
@@ -8224,7 +8246,7 @@ ggplot(data = gpr_data,
                color = colors[[sd_color]],
                aes(xintercept = x - 0.3)) +
     geom_text(data = filter(pred_df,
-                             ymin == min(ymin)),
+                            ymin == min(ymin)),
               aes(y = label_y,
                   x = x - 0.3),
               size = label_size,
@@ -8232,9 +8254,9 @@ ggplot(data = gpr_data,
               color = colors[[sd_color]],
               vjust = label_vjust,
               hjust = label_hjust,
-              label = TeX(paste("$min_{\\mathbf{x}}\\,",
+              label = TeX(paste("$min_{\\mathbf{x}}\\,\\left(",
                                 "\\hat{\\mu}(\\mathbf{x}) - \\alpha",
-                                "\\hat{\\sigma}(\\mathbf{x})$",
+                                "\\hat{\\sigma}(\\mathbf{x})\\right)$",
                                 sep = ""))) +
     geom_vline(data = filter(pred_df,
                              y == min(y)),

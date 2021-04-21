@@ -16903,20 +16903,10 @@ work was still not published at the time of the writing of this thesis.
 :END:
 
 We helped  manage and advise  a group composed of  six masters students  and one
-undergraduate  student at  USP.   During  the nine  months  of  this project  we
-continued       the        development       of       our        DoE       Julia
-library\nbsp{}\cite{bruel2021experimental},  implemented a  prototype  of a  web
-application to use our library to  help defining and exploring autotuning search
-spaces using  virtualized environments,  and helped  students to  specify search
-spaces and  construct designs  and performance  models for  different autotuning
-problems.   Students  brought their  own  problems  from  the context  of  their
-research  projects at  the time,  and we  conducted weekly  group meetings  that
-helped devise  the best exploration and  modeling strategies for each  case.  We
-applied Optimal Design and screening,  to problems such as optimizing parameters
-of the Rust compiler  and of the PETSc library\nbsp{}\cite{satish1997efficient},
-and  optimizing  hyperparameters  and  feature  selection  of  machine  learning
-algorithms    from   the    /Scikit-learn/\nbsp{}\cite{pedregosa2011scikitlearn}
-/Python/   library.    We   maintained    a   project   page   with   additional
+undergraduate  student at  USP. Students  brought  their own  problems from  the
+context of  their research projects at  the time, and we  conducted weekly group
+meetings that  helped devise  the best exploration  and modeling  strategies for
+each    case.     We    maintained    a    project    page    with    additional
 information\nbsp{}\cite{many2021argusp}.   The  students  we  advised,  and  the
 titles of the works they did in the context of this project, were:
 
@@ -16927,8 +16917,9 @@ titles of the works they did in the context of this project, were:
   Classification, submitted to iWAPT;
 - *Nathan Benedetto Proença*: Design Space Exploration as a Service: a Prototype;
 - *Emanuel Lima de Souza*: LLVM Pass Selection for Rust Programs;
-- *Alan Barzilay*: Optimizing Clustering Algorithms for Staying Point Extraction; and
-- *Vinícius  Bitencourt Matos*:  Optimizing Remainder  and Kernel  Computation in
+- *Alan   Barzilay*:  Optimizing   Clustering  Algorithms   for  Staying   Point
+  Extraction; and
+- *Vinícius Bitencourt  Matos*: Optimizing  Remainder and Kernel  Computation in
   Ontologies.
 
 ** Appendices End Marker                                            :ignore:

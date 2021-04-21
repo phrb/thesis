@@ -13172,33 +13172,37 @@ space.
 
 Suppose  we have  fitted a  GP  surrogate model  to  a set  $\mathbf{X}$ with  4
 observations of  an objective function  $f$. Each experiment  is marked as  by a
-green point in Figure\nbsp{}[[fig:ei-gp]], with the  true $f$ marked in red.  As
+brown point in Figure\nbsp{}[[fig:ei-gp]], with the  true $f$ marked in red.  As
 we  described in  Section\nbsp{}\ref{sec:gpr}, the  fitted surrogate  provides a
 vector  $\hat{\boldsymbol{\mu}}$ of  predicted means  for each  $f(\mathbf{x})$,
 represented   by    the   blue   line,   with    associated   variances   vector
 $\hat{\boldsymbol{\sigma}}^{2}$.   Prediction variances  are represented  by the
-shaded areas, and go to zero at each observation. To decide where to spend the
+shaded areas, and go  to zero at each observation. To decide  where to spend the
 next measurement, we could:
 
-1. *explore* by choosing the $\mathbf{x}$ with the smallest lower bound of a 95%
-   confidence    interval    constructed     using    the    mean    predictions
-   $\hat{\boldsymbol{\mu}}$ and the variances $\hat{\boldsymbol{\sigma}}^{2}$;
+1. *explore* by choosing the $\mathbf{x}$ with the largest predicted variance in
+   $\hat{\boldsymbol{\sigma}}^{2}$;
 2. *exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
    $\hat{\boldsymbol{\mu}}$; or
-3. *mix exploitation and exploration* by either using a strategy like the UCB we
-   discussed  for MAB  problems, or  picking the  $\mathbf{x}$ with  the largest
-   Expected Improvement.
+3. *mix exploitation  and exploration*  by choosing  the $\mathbf{x}$  with the
+   smallest lower bound of a 95%  confidence interval constructed using the mean
+   predictions       $\hat{\boldsymbol{\mu}}$       and      the       variances
+   $\hat{\boldsymbol{\sigma}}^{2}$.
+4.  *mix exploitation  and exploration*  by  picking the  $\mathbf{x}$ with  the
+   largest Expected Improvement.
 
 #+NAME: fig:ei-gp
 #+CAPTION: A surrogate Gaussian Process, whose mean is shown in @@latex: \textcolor{NavyBlue}{\textbf{blue}}@@, fit to four observations,
-#+CAPTION: shown in  @@latex: \textcolor{OliveGreen}{\textbf{green}}@@, of an objective function represented by the @@latex: \textcolor{BrickRed}{\textbf{red}}@@
+#+CAPTION: shown in  @@latex: \textcolor{Mahogany}{\textbf{brown}}@@, of an objective function represented by the @@latex: \textcolor{Red}{\textbf{red}}@@
 #+CAPTION: line.
 #+CAPTION: The dashed vertical lines show which $\mathbf{x}$ would be chosen for
 #+CAPTION: the next observation, if we followed the surrogate's
 #+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@, its
 #+CAPTION: @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@ minus its
 #+CAPTION: @@latex: \textcolor{DarkOrchid}{\textbf{confidence interval}}@@
-#+CAPTION: lower bound, or if we picked the $\mathbf{x}$ that maximizes the
+#+CAPTION: lower bound, its
+#+CAPTION: @@latex: \textcolor{OliveGreen}{\textbf{variance}}@@,
+#+CAPTION: or if we picked the $\mathbf{x}$ that maximizes its
 #+CAPTION: @@latex: \textcolor{BurntOrange}{\textbf{Expected Improvement}}@@
 #+ATTR_LATEX: :placement [t] :width \textwidth
 [[./img/online_learning/ei/gp_ei.pdf]]

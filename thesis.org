@@ -16735,13 +16735,26 @@ fruitful.
 
 We did  not include some  of the projects in  which we participated  during this
 thesis,  notably  the  ones where  we  helped  others  to  apply the  Design  of
-Experiments to  their own autotuning  problems.  These and  other collaborations
-were  omitted from  this  thesis due  to  time and  space  constraints, but  the
-experience  with  applying  DoE  methods   to  problems  of  interest  to  other
-researchers aided in  the consolidation of our understanding, in  the writing of
-this document, and  in demonstrating the potential of DoE  methods on domains we
-did  not  explore  directly  during  this   thesis.   A  complete  list  of  our
-collaborations is presented in Appendix\nbsp{}\ref{app:contrib}.
+Experiments to their own autotuning problems.   In the last year of this thesis,
+we helped advise a group composed  of six masters students and one undergraduate
+student,  at the  University  of São  Paulo.   During the  nine  months of  this
+project's   duration,  we   continued   the  development   of   our  DoE   Julia
+library\nbsp{}\cite{bruel2021experimental},  implemented a  prototype  of a  web
+application to use our library to  help defining and exploring autotuning search
+spaces using  virtualized environments,  and helped  students to  specify search
+spaces and  construct designs  and performance  models for  different autotuning
+problems.   Students  brought their  own  problems  from  the context  of  their
+research projects at the time, giving us opportunity to apply Optimal Design and
+screening to problems such as optimizing  parameters of the Rust compiler and of
+the     PETSc    library\nbsp{}\cite{satish1997efficient},     and    optimizing
+hyperparameters and  feature selection of  machine learning algorithms  from the
+/Scikit-learn/\nbsp{}\cite{pedregosa2011scikitlearn}  /Python/  library.   These
+and other  collaborations were omitted  from this thesis  due to time  and space
+constraints,  but  the experience  with  applying  DoE  methods to  problems  of
+interest to other  researchers aided in the consolidation  of our understanding,
+in  the writing  of this  document, and  in demonstrating  the potential  of DoE
+methods on domains  we did not explore directly during  this thesis.  A complete
+list of our collaborations is presented in Appendix\nbsp{}\ref{app:contrib}.
 
 *** Future Work
 The autotuning method that best fit each of the studies presented in this thesis

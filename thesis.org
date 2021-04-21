@@ -12971,20 +12971,21 @@ design $\mathbf{X}$,  and then  run all experiments  to obtain  $\mathbf{y}$, in
 order to  improve the quality  of fit  of our models.   For the purposes  of the
 expositions  on this  thesis, /Online  Learning/  methods can  be understood  as
 strategies to progressively  decide which experiments should  be performed next,
-based  on uncertainty  regarding the  search  space, and  modeled from  previous
+based  on  uncertainty  regarding  the   search  space,  modeled  from  previous
 experimental data.
 
 The different  sampling strategies  we discussed  in Chapter\nbsp{}\ref{chap:ed}
 can be effectively  used for improving the  quality of fit of  linear models and
 other surrogates  by, for  example, efficiently covering  the search  space with
 space-filling designs, or  using optimal designs to sample  specific regions and
-check the  significance of  a modeling  hypotheses.  These  approaches /explore/
-search spaces, seeking to find out significant relationships between factors and
-response, building  surrogate models that can  aid in optimization.  In  our DoE
-approach,  this  exploration stage  is  clearly  separated from  the  subsequent
-attempts to /exploit/ the identified  relationships, where we are concerned with
-improving model  accuracy by fitting  a smaller model with  significant factors,
-finding the best prediction, and restricting the search space of interest.
+check  the significance  of  a  modeling hypotheses.   These  are approaches  to
+/explore/ search spaces,  seeking to find out  significant relationships between
+factors  and  response,  aiming  to  build surrogate  models  that  can  aid  in
+optimization.  In our DoE approach,  this exploration stage is clearly separated
+from the subsequent attempts to /exploit/ the identified relationships, where we
+become concerned with  improving model accuracy by fitting a  smaller model with
+significant factors,  finding the  best prediction,  and restricting  the search
+space of interest.
 
 This chapter will present three approaches that explicitly model uncertainty and
 attempt to mix  and balance the exploration and exploitation  steps. The chapter
@@ -13001,18 +13002,20 @@ the chapter.
 :END:
 
 The Multi-Armed Bandit (MAB) problem consists  of choosing a sequence of actions
-that maximizes the  cumulative rewards obtained over a period  of time.  Choices
+that maximizes  the cumulative reward obtained  over a period of  time.  Choices
 made in expectation of a reward can  be compared to pulling the levers, or arms,
-of slot machines in  a casino, which is the analogy that  inspired the MAB name.
-In a  discrete time  period with  $T$ instants,  a solution  to the  MAB problem
-provides at each instant $t \in \{1, \dots,  T\}$ a choice $I_i$ from a set with
-$k$   possible  actions   $A_1,\dots,A_k$,  leading   to  sequence   of  rewards
-$R_{t,I_i}$.  A sequence of actions for each instant can be called a policy, and
-we wish to find policies, or strategies to construct them, that maximize the sum
-of  obtained rewards  over time.   In this  section we  assume that  rewards are
+of slot  machines in  a casino,  an analogy that  inspired the  MAB name.   In a
+discrete time period  with $T$ instants, a solution to  the MAB problem provides
+at each  instant $t  \in \{1, \dots,  T\}$ a  choice $I_i$ from  a set  with $k$
+possible actions $A_1,\dots,A_k$, leading to sequence of rewards $R_{t,I_i}$.  A
+sequence of actions for each instant can be called a policy, and we wish to find
+policies, or  strategies to construct  them, that  maximize the sum  of obtained
+rewards over  time.  In the discussion  that follows we assume  that rewards are
 independent and static  over time, although general MAB solutions  can deal with
 dynamic
 rewards\nbsp{}\cite{auer2019adaptively,auer2002nonstochastic,seldin2013evaluation}.
+For the moment,  we also assume that optimization occurs  within a finite number
+of instants $T$.
 
 Bernoulli bandits are a  special case when rewards for each of  the $k$ arms are
 independent Bernoulli random variables with parameters $p_1,\dots,p_k$, giving a
@@ -13077,20 +13080,18 @@ Algorithms for the MAB problem model  choices over time and balance exploitation
 and  exploration  directly.   Although  they   have  been  used  to  manage  the
 distribution  of the  experimental budget  between optimization  methods in  the
 OpenTuner  framework,  they  are  not   necessarily  the  best  fit  for  direct
-application to autotuning problems.
-
-One way to model an autotuning problem as a set of choices with distinct rewards
-would  require  including each  possible  configuration  as  an action,  with  a
-corresponding performance metric as a reward.  In this setting, we would have to
-run many tests  with each configuration in order to  build a confidence interval
-that  we  could leverage.   Still,  many  configurations  would have  to  remain
-unevaluated in  high dimensional  search spaces, but  previous knowledge  of the
-target  problem  could   be  used  to  reduce  the   number  of  configurations.
-Alternatively, it is possible  to model rewards for each arm  as a linear model,
-using knowledge about search space structure that can be updated as optimization
-progresses.     The     /LinUCB/    algorithm     introduced    by     Li    /et
-al./\nbsp{}\cite{li2010contextual}  implements  such   contextual  approach  and
-applies it to news recommender systems that adapt to different users.
+application to autotuning problems.  One way to model an autotuning problem as a
+set  of choices  with distinct  rewards  would require  including each  possible
+configuration as an action, with a corresponding performance metric as a reward.
+In this  setting, we  would have to  run many tests  with each  configuration in
+order  to build  a  confidence interval  that we  could  leverage.  Still,  many
+configurations  would have  to  remain unevaluated  in  high dimensional  search
+spaces, but previous knowledge of the target problem could be used to reduce the
+number of  configurations.  Alternatively, it  is possible to model  rewards for
+each arm  as a linear model,  using knowledge about search  space structure that
+can be updated as optimization progresses.  The /LinUCB/ algorithm introduced by
+Li  /et al./\nbsp{}\cite{li2010contextual}  implements such  contextual approach
+and applies it to news recommender systems that adapt to different users.
 
 *** Reinforcement Learning
 :PROPERTIES:
@@ -13124,39 +13125,35 @@ function $P(a, s, s^{\prime})$ gives the  probability that, when in state $s$ at
 instant $t$, taking action  $a$ leads to state $s^{\prime}$ at  instant $t + 1$,
 and  the  function  $R(a,  s,   s^{\prime})$  gives  the  corresponding  reward.
 Completing the specification of an MDP, the third function is the policy $\pi: S
-\to A$, determining  which action should be taken at  each state.  Reinforcement
-Learning  algorithms  operate are  used  when  the  functions  $P$ and  $R$  are
-completely or  partially unknown, and seek  to learn these functions  by testing
-different  policies $\pi$.   These algorithms  need to  balance exploitation  of
-known  effective  policies,  aiming  to  maximize  the  cumulative  reward,  and
-exploration of  new policies, aiming to  learn $P$ and $R$.   Policy choices can
-also be different in cases when the maximum duration $T$ is known, in a scenario
-said to have  a /fixed horizon/, and  when $T$ is unknown, when  the best choice
-would  be  optimize for  a  potentially  infinite  duration with  a  /discounted
-reward/.  Figure\nbsp{}\ref{fig:mdp} shows an example  of an MDP with two states
-and two actions, with known $P$ and $R$.
+\to   A$,  determining   which   action   should  be   taken   at  each   state.
+Figure\nbsp{}\ref{fig:mdp} shows  an example of an  MDP with two states  and two
+actions, with known $P$ and $R$.
 
-Regret for RL algorithms can be modeled  in a similar fashion to the MAB example
-of the previous  section, and the strategies we briefly  described for balancing
-exploitation and  exploration could  in principle be  applied to  optimizing MDP
-policies. Policies  are generally  obtained using  dynamic programming  for both
-fixed horizon and  discounted reward cases.  Optimal policies  exist for special
-cases    when    an    MDP    has    a   finite    number    of    states    and
-actions\nbsp{}\cite{burnetas1997optimal}.
+Reinforcement Learning  algorithms operate are  used when the functions  $P$ and
+$R$ are  completely or partially unknown,  and seek to learn  these functions by
+testing different  policies $\pi$. Instead  of directly modeling  and optimizing
+$P$ and $R$,  RL algorithms optimize a function $Q:  S\times{}A \to \mathbb{R}$,
+in a method  named /Q-learning/\nbsp{}\cite{watkins1989learning}, which provides
+the expected reward of a state-action combination.  If optimization is performed
+for a  known, finite, and fixed  number of instants  $T$, we can compute  $Q$ by
+defining  its recurrence  function  and  filling a  table  of  rewards for  each
+state-action combination using dynamic programming.
 
-Other  approaches  exist  for  general  cases which  adapt,  among  others,  the
-gradient-based    and   function    minimization   methods    we   discuss    in
-Chapter\nbsp{}\ref{chap:funcmin} to an objective function that receives a policy
-and  computes the  regret.   One  of these  is  the  /Deep Deterministic  Policy
-Gradient/ (DDPG) method\nbsp{}\cite{lillicrap2015continuous}  used in the method
-we       use        as       a        baseline\nbsp{}\cite{wang2019haq}       in
-Chapter\nbsp{}\ref{chap:quantization}.   This  method  is  a  variation  of  the
-/Q-learning/ algorithm,  introduced by Watkins\nbsp{}\cite{watkins1989learning},
-where a function $Q: S\times{}A \to  \mathbb{R}$ provides the expected reward of
-a state-action combination, and is updated using dynamic programming, using data
-from observations over time. Finding an optimal policy using the function /Q/ is
-hard  in general,  but using  a  Deep Neural  Network to  represent /Q/  enables
-optimizing for certain scenarios.
+Successful algorithms must balance the exploitation of known effective policies,
+aiming to maximize  the cumulative reward, and the exploration  of new policies,
+aiming  to  learn  $P$ and  $R$.   When  the  objective  is to  optimize  for  a
+potentially infinite duration,  building a table for dynamic  programming is not
+anymore viable, and the function /Q/ must be modeled using different approaches.
+Optimal policies  exist for  special cases when  an MDP has  a finite  number of
+states and actions\nbsp{}\cite{burnetas1997optimal},  and other approaches exist
+for general cases which model /Q/  by adapting, among others, the gradient-based
+and function minimization methods we discuss in Chapter\nbsp{}\ref{chap:funcmin}
+to  an objective  function  that  receives a  policy  and  computes the  regret.
+Another approach  is to  model the function  /Q/ using a  neural network,  as is
+done,  for  example,   in  the  /Deep  Deterministic   Policy  Gradient/  (DDPG)
+method\nbsp{}\cite{lillicrap2015continuous},     used     as    a     comparison
+baseline\nbsp{}\cite{wang2019haq}         for         our        work         in
+Chapter\nbsp{}\ref{chap:quantization}.
 
 *** Expected Improvement for Gaussian Process Regression
 :PROPERTIES:
@@ -13185,7 +13182,7 @@ next measurement, we could:
 3. *mix exploitation  and exploration*  by choosing  the $\mathbf{x}$  with the
    smallest lower bound of a 95%  confidence interval constructed using the mean
    predictions       $\hat{\boldsymbol{\mu}}$       and      the       variances
-   $\hat{\boldsymbol{\sigma}}^{2}$.
+   $\hat{\boldsymbol{\sigma}}^{2}$; and
 4.  *mix exploitation  and exploration*  by  picking the  $\mathbf{x}$ with  the
    largest Expected Improvement.
 
@@ -13194,11 +13191,11 @@ next measurement, we could:
 #+CAPTION: shown in  @@latex: \textcolor{Mahogany}{\textbf{brown}}@@, of an objective function represented by the @@latex: \textcolor{Red}{\textbf{red}}@@
 #+CAPTION: line.
 #+CAPTION: The dashed vertical lines show which $\mathbf{x}$ would be chosen for
-#+CAPTION: the next observation, if we followed the surrogate's
+#+CAPTION: the next observation if we followed the surrogate's
 #+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@, its
-#+CAPTION: @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@ minus its
+#+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@ minus its
 #+CAPTION: @@latex: \textcolor{DarkOrchid}{\textbf{confidence interval}}@@
-#+CAPTION: lower bound, its
+#+CAPTION: lower bound, its maximum
 #+CAPTION: @@latex: \textcolor{OliveGreen}{\textbf{variance}}@@,
 #+CAPTION: or if we picked the $\mathbf{x}$ that maximizes its
 #+CAPTION: @@latex: \textcolor{BurntOrange}{\textbf{Expected Improvement}}@@
@@ -13272,8 +13269,8 @@ Process Regression.
 A model of regret over time was used in the first two sections, and we discussed
 how it  is not necessarily applicable  to autotuning problems. For  the problems
 studied in  the context  of this  thesis, the Expected  Improvement is  a better
-suited metric for balancing exploitation and exploration, which can in principle
-be applied to all methods relying in statistical models.
+suited metric for balancing exploitation and exploration, although it emphasises
+exploration more and relies on the hypotheses of Gaussian Processes.
 
 The next chapter closes Part\nbsp{}\ref{part:optim}, summarizing the discussions
 of the previous chapters and presenting  an overview of the optimization methods

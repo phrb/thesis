@@ -8950,19 +8950,23 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
   \justify
 #+end_export
 
-I have met many kind people during  this thesis. I thank Alfredo, Arnaud, Brice,
-Dejan, and  Sai, who  I consider  friends and  mentors, for  having had  a great
+I thank the  members of the examining  committee for the time  they dedicated to
+reading and reviewing my work.
+
+In the last years  I have met many kind people. I  thank Alfredo, Arnaud, Brice,
+and Dejan, who  I consider friends and  patient mentors, for having  had a great
 positive impact in  the way I came  to understand research first as  a human and
-social endeavour, and second as a precise, pragmatic, and reproducible hope.
+social endeavour, and second  as a method we can employ in  a hopeful search for
+understanding.
 
 Many other friends  have given me opportunity to laugh,  complain, travel, work,
-cook, study, talk, and contemplate  life.  With the certainty of incompleteness,
-I thank  Marcos, Flávio, Bodo,  Thilo, Andrei,  Danilo, Salah, Adrien,  Tom, and
+study,  talk, and  contemplate life.   With the  certainty of  incompleteness, I
+thank  Marcos, Flávio,  Bodo, Thilo,  Andrei,  Danilo, Salah,  Adrien, Tom,  and
 Christian.
 
 I thank  my mother, my  brother, and my father,  for showing me  how, especially
 when adversity seems overwhelming, we can  find sparks of joy, love, and courage
-to reignite our strength to continue.
+to reignite the strength that pushes us forward.
 
 #+begin_export latex
 

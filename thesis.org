@@ -13020,19 +13020,19 @@ other surrogates  by, for  example, efficiently covering  the search  space with
 space-filling designs, or  using optimal designs to sample  specific regions and
 check  the significance  of  a  modeling hypotheses.   These  are approaches  to
 /explore/ search spaces,  seeking to find out  significant relationships between
-factors  and  response,  aiming  to  build surrogate  models  that  can  aid  in
-optimization.  In our DoE approach,  this exploration stage is clearly separated
-from the subsequent attempts to /exploit/ the identified relationships, where we
+factors  and   response,  and  building   surrogate  models  that  can   aid  in
+optimization.  In our DoE approach,  this exploration stage is separated clearly
+from the subsequent attempts to  /exploit/ the identified relationships, when we
 become concerned with  improving model accuracy by fitting a  smaller model with
-significant factors,  finding the  best prediction,  and restricting  the search
-space of interest.
+significant factors, finding  the best prediction, and  restricting the subspace
+of interest.
 
 This chapter will present three approaches that explicitly model uncertainty and
 attempt to mix  and balance the exploration and exploitation  steps. The chapter
 is organized  as follows.  Section\nbsp{}\ref{sec:bandits}  presents independent
-multi-armed  bandit algorithms,  Section\nbsp{}\ref{sec:reinforcement}, presents
+multi-armed  bandit  algorithms, Section\nbsp{}\ref{sec:reinforcement}  presents
 Reinforcement Learning,  and Section\nbsp{}\ref{sec:expected}  presents Expected
-Improvement,  an acquisition  function  used with  Gaussian Process  regression.
+Improvement,  an acquisition  function  used with  Gaussian Process  Regression.
 Section\nbsp{}\ref{sec:online-summary} summarizes  the discussion  and concludes
 the chapter.
 
@@ -13047,20 +13047,20 @@ made in expectation of a reward can  be compared to pulling the levers, or arms,
 of slot  machines in  a casino,  an analogy that  inspired the  MAB name.   In a
 discrete time period  with $T$ instants, a solution to  the MAB problem provides
 at each  instant $t  \in \{1, \dots,  T\}$ a  choice $I_i$ from  a set  with $k$
-possible actions $A_1,\dots,A_k$, leading to sequence of rewards $R_{t,I_i}$.  A
-sequence of actions for each instant can be called a policy, and we wish to find
-policies, or  strategies to construct  them, that  maximize the sum  of obtained
-rewards over  time.  In the discussion  that follows we assume  that rewards are
-independent and static  over time, although general MAB solutions  can deal with
-dynamic
+possible   actions    $A_1,\dots,A_k$   leading    to   sequence    of   rewards
+$R_{1,I_1},\dots,R{T,I_T}$.   A sequence  of  actions for  each  instant can  be
+called a policy, and we wish to  find policies, or strategies to construct them,
+that maximize  the sum of  rewards obtained over  time.  In the  discussion that
+follows we  assume that rewards are  independent and static over  time, although
+general       MAB       solutions        can       deal       with       dynamic
 rewards\nbsp{}\cite{auer2019adaptively,auer2002nonstochastic,seldin2013evaluation}.
 For the moment,  we also assume that optimization occurs  within a finite number
-of instants $T$.
+$T$ of instants.
 
 Bernoulli bandits are a  special case when rewards for each of  the $k$ arms are
 independent Bernoulli random variables with parameters $p_1,\dots,p_k$, giving a
-reward $R_{t,I_i}  = 1$ with  unknown probabilities  $p_i$, and $R_{t,I_i}  = 0$
-with complementary  probabilities.  In  this problem, if  we denote  $p^{\ast} =
+reward $R_{t,I_i} = 1$ with unknown  probability $p_i$, and $R_{t,I_i} = 0$ with
+complementary  probability.   In   this  problem,  if  we   denote  $p^{\ast}  =
 \text{max}_i\;p_i$, the best cumulative reward we  can expect over a period with
 $T$  instants is  $p^{\ast}T$, corresponding  to always  making the  choice that
 gives a reward with the highest  probability $p^{\ast}$ in $P$. In this context,
@@ -13073,10 +13073,11 @@ we can write the expected regret of a policy as
 \end{align}
 #+end_export
 where $\mathcal{I}  = (I_1,\dots,I_T)$ is the  sequence of choices made  at each
-instant, and $R_{t,I_t}$ the reward  associated with each action. Minimizing the
-regret is similar to maximizing the sum of rewards, but incorporates information
-about the  best possible  policy.  Beyond problems  with Bernoulli  rewards, MAB
-solutions seek to minimize regret for any unknown reward distribution.
+instant,  and $R_{t,I_t}$  the reward  associated with  action $I_t$  at instant
+$t$. Minimizing  the regret  is similar  to maximizing the  sum of  rewards, but
+incorporates information about  the best possible policy.   Beyond problems with
+Bernoulli rewards, MAB solutions seek to  minimize regret for any unknown reward
+distribution.
 
 Three simple policies for choosing an action at instant $t$, with linear-growing
 regret as  a function of  time, as described  in Equation\nbsp{}\ref{eq:regret},
@@ -13088,8 +13089,8 @@ are:
 3. *mixing exploitation and exploration*, by picking the best action so far with
    probability $1 -  \epsilon$ and a random action  with probability $\epsilon$.
 
-Approaches /2/ and /3/ above are not  guaranteed to explore enough, in the sense
-that they tend to always favor the action with the highest observed mean reward,
+Approaches /2/ and /3/  are not guaranteed to explore enough,  in the sense that
+they tend  to always  favor the  action with the  highest observed  mean reward,
 which could  lead to  suboptimal policies,  with strictly  positive probability.
 The             Upper             Confidence             Bound             (UCB)
 algorithm\nbsp{}\cite{auer2002using,auer2010ucb}    includes   the    confidence
@@ -13102,36 +13103,36 @@ enforced  by increased  thresholds, ensuring  that we  balance exploitation  and
 exploration  and   preventing  missing  opportunities  by   concentrating  on  a
 suboptimal arm that produced good results by chance in the past.
 
-The OpenTuner\nbsp{}\cite{ansel2014opentuner}  framework provides an  example in
-the autotuning  context, where actions are  choices of search heuristics  to run
-for a small number of iterations, and  the rewards are computed as the number of
-times  a  configuration  that  improves  performance was  found  by  the  chosen
-heuristic, in a sliding time window.   The hypothesis of static and independence
-rewards is arguably violated in  the OpenTuner application because, although the
-optimizations performed by  each heuristic could be independent if  there was no
-communication  between  them,  the  results an  heuristic  finds  are  typically
-dependent  on  the previous  regions  of  the  search  space that  it  explored.
-Additionally,  the   default  configuration   of  the  framework   implements  a
-centralized  manager that  shares  results between  heuristics  and maintains  a
-shared global best  configuration.  It is still possible to  implement and use a
-different strategy to share resources between heuristics in the framework.
+The OpenTuner\nbsp{}\cite{ansel2014opentuner}  framework provides a  MAB example
+applied to the  autotuning context, where actions are represented  by choices of
+search heuristics to run  for a small number of iterations,  and the rewards are
+computed as the  number of times that a configuration  that improves performance
+was found by the chosen heuristic, in  a sliding time window.  The hypothesis of
+static and independent rewards is arguably violated in the OpenTuner application
+because,  although  the  optimizations  performed by  each  heuristic  could  be
+independent if there was no communication  between them, the results a heuristic
+finds are typically  dependent on the previous regions of  the search space that
+it  explored.    Additionally,  the  default  configuration   of  the  framework
+implements  a centralized  manager that  shares results  between heuristics  and
+maintains a shared global best configuration.  It is still possible to implement
+and  use a  different  strategy to  share resources  between  heuristics in  the
+framework.
 
 Algorithms for the MAB problem model  choices over time and balance exploitation
-and  exploration  directly.   Although  they   have  been  used  to  manage  the
-distribution  of the  experimental budget  between optimization  methods in  the
-OpenTuner  framework,  they  are  not   necessarily  the  best  fit  for  direct
-application to autotuning problems.  One way to model an autotuning problem as a
-set  of choices  with distinct  rewards  would require  including each  possible
-configuration as an action, with a corresponding performance metric as a reward.
-In this  setting, we  would have to  run many tests  with each  configuration in
-order  to build  a  confidence interval  that we  could  leverage.  Still,  many
-configurations  would have  to  remain unevaluated  in  high dimensional  search
-spaces, but previous knowledge of the target problem could be used to reduce the
-number of  configurations.  Alternatively, it  is possible to model  rewards for
-each arm  as a linear model,  using knowledge about search  space structure that
-can be updated as optimization progresses.  The /LinUCB/ algorithm introduced by
-Li  /et al./\nbsp{}\cite{li2010contextual}  implements such  contextual approach
-and applies it to news recommender systems that adapt to different users.
+and  exploration directly.   Although  they  have been  used  to distribute  the
+experimental  budget between  optimization methods  in the  OpenTuner framework,
+they  are not  the  best  fit for  direct  application  to autotuning  problems.
+Suppose  we modeled  an autotuning  problem as  a set  of choices  with distinct
+rewards, for example, including each possible configuration as an action, with a
+corresponding performance metric  as reward.  In this setting, we  would have to
+run many tests  with each configuration in order to  build a confidence interval
+that  we  could leverage.   Still,  many  configurations  would have  to  remain
+unevaluated in high dimensional search spaces.  Alternatively, it would possible
+to model rewards  for each arm as  a linear model, using  knowledge about search
+space structure  that can be  updated as optimization progresses.   The /LinUCB/
+algorithm  introduced by  Li  /et al./\nbsp{}\cite{li2010contextual}  implements
+such contextual approach and applies it to a news recommender system that adapts
+to different users.
 
 *** Reinforcement Learning
 :PROPERTIES:
@@ -13142,7 +13143,7 @@ Reinforcement Learning (RL)  is a class of algorithms for  online learning based
 on /Markov  Decision Processes/  (MDP), which  consist of  a series  of /states/
 connected by  /actions/.  Each  action taken  when the process  is in  a certain
 state  at instants  $t  \in \{1,\dots,T\}$  can lead  to  different states  with
-different probabilities,  and can  produce a  reward.
+different probabilities, and can produce a reward.
 
 #+NAME: fig:mdp
 #+CAPTION: A Markov Decision Process with state set $S = \{S_1, S_2\}$,
@@ -13162,22 +13163,22 @@ More formally, an  MDP is described by  the sets $S$ and $A$,  and the functions
 $P$,   $R$,  and   $\pi$.   The   sets  $S   =  \{S_1,\dots,S_i\}$   and  $A   =
 \{a_1,\dots,a_j\}$ represent  respectively the $i$  states and $j$  actions. The
 function $P(a, s, s^{\prime})$ gives the  probability that, when in state $s$ at
-instant $t$, taking action  $a$ leads to state $s^{\prime}$ at  instant $t + 1$,
-and  the  function  $R(a,  s,   s^{\prime})$  gives  the  corresponding  reward.
-Completing the specification of an MDP, the third function is the policy $\pi: S
-\to   A$,  determining   which   action   should  be   taken   at  each   state.
+instant $t$, taking action  $a$ leads to state $s^{\prime}$ at  instant $t + 1$.
+The function $R(a,  s, s^{\prime})$ gives the  corresponding reward.  Completing
+the specification of  an MDP, the third  function is the policy $\pi:  S \to A$,
+determining    which    action    should     be    taken    at    each    state.
 Figure\nbsp{}\ref{fig:mdp} shows  an example of an  MDP with two states  and two
 actions, with known $P$ and $R$.
 
 Reinforcement Learning  algorithms operate  when the functions  $P$ and  $R$ are
 completely or  partially unknown, and seek  to learn these functions  by testing
 different policies  $\pi$. Instead of  directly modeling and optimizing  $P$ and
-$R$, we  optimize a function $Q:  S\times{}A \to \mathbb{R}$, in  a method named
+$R$,  we optimize  a function  $Q: S\times{}A  \to \mathbb{R}$,  a method  named
 /Q-learning/\nbsp{}\cite{watkins1989learning},   which  provides   the  expected
 reward of a state-action combination.  If optimization is performed for a known,
 finite, and  fixed number of  instants $T$, we can  compute $Q$ by  defining its
-recurrence  function  and filling  a  table  of  rewards for  each  state-action
-combination using dynamic programming.
+recurrence  function  and  filling  a  table  of  rewards  for  each  successive
+state-action combination using dynamic programming.
 
 Successful algorithms must balance the exploitation of known effective policies,
 aiming to maximize  the cumulative reward, and the exploration  of new policies,

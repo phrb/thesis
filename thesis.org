@@ -16826,14 +16826,14 @@ involve  contributing  to  devise  and   improve  collective  solutions  to  the
 exploration of search spaces, guided  by statistics well-studied and established
 in other  domains. Additionally,  it was  not always  clear to  us that  we were
 manipulating  program parameters  at  the most  effective  abstraction level  to
-achieve performance improvement.  Thus, we believe that studies of the impact of
-parameters  from  different abstraction  levels  should  also be  considered  in
-autotuning problems.
+achieve performance improvement.  Thus, studies of the impact of parameters from
+different abstraction levels should also be considered in autotuning problems.
 
-We believe  that well specified  sets of exhaustively and  collectively measured
-search  spaces,  targeting an  evolving  array  of hardware  architectures,  and
-striving  for reproducible  workflows  and results,  would  provide support  for
-further advancing the research on automated performance tuning.
+We believe that  producing well specified sets of  exhaustively and collectively
+measured search spaces, targeting an evolving array of hardware architectures at
+the most effective  abstraction levels, and striving  for reproducible workflows
+and  results,  would provide  support  for  further  advancing the  research  on
+automated performance tuning.
 
 ** Appendices Begin Marker                                          :ignore:
 #+latex: \begin{appendices}

@@ -8928,12 +8928,12 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 :end:
 * Covers                                                    :noexport:ignore:
 ** IME
-# #+LATEX_HEADER: \input{covers/ime.tex}
+#+LATEX_HEADER: \input{covers/ime.tex}
 ** UGA
-#+LATEX_HEADER: \usepackage[a4paper]{covers/uga}
-#+LATEX_HEADER: \usepackage[french,english]{isodate}
-
-#+LATEX_HEADER: \input{covers/uga.tex}
+# #+LATEX_HEADER: \usepackage[a4paper]{covers/uga}
+# #+LATEX_HEADER: \usepackage[french,english]{isodate}
+#
+# #+LATEX_HEADER: \input{covers/uga.tex}
 * Front Matter                                                       :ignore:
 #+latex: \frontmatter
 

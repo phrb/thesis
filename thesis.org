@@ -12123,17 +12123,13 @@ the initial  stages of  studying a  problem.  While  interactions are  still not
 considered at this  stage, identifying main effects early enables  focusing on a
 smaller set of factors on  subsequent experiments.  A specially efficient design
 construction  method  for  screening  designs  was  presented  by  Plackett  and
-Burman\nbsp{}\cite{plackett1946design} in  1946, and is available  in the /FrF2/
-package\nbsp{}\cite{gromping2014frf2}            of           the            /R/
-language\nbsp{}\cite{team2018rlanguage}.
-
-Despite  having strong  restrictions  on  the number  of  factors they  support,
-/Plackett-Burman/  designs enable  the  identification of  main  effects of  $p$
-factors  with $n  = p  +  1$ experiments.   Factors  may have  many levels,  but
-Plackett-Burman designs can only be constructed for 2-level factors.  Therefore,
-like we  did for fractional  and full  factorial designs, before  constructing a
-Plackett-Burman design we  must identify and encode /high/ and  /low/ levels for
-each factor.
+Burman\nbsp{}\cite{plackett1946design}   in   1946.    Despite   having   strong
+restrictions on  the number of  factors they support,  /Plackett-Burman/ designs
+enable  the identification  of main  effects of  $p$ factors  with $n  = p  + 1$
+experiments.  Factors may have many levels, but Plackett-Burman designs can only
+be constructed for  2-level factors.  Therefore, like we did  for fractional and
+full factorial  designs, before  constructing a  Plackett-Burman design  we must
+identify and encode /high/ and /low/ levels for each factor.
 
 This section presents  an example of /screening/, an interesting  first stage on
 the  sequential approach  to  building  a linear  model  for  a given  objective
@@ -12902,9 +12898,9 @@ complex linear models and to properly evaluate lack of fit.
 
 Space-filling designs are capable of generating better-distributed samples, even
 for high-dimensional search spaces, enabling  more precise measurements of model
-quality.  These  designs  also  help  to improve  the  accuracy  of  acquisition
-functions for  nonparametric optimization methods,  some of which we  discuss in
-Chapter\nbsp{}[[Online Learning]].
+quality.   These  designs also  help  to  improve  the accuracy  of  acquisition
+functions  for  nonparametric  optimization   methods,  such  as  the  /Expected
+Improvement/, which we discuss in Chapter\nbsp{}[[Online Learning]].
 
 Figure\nbsp{}[[fig:low_discrepancy]]   compares   5   sampling  methods   in   a
 two-dimensional search  space. Even  in low  dimension, we  can see  how uniform
@@ -12912,7 +12908,7 @@ random sampling produces clusters of  points and leaves large regions unsampled.
 /Latin  Hypercube Sampling/\nbsp{}\cite{carnell2018lhs}  (LHS)  is  one kind  of
 space-filling  design,   constructed  by  partitioning  the   search  space  and
 attempting to distribute samples evenly across  partitions.  It is still hard to
-cover high-dimensional  spaces, and  it is  common to have  to optimized  an LHS
+cover  high-dimensional spaces,  and it  is common  to have  to optimize  an LHS
 design with function minimization methods.
 
 /Discrepancy/ is one criterion typically used to evaluate how evenly a sample is
@@ -12923,11 +12919,10 @@ region  of a  high-dimensional  search space  contains  a proportionately  small
 number   of  samples.    Sobol,  who   is  also   responsible  for   sensitivity
 indices\nbsp{}\cite{sobol1993sensitivity} from the  previous chapter, and Halton
 introduced          deterministic         /quasirandom/          low-discrepancy
-sequences\nbsp{}\cite{sobol1967distribution,halton1964algorithm}            that
-extensively   used.   Figure\nbsp{}[[fig:low_discrepancy]]  also   shows   these
-sequences,        implemented       in        the       /randtoolbox/        /R/
-package\nbsp{}\cite{dutang2020randtoolbox},  which  also  implements  a  /Torus/
-low-discrepancy sampler.
+sequences\nbsp{}\cite{sobol1967distribution,halton1964algorithm}     that    are
+extensively used.   Figure\nbsp{}[[fig:low_discrepancy]] shows  these sequences,
+implemented in the /randtoolbox/ /R/ package\nbsp{}\cite{dutang2020randtoolbox},
+which also implements a /Torus/ low-discrepancy sampler.
 
 #+NAME: fig:low_discrepancy
 #+CAPTION: Comparison of 1000 samples obtained with different sampling methods.
@@ -12954,14 +12949,14 @@ low-discrepancy sampler.
 [[./img/experimental_design/booth_descent_gradient_sampling.pdf]]
 
 Figure\nbsp{}[[fig:sampling_comparison]] shows  the contour of the  search space
-defined by  the Booth  function and  its exploration  by six  different sampling
-methods, restricted  to 30  measurements.  Here, a  uniform random  sample finds
-points  close  to   the  global  optimum,  even  though   measurements  are  not
-particularly  distributed  and there  is  no  attempt  to exploit  search  space
+defined by the Booth function from previous examples, and its exploration by six
+different sampling methods restricted to 30 measurements.  Here a uniform random
+sample finds  points close to the  global optimum, even though  measurements are
+not particularly  distributed and there  is no  attempt to exploit  search space
 structure. An LHS sample covers the search space more evenly, but still does not
-exploit structure. The Sobol sample is much more useful than the others for such
-a small space,  but we can clearly  see the impact of the  optimal designs built
-for different models.
+exploit structure. The Sobol sample is not  much more useful than the others for
+such a low-dimensional space,  but we can clearly see the  impact of the optimal
+designs built for different models.
 
 The D-optimal design  for a model with  linear terms samples the  corners of the
 search  space, and  adding quadratic  and interaction  terms to  the model  adds
@@ -12980,18 +12975,14 @@ methods dedicated  to planning measurements,  which is fundamental  to empirical
 research.   We discussed  how we  can  construct screening  and optimal  designs
 tailored to estimate factor effects parsimoniously, and how we can generate more
 expensive space-filling  designs to aid  in the exploration  of high-dimensional
-search spaces.
-
-Space-filling designs are  best suited for testing quality of  fit and exploring
-with nonparametric  surrogates, while optimal  design and screening rely  on the
-linear  model and  its  hypotheses,  and are  transparent  and parsimonious  for
-estimating factor effects and significance,  provided we use good starting model
-hypotheses.
-
-We  presented  examples of  the  DoE  methodology, highlighting  the  separation
-between  the  stages of  sampling  search  spaces,  fitting linear  models,  and
-interpreting results, with the objectives  of reducing dimension and restricting
-further experimentation to promising regions of the search space.
+search spaces.  Space-filling designs are best suited for testing quality of fit
+and exploring with nonparametric surrogates,  while optimal design and screening
+rely  on linear  model hypotheses  to estimate  factor effects  and significance
+transparently  and   parsimoniously,  provided   we  use  good   starting  model
+hypotheses.   We presented  examples of  the DoE  methodology, highlighting  the
+separation between the stages of  sampling search spaces, fitting linear models,
+and  interpreting  results,  with  the  objectives  of  reducing  dimension  and
+restricting further experimentation to promising regions of the search space.
 
 During our study of design construction  methods we have implemented versions of
 the Paley  construction for  screening designs\nbsp{}\cite{paley1933orthogonal},

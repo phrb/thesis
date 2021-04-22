@@ -11779,33 +11779,34 @@ improving model fits, or minimizing the objective function.
 :CUSTOM_ID: chap:ed
 :END:
 
-This  chapter   presents  some   elements  of   Design  of   Experiments  (DoE).
-Complementing the  learning methods  we discussed in  the previous  chapter, DoE
-methods enable choosing the experiments included on a design matrix $\mathbf{X}$
-according to  different needs and  criteria.  A well-constructed  design enables
-testing hypotheses  about the  objective function,  which can  lead either  to a
-useful model or to a set of questions to ask and hypotheses to test.
+This  chapter  presents some  of  the  fundamental  elements  of the  Design  of
+Experiments  (DoE).  Complementing  the  learning methods  we  discussed in  the
+previous chapter,  DoE methods  enable choosing the  experiments that  should be
+included  in a  design  matrix  $\mathbf{X}$ according  to  different needs  and
+criteria.   A  well-constructed  design  enables testing  hypotheses  about  the
+objective function $f$, which  can lead either to a useful model or  to a set of
+questions to ask and new hypotheses to test.
 
 This  chapter   is  organized  as   follows.   Section\nbsp{}\ref{sec:factorial}
-introduces  key  concepts and  presents  2-level  full and  fractional  designs.
-Section\nbsp{}\ref{sec:screening} presents  screening designs, an  efficient way
-to  detect  linear  effects.  Section\nbsp{}\ref{sec:optimal}  presents  Optimal
-Design,  which   enables  constructing   efficient  designs  for   more  complex
-hypotheses.   Section\nbsp{}\ref{sec:filling}  presents  space-filling  designs,
-useful  for  search  space  exploration   and  more  complex  learning  methods.
-Section\nbsp{}\ref{sec:comparing}  compares different  sampling strategies,  and
-Section\nbsp{}\ref{sec:summary-ed} summarizes  the discussion and  concludes the
-chapter.
+introduces  key concepts  and  presents 2-level  full  and fractional  factorial
+designs.   Section\nbsp{}\ref{sec:screening}  presents   screening  designs,  an
+efficient  way   to  detect  linear   effects.   Section\nbsp{}\ref{sec:optimal}
+presents the  Optimal Design  methodology, which enables  constructing efficient
+designs for  more complex hypotheses.   Section\nbsp{}\ref{sec:filling} presents
+space-filling designs,  useful for  balanced search  space exploration  and more
+complex learning methods.   Section\nbsp{}\ref{sec:comparing} compares different
+sampling  strategies,  and   Section\nbsp{}\ref{sec:summary-ed}  summarizes  the
+discussion and concludes the chapter.
 
 *** Estimating Linear Effects
 :PROPERTIES:
 :CUSTOM_ID: sec:factorial
 :END:
 
-We have been  using Design of Experiments terminology in  this thesis, where the
-vector $\mathbf{y}$ with  observations of an objective function $f$  in an input
-set $\mathbf{X}$ is called a /response/. The input set is an $n\times{}p$ matrix
-called  a /design/,  where  each  row is  an  /experiment/  with $p$  /factors/.
+We have been  using the Design of Experiments terminology  in this thesis, where
+the vector  $\mathbf{y}$, with observations of  an objective function $f$  in an
+input set $\mathbf{X}$, is called a /response/. The input set is an $n\times{}p$
+matrix called a /design/, where each  row is an /experiment/ with $p$ /factors/.
 Choosing an  adequate design depends on  characteristics of the factors,  of the
 objective function, and of the statistical  analysis or learning methods we wish
 to use.
@@ -11818,40 +11819,43 @@ heteroscedasticity, and interactions between factors.
 
 **** 2-Level Factorial Designs
 Figure\nbsp{}[[fig:vareffect]] shows measurements of an objective function whose
-input is  a single real number  factor $x_1 \in  [0,1]$. Each of the  six panels
-represents an experiment  where we fit a linear model  to a limited experimental
-budget of two observations of $f$, represented by blue points.  Hollow points in
-each  panel  represent a  much  larger  sample of  values  of  $f$, to  aid  the
-visualization of each experimental condition.
+input is a  single real-number factor $x_1  \in [0,1]$.  Each of  the six panels
+represents an  experiment where  we fit  a series of  linear models  to distinct
+data, using  a limited experimental budget  of two observations of  $f$.  Hollow
+points in each panel represent a much larger sample of values of $f$, to aid the
+visualization  of  each  experimental  condition,   and  each  linear  model  is
+represented by  a gray  line. A  single model  is highlighted  in blue,  and its
+experiments in red.
 
 Our objective  is this  example is  to distribute  our 2-point  budget so  as to
 produce a linear  model fit for $f$  which will guide future  experiments in the
-correct direction for  minimizing it.  The direction in which  we would explored
-if we followed each model fit is represented by dashed vertical red lines.  With
-such  a budget  restriction we  will not  have sufficient  data to  estimate the
-confidence intervals  for the predictions  of our linear  model. We did  this in
-this example so  we can discuss the impact  of the choice of design  points in a
-single prediction, and we later look at an experiment with more measurements.
+correct direction for minimizing it.  The direction in which we would explore if
+we followed the  highlighted model is represented by vertical  dashed red lines.
+Such  a budget  restriction will  not provide  sufficient data  to estimate  the
+confidence intervals for  the predictions of our linear model,  but this example
+enables  discussing the  impact  of the  choice  of design  points  in a  single
+prediction. We later look at experiments with more measurements.
 
 The first  row of  Figure\nbsp{}[[fig:vareffect]] shows measurements  subject to
 small measurement error.   In these conditions we can produce  a fairly good fit
 regardless of how close we pick our two experiments.  This experiment with small
 noise reveals that the ``true'' shape of $f$ is linear, minimized by $x_1 = 0$.
 
-The  experiments in  the  second  row have  larger  measurement  error. In  real
-situations this could happen  if we were measuring $f$ in  a shared machine, for
-example, while  in the first  row we might have  had exclusive access.   In this
-setting, picking experiments too close to each other can invert the direction in
-which the model tells us to explore, and  we will be better off spending our two
-measurements at the interval extremes.
+The experiments  in the second  row have  larger measurement error.   This could
+happen if we were  measuring $f$ in a shared machine, for  example, while in the
+first row  we might  have had  exclusive access.  In  this new  setting, picking
+experiments too close to each other can  invert the direction in which the model
+tells us  to explore,  as is  shown by the  highlighted model,  and we  would be
+better off spending our two measurements at the interval extremes.
 
 The last  row shows an experimental  setting where measurement error  depends on
-the value of  $x_1$, violating a core hypothesis of  linear models.  Although we
-could still  fit a linear  model indicating  the right exploration  direction in
-this  scenario,  chances  are  high  that  we wont,  even  if  we  pick  extreme
-points. Heteroscedastic  error can  be produced in  real conditions  by resource
-management overhead, for example,  and the simplest way to try  and deal with it
-in practice is to fit a linear model to the logarithm of the response.
+the  value of  $x_1$, violating  one of  the core  hypotheses the  linear model.
+Although we could  still fit a model indicating the  right exploration direction
+in this scenario, chances are high that we wont, even if we pick extreme points,
+as shown  in the highlighted  model.  Heteroscedastic  error can be  produced in
+real conditions by  resource management overhead, for example,  and the simplest
+way to  deal with  it in  practice is  to fit a  model to  the logarithm  of the
+response.
 
 #+latex: \clearpage
 
@@ -11872,12 +11876,12 @@ in practice is to fit a linear model to the logarithm of the response.
 #+latex: \clearpage
 
 In general, picking  far-apart points will help estimating  linear effects. This
-principle keeps working in higher-dimension search spaces, and is the motivation
-for 2-level full factorial designs. The first step to construct such a design is
-to choose extreme /levels/  for each of the $p$ factors, as we  did in the right
-column  of  Figure\nbsp{}[[fig:vareffect]],  and  then  /encode/  these  levels,
-mapping their original values to the $[-1, 1]$ interval.  The design is produced
-by listing all $2^{p}$ combinations of factor levels.
+principle  keeps  working  in  higher-dimensional  search  spaces,  and  is  the
+motivation for 2-level full factorial designs.  The first step to construct such
+a design is to choose extreme /levels/ for each of the $p$ factors, as we did in
+the  right column  of  Figure\nbsp{}[[fig:vareffect]], and  then /encode/  these
+levels, mapping their original values to  the $[-1, 1]$ interval.  The design is
+produced by listing all $2^{p}$ combinations of factor levels.
 
 Table\nbsp{}\ref{tab:2level-fac}  shows a  2-level full  factorial design  for a
 search space with $p = 3$ factors and $2^{p} = 8$ experiments. We added a fourth
@@ -11891,10 +11895,11 @@ $\theta$ as we did in Section\nbsp{}[[Linear Regression]], by computing
 \end{align}
 #+end_export
 where $\mathbf{X}$  contains the $x_1,x_2,x_3$  columns from the  design matrix,
-and $\mathbf{y}$  consists of the  $y$ column. With this  design we are  able to
-estimate eight model  coefficients, one for the intercept, or  mean, term, three
-for the linear  effects of each factor, three for  the two-way interactions, and
-one for the three-way interaction $x_1x_2x_3$.
+plus a  first column of ones  representing the intercept term,  and $\mathbf{y}$
+consists of the $y$ column. With this design we are able to estimate eight model
+coefficients: one  for the mean  or intercept; three  for the linear  effects of
+each  factor; three  for the  two-way interactions;  and one  for the  three-way
+interaction $x_1x_2x_3$.
 
 #+begin_SRC R :results output :session *R* :eval no-export :exports none
 library(FrF2)
@@ -11959,13 +11964,13 @@ $x_1$ & $x_2$ & $x_3$ & $y$ \\
 
 If we fit  models to distinct sets  of two points picked  at random, considering
 distant  and close  sets separately,  we  would get  much more  variance in  the
-predictions   of  the   models   using  close   point  sets,   as   we  see   in
-Figure\nbsp{}[[fig:vareffect]].   In   other  words,  the  linear   model  lacks
-robustness when  designs are not  constructed properly, especially for  noisy or
-heteroscedastic measurements.
+predictions of the models using close point sets, as we see in the gray lines in
+all panels of Figure\nbsp{}[[fig:vareffect]].  In  other words, the linear model
+lacks robustness when designs are not constructed properly, especially for noisy
+or heteroscedastic measurements.
 
-We  can  fit  more  robust  linear  models if  we  allow  an  expansion  to  our
-experimental budget  and evaluate  eight additional  points in  each experiment.
+We  can  fit  more  robust  linear  models if  we  allow  an  expansion  of  our
+experimental budget,  and evaluate eight  additional points in  each experiment.
 Figure\nbsp{}[[fig:conflineffect]]  shows the  resulting model  fits, this  time
 accompanied  by  95% confidence  intervals  for  predictions. We  observe  great
 improvements in the heteroscedastic scenario due  to the extra samples of $f$ we
@@ -11973,40 +11978,39 @@ were  able to  get, but  we see  that the  confidence intervals  are not  at all
 capable  of  modeling  the  heteroscedasticity in  the  observations,  producing
 inaccurate uncertainty  estimates.  This  example allows  pointing out  that the
 uncertainty in  our model fits, which  is proportional to the  narrowness of the
-confidence intervals, is  related to the distribution of experiments  and to the
-variance associated with measuring $f$.
+confidence intervals, is  related to the distribution of the  experiments and to
+the variance associated with measuring $f$.
 
-Figure\nbsp{}[[fig:conflineffect]]  also  shows  that the  determinants  of  the
-matrices $\mathbf{X}^{\transp}\mathbf{X}$,  associated with the designs  in each
-panel,  are larger  for designs  with more  distant points.   Combined with  the
-confidence intervals for  predictions, this example illustrates  that the choice
-of  the design  matrix $\mathbf{X}$  impacts the  variance of  the estimator  of
-$\theta$  in  the model  fit  in  Equation\nbsp{}\ref{eq:linmodel-ed}.  We  will
-present    a    more   precise    statement    of    this   interpretation    in
+Figure\nbsp{}[[fig:conflineffect]] also  shows the determinants of  the matrices
+$\mathbf{X}^{\transp}\mathbf{X}$,   associated   with   the  designs   in   each
+panel. Note that  determinants are larger for designs with  more distant points.
+Combined with the confidence intervals for predictions, this example illustrates
+that the  choice of the design  matrix $\mathbf{X}$ impacts the  variance of the
+estimator of  $\theta$ in the model  fit in Equation\nbsp{}\ref{eq:linmodel-ed}.
+We  will   present  a   more  precise  statement   of  this   interpretation  in
 Section\nbsp{}\ref{sec:optimal}, and  in the  next section  we will  discuss the
 impact  of interactions  on our  estimates, and  present /fractional/  factorial
 designs.
 
 **** Interactions and Fractional Factorial Designs
-Figure\nbsp{}[[fig:interactions]] shows two different objective functions of two
-input factors $x_1$ and  $x_2$, which can take real values  in the interval $[0,
-1]$. The top  and bottom panels show  the measures from a  full factorial design
-using the interval extremes  of both factors. We see the  impact on the measured
-values of $f$ when  we change $x_1$ from zero to one,  while keeping $x_2$ fixed
-to zero, represented by  the red line, or fixed to one,  represented by the blue
-line.
+Figure\nbsp{}[[fig:interactions]] shows  two different objective  functions with
+two input factors  $x_1$ and $x_2$, which  can take real values  in the interval
+$[0, 1]$.   The top and  bottom panels show the  measures from a  full factorial
+design using  the interval extremes  of both factors. We  see the impact  on the
+measured values of $f$ when we change $x_1$ from zero to one while keeping $x_2$
+fixed to zero, shown in the red line, or fixed to one, shown in the blue line.
 
 The function on the top panel has no interaction between $x_1$ and $x_2$, and we
 see that  changing $x_2$ from  zero to one increases  the value of  the measured
 $f$, but  does not change the  slope of the  line.  These parallel lines  can be
-represented  in a  linear model  with two  separate coefficients  for $x_1$  and
+represented in a  linear model using one coefficient for  $x_1$, and another for
 $x_2$.  The bottom panel shows measurements using the same design, evaluated for
 an objective function  where an interaction between $x_1$ and  $x_2$ is present.
 There  is still  an additive  effect,  since the  two lines  start at  different
 values, but  now the slopes do  not match.  In  a linear model we  can represent
-this interaction  as a multiplicative effect,  that is, in addition  to separate
-coefficients for each factor there is a third coefficient for the multiplication
-$x_1x_2$.
+this  interaction  as   a  multiplicative  effect,  that  is,   in  addition  to
+coefficients  for  each   factor,  we  include  a  third   coefficient  for  the
+multiplication $x_1x_2$.
 
 #+NAME: fig:interactions
 #+CAPTION: Effect of interactions in the slopes for extreme values of factors
@@ -12090,7 +12094,7 @@ A  fractional factorial  design for  $p$ factors  consists of  a full  factorial
 design for $p  - k$ factors, augmented with $k$  columns produced by multiplying
 two  or more  of the  original $p  - k$  columns. Table\nbsp{}\ref{tab:frac-fac}
 shows a  fractional factorial  design for  $p =  5$ and  $k =  2$, said  to have
-/resolution/ 3, with $2^{5 - 2} = 8$ experiments.
+/resolution/ 3, with $2^{5 - 2} =  8$ experiments.
 
 We can use this design to estimate the  six coefficients we need for the for the
 main effects of each  factor plus the intercept, but the  estimates for the main
@@ -12099,7 +12103,9 @@ combined  columns. Effects  that are  indistinguishable because  of the  way the
 design is constructed are said to be aliased by, or confounded with, each other.
 We will only be able to accurately  estimate main effects in this setting if the
 interaction confounded with a main effect has small or nonexistent impact on the
-response.
+response.  Note that we can multiply any set of two or more columns to produce a
+new one,  which allows choosing which  interactions will be confounded  with the
+estimate of a new effect.
 
 Fractional  factorial  designs  enable  reducing the  cost  of  estimating  main
 effects, but  the quality of the  estimates relies on weak  factor interactions.

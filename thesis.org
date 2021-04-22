@@ -9210,24 +9210,22 @@ seeking   to  discover   and  explain   relationships  between   parameters  and
 performance, and the exploitation of  known or discovered relationships, seeking
 only to find the best possible performance.
 
-Search  algorithms  based  on  machine  learning heuristics  are  not  the  best
-candidates for  autotuning domains  where measurements  are lengthy  and costly,
-such as compiling industrial-level FPGA  programs, because these algorithms rely
-on the  availability of a  large number of  measurements. They also  assume good
-optimizations  are  reachable from  a  starting  position, and  that  tendencies
-observed locally in the search space are exploitable.  These assumptions are not
+Machine learning  and search algorithms  are often  not the best  candidates for
+autotuning domains where measurements are  lengthy and costly, such as compiling
+industrial-level FPGA programs,  because these methods rely  on the availability
+of a large number of measurements.   Search algorithms in particular also assume
+that good optimizations  are reachable from a starting position,  and that local
+trends observed  in a search space  are exploitable.  These assumptions  are not
 usually true in common  autotuning domains, as shown in the  work of Seymour /et
-al./\nbsp\cite{seymour2008comparison}.
-
-Autotuning search spaces also usually  have non-linear constraints and undefined
-regions, which are  also expected to decrease the effectiveness  of search based
-on heuristics and  machine learning.  An additional downside  to heuristics- and
-machine learning-based search  is that, usually, optimization  choices cannot be
-explained, and knowledge  gained during optimization is not  reusable.  The main
-contribution of this  thesis is to study  how to overcome the  reliance on these
-assumptions about search spaces, and the lack of explainable optimizations, from
-the point of view of a  /Design of Experiments/ (DoE), or /Experimental Design/,
-methodology to autotuning.
+al./\nbsp\cite{seymour2008comparison}.   Autotuning search  spaces usually  have
+non-linear  constraints  and  undefined  regions, which  are  also  expected  to
+decrease  the  effectiveness of  search  heuristics  and machine  learning.   An
+additional downside is that, usually,  optimization choices cannot be explained,
+and  knowledge  gained during  optimization  with  machine learning  and  search
+heuristics  is not  reusable.   In this  thesis  we study  how  to overcome  the
+reliance on these assumptions about autotuning search spaces, using parsimonious
+optimization methods that can be  transparently explained within the statistical
+framework of the /Design of Experiments/ (DoE), or /Experimental Design/.
 
 One of  the first detailed  descriptions and  mathematical treatment of  DoE was
 presented  by Ronald  Fisher\nbsp\cite{fisher1937design} in  his 1937  book /The
@@ -9254,14 +9252,13 @@ response.  The  field of DoE  encompasses the mathematical formalization  of the
 construction of experimental designs.  More practical works in the field present
 algorithms to generate designs with different objectives and restrictions.
 
-The contributions of  this thesis are strategies to apply  to program autotuning
-the         DoE        methodology,         and        /Gaussian         Process
-Regression/\nbsp{}\cite{williams2006gaussian}.  This  thesis presents background
-and  a high-level  view  of  the theoretical  foundations  of  each method,  and
-detailed  discussions of  the challenges  involved in  specializing the  general
-definitions of search  heuristics and statistical learning  methods to different
-autotuning problems, as well as what  can be /learned/ about specific autotuning
-search spaces,  and how  that acquired  knowledge can  be leveraged  for further
+The  contributions of  this thesis  are strategies  to adapt  and apply  the DoE
+methodology  to  program autotuning.   This  thesis  presents background  and  a
+high-level  view of  the theoretical  foundations of  each method,  and detailed
+discussions of the  challenges involved in specializing  the general definitions
+of search  heuristics and statistical  learning methods to  different autotuning
+problems, as  well as  what can  be /learned/  about specific  autotuning search
+spaces,  and  how   that  acquired  knowledge  can  be   leveraged  for  further
 optimization.
 
 This  chapter aims  to substantiate  the claim  that autotuning  methods have  a
@@ -9269,11 +9266,19 @@ fundamental  role to  play on  the future  of program  performance optimization,
 arguing  that the  value and  the difficulty  of the  efforts to  carefully tune
 software became more apparent ever since advances in hardware stopped leading to
 effortless performance improvements, at least from the programmer's perspective.
-The following sections discuss the historical  context for the changes in trends
-on  computer  architecture,  and  characterize  the  search  spaces  found  when
-optimizing performance on different domains.
+The    remainder     of    this    chapter    is     organized    as    follows.
+Section\nbsp{}\ref{sec:trends} discusses the historical  context for the changes
+in trends on computer architecture. Section\nbsp{}\ref{sec:code-conseq} presents
+the    consequences     of    these     changes    for     code    optimization.
+Section\nbsp{}\ref{sec:search-spaces} characterizes the search spaces found when
+optimizing                performance                on                different
+domains. Section\nbsp{}\ref{sec:structure-thesis} presents the structure of this
+thesis and highlights our contributions.
 
 *** Historical Hardware Design Trends
+:PROPERTIES:
+:CUSTOM_ID: sec:trends
+:END:
 The physical  constraints imposed  by technological  advances on  circuit design
 were evident since  the first vacuum tube computers that  already spanned entire
 floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
@@ -9386,6 +9391,9 @@ commonly used to explore search spaces, some of which are discussed in detail in
 Part\nbsp{}\ref{part:optim}.
 
 *** Consequences for Code Optimization: Autotuning Loop Nest Optimization
+:PROPERTIES:
+:CUSTOM_ID: sec:code-conseq
+:END:
 Algorithms for linear  algebra problems are fundamental  to scientific computing
 and statistics. Therefore,  decreasing the execution time of  algorithms such as
 general  matrix multiplication  (GEMM)\nbsp{}\cite{dongarra1990set}, and  others
@@ -9689,6 +9697,9 @@ selection of  search spaces and  discussing the trends  that can be  observed on
 search space size, targeted HPC domains, and chosen optimization methods.
 
 *** Autotuning Approaches and Search Spaces
+:PROPERTIES:
+:CUSTOM_ID: sec:search-spaces
+:END:
 Autotuning  methods have  been used  to improve  performance in  an increasingly
 large  variety of  domains,  from  the earlier  applications  to linear  algebra
 subprograms,  to the  now ubiquitous  construction and  configuration of  neural
@@ -9698,12 +9709,12 @@ establish a  link between  the continued increases  in performance  and hardware
 complexity, that  we discussed previously in  this chapter, to the  increases in
 dimension and size of the autotuning problems that we can now tackle.
 
-Figure\nbsp{}[[fig:search-spaces]] presents search space  dimension, measured as the
-number of  parameters involved,  and size,  measured as  the number  of possible
+Figure\nbsp{}[[fig:search-spaces]] presents search  space dimension, measured as
+the number of parameters involved, and  size, measured as the number of possible
 parameter  combinations, for  a selection  of search  spaces from  14 autotuning
 domains.   Precise  information about  search  space  characterization is  often
 missing from works on autotuning  methods and applications. The characterization
-of  most of  the search  spaces in  Figure\nbsp{}[[fig:search-spaces]] was  obtained
+of most of the search  spaces in Figure\nbsp{}[[fig:search-spaces]] was obtained
 directly from the text of the corresponding published paper, but for some it was
 necessary to extract  characterizations from the available  source code.  Still,
 it was impossible  to obtain detailed descriptions of search  spaces for many of
@@ -9718,11 +9729,11 @@ works that provided it.
 #+CAPTION: The left panel shows a zoomed view of the right panel
 [[file:img/search_spaces.pdf]]
 
-The left hand  panel of Figure\nbsp{}[[fig:search-spaces]] shows  search spaces with
-up to 60 parameters. The over-representation of search spaces for linear algebra
-domains in this sample stands out on the  left hand panel, but the domain is not
-present on the remaining  portion of the sample, shown on  the right hand panel.
-The  largest  search spaces  for  which  we were  able  to  find information  on
+The left  hand panel  of Figure\nbsp{}[[fig:search-spaces]] shows  search spaces
+with up  to 60 parameters. The  over-representation of search spaces  for linear
+algebra domains in this sample stands out on the left hand panel, but the domain
+is not present on  the remaining portion of the sample, shown  on the right hand
+panel.  The largest search spaces for which  we were able to find information on
 published  work are  defined for  the domains  of neural  network configuration,
 High-Level  Synthesis  for  FPGAs,   compiler  parameters,  and  domain-specific
 languages.
@@ -9741,8 +9752,8 @@ generating  a large  set of  combinations. Despite  that, regarding  performance
 improvements, it is likely that most  configuration parameters will have a small
 impact, that is,  that only a handful of parameters  are responsible for changes
 in performance.  Search  spaces are often much more restrictive  than the one we
-discussed in  Section\nbsp{}[[Consequences for Code Optimization:  Autotuning Loop
-Nest   Optimization]].   Autotuning   problem   definitions   usually  come   with
+discussed in Section\nbsp{}[[Consequences for Code Optimization: Autotuning Loop
+Nest  Optimization]].    Autotuning  problem   definitions  usually   come  with
 /constraints/  on  parameter  values  and limited  /experimental  budgets/,  and
 /runtime/ failures  for some  configurations are  often unpredictable.   In this
 context,  finding configurations  that improve  performance and  determining the
@@ -9871,20 +9882,23 @@ computing, compiler parameters, and High-Level Synthesis.  Systems using methods
 based on  Machine Learning become more  common on later work  than systems using
 heuristics.
 
-Chapter\nbsp{}[[Methods   for  Function   Minimization]]   provides  more   detailed
+Chapter\nbsp{}[[Methods  for  Function  Minimization]]  provides  more  detailed
 definitions and discussions of the applicability, effectiveness, and explanatory
 power  of  stochastic  autotuning  methods  based  on  search  heuristics.   The
 remainder  of this  chapter details  the contributions  of this  thesis and  the
 structure of this document.
 
-*** Structure of This Thesis
+*** Structure and Contributions of This Thesis
+:PROPERTIES:
+:CUSTOM_ID: sec:structure-thesis
+:END:
 This  thesis is  organized in  two parts.   Part\nbsp{}\ref{part:optim} presents
 high-level   descriptions  of   different  optimization   methods,  highlighting
 meaningful     features     for      their     application     to     autotuning
-problems. Part\nbsp{}\ref{part:app}  presents five separate studies  where apply
-distinct optimization methods to a  series of autotuning problems from different
-domains. The remainder  of this section presents the structure  of the two parts
-in further detail and discusses the contributions of this thesis.
+problems.  Part\nbsp{}\ref{part:app} presents  five  separate  studies where  we
+apply  distinct optimization  methods to  a series  of autotuning  problems from
+different domains. The  remainder of this section presents the  structure of the
+two parts in further detail and discusses the contributions of this thesis.
 
 Chapter\nbsp{}\ref{chap:notation} opens  Part\nbsp{}\ref{part:optim} describing,
 from the point of view of autotuning problems, the mathematical notation we used
@@ -9902,18 +9916,25 @@ choosing which experiments  should be conducted. Chapter\nbsp{}\ref{chap:online}
 presents Online  Learning methods, which  explicitly model and seek  to optimize
 the  compromise  between   exploring  a  search  space  seeking   to  learn  new
 relationships between factors and  responses, and exploiting known relationships
-to  find  the  optimal factor  configuration.  Chapter\nbsp{}\ref{chap:overview}
+to  find the  optimal  factor configuration.   Chapter\nbsp{}\ref{chap:overview}
 closes this  part presenting, in light  of the previous expositions,  the method
-choices that compose the path we took across the studies done in this thesis.
+choices composing the path we took in this thesis.
 
 Part\nbsp{}\ref{part:app} begins with a presentation of our research methodology
 in Chapter\nbsp{}\ref{chap:method},  which describes  the efforts made  over the
 duration  of the  work on  this  thesis to  establish a  workflow that  promotes
 reproducible science,  using computational  documents, versioning,  and archival
-for code, results, and statistical analyses. The other chapters of this part are
-described in the paragraphs below,  and present the autotuning studies conducted
-during this thesis.
+for  code,   results,  and   statistical  analyses.    The  other   chapters  of
+Part\nbsp{}\ref{part:app} present the contributions of  this thesis, in the form
+of performance optimization  case studies.  Our contributions  are summarized in
+the    remainder   of    this    section.    After    Part\nbsp{}\ref{part:app},
+Chapter\nbsp{}\ref{chap:conclusion}  concludes  this document,  summarizing  the
+contributions of this thesis and highlighting future work.
 
+**** Case Studies with Search Heuristics
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 Initial work on this thesis, carried out at the University of São Paulo, studied
 the effectiveness of classical and standard search heuristics, such as Simulated
 Annealing, on autotuning  problems.  The first target autotuning  domain was the
@@ -9964,24 +9985,32 @@ expensive-to-evaluate functions, such as those  that appear on the autotuning of
 HLS, require a more parsimonious  and transparent approach, that can potentially
 be achieved using the Design of Experiments methodology.
 
-In this thesis we present an adaptation of the Design of Experiments methodology
-to autotuning, which  we apply to different problems.  The  method we propose is
-based on linear regression and its extensions, Analysis of Variance (ANOVA), and
-Optimal Design.   The strategy requires  the formulation of  initial assumptions
-about the  target autotuning problem, which  are refined with data  collected by
-efficiently selected experiments.  The objective of this approach is to identify
-and exploit relationships  between factors and response,  suggesting regions for
-further exploration in a transparent way, that is, in a way that is supported by
-statistical tests of significance.  The  effectiveness of the proposed strategy,
-and  its  ability to  explain  the  optimizations  it  finds, are  evaluated  on
-autotuning problems  in the code generation  and source-to-source transformation
-domains.     This   work    was    partially   published    at   the    IEEE/ACM
+**** A Transparent and Parsimonious Approach to Autotuning
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+The  key  contribution  of  this  thesis  is an  adaptation  of  the  Design  of
+Experiments methodology  to autotuning,  which we  apply to  different problems.
+The method we propose is based on linear regression and its extensions, Analysis
+of Variance (ANOVA), and Optimal  Design.  The strategy requires the formulation
+of initial  assumptions about the  target autotuning problem, which  are refined
+with data collected by efficiently  selected experiments.  The objective of this
+approach is to identify and  exploit relationships between factors and response,
+suggesting regions for  further exploration in a transparent way,  that is, in a
+way that is  supported by statistical tests of  significance.  The effectiveness
+of the proposed strategy, and its ability to explain the optimizations it finds,
+are evaluated on autotuning problems in the code generation and source-to-source
+transformation  domains.  This  work  was partially  published  at the  IEEE/ACM
 CCGrid\nbsp{}\cite{bruel2019autotuning}                              conference.
 Chapter\nbsp{}\ref{chap:laplacian} presents  our first complete study  of DoE to
 an autotuning problem, where we compare our method's results with those of other
 autotuning  methods, demonstrating  how our  method is  capable of  consistently
 finding the global optimum under certain conditions.
 
+**** Case Studies with DoE and Gaussian Process Regression
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 Because the  Design of Experiments  methodology requires the specification  of a
 class of initial performance models, our methodology can sometimes achieve worse
 prediction  capabilities  when  there  is considerable  uncertainty  on  initial
@@ -10001,10 +10030,6 @@ Packard Enterprise/  researchers, on a  larger autotuning problem  regarding the
 mixed-precision   quantization  of   /Convolutional   Neural  Networks/   (CNN),
 unpublished at the time  of the writing of this thesis,  and described in detail
 in Chapter\nbsp{}\ref{chap:quantization}.
-
-Finally,    Chapter\nbsp{}\ref{chap:conclusion}    concludes   this    document,
-summarizing the  discussions of the  previous chapters and the  contributions of
-this thesis.
 
 * Optimization Methods for Autotuning
 :PROPERTIES:
@@ -10794,8 +10819,8 @@ space to provide variability.
 
 *** Summary
 The methods for  function minimization we have discussed in  this chapter do not
-strive to be parsimonious. To be effective they require many estimates of values
-of  $f$  and  may  require  additional  information,  such  as  $\nabla{}f$  and
+are not parsimonious.  To be effective they require many  estimates of values of
+$f$  and   may  require   additional  information,   such  as   $\nabla{}f$  and
 $\mathbf{H}f$.  The strong hypotheses of derivative-based methods restrict their
 applicability by invalidating convergence guarantees. Stochastic methods have no
 such guarantees to begin with, and thus require costly exploration.

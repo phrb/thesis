@@ -8960,9 +8960,9 @@ cook, study, talk, and contemplate  life.  With the certainty of incompleteness,
 I thank  Marcos, Flávio, Bodo,  Thilo, Andrei,  Danilo, Salah, Adrien,  Tom, and
 Christian.
 
-I thank my  mother, my brother, my  father, for showing me  how, especially when
-adversity seems overwhelming,  we can find the sparks of  joy, love, and courage
-that reignite our strength to continue.
+I thank  my mother, my  brother, and my father,  for showing me  how, especially
+when adversity seems overwhelming, we can  find sparks of joy, love, and courage
+to reignite our strength to continue.
 
 #+begin_export latex
 
@@ -13140,15 +13140,15 @@ Completing the specification of an MDP, the third function is the policy $\pi: S
 Figure\nbsp{}\ref{fig:mdp} shows  an example of an  MDP with two states  and two
 actions, with known $P$ and $R$.
 
-Reinforcement Learning  algorithms operate are  used when the functions  $P$ and
-$R$ are  completely or partially unknown,  and seek to learn  these functions by
-testing different  policies $\pi$. Instead  of directly modeling  and optimizing
-$P$ and $R$,  RL algorithms optimize a function $Q:  S\times{}A \to \mathbb{R}$,
-in a method  named /Q-learning/\nbsp{}\cite{watkins1989learning}, which provides
-the expected reward of a state-action combination.  If optimization is performed
-for a  known, finite, and fixed  number of instants  $T$, we can compute  $Q$ by
-defining  its recurrence  function  and  filling a  table  of  rewards for  each
-state-action combination using dynamic programming.
+Reinforcement Learning  algorithms operate  when the functions  $P$ and  $R$ are
+completely or  partially unknown, and seek  to learn these functions  by testing
+different policies  $\pi$. Instead of  directly modeling and optimizing  $P$ and
+$R$, we  optimize a function $Q:  S\times{}A \to \mathbb{R}$, in  a method named
+/Q-learning/\nbsp{}\cite{watkins1989learning},   which  provides   the  expected
+reward of a state-action combination.  If optimization is performed for a known,
+finite, and  fixed number of  instants $T$, we can  compute $Q$ by  defining its
+recurrence  function  and filling  a  table  of  rewards for  each  state-action
+combination using dynamic programming.
 
 Successful algorithms must balance the exploitation of known effective policies,
 aiming to maximize  the cumulative reward, and the exploration  of new policies,
@@ -13177,10 +13177,10 @@ computing the  /Expected Improvement/  (EI) of unobserved  points in  the search
 space.
 
 Suppose  we have  fitted a  GP  surrogate model  to  a set  $\mathbf{X}$ with  4
-observations of  an objective function  $f$. Each experiment  is marked as  by a
-brown point in Figure\nbsp{}[[fig:ei-gp]], with the  true $f$ marked in red.  As
-we  described in  Section\nbsp{}\ref{sec:gpr}, the  fitted surrogate  provides a
-vector  $\hat{\boldsymbol{\mu}}$ of  predicted means  for each  $f(\mathbf{x})$,
+observations of an objective function $f$.  Each experiment is marked by a brown
+point in  Figure\nbsp{}[[fig:ei-gp]], with the  true $f$  marked in red.   As we
+described in Section\nbsp{}\ref{sec:gpr}, the fitted surrogate provides a vector
+$\hat{\boldsymbol{\mu}}$   of   predicted   means  for   each   $f(\mathbf{x})$,
 represented   by    the   blue   line,   with    associated   variances   vector
 $\hat{\boldsymbol{\sigma}}^{2}$.   Prediction variances  are represented  by the
 shaded areas, and go  to zero at each observation. To decide  where to spend the
@@ -13189,11 +13189,11 @@ next measurement, we could:
 1. *explore* by choosing the $\mathbf{x}$ with the largest predicted variance in
    $\hat{\boldsymbol{\sigma}}^{2}$;
 2. *exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
-   $\hat{\boldsymbol{\mu}}$; or
+   $\hat{\boldsymbol{\mu}}$;
 3. *mix exploitation  and exploration*  by choosing  the $\mathbf{x}$  with the
    smallest lower bound of a 95%  confidence interval constructed using the mean
    predictions       $\hat{\boldsymbol{\mu}}$       and      the       variances
-   $\hat{\boldsymbol{\sigma}}^{2}$; and
+   $\hat{\boldsymbol{\sigma}}^{2}$; or
 4.  *mix exploitation  and exploration*  by  picking the  $\mathbf{x}$ with  the
    largest Expected Improvement.
 

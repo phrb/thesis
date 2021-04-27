@@ -8356,7 +8356,7 @@ ggplot(data = gpr_data,
             [{\textbf{Populations}\\[0.7em]\textit{Genetic}\\\textit{Algorithms}\\[0.7em]$\dots$},
               draw]
             [{\textbf{Direct}\\[0.7em]\textit{Nelder-Mead}\\[0.7em]$\dots$}, draw]
-            [{\textbf{Single-State}\\[0.7em]\textit{Simulated}\\[0.7em]\textit{Annealing}\\[0.7em]$\dots$},
+            [{\textbf{Single-State}\\[0.7em]\textit{Simulated}\\\textit{Annealing}\\[0.7em]$\dots$},
               draw]]
           [{\textit{Gradient}\\\textit{Descent}\\[0.7em]$\dots$},
             draw,
@@ -8371,23 +8371,22 @@ ggplot(data = gpr_data,
           [{\textbf{Parametric Models}},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
-            [{$x_{i} \in \mathbf{x}$, for $i = 1,\dots,p$\\$\implies x_i$ is
-                discrete,\\[0.7em]$\hat{f}_\theta(\mathbf{x}) = h_1(x_1) + \dots
-                + h_p(x_p)$},
+            [{$\mathbf{x} \in \mathcal{X}$ are \textit{discrete} and
+                \\\textit{independent} choices},
               draw
-              [{\textbf{Independent Bandits}\\[0.7em]for each
-                  $x_i$: \textit{UCB}, \textit{EXP3},\\[0.4em]$\dots$}, draw]]
-            [{\textbf{Design of Experiments}\\using linear
-                models\\[0.7em]$\hat{f}_\theta(\mathbf{x}) =
+              [{\textbf{Independent}\\\textbf{Bandits}\\[0.7em]\textit{UCB},
+                  \textit{EXP3}, $\dots$}, draw]]
+            [{Design of Experiments\\using \textbf{Linear
+                  Models}\\[0.7em]$\hat{f}_\theta(\mathbf{x}) =
                 \mathcal{M}(\mathbf{x})^{\transp}\theta(\mathbf{x})+
                 \varepsilon$},
               draw
-              [{Find \textit{significant} $x_i \in \mathbf{x}$,\\or check \textit{lack of
-                    fit} of $\hat{f}$?},
+              [{Check \textit{lack of fit} of $\hat{f}$?},
                 draw,
                 alias = adequacy
-                [{Consider interactions?\\[0.7em]{$\exists x_i \neq x_j:\;
-                      \theta(x_ix_j) \neq 0$}},
+                [{Find \textit{significant} $x_i \in
+                    \mathbf{x}$\\[0.7em]Consider
+                    interactions?\\{$\theta(x_i,x_j) \neq 0$}},
                   draw,
                   alias = interactions,
                   edge label = {node[midway, fill=white, font = \scriptsize]{No}}
@@ -8416,7 +8415,8 @@ ggplot(data = gpr_data,
                 [, phantom]
                 [{\textbf{Space-Filling}\\\textbf{Designs}},
                   draw,
-                  edge label = {node[midway, fill=white, font = \scriptsize]{Yes}}
+                  edge label = {node[midway, fill=white, font = \scriptsize]{Yes}},
+                  alias = sfd,
                   [{\textbf{Model Selection}\\[0.7em]ANOVA, Sobol
                       indices,\\[0.7em]$\dots$},
                     edge = {-stealth, Black, semithick},
@@ -8427,9 +8427,12 @@ ggplot(data = gpr_data,
           [{\textbf{Nonparametric Models}},
             draw,
             edge label = {node[midway, fill=white, font = \scriptsize]{No}}
-            [{\textbf{Decision} \textbf{Trees}\\[0.7em]Splitting rules on \mathbf{x}},
+            [{\textbf{Gaussian Process}\\\textbf{Regression}},
               draw
-              [, phantom]
+              [{Find \textit{significant} $x_i \in \mathbf{x}$},
+                edge = {Black, semithick},
+                alias = gprsig,
+                draw]
               [, phantom]
               [, phantom]
               [, phantom]
@@ -8455,15 +8458,20 @@ ggplot(data = gpr_data,
                   edge = {Black, semithick},
                   edge label = {node[midway, fill=white, font = \scriptsize]{Exploit$+$Explore}},
                   draw,
+                  alias = ego,
                   color = Black]]]
-            [{\textbf{Gaussian Process}\\\textbf{Regression}},
-              alias = gaussian,
+            [{\textbf{Decision} \textbf{Trees}\\[0.7em]Splitting rules on \mathbf{x}},
+              alias = dectrees,
               draw]]]]]]
   \draw [-stealth, semithick, Black](selection) to [bend left=14] node[near
     start, fill=white, font = \scriptsize] {Exploit} (adequacy.south);
   \draw [-stealth, semithick, Black](estimate.east) to [bend right=32] node[near
-    start, fill=white, font = \scriptsize] {Explore} (adequacy.south) ;
-  \draw [-stealth, semithick, Black](gaussian) to (uncertainty);
+    start, fill=white, font = \scriptsize] {Explore} (adequacy.south);
+  \draw [-stealth, semithick, Black](dectrees) to (uncertainty);
+  \draw [-stealth, semithick, Black](gprsig.south) to [bend right = 14]
+  node[midway, fill=white, font = \scriptsize] {Explore} (sfd.north);
+  \draw [-stealth, semithick, Black](ego) to [bend left = 14]
+  node[midway, fill=white, font = \scriptsize] {Initialize} (sfd.south east);
   \draw [-stealth, semithick, Black](optimal) to node[midway, fill=white, font =
     \scriptsize] {Exploit} (estimate) ;
 \end{forest}
@@ -8928,12 +8936,12 @@ model_plot.save("./img/neural_net_autotuning/resnet50_full_architecture_generate
 :end:
 * Covers                                                    :noexport:ignore:
 ** IME
-#+LATEX_HEADER: \input{covers/ime.tex}
+# #+LATEX_HEADER: \input{covers/ime.tex}
 ** UGA
-# #+LATEX_HEADER: \usepackage[a4paper]{covers/uga}
-# #+LATEX_HEADER: \usepackage[french,english]{isodate}
-#
-# #+LATEX_HEADER: \input{covers/uga.tex}
+#+LATEX_HEADER: \usepackage[a4paper]{covers/uga}
+#+LATEX_HEADER: \usepackage[french,english]{isodate}
+
+#+LATEX_HEADER: \input{covers/uga.tex}
 * Front Matter                                                       :ignore:
 #+latex: \frontmatter
 

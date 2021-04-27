@@ -16729,12 +16729,12 @@ explore in this thesis.
 :END:
 
 Computer  performance has  sustained exponential  increases over  the last  half
-century,  despite   current  physical  limits  on   hardware  design.   Software
-optimization  has  performed an  increasingly  substantial  role on  performance
-improvement over the last 15 years, requiring the exploration of larger and more
-complex search spaces than ever before.   Autotuning methods are one approach to
-tackle  the   performance  optimization  of  complex   search  spaces,  enabling
-exploitation   of  existing   relationships  between   program  parameters   and
+century, despite current  physical limits on hardware design.   In this context,
+software  optimization  has  performed   an  increasingly  substantial  role  on
+performance  improvement,  especially  in  the  last  15  years,  demanding  the
+exploration  of  larger  and  more  complex  search  spaces  than  ever  before.
+Autotuning  methods are  one  approach optimization  in  complex search  spaces,
+enabling exploitation  of existing relationships between  program parameters and
 performance.  We  can adapt autotuning methods  from well-established statistics
 and  mathematical optimization,  although,  as is  the case  for  the Design  of
 Experiments, their usage is not always common in autotuning research.
@@ -16773,8 +16773,11 @@ efficiently  studied  with  Plackett-Burman  designs.   We  effectively  applied
 Gaussian Process Regression with  space-filling designs and Expected Improvement
 to  mixed-precision  bit  quantization  of neural  networks,  and  although  the
 quantizations  we found  were consistent,  identifying significant  factors with
-Sobol indices  was inconclusive. Applying DoE  methods to this problem  could be
-fruitful.
+Sobol  indices was  inconclusive.  In  initial studies  of the  bit quantization
+problem, we performed  ANOVA tests with designs constructed  for quadratic terms
+and  found  interesting  significance  measurements for  some  layers  of  large
+networks. We did  not pursue this line of exploration,  but applying DoE methods
+to this problem, such as optimal design and screening, could be fruitful.
 
 We did  not include some  of the projects in  which we participated  during this
 thesis,  notably  the  ones where  we  helped  others  to  apply the  Design  of
@@ -16806,41 +16809,43 @@ It was necessary to construct  different experimental and analysis workflows for
 each problem we studied, because each one targeted different hardware, worked on
 a different level of the  hardware-software stack, and had different constraints
 and experimental budgets.  Finding a  reasonable baseline of comparison was done
-differently for  each problem and, with  the exception of the  work presented in
-Chapter\nbsp{}\ref{chap:laplacian},  relied on  consensus established  among the
-users of a program.
+differently for each problem and relied on consensus established among the users
+of   a    program,   with   the    exception   of   the   work    presented   in
+Chapter\nbsp{}\ref{chap:laplacian}, where the global optimum was known.
 
-By addressing common issues, these differences expose a set of common steps that
-must be taken  for studying most autotuning problems, which  could be abstracted
-to produce a standard for  autotuning research. Efforts toward establishing such
-a standard\nbsp{}\cite{fursin2021collective}  and using  collective explorations
-of     a     search     space     to     aid     further     optimization     by
+Because applying a  method for a new  problem requires adapting the  method to a
+specific  environment,   comparing  the   performance  of  methods   in  similar
+experimental conditions was  not possible during this thesis.   An extensive set
+of  representative,  parameterized,  and   exhaustively  measured  programs  for
+specific hardware would therefore enable comparing the optimizations produced by
+different methods  with known global  optima, subject to controlled  budgets and
+environments.  Additionally, it  was not always clear that  we were manipulating
+program  parameters  at   the  most  effective  abstraction   level  to  achieve
+performance  improvement.   Thus,  studies  of the  impact  of  parameters  from
+different abstraction  levels should also be  considered in the production  of a
+set of problems for comparing autotuning methods.  The elaboration of such a set
+would present  a considerable challenge  for a  single research project,  but it
+would favourably impact the reproducibility  of autotuning research.  Still, due
+to characteristics intrinsic to the  evolution of hardware design, which require
+constant increases in complexity, we believe  that this effort is recurring, and
+that it would benefit from social and collective approaches.
+
+By addressing common issues, the differences  we have encountered in our studies
+expose a  set of common  steps that  must be taken,  which can be  abstracted to
+produce  a   standard  for  collective  autotuning   research.   Efforts  toward
+establishing   such  a   standard\nbsp{}\cite{fursin2021collective}  and   using
+collective  explorations  of  search  spaces  to  aid  further  optimization  by
 others\nbsp{}\cite{fursin2014collective} have  been performed by  Grigori Fursin
 and others, and are highly motivating.
-
-Producing an  extensive set  of representative, parameterized,  and exhaustively
-measured programs for specific hardware would enable comparing the optimizations
-produced by  different methods with  known global optima, subject  to controlled
-budgets and  software and  hardware environments. Elaborating  such a  set would
-present a  considerable challenge for  a single  research project, but  it would
-favourably impact  the reproducibility  of autotuning  research.  Still,  due to
-characteristics  intrinsic to  the  evolution of  hardware  design that  require
-constant increases in complexity, we believe this to be a recurring effort, that
-would benefit from social and collective approaches.
-
-Future  work on  the directions  we  believe this  thesis has  pointed to  would
-involve  contributing  to  devise  and   improve  collective  solutions  to  the
-exploration of search spaces, guided  by statistics well-studied and established
-in other  domains. Additionally,  it was  not always  clear to  us that  we were
-manipulating  program parameters  at  the most  effective  abstraction level  to
-achieve performance improvement.  Thus, studies of the impact of parameters from
-different abstraction levels should also be considered in autotuning problems.
 
 We believe that  producing well specified sets of  exhaustively and collectively
 measured search spaces, targeting an evolving array of hardware architectures at
 the most effective  abstraction levels, and striving  for reproducible workflows
 and  results,  would provide  support  for  further  advancing the  research  on
-automated performance tuning.
+automated performance  tuning.  Future  work on the  directions we  believe this
+thesis  has  pointed  to  would  involve  contributing  to  devise  and  improve
+collective solutions to  the exploration of search spaces,  guided by statistics
+well-studied and established in other domains.
 
 ** Appendices Begin Marker                                          :ignore:
 #+latex: \begin{appendices}

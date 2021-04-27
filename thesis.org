@@ -13053,7 +13053,7 @@ of slot  machines in  a casino,  an analogy that  inspired the  MAB name.   In a
 discrete time period  with $T$ instants, a solution to  the MAB problem provides
 at each  instant $t  \in \{1, \dots,  T\}$ a  choice $I_i$ from  a set  with $k$
 possible   actions    $A_1,\dots,A_k$   leading    to   sequence    of   rewards
-$R_{1,I_1},\dots,R{T,I_T}$.   A sequence  of  actions for  each  instant can  be
+$R_{1,I_1},\dots,R_{T,I_T}$.   A sequence  of actions  for each  instant can  be
 called a policy, and we wish to  find policies, or strategies to construct them,
 that maximize  the sum of  rewards obtained over  time.  In the  discussion that
 follows we  assume that rewards are  independent and static over  time, although
@@ -13094,19 +13094,20 @@ are:
 3. *mixing exploitation and exploration*, by picking the best action so far with
    probability $1 -  \epsilon$ and a random action  with probability $\epsilon$.
 
-Approaches /2/ and /3/  are not guaranteed to explore enough,  in the sense that
-they tend  to always  favor the  action with the  highest observed  mean reward,
-which could  lead to  suboptimal policies,  with strictly  positive probability.
-The             Upper             Confidence             Bound             (UCB)
+The regret of all of these approaches  is $O(T)$. Approaches /2/ and /3/ are not
+guaranteed to explore  enough, in the sense  that they tend to  always favor the
+action with  the highest observed  mean reward,  which could lead  to suboptimal
+policies, with strictly positive probability.   The Upper Confidence Bound (UCB)
 algorithm\nbsp{}\cite{auer2002using,auer2010ucb}    includes   the    confidence
 interval of the observed  reward for each action as a  component to decide which
-choice to  make.  At each interval,  the algorithm chooses the  action for which
-the upper bound  of a confidence interval  of a specified level  is the highest.
-The confidence levels required should increase  as a function of time, resulting
-in a greedy strategy which exploits the best observed mean rewards and explores,
-enforced  by increased  thresholds, ensuring  that we  balance exploitation  and
-exploration  and   preventing  missing  opportunities  by   concentrating  on  a
-suboptimal arm that produced good results by chance in the past.
+choice  to make.   The  regret of  the  UCB algorithm  is  $O(log\,T)$. At  each
+interval,  the algorithm  chooses the  action  for which  the upper  bound of  a
+confidence interval of a specified level  is the highest.  The confidence levels
+required should increase  as a function of time, resulting  in a greedy strategy
+which  exploits  the  best  observed  mean rewards  and  explores,  enforced  by
+increased thresholds, ensuring that we  balance exploitation and exploration and
+preventing  missing opportunities  by  concentrating on  a  suboptimal arm  that
+produced good results by chance in the past.
 
 The OpenTuner\nbsp{}\cite{ansel2014opentuner}  framework provides a  MAB example
 applied to the  autotuning context, where actions are represented  by choices of
@@ -13187,9 +13188,9 @@ state-action combination using dynamic programming.
 
 Successful algorithms must balance the exploitation of known effective policies,
 aiming to maximize  the cumulative reward, and the exploration  of new policies,
-aiming  to  learn  $P$ and  $R$.   When  the  objective  is to  optimize  for  a
-potentially infinite duration,  building a table for dynamic  programming is not
-anymore viable, and the function /Q/ must be modeled using different approaches.
+aiming to learn $P$ and $R$.  When the objective is to optimize for a very large
+or unbounded duration,  building a table for dynamic programming  is not anymore
+viable,  and  the function  /Q/  must  be  modeled using  different  approaches.
 Optimal policies  exist for  special cases when  an MDP has  a finite  number of
 states and actions\nbsp{}\cite{burnetas1997optimal},  and other approaches exist
 for general cases which model /Q/  by adapting, among others, the gradient-based
@@ -13218,25 +13219,26 @@ described in Section\nbsp{}\ref{sec:gpr}, the fitted surrogate provides a vector
 $\hat{\boldsymbol{\mu}}$   of   predicted   means  for   each   $f(\mathbf{x})$,
 represented   by    the   blue   line,   with    associated   variances   vector
 $\hat{\boldsymbol{\sigma}}^{2}$.   Prediction variances  are represented  by the
-shaded areas, and go  to zero at each observation. To decide  where to spend the
-next measurement, we could:
+shaded areas,  and go  to zero  at each observation.   Analogously to  the three
+approaches  we described  for MAB  algorithms, we  could decide  to explore,  by
+choosing   the   $\mathbf{x}$   with   the   largest   predicted   variance   in
+$\hat{\boldsymbol{\sigma}}^{2}$, exploit  by choosing the $\mathbf{x}$  with the
+smallest  predicted mean  in $\hat{\boldsymbol{\mu}}$,  or mix  exploitation and
+exploration by choosing the $\mathbf{x}$ with  the smallest lower bound of a 95%
+confidence     interval    constructed     using     the    mean     predictions
+$\hat{\boldsymbol{\mu}}$ and the  variances $\hat{\boldsymbol{\sigma}}^{2}$.  In
+this section we  present an approach for balancing  exploitation and exploration
+that is better suited to autotuning problems, where we:
 
-1. *explore* by choosing the $\mathbf{x}$ with the largest predicted variance in
-   $\hat{\boldsymbol{\sigma}}^{2}$;
-2. *exploit*  by choosing the $\mathbf{x}$  with the smallest predicted  mean in
-   $\hat{\boldsymbol{\mu}}$;
-3. *mix exploitation  and exploration*  by choosing  the $\mathbf{x}$  with the
-   smallest lower bound of a 95%  confidence interval constructed using the mean
-   predictions       $\hat{\boldsymbol{\mu}}$       and      the       variances
-   $\hat{\boldsymbol{\sigma}}^{2}$; or
-4.  *mix exploitation  and exploration*  by  picking the  $\mathbf{x}$ with  the
-   largest Expected Improvement.
+4.  [@4]  *mix exploitation and  exploration* by picking the  $\mathbf{x}$ that
+   maximizes the Expected Improvement of $f(\mathbf{x})$.
 
 #+NAME: fig:ei-gp
-#+CAPTION: A surrogate Gaussian Process, whose mean is shown in @@latex: \textcolor{NavyBlue}{\textbf{blue}}@@, fit to four observations,
-#+CAPTION: shown in  @@latex: \textcolor{Mahogany}{\textbf{brown}}@@, of an objective function represented by the @@latex: \textcolor{Red}{\textbf{red}}@@
-#+CAPTION: line.
-#+CAPTION: The dashed vertical lines show which $\mathbf{x}$ would be chosen for
+#+CAPTION: A surrogate Gaussian Process, whose mean is shown in
+#+CAPTION: @@latex: \textcolor{NavyBlue}{\textbf{blue}}@@, fit to four observations,
+#+CAPTION: shown in  @@latex: \textcolor{Mahogany}{\textbf{brown}}@@, of an
+#+CAPTION: objective function represented by the @@latex: \textcolor{Red}{\textbf{red}}@@
+#+CAPTION: line. The dashed vertical lines show which $\mathbf{x}$ would be chosen for
 #+CAPTION: the next observation if we followed the surrogate's
 #+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@, its
 #+CAPTION: minimum @@latex: \textcolor{NavyBlue}{\textbf{mean}}@@ minus its

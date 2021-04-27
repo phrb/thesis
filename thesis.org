@@ -12182,7 +12182,7 @@ Our initial modeling hypothesis for the screening experiment is written
 and Table\nbsp{}\ref{tab:plackett} shows the Plackett-Burman design we generated
 for testing it.  The design consists of an orthogonal matrix with twelve rows an
 eleven columns,  containing the extreme  levels of factors  $x_1,\dots,x_8$ plus
-three  ``dummy''  factors  $d_1,d_2,d_3$,   completing  the  columns  needed  to
+three ``placeholder''  factors $d_1,d_2,d_3$,  completing the columns  needed to
 construct         a         Plackett-Burman         design         for         8
 factors\nbsp{}\cite{plackett1946design}.  The final  design matrix also contains
 a column for the computed response, subject to measurement error.
@@ -12229,7 +12229,7 @@ names(design) <- c("$x_1$", "$x_2$", "$x_3$",
 
 cap <- paste("Randomized Plackett-Burman design for factors $x_1, \\dots, x_8$,",
              "with experiments $\\mathbf{x}_1,\\dots,\\mathbf{x}_{12}$, and",
-             "added ``dummy'' factors $d_1, d_2, d_3$.",
+             "added ``placeholder'' factors $d_1, d_2, d_3$.",
              "The response $y$ is subject to measurement",
              "error $\\varepsilon$")
 
@@ -12249,7 +12249,7 @@ print(tab, booktabs = TRUE,
 % Thu Apr  1 13:43:15 2021
 \begin{table}[t]
 \centering
-\caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, with experiments $\mathbf{x}_1,\dots,\mathbf{x}_{12}$, and added ``dummy'' factors $d_1, d_2, d_3$. The response $y$ is subject to measurement error $\varepsilon$}
+\caption{Randomized Plackett-Burman design for factors $x_1, \dots, x_8$, with experiments $\mathbf{x}_1,\dots,\mathbf{x}_{12}$, and added ``placeholder'' factors $d_1, d_2, d_3$. The response $y$ is subject to measurement error $\varepsilon$}
 \label{tab:plackett}
 \begingroup\small
 \begin{tabular}{cccccccccccc}

@@ -11025,16 +11025,6 @@ the  surrogate's  predictions.  We  will  use  the  fact  that the  variance  of
 $\hat{\theta}$  depends   on  $(\mathbf{X}^{\transp}\mathbf{X})^{-1}$   when  we
 discuss Optimal Design on Section\nbsp{}\ref{sec:optimal}.
 
-#+NAME: fig:regression-projection
-#+ATTR_LATEX: :width 0.48\textwidth :placement [h]
-#+CAPTION: In Linear Regression, the prediction vector $\hat{\mathbf{y}}$
-#+CAPTION: is the projection of the observations vector $\mathbf{y}$
-#+CAPTION: into the vector space
-#+CAPTION: spanned by the columns of $\mathbf{X}$.
-#+CAPTION: The vector $\boldsymbol{\varepsilon} = \mathbf{y} - \hat{\mathbf{y}}$
-#+CAPTION: is the model error, and is minimized when we ensure it is orthogonal to $\mathbf{X}\theta$
-[[file:img/linear_regression_projection.pdf]]
-
 An interesting interpretation  of the OLS estimator is that  it approximates the
 observation vector  $\mathbf{y}$ by  its orthogonal  projection into  the vector
 space    spanned    by    the    columns    of    $\mathbf{X}$.     Substituting
@@ -11054,6 +11044,16 @@ orthogonal   to  the   column   space  of   $\mathbf{X}$,   as  represented   in
 Figure\nbsp{}[[fig:regression-projection]].   The  OLS  estimator  can  also  be
 derived as a special case of  the Maximum Likelihood Estimator with $\varepsilon
 \sim \mathcal{N}(\mu,\sigma^2)$.
+
+#+NAME: fig:regression-projection
+#+ATTR_LATEX: :width 0.48\textwidth :placement [!t]
+#+CAPTION: In Linear Regression, the prediction vector $\hat{\mathbf{y}}$
+#+CAPTION: is the projection of the observations vector $\mathbf{y}$
+#+CAPTION: into the vector space
+#+CAPTION: spanned by the columns of $\mathbf{X}$.
+#+CAPTION: The vector $\boldsymbol{\varepsilon} = \mathbf{y} - \hat{\mathbf{y}}$
+#+CAPTION: is the model error, and is minimized when we ensure it is orthogonal to $\mathbf{X}\theta$
+[[file:img/linear_regression_projection.pdf]]
 
 We  assumed  that the  design  matrix  $\mathbf{X}$  was  used directly  in  the
 surrogate  model\nbsp{}\ref{eq:linear-model-surrogate},  but   this  limits  the
@@ -13084,9 +13084,8 @@ incorporates information about  the best possible policy.   Beyond problems with
 Bernoulli rewards, MAB solutions seek to  minimize regret for any unknown reward
 distribution.
 
-Three simple policies for choosing an action at instant $t$, with linear-growing
-regret as  a function of  time, as described  in Equation\nbsp{}\ref{eq:regret},
-are:
+We list below three simple policies for  choosing an action at instant $t$ whose
+regret as a function of time is $O(T)$ and $\Omega(T)$:
 
 1. *exploring* by uniformly choosing a random action for instant $t$;
 2. *exploiting* by picking the action for which we observed the best mean reward
@@ -13094,20 +13093,21 @@ are:
 3. *mixing exploitation and exploration*, by picking the best action so far with
    probability $1 -  \epsilon$ and a random action  with probability $\epsilon$.
 
-The regret of all of these approaches  is $O(T)$. Approaches /2/ and /3/ are not
-guaranteed to explore  enough, in the sense  that they tend to  always favor the
-action with  the highest observed  mean reward,  which could lead  to suboptimal
-policies, with strictly positive probability.   The Upper Confidence Bound (UCB)
+Approaches /2/ and /3/  are not guaranteed to explore enough,  in the sense that
+they tend  to always  favor the  action with the  highest observed  mean reward,
+which could  lead to  suboptimal policies,  with strictly  positive probability.
+The             Upper             Confidence             Bound             (UCB)
 algorithm\nbsp{}\cite{auer2002using,auer2010ucb}    includes   the    confidence
 interval of the observed  reward for each action as a  component to decide which
-choice  to make.   The  regret of  the  UCB algorithm  is  $O(log\,T)$. At  each
-interval,  the algorithm  chooses the  action  for which  the upper  bound of  a
-confidence interval of a specified level  is the highest.  The confidence levels
-required should increase  as a function of time, resulting  in a greedy strategy
-which  exploits  the  best  observed  mean rewards  and  explores,  enforced  by
-increased thresholds, ensuring that we  balance exploitation and exploration and
-preventing  missing opportunities  by  concentrating on  a  suboptimal arm  that
-produced good results by chance in the past.
+choice  to make.   The regret  of the  UCB algorithm  is $O(\log  T)$, which  is
+asymptotically optimal. At  each interval, the algorithm chooses  the action for
+which the  upper bound  of a  confidence interval  of a  specified level  is the
+highest.  The confidence levels required should  increase as a function of time,
+resulting in a greedy strategy which exploits the best observed mean rewards and
+explores,   enforced  by   increased  thresholds,   ensuring  that   we  balance
+exploitation   and  exploration   and   preventing   missing  opportunities   by
+concentrating on  a suboptimal arm that  produced good results by  chance in the
+past.
 
 The OpenTuner\nbsp{}\cite{ansel2014opentuner}  framework provides a  MAB example
 applied to the  autotuning context, where actions are represented  by choices of
@@ -13224,14 +13224,10 @@ approaches  we described  for MAB  algorithms, we  could decide  to explore,  by
 choosing   the   $\mathbf{x}$   with   the   largest   predicted   variance   in
 $\hat{\boldsymbol{\sigma}}^{2}$, exploit  by choosing the $\mathbf{x}$  with the
 smallest  predicted mean  in $\hat{\boldsymbol{\mu}}$,  or mix  exploitation and
-exploration by choosing the $\mathbf{x}$ with  the smallest lower bound of a 95%
-confidence     interval    constructed     using     the    mean     predictions
-$\hat{\boldsymbol{\mu}}$ and the  variances $\hat{\boldsymbol{\sigma}}^{2}$.  In
-this section we  present an approach for balancing  exploitation and exploration
-that is better suited to autotuning problems, where we:
-
-4.  [@4]  *mix exploitation and  exploration* by picking the  $\mathbf{x}$ that
-   maximizes the Expected Improvement of $f(\mathbf{x})$.
+exploration in the same manner as the UCB approach, by choosing the $\mathbf{x}$
+with the smallest lower bound of a 95% confidence interval constructed using the
+mean     predictions     $\hat{\boldsymbol{\mu}}$      and     the     variances
+$\hat{\boldsymbol{\sigma}}^{2}$.
 
 #+NAME: fig:ei-gp
 #+CAPTION: A surrogate Gaussian Process, whose mean is shown in
@@ -13257,10 +13253,16 @@ grow quickly the farther from the  observations we look. Exploiting by following
 the mean would produce the best point  in this example, but notice that we would
 measure a point  right next to a  previous observation, and we  would likely get
 trapped  in  a  nearby  local  minimum  if we  continued  betting  on  the  mean
-predictions.   The point  we would  evaluate by  following the  highest expected
-improvement  might  not  be  an   immediate  improvement  on  the  current  best
-observation, but it is the choice that will dynamically balance exploitation and
-exploration in the long run.
+predictions. In this  section we present an approach  for balancing exploitation
+and exploration that is better suited to autotuning problems, where we:
+
+4.  [@4]  *mix exploitation and  exploration* by picking the  $\mathbf{x}$ that
+   maximizes the Expected Improvement of $f(\mathbf{x})$.
+
+The point  we would evaluate  by following  the highest expected  improvement is
+also shown in Figure\nbsp{}\ref{fig:ei-gp} might not be an immediate improvement
+on the  current best  observation, but  it is the  choice that  will dynamically
+balance exploitation and exploration in the long run.
 
 The improvement brought by a new observation $f(\mathbf{x})$, in relation to our
 current best observation $y^{\ast} = min(\mathbf{y})$ is written
@@ -15327,8 +15329,9 @@ groups.
 #+CAPTION: the factors eliminated in a given step.
 #+CAPTION: A $\color{red}\boldsymbol{\times}$ marks the predicted best level of
 #+CAPTION: each factor, a $\color{blue}\boldsymbol{\times}$ marks the factor
-#+CAPTION: level on the global optimum, and \(\color{OliveGreen}\boldsymbol{\times}\)s
-#+CAPTION: mark the design points measured at each step
+#+CAPTION: level on the global optimum, \(\color{OliveGreen}\boldsymbol{\times}\)s
+#+CAPTION: mark the design points measured at each step, and gray points mark the
+#+CAPTION: completely evaluated search space
 #+ATTR_LATEX: :placement [t] :width .85\columnwidth
 [[./img/dopt_anova_experiments/model_sample_execution.pdf]]
 
@@ -16553,7 +16556,8 @@ backlog and picking a new region of the search space to explore.
 #+NAME: fig:variances
 #+CAPTION: Running optimized quantization policies with new
 #+CAPTION: /ImageNet/ samples, with 95% confidence intervals
-#+CAPTION: for the mean estimate. The baseline is the uniform 8-bit
+#+CAPTION: for the mean estimate. Diamond shapes mark the measured
+#+CAPTION: accuracy on the original sample. The baseline is the uniform 8-bit
 #+CAPTION: /ResNet50/ quantization
 #+ATTR_LATEX: :placement [t] :width 0.8\textwidth
 [[./img/neural_net_autotuning/variances.pdf]]
@@ -16566,7 +16570,8 @@ did not see any difference between RL experiments, but we were surprised to find
 that  RL experiments  were consistently  better, and  outside of  the confidence
 intervals,  for   new  datasets,   although  differences  are   not  practically
 significant.       Experiment      numbering      is     the      same      from
-Figures\nbsp{}[[fig:rl_results]] and [[fig:gpr_results]].
+Figures\nbsp{}[[fig:rl_results]]  and  [[fig:gpr_results]], and  diamond  shapes
+mark the accuracy measured in each experiment in the original /ImageNet/ sample.
 
 *** Measuring Performance and Detecting Significance for GPR
 In this  section we analyze the  performance of our GPR  implementation, discuss
@@ -16913,11 +16918,11 @@ programming and autotuning to a larger community inside USP, at:
 We  met  *Steven Quinito  Masnada*  (Inria),  *Brice Videau*  (ANL),  *Jean-Marc
 Vincent* (UGA)  at the  /Laboratoire d'Informatique de  Grenoble/ (LIG),  and we
 have collaborated  from the start of  this thesis's /cotutelle/ between  USP and
-UGA.       We       have      developed      and      applied       the      DoE
-methodology\nbsp{}\cite{bruel2019autotuning}             described            in
-Chapters\nbsp{}\ref{chap:laplacian}   and    \ref{chap:spapt},   and   continued
-collaborating,  meeting weekly  with *Brice  Videau*  for the  duration of  this
-thesis.
+UGA,  advised by  Professors *Alfredo  Goldman* and  *Arnaud Legrand*.   We have
+developed  and  applied   the  DoE  methodology\nbsp{}\cite{bruel2019autotuning}
+described  in  Chapters\nbsp{}\ref{chap:laplacian}   and  \ref{chap:spapt},  and
+continued collaborating, meeting weekly with  *Brice Videau* for the duration of
+this thesis.
 
 *** At HPE Palo Alto
 :PROPERTIES:

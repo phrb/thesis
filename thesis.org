@@ -8478,7 +8478,6 @@ ggplot(data = gpr_data,
 #+end_src
 
 #+RESULTS:
-[[file:./img/optimization_methods/tree.pdf]]
 
 **** Old
 ***** (Old) Complete Classification Tree for Function Minimization Methods

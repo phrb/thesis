@@ -1,0 +1,143 @@
+#+STARTUP: beamer overview indent inlineimages logdrawer
+#+TITLE:     Presentation Stub
+#+AUTHOR:    \footnotesize Pedro Bruel \newline \scriptsize \emph{pedro.bruel@gmail.com}
+#+DATE:      \scriptsize \today
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:2 num:t toc:nil @:t \n:nil ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   tex:t latex:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+
+* LaTeX Setup                                      :B_ignoreheading:noexport:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+
+See [[Emacs Setup]] below for local buffer variables
+
+** LaTeX Configuration
+:latex_header:
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [10pt, compress, aspectratio=169, xcolor={table,usenames,dvipsnames}]
+#+LATEX_HEADER: \mode<beamer>{\usetheme[numbering=fraction, progressbar=none, titleformat frame=regular, titleformat title=regular, sectionpage=progressbar]{metropolis}}
+
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+#+LATEX_HEADER: \usepackage{sourcecodepro}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage[scale=2]{ccicons}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage{relsize}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{bm}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{textcomp}
+#+LATEX_HEADER: \usepackage{pgfplots}
+#+LATEX_HEADER: \usepgfplotslibrary{dateplot}
+
+#+LATEX_HEADER: \definecolor{Base}{HTML}{191F26}
+#+LATEX_HEADER: \definecolor{Accent}{HTML}{b10000}
+#+LATEX_HEADER: \colorlet{Highlight}{Accent!18}
+
+#+LATEX_HEADER: \setbeamercolor{alerted text}{fg=Accent}
+#+LATEX_HEADER: \setbeamercolor{frametitle}{fg=Accent,bg=normal text.bg}
+#+LATEX_HEADER: \setbeamercolor{normal text}{bg=black!2,fg=Base}
+
+#+LATEX_HEADER: \usepackage{newpxtext}
+#+LATEX_HEADER: \usepackage{newpxmath}
+#+LATEX_HEADER: \usepackage{DejaVuSansMono}
+#+LATEX_HEADER: \setmonofont{DejaVuSansMono}
+
+#+LATEX_HEADER: \lstset{ %
+#+LATEX_HEADER:   backgroundcolor={},
+#+LATEX_HEADER:   basicstyle=\ttfamily\scriptsize,
+#+LATEX_HEADER:   breakatwhitespace=true,
+#+LATEX_HEADER:   breaklines=true,
+#+LATEX_HEADER:   captionpos=n,
+#+LATEX_HEADER:   commentstyle=\color{Accent},
+# #+LATEX_HEADER:   escapeinside={\%*}{*)},
+#+LATEX_HEADER:   extendedchars=true,
+#+LATEX_HEADER:   frame=n,
+#+LATEX_HEADER:   keywordstyle=\color{Accent},
+#+LATEX_HEADER:   rulecolor=\color{black},
+#+LATEX_HEADER:   showspaces=false,
+#+LATEX_HEADER:   showstringspaces=false,
+#+LATEX_HEADER:   showtabs=false,
+#+LATEX_HEADER:   stepnumber=2,
+#+LATEX_HEADER:   stringstyle=\color{gray},
+#+LATEX_HEADER:   tabsize=2,
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller[2]\relax}
+#+LATEX_HEADER: \addtobeamertemplate{block begin}{}{\justifying}
+
+#+LATEX_HEADER: \captionsetup[figure]{labelformat=empty}
+
+#+LATEX_HEADER: \hypersetup{
+#+LATEX_HEADER:     colorlinks=true,
+#+LATEX_HEADER:     linkcolor={Accent},
+#+LATEX_HEADER:     citecolor={Accent},
+#+LATEX_HEADER:     urlcolor={Accent}
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \setlength{\metropolis@titleseparator@linewidth}{1pt}
+#+LATEX_HEADER: \setlength{\metropolis@progressonsectionpage@linewidth}{2.5pt}
+# #+LATEX_HEADER: \setlength{\metropolis@progressinheadfoot@linewidth}{2pt}
+#+LATEX_HEADER: \makeatother
+:end:
+
+* Introduction
+** Sample Slide 1
+*** Sample Column/Block A                                     :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_env: block
+:BEAMER_col: 0.5
+:END:
+Sample text
+
+**** Sample Block 1                                                 :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+Sample *text*
+
+*** Sample Column/Block B                                     :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_env: block
+:BEAMER_COL: 0.5
+:END:
+
+Sample list:
+
+- Sample item 1
+- Sample item 2
+* Ending Title :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+LATEX: \maketitle
+
+* Emacs Setup                                      :noexport:B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+See [[LaTeX Setup]] above for the beamer configuration
+
+** Use XeLaTeX
+If you  accept this definition  when loading the  buffer, this variable  will be
+modified  locally to  the buffer.  This allows  using XeLaTeX  for exporting  to
+beamer pdf.
+
+# Local Variables:
+# eval: (setq-local org-latex-pdf-process (list "latexmk -xelatex %f"))
+# End:

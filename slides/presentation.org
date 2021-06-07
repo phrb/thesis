@@ -254,28 +254,65 @@ See [[Emacs Setup]] below for local buffer variables
 - Low-discrepancy sampling in high dimension
 - Constraints complicate exploration
 - Multi-objective optimization
+- A more complex method usually produces less interpretable results,
+  but not always achieves better optimizations
 * Conclusion (5 min)
-** Curse of Dimensionality for Autotuning Problems
+** Contributions of this Thesis
+- Striving to develop and apply transparent and parsimonious autotuning methods
+- Applications in this thesis:
+
+#+begin_export latex
+\begin{table}[]
+  \renewcommand{\arraystretch}{1.5}
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}ll@{}}
+      \textbf{Domain} & \textbf{Method}         \\ \midrule
+      CUDA compiler  parameters & \multirow{2}{*}{Function  minimization methods
+        with Online Learning} \\
+      FPGA compiler parameters &  \\
+      OpenCL  Laplacian  Kernel  &  Function  minimization  methods, Linear Models, Gaussian Process Regression \\
+      SPAPT Kernels & Linear Models, Gaussian Process Regression \\
+      CNN Mixed-Precision Quantization & Gaussian Process Regression
+    \end{tabular}%
+  }
+\end{table}
+#+end_export
+
+** Reproducibility of Performance Tuning Experiments
+- Redoing all the work for different problems
+- Complementary approaches:
+  - Completely evaluate small sets of a search space
+  - Collaborative optimizing for different architectures, problems
+** Key Discussions
+*** Curse of Dimensionality for Autotuning Problems         :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_env: block
+:BEAMER_col: 0.5
+:END:
 - Implications for Sampling and Learning
 - Space-filling helps, but does not solve
 - Constraints
-** Which method to use?
+**** Which method to use?                                        :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
 - Design  of  Experiments  for  transparency and  parsimony  when  building  and
   interpreting statistical models
 - Linear models for simpler spaces and problems
 - Gaussian Process Surrogates for more complex situations
-** It is often unclear if there is something to find
+*** It is often unclear if there is something to find       :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_env: block
+:END:
 - Abundance of local optima
 - Is there a global optimum, is it "hidden"?
   - How to find it, if so? (can learning do it?)
 - What is the most effective level of abstraction for optimizing a program?
   - Compiler, kernel, machine, model, dependencies?
 - When to stop?
-** Reproducibility of Performance Tuning Experiments
-- Redoing all the work for different problems
-- Complementary approaches:
-  - Completely evaluate small sets of a search space
-  - Collaborative optimizing for different architectures, problems
+** Conclusion
+
 * Ending Title :B_ignoreheading:
 :PROPERTIES:
 :BEAMER_env: ignoreheading

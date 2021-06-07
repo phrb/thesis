@@ -47,17 +47,22 @@ See [[Emacs Setup]] below for local buffer variables
 #+LATEX_HEADER: \usepgfplotslibrary{dateplot}
 
 #+LATEX_HEADER: \definecolor{Base}{HTML}{191F26}
-#+LATEX_HEADER: \definecolor{Accent}{HTML}{b10000}
+
+# #+LATEX_HEADER: \definecolor{Accent}{HTML}{b10000}
+# #+LATEX_HEADER: \colorlet{Accent}{PineGreen}
+#+LATEX_HEADER: \colorlet{Accent}{OliveGreen!85!Black}
+
 #+LATEX_HEADER: \colorlet{Highlight}{Accent!18}
 
 #+LATEX_HEADER: \setbeamercolor{alerted text}{fg=Accent}
 #+LATEX_HEADER: \setbeamercolor{frametitle}{fg=Accent,bg=normal text.bg}
 #+LATEX_HEADER: \setbeamercolor{normal text}{bg=black!2,fg=Base}
 
+#+LATEX_HEADER: \usefonttheme{professionalfonts}
 #+LATEX_HEADER: \usepackage{newpxtext}
-#+LATEX_HEADER: \usepackage{newpxmath}
 #+LATEX_HEADER: \usepackage{DejaVuSansMono}
 #+LATEX_HEADER: \setmonofont{DejaVuSansMono}
+#+LATEX_HEADER: \usepackage{newpxmath}
 
 #+LATEX_HEADER: \lstset{ %
 #+LATEX_HEADER:   backgroundcolor={},

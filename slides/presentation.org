@@ -152,7 +152,7 @@ See [[Emacs Setup]] below for local buffer variables
 
 * Methods for Function Minimization (10 minutes)
 ** Overview
-- We know information about $f$:
+- We know information about $f$
 - Derivative-based
 - Other heuristics
 ** Search Heuristics with Multi-Armed Bandit

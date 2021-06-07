@@ -1,7 +1,8 @@
 #+STARTUP: beamer overview indent inlineimages logdrawer
-#+TITLE:     Presentation Stub
-#+AUTHOR:    \footnotesize Pedro Bruel \newline \scriptsize \emph{pedro.bruel@gmail.com}
-#+DATE:      \scriptsize \today
+#+TITLE: @@latex: Toward Transparent and Parsimonious
+#+TITLE: Methods \\ for Automatic Performance Tuning@@
+#+AUTHOR:    \footnotesize Pedro Bruel \newline \scriptsize \emph{phrb@ime.usp.br}
+#+DATE:      \scriptsize July 9 2021
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en

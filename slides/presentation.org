@@ -28,10 +28,8 @@ See [[Emacs Setup]] below for local buffer variables
 
 #+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
 
-#+LATEX_HEADER: \usepackage{sourcecodepro}
 #+LATEX_HEADER: \usepackage{booktabs}
 #+LATEX_HEADER: \usepackage{array}
-#+LATEX_HEADER: \usepackage{listings}
 #+LATEX_HEADER: \usepackage{multirow}
 #+LATEX_HEADER: \usepackage{caption}
 #+LATEX_HEADER: \usepackage{graphicx}
@@ -50,8 +48,11 @@ See [[Emacs Setup]] below for local buffer variables
 
 # #+LATEX_HEADER: \definecolor{Accent}{HTML}{b10000}
 # #+LATEX_HEADER: \colorlet{Accent}{PineGreen}
-#+LATEX_HEADER: \colorlet{Accent}{OliveGreen!85!Black}
+# #+LATEX_HEADER: \colorlet{Accent}{OliveGreen!85!Black}
 
+#+LATEX_HEADER: \colorlet{Accent}{BrickRed}
+#+LATEX_HEADER: \colorlet{CodeBg}{Gray!20}
+#+LATEX_HEADER: \colorlet{CodeHighBg}{Accent!10}
 #+LATEX_HEADER: \colorlet{Highlight}{Accent!18}
 
 #+LATEX_HEADER: \setbeamercolor{alerted text}{fg=Accent}
@@ -60,29 +61,26 @@ See [[Emacs Setup]] below for local buffer variables
 
 #+LATEX_HEADER: \usefonttheme{professionalfonts}
 #+LATEX_HEADER: \usepackage{newpxtext}
-#+LATEX_HEADER: \usepackage{DejaVuSansMono}
-#+LATEX_HEADER: \setmonofont{DejaVuSansMono}
 #+LATEX_HEADER: \usepackage{newpxmath}
 
-#+LATEX_HEADER: \lstset{ %
-#+LATEX_HEADER:   backgroundcolor={},
-#+LATEX_HEADER:   basicstyle=\ttfamily\scriptsize,
-#+LATEX_HEADER:   breakatwhitespace=true,
-#+LATEX_HEADER:   breaklines=true,
-#+LATEX_HEADER:   captionpos=n,
-#+LATEX_HEADER:   commentstyle=\color{Accent},
-# #+LATEX_HEADER:   escapeinside={\%*}{*)},
-#+LATEX_HEADER:   extendedchars=true,
-#+LATEX_HEADER:   frame=n,
-#+LATEX_HEADER:   keywordstyle=\color{Accent},
-#+LATEX_HEADER:   rulecolor=\color{black},
-#+LATEX_HEADER:   showspaces=false,
-#+LATEX_HEADER:   showstringspaces=false,
-#+LATEX_HEADER:   showtabs=false,
-#+LATEX_HEADER:   stepnumber=2,
-#+LATEX_HEADER:   stringstyle=\color{gray},
-#+LATEX_HEADER:   tabsize=2,
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usemintedstyle{vs}
+#+LATEX_HEADER: \setminted{
+#+LATEX_HEADER:            beameroverlays=true,
+#+LATEX_HEADER:            frame=none,
+#+LATEX_HEADER:            bgcolor=CodeBg,
+#+LATEX_HEADER:            fontsize=\footnotesize,
+#+LATEX_HEADER:            baselinestretch=1.2,
+#+LATEX_HEADER:            framesep=0.6em,
+#+LATEX_HEADER:            tabsize=2,
+#+LATEX_HEADER:            breaklines
 #+LATEX_HEADER: }
+
+#+LATEX_HEADER: \AtBeginEnvironment{snugshade*}{\vspace{-\FrameSep}}
+#+LATEX_HEADER: \AfterEndEnvironment{snugshade*}{\vspace{-\FrameSep}}
+
+#+LATEX_HEADER: \usepackage{DejaVuSansMono}
+#+LATEX_HEADER: \setmonofont{DejaVuSansMono}
 #+LATEX_HEADER: \renewcommand*{\UrlFont}{\ttfamily\smaller[2]\relax}
 #+LATEX_HEADER: \addtobeamertemplate{block begin}{}{\justifying}
 
@@ -102,26 +100,218 @@ See [[Emacs Setup]] below for local buffer variables
 #+LATEX_HEADER: \makeatother
 :end:
 
+* Introduction
+:PROPERTIES:
+:DURATION: 5 minutes
+:END:
+** High Performance Computing is Needed at Multiple Scales, \dots
+#+LaTeX: \begin{columns}\begin{column}[t]{.35\linewidth}\centering
+Climate  simulation  for policies to fight *climate change*
 
-* Introduction (5 min)
-** Trends on Hardware Design
-- Hardware has ceased to provide "effortless" performance gains
-- Performance continues to increase
-- Accelerators are important, but suffer from the same scaling limits
+#+begin_export latex
+\begin{center}
+  \includegraphics[width=\columnwidth]{../img/nasa_climate_change}
+
+  \vspace{0.3em}
+
+  \includegraphics[width=.96\columnwidth]{../img/weather_model}
+\end{center}
+#+end_export
+
+#+LaTeX: \end{column}\begin{column}[t]{.35\linewidth}\centering
+Fluid dynamics for stronger *infrastructure* and fuel *efficiency*
+
+#+begin_export latex
+\begin{center}
+  \includegraphics[width=.97\columnwidth]{../img/cfd_infrastructure.jpg}
+
+  \vspace{0.24em}
+
+  \includegraphics[width=\columnwidth]{../img/cfd_car.png}
+\end{center}
+#+end_export
+
+#+LaTeX: \end{column}\begin{column}[t]{.35\linewidth}\centering
+Molecular dynamics for *virtual testing* of *drugs* and *vaccines*
+
+#+begin_export latex
+\begin{center}
+  \includegraphics[width=\columnwidth]{../img/drug_virtual_trials_small}
+
+  \vspace{0.15em}
+
+  \includegraphics[width=.98\columnwidth]{../img/molecules_simulation}
+\end{center}
+#+end_export
+
+#+LaTeX: \end{column}\end{columns}\bigskip
+** \dots and the Performance of Supercomputers has so far Improved Exponentially
+#+ATTR_LATEX: :width 1\textwidth
+[[file:../img/top500_rmax_rpeak_annotated.pdf]]
+** Now, it is Harder to Improve Hardware, but Autotuning can Help!
+#+ATTR_LATEX: :width \textwidth
+[[file:../img/49_years_processor_data_annotated.pdf]]
+
+*** Notes                                                       :noexport:
+- Hardware has ceased to provide  "effortless" performance gains but performance
+  continues to increase
 - Code optimization is crucial for performance, and will continue to be
 
-** An Example of Autotuning: Loop Tiling and Unrolling
-- How  to  restructure  memory  accesses  in loops  to  increase  throughput  by
-  leveraging cache locality?
-- Size and shape of the resulting search space
-- Introduce notation: $f: \mathcal{X} \to \mathbb{R}$
+** An Autotuning Example: Loop /Blocking/ and /Unrolling/ for Matrix Multiplication :BMCOL:
+:PROPERTIES:
+:BEAMER_opt: t,fragile
+:END:
 
+*** Pull Up Columns                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+
+\vspace{-1.4em}
+
+*** Optimizing Matrix Multiplication :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_env: block
+:BEAMER_col: 0.44
+:END:
+
+#+latex: \vspace{0.5em}
+
+How  to  *restructure  memory  accesses*  in loops  to  increase  throughput  by
+leveraging *cache locality*?
+
+**** Resulting Search Space                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+#+latex: \vspace{0.5em}
+
+Performance as a *function*: $f: \mathcal{X} \to \mathbb{R}$
+
+#+latex: \vspace{-0.7em}
+
+#+ATTR_LATEX: :width .9\textwidth
+[[file:../img/seymour2008comparison.pdf]]
+
+#+latex: \vfill
+
+*** Sample in C                                                     :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.56
+:END:
+
+\vspace{-1.4em}
+
+#+begin_export latex
+\begin{onlyenv}<1>
+\begin{figure}
+\begin{minted}[fontsize=\scriptsize]{C}
+int N = 256;
+
+float A[N][N], B[N][N], C[N][N];
+int i, j, k;
+// Initialize A, B, C
+for(i = 0; i < N; i++){ // Load A[i][]
+  for(j = 0; j < N; j++){
+    // Load C[i][j], B[][j] to fast memory
+    for(k = 0; k < N; k++){
+
+
+
+
+      C[i][j] += A[i][k] * B[k][j];
+    }
+
+
+    // Write C[i][j] to main memory
+  }
+}
+\end{minted}
+\end{figure}
+\end{onlyenv}
+#+end_export
+
+#+begin_export latex
+\begin{onlyenv}<2>
+\begin{figure}
+\begin{minted}[fontsize=\scriptsize]{C}
+int N = 256;
+int B_size = 4;
+float A[N][N], B[N][N], C[N][N];
+int i, j, k, x, y;
+// Initialize A, B, C
+for(i = 0; i < N; i += B_size){
+  for(j = 0; j < N; j += B_size){
+    // Load block (i, j) of C to fast memory
+    for(k = 0; k < N; k++){
+      // Load block (i, k) of A to fast memory
+      // Load block (k, y) of B to fast memory
+      for(x = i; x < min(i + B_size, N); x++){
+        for(y = j; y < min(j + B_size, N); y++){
+          C[x][y] += A[x][k] * B[k][y];
+        }
+      }
+    }
+    // Write block (i, j) of C to main memory
+  }
+} // One parameter: B_size
+\end{minted}
+\end{figure}
+\end{onlyenv}
+#+end_export
+
+#+begin_export latex
+\begin{onlyenv}<3>
+\begin{figure}
+\begin{minted}[fontsize=\scriptsize]{C}
+int N = 256;
+int B_size = 4;
+float A[N][N], B[N][N], C[N][N];
+int i, j, k; // int U_size = 16;
+// Initialize A, B, C
+for(i = 0; i < N; i += B_size){
+  for(j = 0; j < N; j += B_size){
+    // Load block (i, j) of C to fast memory
+    for(k = 0; k < N; k++){
+      // Load block (i, k) of A to fast memory
+      // Load block (k, y) of B to fast memory
+      C[i + 0][j + 0] += A[i + 0][k] * B[k][j + 0];
+      C[i + 0][j + 1] += A[i + 0][k] * B[k][j + 1];
+      // Unroll the other 13 iterations
+      C[i + Bsize - 1][j + B_size - 1] += A[i + Bsize - 1][k] * B[k][j + B_size - 1];
+    }
+    // Write block (i, j) of C to main memory
+  }
+} // Two parameters: B_size and U_size
+\end{minted}
+\end{figure}
+\end{onlyenv}
+#+end_export
 ** Autotuning Problems in Other Domains
-- Number of parameters and combinations growing over time
+#+ATTR_LATEX: :width \textwidth
+[[file:../img/search_spaces_annotated.pdf]]
+
+*** Notes                                                        :noexport:
 - Earlier application to optimize BLAS routines
 - Autotuning for specific domains and Neural Networks
 
+
 ** Common Approaches to Autotuning
+*** Search Space Dimension                                  :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_env: block
+:END:
+
+#+ATTR_LATEX: :width \textwidth
+[[file:../img/search_methods.pdf]]
+
+*** Some Autotuning Methods                                 :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:BEAMER_env: block
+:END:
 - Function minimization methods
   - Online learning?
 - Surrogate-based optimization
@@ -150,7 +340,10 @@ See [[Emacs Setup]] below for local buffer variables
 \end{table}
 #+end_export
 
-* Methods for Function Minimization (10 minutes)
+* Autotuning with Generic Methods for Function Minimization
+:PROPERTIES:
+:DURATION: 10 minutes
+:END:
 ** Overview
 - We know information about $f$
 - Derivative-based
@@ -160,15 +353,19 @@ See [[Emacs Setup]] below for local buffer variables
 - Ensemble of search heuristics
   - Coordinated by a MAB algorithm (online learning)
 ** Application: High-Level Synthesis for FPGAs
-** Search Space and Performance Metrics
+*** Search Space and Performance Metrics
 ** Results
 ** Discussion
+- Function minimization methods *are not parsimonious*
 - Curse of dimensionality
 - It is often unclear:
   - if there is something to find, and when to stop exploring
 - It is impossible to:
   - interpret optimizations
-* Design of Experiments (15 minutes)
+* Applying Sequential Design of Experiments
+:PROPERTIES:
+:DURATION: 15 minutes
+:END:
 ** Linear Models
 - Learning: Building surrogates, used for optimization
 - Introduce notation:
@@ -201,19 +398,24 @@ See [[Emacs Setup]] below for local buffer variables
 ** A Transparent and Parsimonious Approach to Autotuning
 - Explain paper diagram
 ** Application: GPU Laplacian
-** Search Space and Performance Metrics
+*** Search Space and Performance Metric
 ** Results
 - Comparison with multiple methods
 - Leave GPR for later
 ** Interpreting the Optimization
 ** Application: SPAPT kernels
 - Pick one?
-** Search Spaces and Performance Metrics
+*** Search Spaces and Performance Metric
 ** Results
 - Is there anything to find?
 - Leave GPR for later
 ** Interpreting the Optimization
 ** Discussion
+- Sequential and incremental
+  - Definitive restrictions
+  - Improvements by batch
+  - Low model flexibility (rigid models)
+
 - Motivating results in the Laplacian kernel
 - It is possible to interpret results, guide optimization
   - sometimes simpler models give better results
@@ -229,7 +431,11 @@ See [[Emacs Setup]] below for local buffer variables
 - What is the most effective level of abstraction for optimizing a program?
   - Compiler, kernel, machine, model, dependencies?
 
-* Gaussian Process Regression (10 minutes)
+
+* Active Learning with Gaussian Processes
+:PROPERTIES:
+:DURATION: 10 minutes
+:END:
 ** More Flexibility with Gaussian Process Regression
 - Introduce notation:
   - Model of $f$: $f(\mathbf{x}) \sim \mathcal{N}(\boldsymbol{\mu},\boldsymbol{\Sigma})$
@@ -239,12 +445,13 @@ See [[Emacs Setup]] below for local buffer variables
 - How to decide where to measure next?
 ** Application: GPU Laplacian and SPAPT
 - GPR was applied to these problems too
+*** Search Spaces and Performance Metrics
 ** Results: GPU Laplacian
 - GPR is good too, but the simpler model is more consistent
 ** Results: SPAPT
 - GPR still can't find better configurations
 ** Application: Quantization for Convolutional Neural Networks
-** Search Space, Constraints, and Performance Metrics
+*** Search Space, Constraints, and Performance Metrics
 - Comparing with a Reinforcement Learning approach in the original paper
 - ImageNet
 ** Results
@@ -256,7 +463,10 @@ See [[Emacs Setup]] below for local buffer variables
 - Multi-objective optimization
 - A more complex method usually produces less interpretable results,
   but not always achieves better optimizations
-* Conclusion (5 min)
+* Conclusion
+:PROPERTIES:
+:DURATION: 5 minutes
+:END:
 ** Contributions of this Thesis
 - Striving to develop and apply transparent and parsimonious autotuning methods
 - Applications in this thesis:
@@ -331,5 +541,5 @@ modified  locally to  the buffer.  This allows  using XeLaTeX  for exporting  to
 beamer pdf.
 
 # Local Variables:
-# eval: (setq-local org-latex-pdf-process (list "latexmk -xelatex %f"))
+# eval: (setq-local org-latex-pdf-process (list "latexmk -xelatex -shell-escape %f"))
 # End:

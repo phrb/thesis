@@ -847,12 +847,9 @@ str(df_transistor)
 :  $ area_mm         : num  12 14 32 12 16 20 11 21 27 18 ...
 
 ***** Plots
-#+begin_SRC R :results graphics output :session *R* :file "./img/49_years_processor_data.pdf" :width 10 :height 5 :eval no-export
+#+begin_SRC R :results file graphics output :session *R* :file "./img/49_years_processor_data.pdf" :width 10 :height 5 :eval no-export
 library(ggplot2)
-library(extrafont)
 library(scales)
-
-loadfonts(device = "postscript")
 
 point_alpha = 0.9
 line_alpha = 0.4
@@ -887,22 +884,22 @@ ggplot() +
                size = point_size,
                aes(x = date,
                    y = process_nm,
-                   shape = "Process (nanometers)",
-                   color = "Process (nanometers)")) +
+                   shape = "Process (Nanometers)",
+                   color = "Process (Nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
                size = point_size,
                aes(x = date,
                    y = process_nm,
-                   shape = "Process (nanometers)",
-                   color = "Process (nanometers)")) +
+                   shape = "Process (Nanometers)",
+                   color = "Process (Nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
                size = point_size,
                aes(x = date,
                    y = process_micro_m * 1e3,
-                   shape = "Process (nanometers)",
-                   color = "Process (nanometers)")) +
+                   shape = "Process (Nanometers)",
+                   color = "Process (Nanometers)")) +
     geom_point(data = df_freq,
                alpha = point_alpha,
                size = point_size,
@@ -966,8 +963,7 @@ ggplot() +
           legend.position = c(0.14, 0.86),
           legend.direction = "horizontal",
           legend.background = element_rect(fill = "transparent", color = NA),
-          legend.text = element_text(size = 14),
-          text = element_text(family = "Liberation Sans")) +
+          legend.text = element_text(size = 14)) +
     guides(color = guide_legend(nrow = 4,
                                 override.aes = list(alpha = 1.0,
                                                     size = 2)))
@@ -1702,6 +1698,73 @@ p2 * p1
 
 #+RESULTS:
 [[file:./img/search_spaces.pdf]]
+
+**** Methods
+***** Looking at the Data
+#+begin_SRC R :results output :eval no-export :exports none
+df <- read.csv("data/search_spaces/search_methods.csv")
+str(df)
+
+unique(df$method)
+unique(df$year)
+filter(df, year == 1997)
+#+end_SRC
+
+#+RESULTS:
+#+begin_example
+'data.frame':	34 obs. of  10 variables:
+ $ name              : chr  "Orio" "OpenTuner" "pOSKI" "Petrovic, F. \\textit{et al.}" ...
+ $ gscholar_citation : chr  "balaprakash2012spapt" "ansel2014opentuner" "byun2012autotuning" "petrovivc2020benchmark" ...
+ $ problem_domain    : chr  "Linear Algebra" "Compiler Parameters" "Linear Algebra" "Linear Algebra" ...
+ $ year              : int  2012 2014 2012 2020 2018 2016 2015 2017 2009 2009 ...
+ $ method            : chr  "Decision Trees" "Search Heuristics" "Search Heuristics" "Search Heuristics" ...
+ $ shorthand_method  : chr  "ML (Decision Trees)" "SH" "SH" "SH" ...
+ $ largest_dimension : int  49 222 5 15 11 10 5 24 7 63 ...
+ $ largest_size      : num  2.73e+30 1.00e+106 1.54e+03 2.42e+05 6.40e+13 ...
+ $ largest_size_log10: int  30 106 3 5 13 7 7 15 7 38 ...
+ $ ad_hoc            : logi  FALSE FALSE TRUE FALSE FALSE TRUE ...
+[1] "Decision Trees"        "Search Heuristics"     "Exhaustive"
+[4] "Design of Experiments" "Machine Learning"      "Sensitivity Analysis"
+[7] "Genetic Algorithm"
+ [1] 2012 2014 2020 2018 2016 2015 2017 2009 2019 2008 1998 2005 2002 2011 1997
+    name    gscholar_citation problem_domain year            method
+1 PhiPAC bilmes1997optimizing Linear Algebra 1997 Search Heuristics
+  shorthand_method largest_dimension largest_size largest_size_log10 ad_hoc
+1  SH (Exhaustive)                NA           NA                 NA     NA
+#+end_example
+
+***** Plot
+#+begin_SRC R :results file graphics output :session *R* :file "./img/search_methods.pdf" :width 10 :height 9 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+
+df_search_spaces <- read.csv("data/search_spaces/search_spaces.csv")
+
+df <- read.csv("data/search_spaces/search_methods.csv") %>%
+    na.omit()
+
+color_palette = paletteer_d(palette = "ggsci::default_igv",
+                            n = length(unique(df$method)))
+
+ggplot() +
+    geom_jitter(data = df,
+               size = 3.5,
+               aes(x = as.factor(year),
+                   y = largest_dimension,
+                   color = method)) +
+    scale_color_manual(name = element_blank(),
+                       values = color_palette) +
+    ylab("Search Space Dimension") +
+    xlab("Year") +
+    theme_bw(base_size = 24) +
+    theme(legend.position = c(0.22, 0.89),
+          legend.background = element_rect(fill = "transparent"))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/search_methods.pdf]]
+
 **** Loop Blocking and Unrolling
 ***** First try
 :PROPERTIES:
@@ -9246,7 +9309,7 @@ relationships  between parameters  and  metrics, and  are /transparent/  because
 parameter  selections and  configurations can  be  justified by  the results  of
 statistical tests.
 
-In DoE terminology, a /design/ is a  plan for executing a series of measurements,
+In DoE terminology, a /design/ is a plan for executing a series of measurements,
 or /experiments/, whose objective is to identify relationships between /factors/
 and /responses/.   While factors and  responses can refer to  different concrete
 entities in other domains, in  computer experiments factors can be configuration
@@ -9598,7 +9661,7 @@ factor of zero performs a single iteration per condition check.
     \begin{lstlisting}
       int N = 256;
       int B_size = 4;
-      int A[N][N], B[N][N], C[N][N];
+      float A[N][N], B[N][N], C[N][N];
       int i, j, k, x, y;
       // Initialize A, B, C
       for(i = 0; i < N; i += B_size){
@@ -9626,7 +9689,7 @@ factor of zero performs a single iteration per condition check.
     \begin{lstlisting}
       int N = 256;
       int B_size = 4;
-      int A[N][N], B[N][N], C[N][N];
+      float A[N][N], B[N][N], C[N][N];
       int i, j, k;
       // Initialize A, B, C
       for(i = 0; i < N; i += B_size){

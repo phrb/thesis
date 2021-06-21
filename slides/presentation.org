@@ -100,13 +100,23 @@ See [[Emacs Setup]] below for local buffer variables
 #+LATEX_HEADER: \makeatother
 :end:
 
+
+* Ignore Introduction Section Page                          :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+begin_export latex
+\bgroup\metroset{sectionpage=none}
+#+end_export
+
 * Introduction
 :PROPERTIES:
 :DURATION: 5 minutes
 :END:
 ** High Performance Computing is Needed at Multiple Scales, \dots
 #+LaTeX: \begin{columns}\begin{column}[t]{.35\linewidth}\centering
-Climate  simulation  for policies to fight *climate change*
+Climate  simulation   for  policies   @@latex:  \mbox{to   fight  \alert{climate
+change}}@@
 
 #+begin_export latex
 \begin{center}
@@ -148,7 +158,7 @@ Molecular dynamics for *virtual testing* of *drugs* and *vaccines*
 ** \dots and the Performance of Supercomputers has so far Improved Exponentially
 #+ATTR_LATEX: :width 1\textwidth
 [[file:../img/top500_rmax_rpeak_annotated.pdf]]
-** Now, it is Harder to Improve Hardware, but Autotuning can Help!
+** Software must Improve to Leverage Complexity, and Autotuning can Help
 #+ATTR_LATEX: :width \textwidth
 [[file:../img/49_years_processor_data_annotated.pdf]]
 
@@ -180,21 +190,22 @@ Molecular dynamics for *virtual testing* of *drugs* and *vaccines*
 How  to  *restructure  memory  accesses*  in loops  to  increase  throughput  by
 leveraging *cache locality*?
 
-**** Resulting Search Space                                      :B_block:
+#+begin_export latex
+\uncover<4>{
+#+end_export
+
+
+**** Resulting *Search Space*                                    :B_block:
 :PROPERTIES:
 :BEAMER_env: block
 :END:
 
-#+latex: \vspace{0.5em}
-
-Performance as a *function*: $f: \mathcal{X} \to \mathbb{R}$
-
-#+latex: \vspace{-0.7em}
-
-#+ATTR_LATEX: :width .9\textwidth
+#+ATTR_LATEX: :width \textwidth
 [[file:../img/seymour2008comparison.pdf]]
 
-#+latex: \vfill
+#+begin_export latex
+}
+#+end_export
 
 *** Sample in C                                                     :BMCOL:
 :PROPERTIES:
@@ -262,7 +273,7 @@ for(i = 0; i < N; i += B_size){
 #+end_export
 
 #+begin_export latex
-\begin{onlyenv}<3>
+\begin{onlyenv}<3->
 \begin{figure}
 \begin{minted}[fontsize=\scriptsize]{C}
 int N = 256;
@@ -288,66 +299,203 @@ for(i = 0; i < N; i += B_size){
 \end{figure}
 \end{onlyenv}
 #+end_export
-** Autotuning Problems in Other Domains
+** Autotuning Problems in Other Domains: Dimension Becomes an Issue
+*** Left Plot                                                       :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.54
+:END:
+
 #+ATTR_LATEX: :width \textwidth
-[[file:../img/search_spaces_annotated.pdf]]
+[[file:../img/search_spaces_B.pdf]]
+
+\pause
+*** Right Plot                                                      :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.54
+:END:
+
+#+ATTR_LATEX: :width \textwidth
+[[file:../img/search_spaces_A.pdf]]
 
 *** Notes                                                        :noexport:
 - Earlier application to optimize BLAS routines
 - Autotuning for specific domains and Neural Networks
 
 
-** Common Approaches to Autotuning
-*** Search Space Dimension                                  :B_block:BMCOL:
+** Autotuning as an /Optimization/ or /Learning/ Problem
+*** Performance as a *Function*                             :B_block:BMCOL:
 :PROPERTIES:
 :BEAMER_col: 0.5
 :BEAMER_env: block
+:END:
+
+#+latex: \vspace{0.5em}
+
+Performance: $f: \mathcal{X} \to \mathbb{R}$
+
+#+latex: \vspace{-0.7em}
+
+- Parameters: $\mathbf{x} = [x_1\;\dots\;x_n]^{\transp} \in \mathcal{X}$
+- Performance metric: $y = f(\mathbf{x})$
+
+To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
+- @@latex:\textcolor{NavyBlue}{\textbf{Function minimization}}@@,
+  @@latex:\textcolor{OliveGreen}{\textbf{Learning}}@@: not necessarily
+  *parsimonious* and *transparent*
+
+- @@latex:\textcolor{BrickRed}{\textbf{Design of Experiments}}@@: can help, but
+  not widely used for autotuning
+
+*** Search Space Dimension                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
 :END:
 
 #+ATTR_LATEX: :width \textwidth
-[[file:../img/search_methods.pdf]]
+[[file:../img/search_methods_annotated.pdf]]
 
-*** Some Autotuning Methods                                 :B_block:BMCOL:
+** Toward Transparent and Parsimonious Autotuning
+
+*** Contributions of this Thesis                           :B_block:BMCOL:
 :PROPERTIES:
-:BEAMER_col: 0.5
+:BEAMER_col: 0.6
 :BEAMER_env: block
 :END:
-- Function minimization methods
-  - Online learning?
-- Surrogate-based optimization
-  - Linear Models
-  - Gaussian Processes
-- Design of Experiments
 
-** Contributions of this Thesis
-- Striving to develop and apply transparent and parsimonious autotuning methods
-- Applications in this thesis:
+- *Developing* transparent and  parsimonious autotuning methods  based on
+  the *Design of Experiments*
+- *Evaluating* different autotuning methods in different HPC domains
 
+**** Transparent
+
+- Use statistics to justify code optimization choices
+- Learn about the search space
+
+**** Parsimonious
+
+- Carefully choose which experiments to run
+- Minimize $f$ using as few measurements as possible
+
+*** Applications                                                    :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 #+begin_export latex
+\begin{onlyenv}<1>
 \begin{table}[]
   \renewcommand{\arraystretch}{1.5}
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{@{}ll@{}}
       \textbf{Domain} & \textbf{Method}         \\ \midrule
-      CUDA compiler  parameters & \multirow{2}{*}{Function  minimization methods
-        with Online Learning} \\
-      FPGA compiler parameters &  \\
-      OpenCL  Laplacian  Kernel  &  Function  minimization  methods, Linear Models, Gaussian Process Regression \\
-      SPAPT Kernels & Linear Models, Gaussian Process Regression \\
-      CNN Mixed-Precision Quantization & Gaussian Process Regression
+      CUDA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}}, \phantom{\textbf{L},} \textcolor{BrickRed}{\textbf{D}} \\
+      FPGA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}} \\
+      OpenCL Laplacian Kernel & \textcolor{NavyBlue}{\textbf{F}},
+      \textcolor{OliveGreen}{\textbf{L}}, \textcolor{BrickRed}{\textbf{D}} \\
+      SPAPT Kernels & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      CNN Quantization & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      \multicolumn{2}{c}{\footnotesize\textcolor{NavyBlue}{\textbf{F}}: Function Minimization,
+        \textcolor{OliveGreen}{\textbf{L}}: Learning,} \\[-1em]
+      \multicolumn{2}{c}{\footnotesize\textcolor{BrickRed}{\textbf{D}}: Design of Experiments} \\[-0.7em]
+      \multicolumn{2}{c}{\footnotesize{\phantom{Dummy Line}}}
     \end{tabular}%
   }
 \end{table}
+\end{onlyenv}
 #+end_export
 
+#+begin_export latex
+\begin{onlyenv}<2>
+\begin{table}[]
+  \renewcommand{\arraystretch}{1.5}
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}ll@{}}
+      \textbf{Domain} & \textbf{Method}         \\ \midrule
+      CUDA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}}, \phantom{\textbf{L},} \textcolor{BrickRed}{\textbf{D}} \\
+      \rowcolor{Accent!15}FPGA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}} \\
+      \rowcolor{Accent!15}OpenCL Laplacian Kernel & \textcolor{NavyBlue}{\textbf{F}},
+      \textcolor{OliveGreen}{\textbf{L}}, \textcolor{BrickRed}{\textbf{D}} \\
+      \rowcolor{Accent!15}SPAPT Kernels & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      \rowcolor{Accent!15}CNN Quantization & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      \multicolumn{2}{c}{\footnotesize\textcolor{NavyBlue}{\textbf{F}}: Function Minimization,
+        \textcolor{OliveGreen}{\textbf{L}}: Learning,} \\[-1em]
+      \multicolumn{2}{c}{\footnotesize\textcolor{BrickRed}{\textbf{D}}: Design of Experiments} \\[-0.7em]
+      \multicolumn{2}{c}{\footnotesize\colorbox{Accent!15}{\phantom{A}}: In this presentation}
+    \end{tabular}%
+  }
+\end{table}
+\end{onlyenv}
+#+end_export
+
+
+
+* End Ignore Introduction Section Page                      :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+begin_export latex
+\egroup
+#+end_export
 * Autotuning with Generic Methods for Function Minimization
 :PROPERTIES:
 :DURATION: 10 minutes
 :END:
-** Overview
-- We know information about $f$
-- Derivative-based
-- Other heuristics
+** Minimizing Functions using Derivatives and Other Information
+*** We know or can compute *information* about $f$          :B_block:BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:BEAMER_env: block
+:END:
+- Directly measure *new* $\mathbf{x}_1,\cdots,\mathbf{x}_k,\cdots,\mathbf{x}_n$
+- Search for the *global optimum*, try to escape *local optima*
+#+begin_export latex
+\uncover<3->{
+#+end_export
+**** Strong Hypothesis: we can Compute *Derivatives*
+- $\mathbf{x}_{k}   =  \mathbf{x}_{k   -   1}   -  \mathbf{H}f(\mathbf{x}_{k   -
+  1})\nabla{}f(\mathbf{x}_{k - 1})$
+- *Locally* and *globally*
+**** End Block                                           :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+begin_export latex
+}
+\uncover<5->{
+#+end_export
+**** Hard to State Hypotheses: Search Heuristics
+- Random Walk,  Simulated Annealing,  Genetic Algorithms, Nelder-Mead,  and many
+  others
+**** End Block                                           :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+#+begin_export latex
+}
+#+end_export
+*** Images                                                          :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+#+begin_export latex
+\begin{figure}
+  \begin{overlayarea}{\columnwidth}{.7\textheight}
+    \includegraphics<1>[width=\columnwidth]{../img/simple_search_space_A}
+    \includegraphics<2>[width=\columnwidth]{../img/simple_search_space_B}
+    \includegraphics<3>[width=\columnwidth]{../img/booth_gradient_C}
+    \includegraphics<4>[width=\columnwidth]{../img/booth_gradient_D}
+    \includegraphics<5>[width=\columnwidth]{../img/booth_gradient_E}
+  \end{overlayarea}
+\end{figure}
+#+end_export
 ** Search Heuristics with Multi-Armed Bandit
 - OpenTuner
 - Ensemble of search heuristics

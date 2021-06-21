@@ -1454,7 +1454,7 @@ cat(paste("\\nbsp{}\\cite{", citations, "}", sep = ""))
 ***** Plots
 - Geom_label around thesis work
 - Mark Seymour et al. example
-#+begin_SRC R :results graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
+#+begin_SRC R :results file graphics output :session *R* :file "./img/search_spaces.pdf" :width 18 :height 8.7 :eval no-export
 library(ggplot2)
 library(dplyr)
 library(scales)
@@ -1699,15 +1699,71 @@ p2 * p1
 #+RESULTS:
 [[file:./img/search_spaces.pdf]]
 
+***** Saving Subplots Separately
+
+#+begin_SRC R :results file graphics output :file "./img/search_spaces_A.pdf" :width 9 :height 8.7 :eval no-export
+p1 +
+    theme(axis.title.y = element_text(angle = 90, vjust = 1.2),
+          plot.background = element_rect(fill = "transparent",
+                                         color = "transparent")) +
+    ylab("Search Space Size")
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/search_spaces_A.pdf]]
+
+#+begin_SRC R :results file graphics output :file "./img/search_spaces_B.pdf" :width 9 :height 8.7 :eval no-export
+p2 +
+    theme(plot.background = element_rect(fill = "transparent",
+                                         color = "transparent"))
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/search_spaces_B.pdf]]
+
 **** Methods
-***** Looking at the Data
+***** Loading Data
 #+begin_SRC R :results output :eval no-export :exports none
-df <- read.csv("data/search_spaces/search_methods.csv")
+library(dplyr)
+
+df = read.csv("data/search_spaces/search_methods.csv")
 str(df)
 
 unique(df$method)
 unique(df$year)
 filter(df, year == 1997)
+
+df_search_spaces = read.csv("data/search_spaces/search_spaces.csv")
+str(df_search_spaces)
+
+df_all = bind_rows(df %>%
+                   select(name,
+                          gscholar_citation,
+                          method,
+                          shorthand_method,
+                          largest_size,
+                          largest_dimension,
+                          largest_size_log10),
+                   df_search_spaces %>%
+                   select(name,
+                          gscholar_citation,
+                          dimension,
+                          search_space_size,
+                          log10_search_space_size) %>%
+                   mutate(largest_size = search_space_size,
+                          largest_dimension = dimension,
+                          largest_size_log10 = log10_search_space_size,
+                          method = "Not informed",
+                          shorthand_method = "N/I") %>%
+                   select(name,
+                          gscholar_citation,
+                          method,
+                          shorthand_method,
+                          largest_size,
+                          largest_dimension,
+                          largest_size_log10))
+
+str(df_all)
 #+end_SRC
 
 #+RESULTS:
@@ -1731,6 +1787,25 @@ filter(df, year == 1997)
 1 PhiPAC bilmes1997optimizing Linear Algebra 1997 Search Heuristics
   shorthand_method largest_dimension largest_size largest_size_log10 ad_hoc
 1  SH (Exhaustive)                NA           NA                 NA     NA
+'data.frame':	89 obs. of  10 variables:
+ $ name                   : chr  "atax" "gemv" "fdtd4d2d" "gemver" ...
+ $ year                   : int  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012 ...
+ $ dimension              : int  19 49 30 24 11 15 14 12 20 25 ...
+ $ search_space_size      : num  1.65e+14 2.73e+30 7.06e+24 7.26e+17 1.56e+08 ...
+ $ log10_search_space_size: int  14 30 24 17 8 8 12 8 16 19 ...
+ $ domain                 : chr  "Linear Algebra" "Linear Algebra" "Linear Algebra" "Linear Algebra" ...
+ $ author                 : chr  "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" "Balaprakash, P. et al. (2012)" ...
+ $ gscholar_citation      : chr  "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" "balaprakash2012spapt" ...
+ $ thesis                 : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ chapter                : chr  "" "" "" "" ...
+'data.frame':	123 obs. of  7 variables:
+ $ name              : chr  "Orio" "OpenTuner" "pOSKI" "Petrovic, F. \\textit{et al.}" ...
+ $ gscholar_citation : chr  "balaprakash2012spapt" "ansel2014opentuner" "byun2012autotuning" "petrovivc2020benchmark" ...
+ $ method            : chr  "Decision Trees" "Search Heuristics" "Search Heuristics" "Search Heuristics" ...
+ $ shorthand_method  : chr  "ML (Decision Trees)" "SH" "SH" "SH" ...
+ $ largest_size      : num  2.73e+30 1.00e+106 1.54e+03 2.42e+05 6.40e+13 ...
+ $ largest_dimension : int  49 222 5 15 11 10 5 24 7 63 ...
+ $ largest_size_log10: int  30 106 3 5 13 7 7 15 7 38 ...
 #+end_example
 
 ***** Plot
@@ -1739,27 +1814,50 @@ library(dplyr)
 library(ggplot2)
 library(paletteer)
 
-df_search_spaces <- read.csv("data/search_spaces/search_spaces.csv")
+x_text = element_text(size = 26)
+y_text = element_text(size = 26)
 
-df <- read.csv("data/search_spaces/search_methods.csv") %>%
-    na.omit()
+x_label = element_text(size = 28)
+y_label = element_text(size = 28)
 
-color_palette = paletteer_d(palette = "ggsci::default_igv",
-                            n = length(unique(df$method)))
+
+scientific_10 <- function(x) {
+    print(x)
+    result <- parse(text = gsub("(.*)",
+                                "10^\\1",
+                                format(x)))
+    print(result)
+    return(result)
+}
 
 ggplot() +
-    geom_jitter(data = df,
+    geom_point(data = df_all %>%
+                   filter(method == "Not informed"),
+               size = 3.8,
+               aes(y = largest_size_log10,
+                   x = largest_dimension),
+               color = "gray83") +
+    geom_point(data = df_all %>%
+                   filter(method != "Not informed"),
                size = 3.5,
-               aes(x = as.factor(year),
-                   y = largest_dimension,
+               aes(y = largest_size_log10,
+                   x = largest_dimension,
                    color = method)) +
-    scale_color_manual(name = element_blank(),
-                       values = color_palette) +
-    ylab("Search Space Dimension") +
-    xlab("Year") +
-    theme_bw(base_size = 24) +
-    theme(legend.position = c(0.22, 0.89),
-          legend.background = element_rect(fill = "transparent"))
+    ylim(0, 50) +
+    xlim(0, 100) +
+    scale_color_brewer(palette = "Dark2") +
+    xlab("Dimension") +
+    ylab("Search Space Size") +
+    theme_bw(base_size = 25) +
+    scale_y_continuous(limits = c(0, 50), label = scientific_10) +
+    theme(legend.position = c(0.22, 0.86),
+          legend.background = element_rect(fill = "transparent"),
+          legend.key = element_rect(fill = "transparent"),
+          axis.text.x = x_text,
+          axis.text.y = y_text,
+          plot.background = element_rect(fill = "transparent",
+                                         color = "transparent"),
+          legend.title = element_blank())
 #+end_SRC
 
 #+RESULTS:
@@ -10128,7 +10226,7 @@ chapter ends with a discussion of common search space properties.
 *** Notation
 We will  call /optimization/ the minimization  of a real-valued function  with a
 single vector input.  For a function $f: \mathcal{X} \to \mathbb{R}$, we wish to
-find  the input  vector  $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\transp}$ in  the
+find the  input vector $\mathbf{x}^{\ast} =  [x_1\;\dots\;x_p]^{\transp}$ in the
 /parameter    space/,    or    /search   space/    $\mathcal{X}$    for    which
 $f(\mathbf{x}^{\ast})$ is  the smallest, compared  to all other  $\mathbf{x} \in
 \mathcal{X}$.   The function  $f$  represents, in  the  autotuning context,  the
@@ -10141,13 +10239,13 @@ we can use the opposite of the performance metrics that should be maximized.
 
 As an example of an autotuning  problem, consider optimizing the choice of flags
 for a compiler with $p  = \vert{}\mathbf{x}\vert{}$ flags, where a configuration
-$\mathbf{x} = [x_1 \;\dots\; x_p]^{\transp}$ consists  of a vector of $p$ /boolean/
-values,  denoting whether  each flag  $x_1,  \dots, x_p$  is turned  on for  the
-compilation of a specific application.   To find the compiler configuration that
-generates the binary with the smallest execution  time, we conduct a set of $n =
-\vert{}\mathbf{X}\vert{}$  /experiments/, chosen  according  to some  criterion,
-generating  the   $n\times{}p$  /experimental   design  matrix/   $\mathbf{X}  =
-[\mathbf{x}_1  \;\dots\;  \mathbf{x}_n]^{\transp}$.   Each experiment  consists  of
+$\mathbf{x}  =  [x_1 \;\dots\;  x_p]^{\transp}$  consists  of  a vector  of  $p$
+/boolean/ values, denoting whether each flag  $x_1, \dots, x_p$ is turned on for
+the compilation of  a specific application.  To find  the compiler configuration
+that generates the binary with the smallest  execution time, we conduct a set of
+$n  =   \vert{}\mathbf{X}\vert{}$  /experiments/,   chosen  according   to  some
+criterion, generating the $n\times{}p$  /experimental design matrix/ $\mathbf{X}
+= [\mathbf{x}_1 \;\dots\; \mathbf{x}_n]^{\transp}$.  Each experiment consists of
 compiling the target application using the specified compiler configuration, and
 measuring the execution time of the resulting binary.
 

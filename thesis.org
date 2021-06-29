@@ -8212,6 +8212,74 @@ p_noise
 #+RESULTS:
 [[file:./img/experimental_design/booth_descent_gradient_sampling.pdf]]
 
+**** ANOVA Example
+***** Generate Data
+#+begin_SRC R
+library(dplyr)
+
+x = seq(from = -10,
+        to = 10,
+        length.out = 200)
+
+df = bind_rows(data.frame(x = x,
+                          y = dnorm(x,
+                                    mean = -6,
+                                    sd = 1),
+                          mean = -6,
+                          id = "A"),
+               data.frame(x = x,
+                          y = dnorm(x,
+                                    mean = 4,
+                                    sd = 1),
+                          mean = 4,
+                          id = "B"),
+               data.frame(x = x,
+                          y = dnorm(x,
+                                    mean = 5,
+                                    sd = 1),
+                          mean = 5,
+                          id = "C"))
+#+end_SRC
+
+#+RESULTS:
+
+***** Plot
+#+begin_SRC R :results file graphics output :file "./img/anova_example.pdf" :width 10 :height 10 :eval no-export
+library(ggplot2)
+library(latex2exp)
+
+ggplot() +
+    geom_ribbon(data = df,
+                alpha = 0.6,
+                aes(x = x,
+                    ymin = 0,
+                    ymax = y,
+                    fill = id)) +
+    geom_vline(data = df,
+               show.legend = FALSE,
+               aes(xintercept = mean,
+                   group = id,
+                   color = id),
+               linetype = 2,
+               size = 1.2) +
+    xlab(TeX("Estimates for $\\mu_A$, $\\mu_B$, and $\\mu_C$")) +
+    scale_fill_brewer(palette = "Dark2") +
+    scale_color_brewer(palette = "Dark2") +
+    theme_bw(base_size = 28) +
+    guides(fill = guide_legend(title = TeX("Estimate of $pdf(\\mu)$"),
+                               title.position = "top")) +
+    theme(legend.position = c(0.45, 0.92),
+          legend.title = element_text(size = 26),
+          legend.background = element_rect(fill = "transparent"),
+          legend.direction = "horizontal",
+          plot.background = element_rect(fill = "transparent",
+                                         color = "transparent"),
+          axis.title.y = element_blank())
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/anova_example.pdf]]
+
 *** Online Learning
 **** Probability of Improvement, EI
 ***** Generating f(x)

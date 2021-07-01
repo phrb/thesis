@@ -4817,6 +4817,183 @@ p_no_noise | p_noise | p_constrained
 
 #+RESULTS:
 [[file:./img/booth_descent_gradient_template.pdf]]
+
+***** Descent Template for Booth's Function (No gradient)
+****** Constants
+#+begin_SRC R :results output :session *R* :eval no-export :exports results
+l = 3
+k = -6
+#+end_SRC
+
+#+RESULTS:
+****** Plot
+#+begin_SRC R :results graphics file output :session *R* :file "./img/booth_descent_nogradient_template.pdf" :width 30 :height 10.5 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(pracma)
+library(paletteer)
+library(patchwork)
+library(latex2exp)
+
+#color_palette = "pals::ocean.thermal"
+#color_palette = "scico::roma"
+color_palette = "ggthemes::Red-Blue Diverging"
+fill_palette = "ggthemes::Gray"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+grad_alpha = 0.45
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+noise_sd = 20
+
+#plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+plot_df = read.csv("data/search_spaces/gradient_noisy.csv", header = TRUE)
+
+grad_resolution = 6
+grad_length = 0.83
+picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+scale_limits = c(-10.1, 10.1)
+
+bins = 25
+
+p_no_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z,
+                     color = ..level..),
+                 bins = bins,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z == min(z)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(a)}")) +
+    ylab(TeX("$x_1$")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_noise = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_noisy,
+                     color = ..level..),
+                 bins = bins,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_point(data = plot_df %>%
+                   filter(z_noisy == min(z_noisy)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    xlab(TeX("\\overset{$x_2$}{(b)}")) +
+    ylab(TeX("$x_1$")) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_constrained = ggplot() +
+    scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+    scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+    geom_contour(data = plot_df,
+                 aes(x = x,
+                     y = y,
+                     z = z_constrained,
+                     color = ..level..),
+                 bins = bins,
+                 size = thickness,
+                 linejoin = "round",
+                 lineend = "round",
+                 show.legend = FALSE) +
+    geom_hline(yintercept = l,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_hline(yintercept = k,
+               linetype = 2,
+               color = constraint_border,
+               size = 1.3) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = l,
+                    ymax = 10),
+                alpha = 0.1) +
+    geom_ribbon(data = plot_df %>%
+                    filter(is.na(z_constrained)),
+                aes(x = x,
+                    ymin = -10,
+                    ymax = k),
+                alpha = 0.1) +
+    geom_point(data = plot_df %>%
+                   filter(!is.na(z_constrained)) %>%
+                   filter(z_constrained == min(z_constrained)),
+               aes(x = x,
+                   y = y),
+               color = "red",
+               size = optimum_size,
+               stroke = optimum_stroke,
+               shape = 4) +
+    scale_color_paletteer_c(palette = color_palette, direction = 1) +
+    xlab(TeX("\\overset{$x_2$}{(c)}")) +
+    ylab(TeX("$x_1$")) +
+    theme_bw(base_size = base_size) +
+    theme_config
+
+p_no_noise | p_noise | p_constrained
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/booth_descent_nogradient_template.pdf]]
+
 *** Learning
 **** Linear Regression
 ***** 3d Booth's Function Example
@@ -6947,35 +7124,31 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  38.38384 33.53535
-  - variance bounds :  10588.31 1198707
-  - best initial criterion value(s) :  -69.15038
+  - parameters upper bounds :  31.51515 37.57576
+  - variance bounds :  43919.32 6089399
+  - best initial criterion value(s) :  -71.19949
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=        69.15  |proj g|=       1.0591
-At iterate     1  f =       68.245  |proj g|=       0.51666
-At iterate     2  f =       67.684  |proj g|=       0.22174
-At iterate     3  f =       67.361  |proj g|=      0.062222
-At iterate     4  f =       67.344  |proj g|=      0.017177
-At iterate     5  f =       67.343  |proj g|=     0.0059212
-At iterate     6  f =       67.343  |proj g|=     0.0016697
-At iterate     7  f =       67.343  |proj g|=    0.00020049
-At iterate     8  f =       67.343  |proj g|=    1.1044e-05
-At iterate     9  f =       67.343  |proj g|=    5.8017e-05
+At iterate     0  f=       71.199  |proj g|=      0.12448
+At iterate     1  f =        71.18  |proj g|=       0.11078
+At iterate     2  f =       71.092  |proj g|=     0.0026873
+At iterate     3  f =       71.092  |proj g|=    0.00034462
+At iterate     4  f =       71.092  |proj g|=    4.1692e-06
+At iterate     5  f =       71.092  |proj g|=      1.29e-06
 
-iterations 9
-function evaluations 13
-segments explored during Cauchy searches 9
+iterations 5
+function evaluations 6
+segments explored during Cauchy searches 5
 BFGS updates skipped 0
 active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 5.80172e-05
-final function value 67.343
+norm of the final projected gradient 1.28995e-06
+final function value 71.0923
 
-F = 67.343
-final  value 67.342994
+F = 71.0923
+final  value 71.092260
 converged
-
++ +
 optimisation start
 ------------------
 ,* estimation method   : MLE
@@ -6986,30 +7159,31 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  38.38384 33.53535
-  - variance bounds :  5884.415 608500.8
-  - best initial criterion value(s) :  -65.11035
+  - parameters upper bounds :  31.51515 37.57576
+  - variance bounds :  4128.413 496885.9
+  - best initial criterion value(s) :  -69.25898
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=        65.11  |proj g|=      0.36238
-At iterate     1  f =       64.959  |proj g|=       0.28619
-At iterate     2  f =       64.724  |proj g|=      0.035067
-At iterate     3  f =       64.722  |proj g|=     0.0066773
-At iterate     4  f =       64.721  |proj g|=     0.0029722
-At iterate     5  f =       64.721  |proj g|=    1.8046e-05
-At iterate     6  f =       64.721  |proj g|=    1.0031e-05
+At iterate     0  f=       69.259  |proj g|=      0.85648
+At iterate     1  f =       68.159  |proj g|=       0.59558
+At iterate     2  f =        66.93  |proj g|=       0.13828
+At iterate     3  f =       66.828  |proj g|=      0.044051
+At iterate     4  f =       66.818  |proj g|=     0.0049064
+At iterate     5  f =       66.818  |proj g|=    0.00023833
+At iterate     6  f =       66.818  |proj g|=    9.3015e-06
+At iterate     7  f =       66.818  |proj g|=    6.6532e-06
 
-iterations 6
-function evaluations 7
-segments explored during Cauchy searches 6
+iterations 7
+function evaluations 8
+segments explored during Cauchy searches 7
 BFGS updates skipped 0
 active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 1.00307e-05
-final function value 64.7214
+norm of the final projected gradient 6.65323e-06
+final function value 66.8177
 
-F = 64.7214
-final  value 64.721351
+F = 66.8177
+final  value 66.817678
 converged
 
 optimisation start
@@ -7022,32 +7196,35 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  38.38384 33.53535
-  - variance bounds :  4739.433 516844.1
-  - best initial criterion value(s) :  -67.35271
+  - parameters upper bounds :  31.51515 37.57576
+  - variance bounds :  3830.243 415150.7
+  - best initial criterion value(s) :  -67.25111
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       67.353  |proj g|=       1.2091
-At iterate     1  f =        66.15  |proj g|=       0.71586
-At iterate     2  f =       65.413  |proj g|=       0.17312
-At iterate     3  f =       65.343  |proj g|=      0.042875
-At iterate     4  f =       65.339  |proj g|=     0.0045831
-At iterate     5  f =       65.339  |proj g|=    9.0744e-05
-At iterate     6  f =       65.339  |proj g|=    9.0756e-05
+At iterate     0  f=       67.251  |proj g|=      0.14082
+At iterate     1  f =       67.205  |proj g|=       0.22965
+ys=-1.905e-02  -gs= 3.775e-02, BFGS update SKIPPED
+At iterate     2  f =       67.128  |proj g|=    2.8412e-05
+At iterate     3  f =       66.937  |proj g|=     2.074e-05
+At iterate     4  f =       66.834  |proj g|=    3.8252e-06
+At iterate     5  f =       66.832  |proj g|=    2.2746e-06
+At iterate     6  f =       66.832  |proj g|=    1.3414e-07
+At iterate     7  f =       66.832  |proj g|=    4.3857e-09
+At iterate     8  f =       66.832  |proj g|=    8.8149e-12
 
-iterations 6
-function evaluations 7
-segments explored during Cauchy searches 6
-BFGS updates skipped 0
-active bounds at final generalized Cauchy point 0
-norm of the final projected gradient 9.07564e-05
-final function value 65.3391
+iterations 8
+function evaluations 24
+segments explored during Cauchy searches 9
+BFGS updates skipped 1
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 8.81494e-12
+final function value 66.8316
 
-F = 65.3391
-final  value 65.339062
+F = 66.8316
+final  value 66.831641
 converged
-
++
 optimisation start
 ------------------
 ,* estimation method   : MLE
@@ -7058,31 +7235,54 @@ optimisation start
   - type :  matern5_2
   - nugget : 1e-06
   - parameters lower bounds :  1e-10 1e-10
-  - parameters upper bounds :  38.38384 33.53535
-  - variance bounds :  3.737058 568.1909
-  - best initial criterion value(s) :  -45.0685
+  - parameters upper bounds :  31.51515 37.57576
+  - variance bounds :  28.12997 4133.903
+  - best initial criterion value(s) :  -43.85194
 
 N = 3, M = 5 machine precision = 2.22045e-16
 At X0, 0 variables are exactly at the bounds
-At iterate     0  f=       45.069  |proj g|=      0.75398
-At iterate     1  f =       42.139  |proj g|=       0.15773
-At iterate     2  f =       34.359  |proj g|=      0.023091
-At iterate     3  f =       34.039  |proj g|=      0.017983
-At iterate     4  f =       33.862  |proj g|=    0.00015446
-At iterate     5  f =       33.862  |proj g|=    0.00011581
-At iterate     6  f =       33.862  |proj g|=    3.6625e-07
-At iterate     7  f =       33.862  |proj g|=    8.6504e-10
+At iterate     0  f=       43.852  |proj g|=        0.869
+At iterate     1  f =       43.483  |proj g|=       0.60867
+At iterate     2  f =       43.298  |proj g|=       0.18068
+At iterate     3  f =       43.296  |proj g|=     0.0049702
+At iterate     4  f =       43.296  |proj g|=     0.0049875
+At iterate     5  f =       43.296  |proj g|=      0.039465
+At iterate     6  f =       43.296  |proj g|=      0.078193
+At iterate     7  f =       43.295  |proj g|=       0.15616
+At iterate     8  f =       43.292  |proj g|=       0.26715
+At iterate     9  f =       43.286  |proj g|=       0.41452
+At iterate    10  f =       43.271  |proj g|=       0.50265
+At iterate    11  f =        43.24  |proj g|=       0.24396
+At iterate    12  f =       43.232  |proj g|=      0.066062
+At iterate    13  f =       43.232  |proj g|=      0.017169
+At iterate    14  f =       43.232  |proj g|=     0.0027134
+At iterate    15  f =       43.232  |proj g|=     0.0027142
+At iterate    16  f =       43.232  |proj g|=      0.010862
+At iterate    17  f =       43.232  |proj g|=      0.021799
+At iterate    18  f =       43.232  |proj g|=      0.042297
+At iterate    19  f =       43.232  |proj g|=      0.072767
+At iterate    20  f =       43.231  |proj g|=       0.12124
+At iterate    21  f =        43.23  |proj g|=        0.1933
+At iterate    22  f =       43.227  |proj g|=       0.29362
+At iterate    23  f =        43.22  |proj g|=       0.33504
+At iterate    24  f =       43.204  |proj g|=       0.36673
+At iterate    25  f =       43.163  |proj g|=      0.024588
+At iterate    26  f =       43.162  |proj g|=    0.00033353
+At iterate    27  f =       43.162  |proj g|=     0.0046315
+At iterate    28  f =       43.162  |proj g|=    0.00061889
+At iterate    29  f =       43.162  |proj g|=    8.0334e-06
+At iterate    30  f =       43.162  |proj g|=    1.4914e-07
 
-iterations 7
-function evaluations 16
-segments explored during Cauchy searches 8
+iterations 30
+function evaluations 35
+segments explored during Cauchy searches 31
 BFGS updates skipped 0
-active bounds at final generalized Cauchy point 2
-norm of the final projected gradient 8.65044e-10
-final function value 33.8619
+active bounds at final generalized Cauchy point 1
+norm of the final projected gradient 1.49141e-07
+final function value 43.1615
 
-F = 33.8619
-final  value 33.861945
+F = 43.1615
+final  value 43.161543
 converged
 #+end_example
 
@@ -8384,7 +8584,7 @@ write.csv(df, "./data/sampling/low_discrepancy.csv", row.names = FALSE)
 : [1] "sample_torus"
 
 ***** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/experimental_design/low_discrepancy.pdf" :width 31 :height 8 :eval no-export
+#+begin_SRC R :results graphics file output :session *R* :file "./img/experimental_design/low_discrepancy.pdf" :width 31 :height 8 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(paletteer)
@@ -8423,6 +8623,8 @@ theme_config <- function() {
     theme(axis.ticks = element_blank(),
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
+          plot.background = element_rect(fill = "transparent",
+                                         color = "transparent"),
           strip.background = element_rect(fill = "transparent"),
           strip.text = element_text(size = title_size))
 }

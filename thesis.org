@@ -3093,7 +3093,7 @@ write.csv(plot_df,
 #+RESULTS:
 
 ******* Search Spaces Overview
-#+begin_SRC R :results graphics output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
+#+begin_SRC R :results graphics file output :session *R* :file "./img/simple_search_space.pdf" :width 30 :height 21 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(paletteer)
@@ -3665,7 +3665,7 @@ k = -6
 
 #+RESULTS:
 ***** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
+#+begin_SRC R :results graphics file output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(pracma)
@@ -3870,7 +3870,6 @@ p_no_noise | p_noise | p_constrained
 #+end_SRC
 
 #+RESULTS:
-[[file:./img/booth_descent_gradient_template.pdf]]
 
 **** Methods Based on Derivatives
 ***** Gradient of Booth's Function
@@ -3884,6 +3883,9 @@ k = -6
 ****** Generate Data
 #+begin_SRC R :results output :session *R* :eval no-export :exports results
 library(dplyr)
+library(tidyr)
+library(pracma)
+library(DiceKriging)
 
 resolution = 100
 
@@ -3905,9 +3907,53 @@ f_grad <- function(x, y){
                       grad_y = (8 * x) + (10 * y) - 38))
 }
 
+f_noisy_grad <- function(df) {
+    df_m = xtabs(z_noisy ~ x + y, data = df %>% select(x, y, z_noisy))
+    f_g = gradient(df_m,
+                   as.numeric(attr(df_m, "dimnames")$x),
+                   as.numeric(attr(df_m, "dimnames")$y))
+
+    df_grad_x = data.frame(f_g$X) %>%
+        mutate(x = as.numeric(x),
+               y = as.numeric(y),
+               x_grad_noisy = Freq) %>%
+        arrange(y)
+
+    print(str(df_grad_x))
+
+    df_grad_y = data.frame(f_g$Y) %>%
+        mutate(x = as.numeric(x),
+               y = as.numeric(y),
+               y_grad_noisy = Freq) %>%
+        arrange(y)
+
+    print(str(df_grad_y))
+
+    df_f = data.frame(x_grad_noisy = df_grad_x$x_grad_noisy,
+                      y_grad_noisy = df_grad_y$y_grad_noisy)
+
+    print(str(df_f))
+    return(df_f)
+}
+
 lin_constraint <- function(x1, x2, l, k){
     return(x1 > l | x1 < k)
 }
+
+f_gp_noise <- function(df, subsampling = 12){
+    samples_df = df %>%
+        sample_n(size = subsampling)
+
+    gp_fit = km(design = samples_df %>% select(x, y),
+                response = samples_df %>% select(z),
+                covtype = "matern5_2",
+                nugget = 1e-5) # Avoid numerical error
+
+    return(as.vector(t(simulate(gp_fit,
+                                cond = TRUE,
+                                newdata = df %>% select(x, y)))))
+}
+
 
 df$z = f(df$x, df$y)
 
@@ -3922,32 +3968,320 @@ grad_noise_y = rnorm(resolution ^ 2,
                      mean = 0.0,
                      sd = grad_noise_sd)
 
-df$z_noisy = f(df$x, df$y) + noise
+runs = 30
+offset = 4
 
-df$z_constrained = df$z_noisy
-df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
+experiments = data.frame(contrib = rep(seq(0.5, 0.8, length.out = runs / 2), 2),
+                         samples = c(rep(5, runs / 2), rep(4, runs / 2)))
 
-grad_f = f_grad(df$x, df$y)
-grad_f_noisy = f_grad(df$x, df$y)
+for(i in 1:runs) {
+    subsamp = experiments[i, "samples"]
+    contrib = experiments[i, "contrib"]
 
-grad_f_noisy$grad_x = grad_f_noisy$grad_x + grad_noise_x
-grad_f_noisy$grad_y = grad_f_noisy$grad_y + grad_noise_y
+    print(paste("Run: ",
+                i,
+                ", Samples: ",
+                subsamp,
+                ", Noise Contrib.: ",
+                contrib,
+                sep = ""))
 
-plot_df = df %>%
-    mutate(x_grad = grad_f$grad_x,
-           y_grad = grad_f$grad_y,
-           x_grad_noisy = grad_f_noisy$grad_x,
-           y_grad_noisy = grad_f_noisy$grad_y)
+    df$z_noisy = df$z + (contrib * f_gp_noise(df, subsampling = subsamp))
 
-write.csv(plot_df,
-          "data/search_spaces/gradient.csv",
-          row.names = FALSE)
+    df$z_constrained = df$z_noisy
+    df[lin_constraint(df$y, df$x, l, k), "z_constrained"] = NA
+
+    grad_f = f_grad(df$x, df$y)
+
+    # grad_f_noisy = f_grad(df$x, df$y)
+    # grad_f_noisy$grad_x = grad_f_noisy$grad_x + grad_noise_x
+    # grad_f_noisy$grad_y = grad_f_noisy$grad_y + grad_noise_y
+
+    grad_f_noisy = f_noisy_grad(df)
+
+    plot_df = df %>%
+        mutate(x_grad = grad_f$grad_x,
+               y_grad = grad_f$grad_y,
+               x_grad_noisy = grad_f_noisy$x_grad_noisy,
+               y_grad_noisy = grad_f_noisy$y_grad_noisy)
+
+    write.csv(plot_df,
+              paste("data/search_spaces/gradient_",
+                    i + offset,
+                    ".csv",
+                    sep = ""),
+              row.names = FALSE)
+}
 #+end_SRC
 
 #+RESULTS:
+#+begin_example
+[1] "Run: 30, Samples: 66, Noise Contrib.: 0.75"
 
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-05
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  39.19192 38.38384
+  - variance bounds :  19933.5 2755100
+  - best initial criterion value(s) :  -242.9499
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       242.95  |proj g|=       5.3029
+At iterate     1  f =       224.73  |proj g|=        1.7304
+At iterate     2  f =       221.25  |proj g|=       0.47961
+At iterate     3  f =       220.76  |proj g|=      0.061151
+At iterate     4  f =       220.76  |proj g|=     0.0053538
+At iterate     5  f =       220.76  |proj g|=     0.0001327
+At iterate     6  f =       220.76  |proj g|=     0.0001327
+
+iterations 6
+function evaluations 7
+segments explored during Cauchy searches 6
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 0.000132705
+final function value 220.757
+
+F = 220.757
+final  value 220.757208
+converged
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -358 -356 -353 -351 -348 ...
+ $ x_grad_noisy: num  -358 -356 -353 -351 -348 ...
+NULL
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -375 -374 -371 -368 -365 ...
+ $ y_grad_noisy: num  -375 -374 -371 -368 -365 ...
+NULL
+'data.frame':	10000 obs. of  2 variables:
+ $ x_grad_noisy: num  -358 -356 -353 -351 -348 ...
+ $ y_grad_noisy: num  -375 -374 -371 -368 -365 ...
+NULL
+[1] "Run: 31, Samples: 68, Noise Contrib.: 0.8125"
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-05
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  40 38.78788
+  - variance bounds :  20198.21 3187798
+  - best initial criterion value(s) :  -210.2221
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       210.22  |proj g|=        2.718
+At iterate     1  f =       203.74  |proj g|=        1.8589
+At iterate     2  f =       197.33  |proj g|=       0.19647
+At iterate     3  f =       197.27  |proj g|=      0.040972
+At iterate     4  f =       197.26  |proj g|=     0.0041702
+At iterate     5  f =       197.26  |proj g|=    0.00010008
+At iterate     6  f =       197.26  |proj g|=    0.00010008
+
+iterations 6
+function evaluations 11
+segments explored during Cauchy searches 6
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 0.000100077
+final function value 197.264
+
+F = 197.264
+final  value 197.264243
+converged
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -382 -380 -377 -375 -372 ...
+ $ x_grad_noisy: num  -382 -380 -377 -375 -372 ...
+NULL
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -382 -381 -380 -378 -376 ...
+ $ y_grad_noisy: num  -382 -381 -380 -378 -376 ...
+NULL
+'data.frame':	10000 obs. of  2 variables:
+ $ x_grad_noisy: num  -382 -380 -377 -375 -372 ...
+ $ y_grad_noisy: num  -382 -381 -380 -378 -376 ...
+NULL
+[1] "Run: 32, Samples: 70, Noise Contrib.: 0.875"
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-05
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  37.9798 37.57576
+  - variance bounds :  21693.83 3204767
+  - best initial criterion value(s) :  -222.6464
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       222.65  |proj g|=       4.0667
+At iterate     1  f =       206.85  |proj g|=        2.4193
+At iterate     2  f =       198.37  |proj g|=       0.24841
+At iterate     3  f =       198.18  |proj g|=      0.081255
+At iterate     4  f =       198.17  |proj g|=     0.0057526
+At iterate     5  f =       198.17  |proj g|=    8.8214e-05
+At iterate     6  f =       198.17  |proj g|=    8.8216e-05
+
+iterations 6
+function evaluations 7
+segments explored during Cauchy searches 6
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 8.82162e-05
+final function value 198.17
+
+F = 198.17
+final  value 198.169993
+converged
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -384 -381 -379 -376 -373 ...
+ $ x_grad_noisy: num  -384 -381 -379 -376 -373 ...
+NULL
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -405 -403 -400 -397 -393 ...
+ $ y_grad_noisy: num  -405 -403 -400 -397 -393 ...
+NULL
+'data.frame':	10000 obs. of  2 variables:
+ $ x_grad_noisy: num  -384 -381 -379 -376 -373 ...
+ $ y_grad_noisy: num  -405 -403 -400 -397 -393 ...
+NULL
+[1] "Run: 33, Samples: 72, Noise Contrib.: 0.9375"
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-05
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  39.19192 39.59596
+  - variance bounds :  26057.92 4244018
+  - best initial criterion value(s) :  -217.4519
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       217.45  |proj g|=       1.7325
+At iterate     1  f =       214.06  |proj g|=        1.0424
+At iterate     2  f =       211.07  |proj g|=       0.18406
+At iterate     3  f =       211.02  |proj g|=      0.052069
+At iterate     4  f =       211.02  |proj g|=    0.00028335
+At iterate     5  f =       211.02  |proj g|=    9.3791e-05
+
+iterations 5
+function evaluations 6
+segments explored during Cauchy searches 5
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 9.3791e-05
+final function value 211.017
+
+F = 211.017
+final  value 211.016561
+converged
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -410 -407 -404 -401 -398 ...
+ $ x_grad_noisy: num  -410 -407 -404 -401 -398 ...
+NULL
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -417 -415 -412 -409 -405 ...
+ $ y_grad_noisy: num  -417 -415 -412 -409 -405 ...
+NULL
+'data.frame':	10000 obs. of  2 variables:
+ $ x_grad_noisy: num  -410 -407 -404 -401 -398 ...
+ $ y_grad_noisy: num  -417 -415 -412 -409 -405 ...
+NULL
+[1] "Run: 34, Samples: 75, Noise Contrib.: 1"
+
+optimisation start
+------------------
+,* estimation method   : MLE
+,* optimisation method : BFGS
+,* analytical gradient : used
+,* trend model : ~1
+,* covariance model :
+  - type :  matern5_2
+  - nugget : 1e-05
+  - parameters lower bounds :  1e-10 1e-10
+  - parameters upper bounds :  40 37.57576
+  - variance bounds :  15548.91 2318903
+  - best initial criterion value(s) :  -231.6637
+
+N = 3, M = 5 machine precision = 2.22045e-16
+At X0, 0 variables are exactly at the bounds
+At iterate     0  f=       231.66  |proj g|=       1.1318
+At iterate     1  f =       230.38  |proj g|=       0.38702
+At iterate     2  f =       230.24  |proj g|=      0.019152
+At iterate     3  f =       230.24  |proj g|=     0.0072939
+At iterate     4  f =       230.24  |proj g|=    0.00021413
+At iterate     5  f =       230.24  |proj g|=    0.00021414
+
+iterations 5
+function evaluations 7
+segments explored during Cauchy searches 5
+BFGS updates skipped 0
+active bounds at final generalized Cauchy point 0
+norm of the final projected gradient 0.000214144
+final function value 230.237
+
+F = 230.237
+final  value 230.236512
+converged
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -396 -394 -392 -389 -387 ...
+ $ x_grad_noisy: num  -396 -394 -392 -389 -387 ...
+NULL
+'data.frame':	10000 obs. of  4 variables:
+ $ x           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ y           : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Freq        : num  -420 -419 -417 -414 -412 ...
+ $ y_grad_noisy: num  -420 -419 -417 -414 -412 ...
+NULL
+'data.frame':	10000 obs. of  2 variables:
+ $ x_grad_noisy: num  -396 -394 -392 -389 -387 ...
+ $ y_grad_noisy: num  -420 -419 -417 -414 -412 ...
+NULL
+#+end_example
 ****** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/booth_gradient.pdf" :width 30 :height 10.5 :eval no-export
+#+begin_SRC R :results graphics file output :session *R* :file "./img/booth_gradient.pdf" :width 30 :height 10.5 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(pracma)
@@ -3956,7 +4290,7 @@ library(patchwork)
 library(latex2exp)
 
 color_palette = "viridis::viridis"
-fill_palette = "ggthemes::Green"
+fill_palette = "ggthemes::Red"
 
 constraint_border = paletteer_c(palette = "viridis::viridis",
                                 n = 2)[[1]]
@@ -3990,13 +4324,16 @@ theme_config = theme(axis.title.y = element_text(angle = 0,
 
 resolution = 100
 
-plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+#plot_df = read.csv("data/search_spaces/gradient_3.csv", header = TRUE)
+#plot_df = read.csv("data/search_spaces/gradient_32.csv", header = TRUE)
+plot_df = read.csv("data/search_spaces/gradient_noisy.csv", header = TRUE)
 
 grad_resolution = 6
 grad_length = 0.83
 picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
 
 scale_limits = c(-10.1, 10.1)
+bins = 25
 
 p_no_noise = ggplot() +
     scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
@@ -4006,6 +4343,7 @@ p_no_noise = ggplot() +
                      y = y,
                      z = z),
                  color = contour_color,
+                 bins = bins,
                  size = thickness,
                  linejoin = "round",
                  lineend = "round",
@@ -4046,6 +4384,7 @@ p_noise = ggplot() +
                  aes(x = x,
                      y = y,
                      z = z_noisy),
+                 bins = bins,
                  color = contour_color,
                  size = thickness,
                  linejoin = "round",
@@ -4053,12 +4392,12 @@ p_noise = ggplot() +
                  show.legend = FALSE) +
     geom_segment(data = plot_df %>%
                     filter(x %in% picked & y %in% picked),
-                aes(xend = y,
-                    yend = x,
-                    y = (x + (grad_length *
+                aes(xend = x,
+                    yend = y,
+                    x = (x + (grad_length *
                               (x_grad_noisy / sqrt((x_grad_noisy ^ 2) +
                                              (y_grad_noisy ^ 2))))),
-                    x = (y + (grad_length *
+                    y = (y + (grad_length *
                               (y_grad_noisy / sqrt((x_grad_noisy ^ 2) +
                                              (y_grad_noisy ^ 2))))),
                     color = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
@@ -4066,7 +4405,7 @@ p_noise = ggplot() +
                 size = 1.4,
                 show.legend = FALSE) +
     geom_point(data = plot_df %>%
-                   filter(z == min(z)),
+                   filter(z_noisy == min(z_noisy)),
                aes(x = x,
                    y = y),
                color = "red",
@@ -4104,6 +4443,7 @@ p_constrained = ggplot() +
                      z = z_constrained),
                  color = contour_color,
                  size = thickness,
+                 bins = bins,
                  linejoin = "round",
                  lineend = "round",
                  show.legend = FALSE) +

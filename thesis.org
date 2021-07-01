@@ -4488,6 +4488,114 @@ p_no_noise | p_noise | p_constrained
 #+RESULTS:
 [[file:./img/booth_gradient.pdf]]
 
+
+****** Check Gradient
+#+begin_SRC R :results file graphics output :file "./img/check_grad.pdf" :width 10 :height 10 :eval no-export
+library(dplyr)
+library(ggplot2)
+library(paletteer)
+library(patchwork)
+
+color_palette = "viridis::viridis"
+fill_palette = "ggthemes::Green"
+
+constraint_border = paletteer_c(palette = "viridis::viridis",
+                                n = 2)[[1]]
+
+thickness = 1.3
+line_thickness = 1.4
+base_size = 32
+title_size = 39
+optimum_size = 8
+optimum_stroke = 3
+optima_shape = 4
+contour_color = "gray65"
+
+theme_config = theme(axis.title.y = element_text(angle = 0,
+                                                 margin = margin(t = 0,
+                                                                 b = 0,
+                                                                 r = 0.3,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 vjust = 0.5,
+                                                 size = title_size),
+                     axis.title.x = element_text(margin = margin(t = 0.4,
+                                                                 b = -0.7,
+                                                                 r = 0,
+                                                                 l = 0,
+                                                                 unit = "cm"),
+                                                 size = title_size),
+                     axis.ticks = element_blank(),
+                     axis.text.x = element_blank(),
+                     axis.text.y = element_blank())
+
+resolution = 100
+
+runs = 34
+
+for(i in 1:runs) {
+    plot_df = read.csv(paste("data/search_spaces/gradient_",
+                             i,
+                             ".csv",
+                             sep = ""),
+                       header = TRUE)
+
+    print(paste("Plotting gradient:", i))
+
+    grad_resolution = 6
+    grad_length = 0.83
+    picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
+
+    scale_limits = c(-10.1, 10.1)
+
+    p_noise = ggplot() +
+        scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
+        scale_y_continuous(limits = scale_limits, expand = c(0, 0)) +
+        geom_raster(data = plot_df,
+                    alpha = 0.6,
+                    aes(x = x,
+                        y = y,
+                        fill = sqrt((x_grad_noisy ^ 2) + (y_grad_noisy ^ 2))),
+                        #fill = x_grad_noisy),
+                    show.legend = FALSE) +
+        geom_contour(data = plot_df,
+                     aes(x = x,
+                         y = y,
+                         z = z_noisy),
+                     alpha = 0.4,
+                     bins = 30,
+                     color = "red",
+                     size = thickness,
+                     linejoin = "round",
+                     lineend = "round",
+                     show.legend = FALSE) +
+        geom_point(data = plot_df %>%
+                       filter(z_noisy == min(z_noisy)),
+                   aes(x = x,
+                       y = y),
+                   alpha = 0.4,
+                   color = "red",
+                   size = optimum_size,
+                   stroke = optimum_stroke,
+                   shape = 4) +
+        xlab(TeX("\\overset{$x_2$}{(b)}")) +
+        ylab(TeX("$x_1$")) +
+        scale_fill_paletteer_c(palette = fill_palette, direction = 1) +
+        theme_bw(base_size = base_size) +
+        theme_config
+
+    ggsave(p_noise,
+           file = paste("./img/check_gradient_", i, ".pdf", sep = ""),
+           width = 10,
+           height = 10)
+}
+
+p_noise
+#+end_SRC
+
+#+RESULTS:
+[[file:./img/check_grad.pdf]]
+
 ***** Descent Template for Booth's Function (With gradient)
 ****** Constants
 #+begin_SRC R :results output :session *R* :eval no-export :exports results

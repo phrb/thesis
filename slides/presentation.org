@@ -477,7 +477,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 #+begin_export latex
 \egroup
 #+end_export
-* Autotuning with Methods for @@latex: \mbox{\textcolor{NavyBlue}{Function Minimization}}@@
+* Applying Methods @@latex:\mbox{for \textcolor{NavyBlue}{Function Minimization}}@@
 :PROPERTIES:
 :DURATION: 10 minutes
 :END:
@@ -542,8 +542,8 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 \only<1>{
   {\scriptsize
     \begin{align*}
-      f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2}\phantom{ + \varepsilon}\text{,} \\
-      & x_1,x_2 \in [-10, 10]\phantom{\text{, and }\varepsilon \thicksim \mathcal{N}(0, \sigma^2)}
+      f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2}\text{,}\phantom{ + z} \\
+      & x_1,x_2 \in [-10, 10]\phantom{\text{, and }z \thicksim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})}
     \end{align*}
   }%
 }%
@@ -551,8 +551,8 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
   {\scriptsize
     \begin{align*}
       \scriptsize
-      f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2} + \varepsilon\text{,} \\
-      & x_1,x_2 \in [-10, 10]\text{, and }\varepsilon \thicksim \mathcal{N}(0, \sigma^2)
+      f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2} + z\text{,} \\
+      & x_1,x_2 \in [-10, 10]\text{, and }z \thicksim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})
     \end{align*}
   }%
 }%

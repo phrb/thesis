@@ -4605,7 +4605,7 @@ k = -6
 
 #+RESULTS:
 ****** Plot
-#+begin_SRC R :results graphics output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
+#+begin_SRC R :results graphics file output :session *R* :file "./img/booth_descent_gradient_template.pdf" :width 30 :height 10.5 :eval no-export
 library(dplyr)
 library(ggplot2)
 library(pracma)
@@ -4651,13 +4651,16 @@ resolution = 100
 
 noise_sd = 20
 
-plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+#plot_df = read.csv("data/search_spaces/gradient.csv", header = TRUE)
+plot_df = read.csv("data/search_spaces/gradient_noisy.csv", header = TRUE)
 
 grad_resolution = 6
 grad_length = 0.83
 picked = unique(plot_df$x)[seq(0, resolution, by = grad_resolution)]
 
 scale_limits = c(-10.1, 10.1)
+
+bins = 25
 
 p_no_noise = ggplot() +
     scale_x_continuous(limits = scale_limits, expand = c(0, 0)) +
@@ -4667,6 +4670,7 @@ p_no_noise = ggplot() +
                      y = y,
                      z = z),
                  color = contour_color,
+                 bins = bins,
                  size = thickness,
                  linejoin = "round",
                  lineend = "round",
@@ -4709,6 +4713,7 @@ p_noise = ggplot() +
                      y = y,
                      z = z_noisy),
                  color = contour_color,
+                 bins = bins,
                  size = thickness,
                  linejoin = "round",
                  lineend = "round",
@@ -4729,7 +4734,7 @@ p_noise = ggplot() +
                 size = 1.4,
                 show.legend = FALSE) +
     geom_point(data = plot_df %>%
-                   filter(z == min(z)),
+                   filter(z_noisy == min(z_noisy)),
                aes(x = x,
                    y = y),
                color = "red",
@@ -4767,6 +4772,7 @@ p_constrained = ggplot() +
                      y = y,
                      z = z_constrained),
                  color = contour_color,
+                 bins = bins,
                  size = thickness,
                  linejoin = "round",
                  lineend = "round",

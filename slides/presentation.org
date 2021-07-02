@@ -318,7 +318,7 @@ for(i = 0; i < N; i += B_size){
 int N = 256;
 int B_size = 4;
 float A[N][N], B[N][N], C[N][N];
-int i, j, k, x; // int U_size = 4;
+int i, j, k, x; int U_size = 2;
 // Initialize A, B, C
 for(i = 0; i < N; i += B_size){
   for(j = 0; j < N; j += B_size){
@@ -327,10 +327,10 @@ for(i = 0; i < N; i += B_size){
       // Load block (i, k) of A to fast memory
       // Load block (k, y) of B to fast memory
       for(x = i; x < min(i + B_size, N); x++){
-        C[i][j + 0] += A[i][k] * B[k][j + 0];
-        C[i][j + 1] += A[i][k] * B[k][j + 1];
-        C[i][j + 2] += A[i][k] * B[k][j + 2];
-        C[i][j + 3] += A[i][k] * B[k][j + 3];
+        for(y = j; y < min(j + B_size, N); y += U_size){
+          C[i][y + 0] += A[i][k] * B[k][y + 0];
+          C[i][y + 1] += A[i][k] * B[k][y + 1];
+        }
       }
     } // Write block (i, j) of C to main memory
   }

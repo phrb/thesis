@@ -15819,9 +15819,9 @@ on an /Intel Xeon E5-2630v2/ CPU, with /gcc/ version /4.8.3/ and /Nvidia/ driver
 version /340.32/.
 
 
-#+ATTR_LATEX: :booktabs t :align lll :font \small :float t :placement [t]
 #+NAME: tab:gpu_laplacian_factors
 #+CAPTION: Parameters of the Laplacian Kernel
+#+ATTR_LATEX: :booktabs t :align lll :font \small :placement [t]
 |-------------------------------+-------------------------------+--------------------------------|
 | Factor                        | Levels                        | Short Description              |
 |-------------------------------+-------------------------------+--------------------------------|
@@ -16530,9 +16530,9 @@ their performance is similar to RS regarding budget usage. The global minima are
 not known  for any of  the problems,  and search spaces  are too large  to allow
 complete measurements.
 
-#+ATTR_LATEX: :booktabs t :align llll :font \scriptsize :float t :placement [t]
 #+NAME: tab:spapt_apps
 #+CAPTION: Kernels from the SPAPT benchmark used in this evaluation
+#+ATTR_LATEX: :booktabs t :align llll :font \scriptsize :placement [t]
 |---------------+---------------------------------+---------+----------------------|
 | Kernel        | Operation                       | Factors | Size                 |
 |---------------+---------------------------------+---------+----------------------|

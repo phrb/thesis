@@ -1,7 +1,7 @@
 #+STARTUP: beamer overview indent inlineimages logdrawer
 #+TITLE: @@latex: Toward Transparent and Parsimonious
 #+TITLE: Methods \\ for Automatic Performance Tuning@@
-#+AUTHOR:    \footnotesize Pedro Bruel \newline \scriptsize \emph{phrb@ime.usp.br}
+#+AUTHOR:    \footnotesize Pedro Bruel
 #+DATE:      \scriptsize July 9 2021
 #+DESCRIPTION:
 #+KEYWORDS:
@@ -99,6 +99,33 @@ See [[Emacs Setup]] below for local buffer variables
 #+LATEX_HEADER:     urlcolor={Accent}
 #+LATEX_HEADER: }
 
+#+LATEX_HEADER: \titlegraphic{%
+#+LATEX_HEADER:   \includegraphics[height=3.8em]{../img/imelogo}\hspace{1.3em}
+#+LATEX_HEADER:   \includegraphics[height=3.5em]{../img/uga_logo}\hspace{1.3em}
+#+LATEX_HEADER:   \includegraphics[height=3.5em]{../img/capeslogo}\hfill
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \newcommand{\insertjury}{%
+#+LATEX_HEADER:   \vspace{1em}
+#+LATEX_HEADER:   \scriptsize
+#+LATEX_HEADER:   \begin{minipage}{0.5\textwidth}
+#+LATEX_HEADER:     \textbf{Advisors}\\
+#+LATEX_HEADER:     Alfredo Goldman (USP)\\
+#+LATEX_HEADER:     Arnaud Legrand (CNRS)\\
+#+LATEX_HEADER:     Brice Videau (ANL)
+#+LATEX_HEADER:   \end{minipage}%
+#+LATEX_HEADER:   \hfill
+#+LATEX_HEADER:   \begin{minipage}{0.5\textwidth}
+#+LATEX_HEADER:     \flushright
+#+LATEX_HEADER:     \textbf{Jury} \\
+#+LATEX_HEADER:     Stefan M. Wild (ANL) \\
+#+LATEX_HEADER:     Albert Cohen (Google) \\
+#+LATEX_HEADER:     Boyana Norris (UO) \\
+#+LATEX_HEADER:     Lucia Drummond (UFF)
+#+LATEX_HEADER:   \end{minipage}%
+#+LATEX_HEADER: }
+#+LATEX_HEADER:
+
 #+LATEX_HEADER: \makeatletter
 #+LATEX_HEADER: \setbeamertemplate{section page}{
 #+LATEX_HEADER:   \centering
@@ -121,10 +148,26 @@ See [[Emacs Setup]] below for local buffer variables
 
 #+LATEX_HEADER: \setbeamertemplate{title separator}{
 #+LATEX_HEADER: \begin{tikzpicture}
-#+LATEX_HEADER:   \fill[fg] (0,0) rectangle (0.85\textwidth,
+#+LATEX_HEADER:   \fill[fg] (0,0) rectangle (\textwidth,
 #+LATEX_HEADER:                              \metropolis@titleseparator@linewidth);
 #+LATEX_HEADER: \end{tikzpicture}%
 #+LATEX_HEADER: \par%
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \setbeamertemplate{title page}{
+#+LATEX_HEADER:   \begin{minipage}[b][\paperheight]{\textwidth}
+#+LATEX_HEADER:     \vfill%
+#+LATEX_HEADER:     \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+#+LATEX_HEADER:     \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+#+LATEX_HEADER:     \usebeamertemplate*{title separator}
+#+LATEX_HEADER:     \ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+#+LATEX_HEADER:     \ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+#+LATEX_HEADER:     \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+#+LATEX_HEADER:     \insertjury
+#+LATEX_HEADER:     \vfill
+#+LATEX_HEADER:     \ifx\inserttitlegraphic\@empty\else\inserttitlegraphic\fi
+#+LATEX_HEADER:     \vspace*{1cm}
+#+LATEX_HEADER:   \end{minipage}
 #+LATEX_HEADER: }
 
 #+LATEX_HEADER: \setlength{\metropolis@titleseparator@linewidth}{1pt}
@@ -216,7 +259,7 @@ Molecular dynamics for *virtual testing* of *drugs* and *vaccines*
 *** Optimizing Matrix Multiplication :B_block:BMCOL:
 :PROPERTIES:
 :BEAMER_env: block
-:BEAMER_col: 0.44
+:BEAMER_col: 0.39
 :END:
 
 #+latex: \vspace{0.5em}
@@ -248,7 +291,7 @@ leveraging *cache locality*?
 
 *** Sample in C                                                     :BMCOL:
 :PROPERTIES:
-:BEAMER_col: 0.56
+:BEAMER_col: 0.61
 :END:
 
 \vspace{-1.4em}
@@ -316,9 +359,9 @@ for(i = 0; i < N; i += B_size){
 \begin{figure}
 \begin{minted}[fontsize=\scriptsize]{C}
 int N = 256;
-int B_size = 4;
+int B_size = 4; int U_size = 2;
 float A[N][N], B[N][N], C[N][N];
-int i, j, k, x; int U_size = 2;
+int i, j, k, x, y;
 // Initialize A, B, C
 for(i = 0; i < N; i += B_size){
   for(j = 0; j < N; j += B_size){
@@ -506,7 +549,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 \begin{itemize}
 \item  $\mathbf{x}_{k}  =  \mathbf{x}_{k  -  1}  -  \mathbf{H}f(\mathbf{x}_{k  -
   1})\nabla{}f(\mathbf{x}_{k - 1})$
-\uncover<4->{\item Move to best point in a \alert{neighborhood}}
+\uncover<4->{\item Move to the best point in a \alert{neighborhood}}
 \end{itemize}
 #+end_export
 **** End Block                                           :B_ignoreheading:
@@ -548,7 +591,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
   {\scriptsize
     \begin{align*}
       f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2}\text{,}\phantom{ + z} \\
-      & x_1,x_2 \in [-10, 10]\phantom{\text{, and }z \thicksim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})}
+      & x_1,x_2 \in [-10, 10]\phantom{\text{, and }z \thicksim \mathcal{N}(\boldsymbol{0}, K(\boldsymbol{\theta}, \mathbf{x}, \mathbf{x^{\prime}})}
     \end{align*}
   }%
 }%
@@ -557,7 +600,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
     \begin{align*}
       \scriptsize
       f(\mathbf{x}) &= (x_1 + 2x_2  - 7)^{2} + (2x_1 + x_2 - 5)^{2} + z\text{,} \\
-      & x_1,x_2 \in [-10, 10]\text{, and }z \thicksim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})
+      & x_1,x_2 \in [-10, 10]\text{, and }z \thicksim \mathcal{N}(\boldsymbol{0}, K(\boldsymbol{\theta}, \mathbf{x}, \mathbf{x^{\prime}}))
     \end{align*}
   }%
 }%
@@ -747,7 +790,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 :BEAMER_col: 0.55
 :END:
 - $f: \mathcal{X} \to \mathbb{R}$
-- Model: $f(\mathbf{x}) = \mathbf{x}^{\transp}\boldsymbol{\theta} + \boldsymbol{\varepsilon}\text{, with }\varepsilon \thicksim \mathcal{N}(0, \sigma^2)$
+- Model: $f(\mathbf{x}) = \mathbf{x}^{\transp}\boldsymbol{\theta} + \varepsilon\text{, with }\varepsilon \thicksim \mathcal{N}(0, \sigma^2)$
 - Data: $(\mathbf{x}_k, y_k = f(\mathbf{x}_k))$
 - $\mathbf{x}_{1,\dots{},n}$ in a *given* design $\mathbf{X}$
 
@@ -1263,7 +1306,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 :BEAMER_col: 0.5
 :END:
 - Algorithm, implementation, dependencies, compiler, OS, hardware
-- What is the most effective?
+- How to combine them effectively?
 
 **** Sequential and Incremental Approach
 - *Definitive* search space restrictions
@@ -1273,7 +1316,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 \vspace{-0.8em}
 \pause
 
-**** Active Learning with \textcolor{OliveGreen}{Gaussian Processes}
+**** More *Flexibility* with \textcolor{OliveGreen}{Gaussian Processes}
 #+begin_export latex
 \vspace{-1em}
 \begin{center}
@@ -1447,7 +1490,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 #+ATTR_LATEX: :width \columnwidth
 [[file:../img/dopt_anova_experiments/comparison_histogram_annotated_2.pdf]]
 
-- The more *rigid* model performed better
+- The more *informed* model performed better
 
 *** Right                                                           :BMCOL:
 :PROPERTIES:
@@ -1689,7 +1732,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 :END:
 \vspace{1.1em}
 **** \textcolor{BrickRed}{Design of Experiments}
-- Optimize rigid surrogates
+- Optimize informed surrogates
 - Sequential and incremental
 - Use when a model is available
 
@@ -1712,7 +1755,7 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 :BEAMER_opt: t
 :END:
 \vspace{1.1em}
-**** \textcolor{OliveGreen}{Gaussian Processes}
+**** \textcolor{OliveGreen}{Learning with GPs}
 - Exploration and exploitation
 - Choose experiments online
 - Use to build flexible surrogates
@@ -1752,8 +1795,8 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 \vspace{-1em}
 \begin{center}
   \begin{tcolorbox}[width=0.9\columnwidth]
-  Exhaustive and collective experiments  are \alert{interdependent} and can help
-  achieve \alert{reproducible autotuning}
+  Exhaustive and collective experiments are \alert{interdependent approaches}
+  and can help achieve \alert{reproducible autotuning}
   \end{tcolorbox}
 \end{center}
 #+end_export

@@ -10098,19 +10098,19 @@ results we must also choose methods that make hypotheses compatible with problem
 search  spaces,   such  as  the   existence  of  /discoverable/,  or   at  least
 /exploitable/, relationships  between parameters  and performance.   Choosing an
 autotuning  method requires  balancing the  exploration of  a problem,  that is,
-seeking   to  discover   and  explain   relationships  between   parameters  and
-performance, and the exploitation of  known or discovered relationships, seeking
-only to find the best possible performance.
+seeking to  discover relationships between  parameters and performance,  and the
+exploitation of known or discovered relationships, seeking only to find the best
+possible performance.
 
-Machine learning  and search algorithms  are often  not the best  candidates for
+Machine learning  and search heuristics  are often  not the best  candidates for
 autotuning domains where measurements are  lengthy and costly, such as compiling
 industrial-level FPGA programs,  because these methods rely  on the availability
-of a large number of measurements.   Search algorithms in particular also assume
-that good optimizations  are reachable from a starting position,  and that local
-trends observed  in a search space  are exploitable.  These assumptions  are not
-usually true in common  autotuning domains, as shown in the  work of Seymour /et
-al./\nbsp\cite{seymour2008comparison}.   Autotuning search  spaces usually  have
-non-linear  constraints  and  undefined  regions, which  are  also  expected  to
+of a large number of measurements.   Search heuristics in particular also assume
+that good  code optimizations are reachable  from a starting position,  and that
+local trends observed in a search  space are exploitable.  These assumptions are
+not usually true in  common autotuning domains, as shown in  the work of Seymour
+/et  al./\nbsp\cite{seymour2008comparison}.   Autotuning search  spaces  usually
+have non-linear  constraints and undefined  regions, which are also  expected to
 decrease  the  effectiveness of  search  heuristics  and machine  learning.   An
 additional downside is that, usually,  optimization choices cannot be explained,
 and  knowledge  gained during  optimization  with  machine learning  and  search
@@ -10128,8 +10128,8 @@ Jain\nbsp\cite{bukh1992art}, Montgomery\nbsp\cite{montgomery2017design}  and Box
 foundations.   Techniques based  on DoE  are /parsimonious/  because they  allow
 decreasing   the  number   of   measurements  required   to  determine   certain
 relationships  between parameters  and  metrics, and  are /transparent/  because
-parameter  selections and  configurations can  be  justified by  the results  of
-statistical tests.
+parameter selections and configurations can be justified in many settings by the
+results of statistical tests.
 
 In DoE terminology, a /design/ is a plan for executing a series of measurements,
 or /experiments/, whose objective is to identify relationships between /factors/
@@ -10176,8 +10176,9 @@ were evident since  the first vacuum tube computers that  already spanned entire
 floors,  such   as  the  ENIAC  in   1945\nbsp{}\cite{ceruzzi2003history}.   The
 practical and  economical need to fit  more computing power into  real estate is
 one  force for  innovation in  hardware design  that spans  its history,  and is
-echoed in modern  supercomputers, such as the /Summit/ from  /Oak Ridge National
-Laboratory/\nbsp{}\cite{olcf2020summit}, which spans an entire room.
+echoed in  modern supercomputers, such  as the /Summit/ supercomputer  from /Oak
+Ridge  National Laboratory/\nbsp{}\cite{olcf2020summit},  which spans  an entire
+room.
 
 #+NAME: fig:trends
 #+ATTR_LATEX: :width \textwidth :placement [t]

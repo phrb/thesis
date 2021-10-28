@@ -837,57 +837,6 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 ** Optimization Methods for Autotuning: An Overview
 #+ATTR_LATEX: :width .7\textwidth
 [[../img/optimization_methods/annotated_tree.pdf]]
-* Conclusion
-:PROPERTIES:
-:DURATION: 5 minutes
-:END:
-** Toward Transparent and Parsimonious Autotuning
-\vspace{-1em}
-*** Left                                                            :BMCOL:
-:PROPERTIES:
-:BEAMER_col: 0.5
-:END:
-\vspace{-0.9em}
-**** Autotuning for High Performance Computing
-\vspace{-0.8em}
-#+ATTR_LATEX: :width \columnwidth
-[[file:../img/final_card.pdf]]
-\vspace{-1.9em}
-#+ATTR_LATEX: :width \columnwidth
-[[../img/49_years_processor_data_annotated.pdf]]
-*** Right                                                           :BMCOL:
-:PROPERTIES:
-:BEAMER_col: 0.5
-:END:
-**** Contributions of this Thesis
-- *Developing* transparent and  parsimonious autotuning methods  based on
-  the *Design of Experiments*
-- *Evaluating* different autotuning methods in different HPC domains
-\vspace{-0.9em}
-#+begin_export latex
-\begin{table}[]
-  \renewcommand{\arraystretch}{1.5}
-  \resizebox{0.6\textwidth}{!}{%
-    \begin{tabular}{@{}ll@{}}
-      \textbf{Domain} & \textbf{Method}         \\ \midrule
-      CUDA compiler parameters &
-      \textcolor{NavyBlue}{\textbf{F}}, \phantom{\textbf{L},} \textcolor{BrickRed}{\textbf{D}} \\
-      FPGA compiler parameters &
-      \textcolor{NavyBlue}{\textbf{F}} \\
-      \rowcolor{Accent!15}OpenCL Laplacian Kernel & \textcolor{NavyBlue}{\textbf{F}},
-      \textcolor{OliveGreen}{\textbf{L}}, \textcolor{BrickRed}{\textbf{D}} \\
-      SPAPT Kernels & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
-      \textcolor{BrickRed}{\textbf{D}} \\
-      CNN Quantization & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
-      \textcolor{BrickRed}{\textbf{D}} \\
-      \multicolumn{2}{c}{\footnotesize\textcolor{NavyBlue}{\textbf{F}}: Function Minimization,
-        \textcolor{OliveGreen}{\textbf{L}}: Learning,} \\[-1em]
-      \multicolumn{2}{c}{\footnotesize\textcolor{BrickRed}{\textbf{D}}: Design of Experiments} \\[-0.7em]
-      \multicolumn{2}{c}{\footnotesize\colorbox{Accent!15}{\phantom{A}}: In this presentation}
-    \end{tabular}%
-  }
-\end{table}
-#+end_export
 ** Autotuning Methods Best Suited for Different Contexts
 \vspace{-2.2em}
 *** Left Top
@@ -955,6 +904,57 @@ To *minimize* $f$, we can adapt *proven methods* from other \mbox{domains}:
 - Choose experiments online
 - Use to build flexible surrogates
 
+* Conclusion
+:PROPERTIES:
+:DURATION: 5 minutes
+:END:
+** Toward Transparent and Parsimonious Autotuning
+\vspace{-1em}
+*** Left                                                            :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+\vspace{-0.9em}
+**** Autotuning for High Performance Computing
+\vspace{-0.8em}
+#+ATTR_LATEX: :width \columnwidth
+[[file:../img/final_card.pdf]]
+\vspace{-1.9em}
+#+ATTR_LATEX: :width \columnwidth
+[[../img/49_years_processor_data_annotated.pdf]]
+*** Right                                                           :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+**** Contributions of this Thesis
+- *Developing* transparent and  parsimonious autotuning methods  based on
+  the *Design of Experiments*
+- *Evaluating* different autotuning methods in different HPC domains
+\vspace{-0.9em}
+#+begin_export latex
+\begin{table}[]
+  \renewcommand{\arraystretch}{1.5}
+  \resizebox{0.6\textwidth}{!}{%
+    \begin{tabular}{@{}ll@{}}
+      \textbf{Domain} & \textbf{Method}         \\ \midrule
+      CUDA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}}, \phantom{\textbf{L},} \textcolor{BrickRed}{\textbf{D}} \\
+      FPGA compiler parameters &
+      \textcolor{NavyBlue}{\textbf{F}} \\
+      \rowcolor{Accent!15}OpenCL Laplacian Kernel & \textcolor{NavyBlue}{\textbf{F}},
+      \textcolor{OliveGreen}{\textbf{L}}, \textcolor{BrickRed}{\textbf{D}} \\
+      SPAPT Kernels & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      CNN Quantization & \phantom{\textbf{F}, }\textcolor{OliveGreen}{\textbf{L}},
+      \textcolor{BrickRed}{\textbf{D}} \\
+      \multicolumn{2}{c}{\footnotesize\textcolor{NavyBlue}{\textbf{F}}: Function Minimization,
+        \textcolor{OliveGreen}{\textbf{L}}: Learning,} \\[-1em]
+      \multicolumn{2}{c}{\footnotesize\textcolor{BrickRed}{\textbf{D}}: Design of Experiments} \\[-0.7em]
+      \multicolumn{2}{c}{\footnotesize\colorbox{Accent!15}{\phantom{A}}: In this presentation}
+    \end{tabular}%
+  }
+\end{table}
+#+end_export
 ** Improving Autotuners: Collaborative, Exhaustive, and Reproducible Experiments
 \vspace{-2.4em}
 *** Left                                                            :BMCOL:
